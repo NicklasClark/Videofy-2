@@ -1,4 +1,4 @@
-package com.cncoding.teazer.data.local.room.database;
+package com.cncoding.teazer.data.local.database;
 
 /*
  * Created by Prem $ on 4/7/2017.

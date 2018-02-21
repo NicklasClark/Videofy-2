@@ -466,6 +466,16 @@ public class ViewUtils {
         return materialShowcaseView;
     }
 
+    public static GradientDrawable getClassicCategoryBackground(TextView title, String colorString) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        int color = Color.parseColor(colorString);
+        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setCornerRadius(getPixels(title.getContext(), 3));
+        gradientDrawable.setStroke(getPixels(title.getContext(), 1), color);
+        title.setTextColor(color);
+        return gradientDrawable;
+    }
+
 //    public static void unbindDrawables(View view) {
 //        if (view != null) {
 //            if (view.getBackground() != null) {

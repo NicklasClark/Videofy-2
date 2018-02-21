@@ -2,8 +2,8 @@ package com.cncoding.teazer.data.remote.apicalls.discover;
 
 import com.cncoding.teazer.model.discover.VideosList;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LandingPosts;
-import com.cncoding.teazer.model.post.LandingPostsV2;
+import com.cncoding.teazer.model.discover.LandingPosts;
+import com.cncoding.teazer.model.discover.LandingPostsV2;
 import com.cncoding.teazer.model.post.PostList;
 
 import retrofit2.Call;

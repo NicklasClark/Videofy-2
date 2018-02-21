@@ -22,8 +22,8 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 import static android.text.TextUtils.isDigitsOnly;
-import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_EMAIL;
-import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_PHONE;
+import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
+import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;

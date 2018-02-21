@@ -11,7 +11,7 @@
     app:umanoAnchorPoint="0.4"
     sothree:umanoPanelHeight="0dp"
     sothree:umanoShadowHeight="0dp"
-    tools:context=".home.camera.CameraActivity">
+    tools:fragment=".home.camera.CameraActivity">
 
     <!--CAMERA FRAGMENT CONTAINER-->
     <RelativeLayout

@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
 
-//        welcomeVideo.setSurfaceTextureListener(MainActivity.this);
         try {
             welcomeVideo.setKeepScreenOn(true);
             welcomeVideo.setVideoPath(VIDEO_PATH);
@@ -157,16 +156,18 @@ public class MainActivity extends AppCompatActivity
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
 
         SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
-        imageUri = prfs.getString("USER_DP_IMAGES", "");
+        imageUri = prfs.getString("USER_DP_IMAGES", null);
 
-        Bitmap bitmap;
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
-            bte = bitmapToByte(scaledBitmap);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        if (imageUri != null) {
+            Bitmap bitmap;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+                bte = bitmapToByte(scaledBitmap);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

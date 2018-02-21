@@ -57,7 +57,6 @@ public class UploadParams implements Parcelable {
         this.videoPath = videoPath;
     }
 
-
     protected UploadParams(Parcel in) {
         videoPath = in.readString();
         isReaction = in.readByte() != 0;

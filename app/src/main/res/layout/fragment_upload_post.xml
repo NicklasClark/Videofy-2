@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+    tools:fragment="com.cncoding.teazer.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"

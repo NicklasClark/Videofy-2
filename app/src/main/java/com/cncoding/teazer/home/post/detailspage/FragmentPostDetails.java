@@ -53,6 +53,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.TaggedUser;
@@ -61,7 +62,6 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -116,7 +116,7 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
-import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_FILL;
+import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_ZOOM;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
@@ -261,6 +261,7 @@ public class FragmentPostDetails extends BaseFragment {
         postReactions = new ArrayList<>();
         taggedUsersList = new ArrayList<>();
         previousTitle = getParentActivity().getToolbarTitle();
+        getParentActivity().updateToolbarTitle(getString(R.string.post));
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,8 +289,8 @@ public class FragmentPostDetails extends BaseFragment {
 
         oneShotFlag = true;
 
-        updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
-                postDetails.getMedias().get(0).getDimension().getHeight());
+        updateTextureViewSize(postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                postDetails.getMedias().get(0).getMediaDimension().getHeight());
 
         likeAction(postDetails.canLike(), false);
         if (!postDetails.canReact()) disableView(reactBtn, true);
@@ -875,7 +876,7 @@ public class FragmentPostDetails extends BaseFragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerView.setLayoutParams(params);
-        playerView.setResizeMode(RESIZE_MODE_FILL);
+        playerView.setResizeMode(RESIZE_MODE_ZOOM);
     }
 
     @OnClick(R.id.share) public void onViewClicked() {
@@ -1342,8 +1343,8 @@ public class FragmentPostDetails extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         try {
-            getParentActivity().updateToolbarTitle(previousTitle);
-            getParentActivity().showToolbar();
+//            getParentActivity().updateToolbarTitle(previousTitle);
+//            getParentActivity().showToolbar();
             releaseAudioLock(getContext(), audioFocusChangeListener);
             mHandler.removeCallbacks(mDelayedStopRunnable);
         } catch (Exception e) {

@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
@@ -34,17 +35,18 @@ public class CallbackFactory {
 
     @NonNull
     @Contract(pure = true)
-    public static Callback<PostList> postListCallback(final MutableLiveData<PostList> liveData) {
+    public static Callback<PostList> postListCallback(final MutableLiveData<PostList> liveData, final int callType) {
         return new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new PostList(new Throwable(NOT_SUCCESSFUL)));
+                PostList postList = response.body().setCallType(callType);
+                liveData.setValue(response.isSuccessful() ? postList : new PostList(new Throwable(NOT_SUCCESSFUL)));
             }
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new PostList(new Throwable(FAILED)));
+                liveData.setValue(new PostList(new Throwable(FAILED)).setCallType(callType));
             }
         };
     }
@@ -116,17 +118,18 @@ public class CallbackFactory {
 
     @NonNull
     @Contract(pure = true)
-    public static Callback<UsersList> usersListCallback(final MutableLiveData<UsersList> liveData) {
+    public static Callback<UsersList> usersListCallback(final MutableLiveData<UsersList> liveData, @CallType final int callType) {
         return new Callback<UsersList>() {
             @Override
             public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new UsersList(new Throwable(NOT_SUCCESSFUL)));
+                UsersList usersList = response.body().setCallType(callType);
+                liveData.setValue(response.isSuccessful() ? usersList : new UsersList(new Throwable(NOT_SUCCESSFUL)));
             }
 
             @Override
             public void onFailure(Call<UsersList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new UsersList(new Throwable(FAILED)));
+                liveData.setValue(new UsersList(new Throwable(FAILED)).setCallType(callType));
             }
         };
     }

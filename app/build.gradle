@@ -194,7 +194,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:${archPersistenceVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archPersistenceVersion}"
     // Paging
-//    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
+    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
     // Dagger
     implementation "com.google.dagger:dagger:${daggerVersion}"
     implementation "com.google.dagger:dagger-android-support:${daggerVersion}"

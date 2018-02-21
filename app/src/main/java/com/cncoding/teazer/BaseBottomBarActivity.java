@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,10 +48,7 @@ import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
-import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
-import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter.OnSubSearchInteractionListener;
-import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingListInteractionListener;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscoverSearchInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
@@ -62,7 +58,6 @@ import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser.CallProfileLi
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter.TaggedListInteractionListener;
-import com.cncoding.teazer.home.post.homepage.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
@@ -127,9 +122,7 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_C
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
-import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
-import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
 import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
@@ -158,9 +151,9 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnPostAdapterInteractionListener, OnInterestsInteractionListener, onPostOptionsClickListener,
+        OnInterestsInteractionListener, onPostOptionsClickListener,
 //    Discover page listeners
-        OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
+        OnDiscoverSearchInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
@@ -907,6 +900,7 @@ public class BaseBottomBarActivity extends BaseActivity
         navigationController.popFragment();
     }
 
+    @Override
     public void pushFragmentOnto(Fragment fragment) {
         if (navigationController != null) {
             navigationController.pushFragmentOnto(fragment);
@@ -1094,67 +1088,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     //<editor-fold desc="Fragment listener implementations">
     @Override
-    public void onPostInteraction(int action, final PostDetails postDetails) {
-        switch (action) {
-            case ACTION_VIEW_POST:
-                pushFragment(FragmentPostDetails.newInstance(postDetails, null, true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
-                break;
-            case ACTION_VIEW_PROFILE:
-                int postOwnerId = postDetails.getPostOwner().getUserId();
-                String username = postDetails.getPostOwner().getUserName();
-                String userType = "";
-                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(postOwnerId), userType, username));
-        }
-    }
-
-    @Override
-    public void postDetails(PostDetails postDetails, Bitmap image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId) {
-        //  pushFragment(postDetails);
-        //  hideToolbar();
-
-        pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
-                true, postDetails.getMedias().get(0).getThumbUrl(), null));
-    }
-
-    @Override
-    public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
-                                      PostDetails postDetails) {
-        switch (action) {
-            case ACTION_VIEW_MY_INTERESTS:
-                pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
-                break;
-            case ACTION_VIEW_MOST_POPULAR:
-                pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
-                break;
-            case ACTION_VIEW_POST:
-                pushFragment(FragmentPostDetails.newInstance(postDetails,
-                        null, false, false, null, null));
-                break;
-            case ACTION_VIEW_PROFILE:
-                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
-                                "", postDetails.getPostOwner().getUserName()));
-                break;
-        }
-    }
-
-    @Override
-    public void onSubSearchInteraction(int action, PostDetails postDetails) {
-        switch (action) {
-            case ACTION_VIEW_POST:
-                pushFragment(FragmentPostDetails.newInstance(postDetails,
-                        null, false, false, null, null));
-                break;
-            case ACTION_VIEW_PROFILE:
-                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(
-                                String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
-                break;
-        }
-    }
-
-    @Override
     public void onDiscoverSearchInteraction(boolean isVideosTab, int id) {
         ViewUtils.hideKeyboard(this, bottomTabLayout);
         if (isVideosTab) {
@@ -1177,13 +1110,6 @@ public class BaseBottomBarActivity extends BaseActivity
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(id), "Other", "username"));
         }
-    }
-
-    @Override
-    public void onTrendingListInteraction(Category category) {
-        ArrayList<Category> categories = new ArrayList<>();
-        categories.add(category);
-        pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_TRENDING, categories, null));
     }
 
     @Override
@@ -1221,11 +1147,10 @@ public class BaseBottomBarActivity extends BaseActivity
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
         if (!isFromDiscover)
-            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
+            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories));
         else {
             if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
                 ((DiscoverFragment) currentFragment).loadPosts();
-                ((DiscoverFragment) currentFragment).getFeaturedPosts(1);
             }
         }
     }

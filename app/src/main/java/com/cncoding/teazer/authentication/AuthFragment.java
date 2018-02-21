@@ -70,6 +70,11 @@ public abstract class AuthFragment extends Fragment implements NetworkStateListe
         
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         context.registerReceiver(networkStateReceiver, new IntentFilter(CONNECTIVITY_ACTION));
     }
 
@@ -115,12 +120,12 @@ public abstract class AuthFragment extends Fragment implements NetworkStateListe
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         networkStateReceiver.removeListener(this);
         context.unregisterReceiver(networkStateReceiver);
     }
-    
+
     protected abstract void handleResponse(ResultObject resultObject);
 
     protected abstract void handleError(Throwable throwable);
@@ -131,55 +136,55 @@ public abstract class AuthFragment extends Fragment implements NetworkStateListe
 
     protected abstract boolean isFieldFilled(@ValidationType int whichType);
 
-    public void signUp(InitiateSignup initiateSignup) {
+    protected void signUp(InitiateSignup initiateSignup) {
         authViewModel.signUp(initiateSignup);
     }
 
-    public void verifySignUp(VerifySignUp verifySignUp) {
+    protected void verifySignUp(VerifySignUp verifySignUp) {
         authViewModel.verifySignUp(verifySignUp);
     }
 
-    public void socialSignUp(SocialSignup socialSignup) {
+    protected void socialSignUp(SocialSignup socialSignup) {
         authViewModel.socialSignUp(socialSignup);
     }
 
-    public void loginWithPassword(Login login) {
+    protected void loginWithPassword(Login login) {
         authViewModel.loginWithPassword(login);
     }
 
-    public void loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
+    protected void loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
         authViewModel.loginWithOtp(initiateLoginWithOtp);
     }
 
-    public void verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
+    protected void verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
         authViewModel.verifyLoginWithOtp(verifyLoginWithOtp);
     }
 
-    public void checkUsernameAvailability(String username) {
+    protected void checkUsernameAvailability(String username) {
         authViewModel.checkUsernameAvailability(username);
     }
 
-    public void checkEmailAvailability(String email) {
+    protected void checkEmailAvailability(String email) {
         authViewModel.checkEmailAvailability(email);
     }
 
-    public void checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
+    protected void checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
         authViewModel.checkPhoneNumberAvailability(countryCode, phoneNumber);
     }
 
-    public void verifyForgotPasswordOtp(int otp) {
+    protected void verifyForgotPasswordOtp(int otp) {
         authViewModel.verifyForgotPasswordOtp(otp);
     }
 
-    public void requestResetPasswordByEmail(String email) {
+    protected void requestResetPasswordByEmail(String email) {
         authViewModel.requestResetPasswordByEmail(email);
     }
 
-    public void requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
+    protected void requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
         authViewModel.requestResetPasswordByPhone(resetPasswordByPhoneNumber);
     }
 
-    public void resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
+    protected void resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
         authViewModel.resetPasswordByOtp(resetPasswordByOtp);
     }
 }

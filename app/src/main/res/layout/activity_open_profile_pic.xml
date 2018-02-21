@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#b000"
-    tools:context="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
+    tools:fragment="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
 
     <com.cncoding.teazer.customViews.CircularAppCompatImageView
         android:id="@+id/close"

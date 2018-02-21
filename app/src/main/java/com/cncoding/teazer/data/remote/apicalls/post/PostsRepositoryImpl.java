@@ -135,7 +135,7 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public LiveData<PostList> getHiddenPosts(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getHiddenPosts(page).enqueue(postListCallback(liveData));
+        postService.getHiddenPosts(page).enqueue(postListCallback(liveData, 0));
         return liveData;
     }
 
@@ -182,21 +182,21 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public LiveData<PostList> getPostedVideos(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getPostedVideos(page).enqueue(postListCallback(liveData));
+        postService.getPostedVideos(page).enqueue(postListCallback(liveData, 0));
         return liveData;
     }
 
     @Override
     public LiveData<PostList> getVideosPostedByFriends(int page, int friendId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getVideosPostedByFriends(page, friendId).enqueue(postListCallback(liveData));
+        postService.getVideosPostedByFriends(page, friendId).enqueue(postListCallback(liveData, 0));
         return liveData;
     }
 
     @Override
     public LiveData<PostList> getVideosPostedByFriend(int page, int friendId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getVideosPostedByFriend(page, friendId).enqueue(postListCallback(liveData));
+        postService.getVideosPostedByFriend(page, friendId).enqueue(postListCallback(liveData, 0));
         return liveData;
     }
 
@@ -221,7 +221,7 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public LiveData<PostList> getHiddenVideosList(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getHiddenVideosList(page).enqueue(postListCallback(liveData));
+        postService.getHiddenVideosList(page).enqueue(postListCallback(liveData, 0));
         return liveData;
     }
 

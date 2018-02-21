@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cncoding.teazer.home.discover.search.DiscoverSearchFragment">
+    tools:fragment="com.cncoding.teazer.home.discover.search.DiscoverSearchFragment">
 
     <RelativeLayout
         android:id="@+id/discover_toolbar_layout"

@@ -1,5 +1,8 @@
 package com.cncoding.teazer.model.post;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.CallType;
+
 import java.util.List;
 
 /**
@@ -7,11 +10,11 @@ import java.util.List;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class PostList {
+public class PostList extends BaseModel {
+
     private boolean next_page;
     private int page;
     private List<PostDetails> posts;
-    private Throwable error;
 
     public PostList(List<PostDetails> posts) {
         this.posts = posts;
@@ -27,10 +30,6 @@ public class PostList {
 
     public List<PostDetails> getPosts() {
         return posts;
-    }
-
-    public Throwable getError() {
-        return error;
     }
 
     public int getPage() {
@@ -53,11 +52,12 @@ public class PostList {
         this.posts = posts;
     }
 
-    public void setError(Throwable error) {
-        this.error = error;
-    }
-
     public void clear() {
         posts.clear();
+    }
+
+    public PostList setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 }

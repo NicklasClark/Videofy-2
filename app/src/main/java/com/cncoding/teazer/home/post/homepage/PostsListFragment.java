@@ -2,6 +2,7 @@ package com.cncoding.teazer.home.post.homepage;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
@@ -27,6 +29,7 @@ import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,6 +38,7 @@ import butterknife.ButterKnife;
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
+import static com.cncoding.teazer.TeazerApplication.get;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
@@ -49,7 +53,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     public static PostDetails postDetails;
     public static int positionToUpdate = -1;
     private int currentPage;
-    private PostDetailsViewModel postDetailsViewModel;
+    private PostDetailsViewModel viewModel;
     private PostsListAdapter postListAdapter;
 
     public PostsListFragment() {
@@ -63,8 +67,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AuthTokenViewModelFactory factory = new AuthTokenViewModelFactory(getAuthToken(getParentActivity().getApplicationContext()));
-        postDetailsViewModel = ViewModelProviders.of(this, factory).get(PostDetailsViewModel.class);
+        AuthTokenViewModelFactory factory = new AuthTokenViewModelFactory(get(getParentActivity()), getAuthToken(getContext()));
+        viewModel = ViewModelProviders.of(this, factory).get(PostDetailsViewModel.class);
         currentPage = 1;
     }
 
@@ -80,12 +84,12 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             @Override
             public void onRefresh() {
                 manualRefreshTriggered = true;
-                refreshPosts(false, true);
+                refreshPosts(true, true);
             }
         });
 
         // Handle changes emitted by LiveData
-        postDetailsViewModel.getPostList().observe(this, new Observer<PostList>() {
+        viewModel.getPostList().observe(this, new Observer<PostList>() {
             @Override
             public void onChanged(@Nullable PostList postList) {
                 if (postList != null) {
@@ -114,42 +118,46 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void prepareRecyclerView() {
-        postListAdapter = new PostsListAdapter(getContext());
+        postListAdapter = new PostsListAdapter(this);
         recyclerView.setAdapter(postListAdapter);
         bindRecyclerViewAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
-            @Override
-            public void loadFirstPage() {
-                if (postDetailsViewModel.getPostList().getValue() == null) {
+        if (scrollListener == null)
+            scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                @Override
+                public void loadFirstPage() {
                     currentPage = 1;
-                    refreshPosts(false, false);
+                    new InitialRetrieveTask(PostsListFragment.this).execute();
                 }
-            }
 
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (is_next_page) {
-                    currentPage = page;
-                    getHomePagePosts(page);
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    if (isConnected) {
+                        if (is_next_page) {
+                            currentPage = page;
+                            getHomePagePosts(page);
+                        }
+                    }
+                    else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
                 }
-            }
-        };
+            };
         recyclerView.addOnScrollListener(scrollListener);
     }
 
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
-        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
-        if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
-        toggleRecyclerViewScrolling(false);
-        if (scrollListener != null) scrollListener.resetState();
-        postDetailsViewModel.clearData();
-        getHomePagePosts(1);
+        if (isConnected) {
+            if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
+            if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
+            toggleRecyclerViewScrolling(false);
+            if (scrollListener != null && scrollToTop) scrollListener.resetState();
+            getHomePagePosts(1);
+        }
+        else Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_SHORT).show();
     }
 
     public void getHomePagePosts(int page) {
-        postDetailsViewModel.loadPostList(page);
+        viewModel.loadPostList(page);
     }
 
     @Override
@@ -165,7 +173,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                         int[] positions = new int[2];
                         if (((StaggeredGridLayoutManager) recyclerView.getLayoutManager())
                                 .findFirstCompletelyVisibleItemPositions(positions)[0] == 0)
-                            refreshPosts(false, true);
+                            refreshPosts(true, true);
                         else
                             recyclerView.smoothScrollBy(0, -((int) recyclerView.getChildAt(recyclerView.getChildCount() - 1).getY()),
                                 new DecelerateInterpolator());
@@ -180,10 +188,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void updateOrRemovePostDetailsAtThePosition() {
-        if (postDetailsViewModel.getPostList().getValue() != null && postDetails == null) {
+        if (viewModel.getPostList().getValue() != null && postDetails == null) {
 //            Item is deleted
             try {
-                postDetailsViewModel.getPostList().getValue().getPosts().remove(positionToUpdate);
+                viewModel.getPostList().getValue().getPosts().remove(positionToUpdate);
                 postListAdapter.notifyItemRemoved(positionToUpdate);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -204,13 +212,14 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         } else {
             postListAdapter.addPosts(currentPage, postDetailsList);
         }
+        viewModel.insertAllPosts(postDetailsList);
         if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
     }
 
     @SuppressWarnings("ConstantConditions")
     private void handleError(String message) {
         try {
-            if (currentPage > 1 || postDetailsViewModel.getPostList().getValue().getPosts().isEmpty()) {
+            if (currentPage > 1 || viewModel.getPostList().getValue().getPosts().isEmpty()) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 postLoadErrorLayout.setVisibility(View.VISIBLE);
                 postLoadErrorTextView.setText(message);
@@ -232,6 +241,37 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     private void toggleRecyclerViewScrolling(boolean enabled) {
         CustomLinearLayoutManager manager = (CustomLinearLayoutManager) recyclerView.getLayoutManager();
         manager.setScrollEnabled(enabled);
+    }
+
+    public PostDetailsViewModel getViewModel() {
+        return viewModel;
+    }
+
+    public static class InitialRetrieveTask extends AsyncTask<Void, Void, ArrayList<PostDetails>> {
+
+        private PostsListFragment fragment;
+
+        InitialRetrieveTask(PostsListFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected ArrayList<PostDetails> doInBackground(Void... voids) {
+            return new ArrayList<>(fragment.getViewModel().getDatabase().dao().getAllPosts());
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<PostDetails> postDetailsList) {
+            if (postDetailsList != null && !postDetailsList.isEmpty()) {
+                fragment.getViewModel().getPostList().setValue(new PostList(postDetailsList));
+//                Posts available in Room DB, just update new Posts.
+                fragment.manualRefreshTriggered = true;
+                fragment.refreshPosts(true, false);
+            } else {
+//                Posts are not available in Room DB, fetch them from server.
+                fragment.refreshPosts(false, false);
+            }
+        }
     }
 
     @Override

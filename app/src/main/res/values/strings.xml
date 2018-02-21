@@ -372,4 +372,6 @@
     <string name="otp_is_required">Otp is required</string>
     <string name="reaction_no_longer_exists">This reaction no longer exists</string>
     <string name="location_services_required">Location services are required to get your nearby locations.</string>
+    <string name="no_internet_message">Make sure your internet connection is working to enjoy new Videos</string>
+    <string name="could_not_load_new_posts">Couldn\'t load new posts.\nCheck your internet connection</string>
 </resources>

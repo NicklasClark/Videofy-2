@@ -1,6 +1,7 @@
-package com.cncoding.teazer.model.post;
+package com.cncoding.teazer.model.discover;
 
 import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

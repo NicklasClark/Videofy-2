@@ -11,6 +11,7 @@ import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.user.BlockedUsersList;
+import com.cncoding.teazer.utilities.Annotations;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +25,7 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.usersList
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
+import static com.cncoding.teazer.utilities.Annotations.NO_CALL;
 
 /**
  *
@@ -203,14 +205,14 @@ public class FriendsRepositoryImpl implements FriendsRepository {
     @Override
     public LiveData<UsersList> getUsersListToFollow(int page) {
         MutableLiveData<UsersList> liveData = new MutableLiveData<>();
-        friendsService.getUsersListToFollow(page).enqueue(usersListCallback(liveData));
+        friendsService.getUsersListToFollow(page).enqueue(usersListCallback(liveData, NO_CALL));
         return liveData;
     }
 
     @Override
     public LiveData<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm) {
         MutableLiveData<UsersList> liveData = new MutableLiveData<>();
-        friendsService.getUsersListToFollowWithSearchTerm(page, searchTerm).enqueue(usersListCallback(liveData));
+        friendsService.getUsersListToFollowWithSearchTerm(page, searchTerm).enqueue(usersListCallback(liveData, NO_CALL));
         return liveData;
     }
 

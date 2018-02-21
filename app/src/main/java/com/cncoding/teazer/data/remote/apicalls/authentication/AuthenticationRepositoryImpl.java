@@ -2,12 +2,13 @@ package com.cncoding.teazer.data.remote.apicalls.authentication;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.TeazerApplication;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.Annotations;
+import com.cncoding.teazer.utilities.Annotations.AuthCallType;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
 import com.cncoding.teazer.model.auth.Login;
@@ -18,9 +19,6 @@ import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
 import com.cncoding.teazer.model.auth.VerifySignUp;
 
 import org.jetbrains.annotations.Contract;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -37,26 +35,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class AuthenticationRepositoryImpl implements AuthenticationRepository {
-
-    public static final int SIGNUP = 10;
-    public static final int VERIFY_SIGNUP = 11;
-    public static final int SOCIAL_SIGNUP = 12;
-    public static final int LOGIN_WITH_PASSWORD = 13;
-    public static final int LOGIN_WITH_OTP = 14;
-    public static final int VERIFY_LOGIN_WITH_OTP = 15;
-    public static final int CHECK_USERNAME_AVAILABILITY = 16;
-    public static final int CHECK_EMAIL_AVAILABILITY = 17;
-    public static final int CHECK_PHONE_NUMBER_AVAILABILITY = 18;
-    public static final int VERIFY_FORGOT_PASSWORD_OTP = 19;
-    public static final int REQUEST_RESET_PASSWORD_BY_EMAIL = 20;
-    public static final int REQUEST_RESET_PASSWORD_BY_PHONE = 21;
-    public static final int RESET_PASSWORD_BY_OTP = 22;
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({SIGNUP, VERIFY_SIGNUP, SOCIAL_SIGNUP, LOGIN_WITH_PASSWORD, LOGIN_WITH_OTP, VERIFY_LOGIN_WITH_OTP,
-            CHECK_USERNAME_AVAILABILITY, CHECK_EMAIL_AVAILABILITY, CHECK_PHONE_NUMBER_AVAILABILITY, VERIFY_FORGOT_PASSWORD_OTP,
-            REQUEST_RESET_PASSWORD_BY_EMAIL, REQUEST_RESET_PASSWORD_BY_PHONE, RESET_PASSWORD_BY_OTP})
-    public @interface CallType {}
 
     public static final String STATUS_FALSE = "status false";
     public static final String NOT_SUCCESSFUL = "not successful";
@@ -79,77 +57,77 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     @Override
     public LiveData<ResultObject> signUp(InitiateSignup initiateSignup) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.signUp(initiateSignup).enqueue(getCallback(liveData, SIGNUP));
+        authenticationService.signUp(initiateSignup).enqueue(getCallback(liveData, Annotations.SIGNUP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> verifySignUp(VerifySignUp verifySignUp) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.verifySignUp(verifySignUp).enqueue(getCallback(liveData, VERIFY_SIGNUP));
+        authenticationService.verifySignUp(verifySignUp).enqueue(getCallback(liveData, Annotations.VERIFY_SIGNUP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> socialSignUp(SocialSignup socialSignup) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.socialSignUp(socialSignup).enqueue(getCallback(liveData, SOCIAL_SIGNUP));
+        authenticationService.socialSignUp(socialSignup).enqueue(getCallback(liveData, Annotations.SOCIAL_SIGNUP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> loginWithPassword(Login login) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.loginWithPassword(login).enqueue(getCallback(liveData, LOGIN_WITH_PASSWORD));
+        authenticationService.loginWithPassword(login).enqueue(getCallback(liveData, Annotations.LOGIN_WITH_PASSWORD));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.loginWithOtp(initiateLoginWithOtp).enqueue(getCallback(liveData, LOGIN_WITH_OTP));
+        authenticationService.loginWithOtp(initiateLoginWithOtp).enqueue(getCallback(liveData, Annotations.LOGIN_WITH_OTP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.verifyLoginWithOtp(verifyLoginWithOtp).enqueue(getCallback(liveData, VERIFY_LOGIN_WITH_OTP));
+        authenticationService.verifyLoginWithOtp(verifyLoginWithOtp).enqueue(getCallback(liveData, Annotations.VERIFY_LOGIN_WITH_OTP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> checkUsernameAvailability(String username) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.checkUsernameAvailability(username).enqueue(getCallback(liveData, CHECK_USERNAME_AVAILABILITY));
+        authenticationService.checkUsernameAvailability(username).enqueue(getCallback(liveData, Annotations.CHECK_USERNAME_AVAILABILITY));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> checkEmailAvailability(String email) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.checkEmailAvailability(email).enqueue(getCallback(liveData, CHECK_EMAIL_AVAILABILITY));
+        authenticationService.checkEmailAvailability(email).enqueue(getCallback(liveData, Annotations.CHECK_EMAIL_AVAILABILITY));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.checkPhoneNumberAvailability(countryCode, phoneNumber).enqueue(getCallback(liveData, CHECK_PHONE_NUMBER_AVAILABILITY));
+        authenticationService.checkPhoneNumberAvailability(countryCode, phoneNumber).enqueue(getCallback(liveData, Annotations.CHECK_PHONE_NUMBER_AVAILABILITY));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> verifyForgotPasswordOtp(int otp) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.verifyForgotPasswordOtp(otp).enqueue(getCallback(liveData, VERIFY_FORGOT_PASSWORD_OTP));
+        authenticationService.verifyForgotPasswordOtp(otp).enqueue(getCallback(liveData, Annotations.VERIFY_FORGOT_PASSWORD_OTP));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> requestResetPasswordByEmail(String email) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.requestResetPasswordByEmail(email).enqueue(getCallback(liveData, REQUEST_RESET_PASSWORD_BY_EMAIL));
+        authenticationService.requestResetPasswordByEmail(email).enqueue(getCallback(liveData, Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL));
         return liveData;
     }
 
@@ -157,20 +135,20 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public LiveData<ResultObject> requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         authenticationService.requestResetPasswordByPhone(resetPasswordByPhoneNumber)
-                .enqueue(getCallback(liveData, REQUEST_RESET_PASSWORD_BY_PHONE));
+                .enqueue(getCallback(liveData, Annotations.REQUEST_RESET_PASSWORD_BY_PHONE));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        authenticationService.resetPasswordByOtp(resetPasswordByOtp).enqueue(getCallback(liveData, RESET_PASSWORD_BY_OTP));
+        authenticationService.resetPasswordByOtp(resetPasswordByOtp).enqueue(getCallback(liveData, Annotations.RESET_PASSWORD_BY_OTP));
         return liveData;
     }
 
     @NonNull
     @Contract(pure = true)
-    private Callback<ResultObject> getCallback(final MutableLiveData<ResultObject> liveData, @CallType final int callType) {
+    private Callback<ResultObject> getCallback(final MutableLiveData<ResultObject> liveData, @AuthCallType final int callType) {
         return new Callback<ResultObject>() {
             @SuppressWarnings("ConstantConditions")
             @Override
@@ -178,6 +156,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                 try {
                     if (response.isSuccessful()) {
                         ResultObject tempResultObject = response.body();
+                        tempResultObject.setCode(response.code());
                         tempResultObject.setCallType(callType);
                         if (tempResultObject.getStatus()) {
                             liveData.setValue(tempResultObject);

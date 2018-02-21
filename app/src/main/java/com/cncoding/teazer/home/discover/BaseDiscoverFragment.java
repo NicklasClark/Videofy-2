@@ -1,0 +1,189 @@
+package com.cncoding.teazer.home.discover;
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Toast;
+
+import com.cncoding.teazer.R;
+import com.cncoding.teazer.data.viewmodel.DiscoverViewModel;
+import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
+import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.discover.LandingPostsV2;
+import com.cncoding.teazer.model.discover.VideosList;
+import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.cncoding.teazer.TeazerApplication.get;
+import static com.cncoding.teazer.utilities.Annotations.NO_CALL;
+import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
+
+/**
+ *
+ * Created by Prem$ on 2/20/2018.
+ */
+
+public abstract class BaseDiscoverFragment extends BaseFragment {
+
+    protected static DiscoverViewModel viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = ViewModelProviders
+                .of(this, new AuthTokenViewModelFactory(get(getParentActivity()), getAuthToken(getContext())))
+                .get(DiscoverViewModel.class);
+    }
+
+    /**
+     * Setting observers.
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewModel.getLandingPosts().observe(this, new Observer<LandingPostsV2>() {
+            @Override
+            public void onChanged(@Nullable LandingPostsV2 landingPostsV2) {
+                handleLiveDataChange(landingPostsV2);
+            }
+        });
+
+        viewModel.getPostListLiveData().observe(this, new Observer<PostList>() {
+            @Override
+            public void onChanged(@Nullable PostList postList) {
+                handleLiveDataChange(postList);
+            }
+        });
+
+        viewModel.getMostPopularPosts().observe(this, new Observer<PostList>() {
+            @Override
+            public void onChanged(@Nullable PostList postList) {
+                handleLiveDataChange(postList);
+            }
+        });
+
+        viewModel.getUsersList().observe(this, new Observer<UsersList>() {
+            @Override
+            public void onChanged(@Nullable UsersList usersList) {
+                handleLiveDataChange(usersList);
+            }
+        });
+
+        viewModel.getVideosList().observe(this, new Observer<VideosList>() {
+            @Override
+            public void onChanged(@Nullable VideosList videosList) {
+                handleLiveDataChange(videosList);
+            }
+        });
+    }
+
+    private void handleLiveDataChange(BaseModel baseModel) {
+        if (isConnected) {
+            if (baseModel != null) {
+                if (baseModel.getError() != null) handleError(baseModel);
+                else handleResponse(baseModel);
+            }
+            else handleError(
+                    new BaseModel()
+                            .loadError(new Throwable(getString(R.string.something_went_wrong)))
+                            .loadCallType(NO_CALL));
+        }
+        else notifyNoInternetConnection();
+    }
+
+    private void notifyNoInternetConnection() {
+        Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+    }
+
+    protected ArrayList<PostDetails> getFeaturedPosts() {
+        try {
+            //noinspection ConstantConditions
+            return viewModel.getLandingPosts().getValue().getFeaturedVideos();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected List<PostDetails> getMostPopularPosts() {
+        try {
+            //noinspection ConstantConditions
+            return viewModel.getMostPopularPosts().getValue().getPosts();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected ArrayList<Category> getUserInterests() {
+        try {
+            //noinspection ConstantConditions
+            return viewModel.getLandingPosts().getValue().getUserInterests();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected ArrayList<Category> getTrendingCategories() {
+        try {
+            //noinspection ConstantConditions
+            return viewModel.getLandingPosts().getValue().getTrendingCategories();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected Map<String, ArrayList<PostDetails>> getMyInterests() {
+        try {
+            //noinspection ConstantConditions
+            return viewModel.getLandingPosts().getValue().getMyInterests();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void loadLandingPosts() {
+        viewModel.loadLandingPosts();
+    }
+
+    public void loadMostPopularPosts(int page) {
+        viewModel.loadMostPopularPosts(page);
+    }
+
+    public void loadFeaturedPosts(int page) {
+        viewModel.loadFeaturedPosts(page);
+    }
+
+    public void loadAllInterestedCategoriesPosts(int page, int categoryId) {
+        viewModel.loadAllInterestedCategoriesPosts(page, categoryId);
+    }
+
+    public void loadTrendingPosts(int page, int categoryId) {
+        viewModel.loadTrendingPosts(page, categoryId);
+    }
+
+    public void loadUsersList(int page) {
+        viewModel.loadUsersList(page);
+    }
+
+    public void loadUsersListWithSearchTerm(int page, String searchTerm) {
+        viewModel.loadUsersListWithSearchTerm(page, searchTerm);
+    }
+
+    public void loadVideosWithSearchTerm(int page, String searchTerm) {
+        viewModel.loadVideosWithSearchTerm(page, searchTerm);
+    }
+
+    protected abstract void handleResponse(BaseModel resultObject);
+
+    protected abstract void handleError(BaseModel baseModel);
+}

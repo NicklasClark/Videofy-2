@@ -50,7 +50,7 @@ public class AudioVolumeContentObserver extends ContentObserver {
     }
 
     int getLastVolume() {
-        return lastVolume > 0 ? lastVolume : audioManager.getStreamMaxVolume(audioStreamType);
+        return lastVolume > 0 ? lastVolume : audioManager.getStreamMaxVolume(audioStreamType) / 2;
     }
 
     public interface OnAudioVolumeChangedListener {

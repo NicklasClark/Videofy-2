@@ -234,6 +234,8 @@ public final class SimpleExoPlayerView extends FrameLayout {
     private int controllerShowTimeoutMs;
     private boolean controllerAutoShow;
     private boolean controllerHideOnTouch;
+    private int mediaWidth;
+    private int mediaHeight;
     private OnThumbReadyListener listener;
 
     public void setOnThumbReadyListener(OnThumbReadyListener listener) {
@@ -250,7 +252,6 @@ public final class SimpleExoPlayerView extends FrameLayout {
 
     public SimpleExoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         if (isInEditMode()) {
             contentFrame = null;
             shutterView = null;
@@ -276,8 +277,8 @@ public final class SimpleExoPlayerView extends FrameLayout {
 //        boolean useArtwork = true;
 //        int defaultArtworkId = 0;
         boolean useController = false;
-        int surfaceType = SURFACE_TYPE_SURFACE_VIEW;
-        int resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL;
+        int surfaceType = SURFACE_TYPE_TEXTURE_VIEW;
+        int resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM;
         int controllerShowTimeoutMs = PlaybackControlView.DEFAULT_SHOW_TIMEOUT_MS;
         boolean controllerHideOnTouch = true;
         boolean controllerAutoShow = true;
@@ -327,8 +328,7 @@ public final class SimpleExoPlayerView extends FrameLayout {
         if (contentFrame != null && surfaceType != SURFACE_TYPE_NONE) {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            surfaceView = surfaceType == SURFACE_TYPE_TEXTURE_VIEW ? new TextureView(context)
-                    : new SurfaceView(context);
+            surfaceView = surfaceType == SURFACE_TYPE_TEXTURE_VIEW ? new TextureView(context) : new SurfaceView(context);
             surfaceView.setLayoutParams(params);
             contentFrame.addView(surfaceView, 0);
         } else {
@@ -1011,7 +1011,7 @@ public final class SimpleExoPlayerView extends FrameLayout {
         @Override
         public void onRenderedFirstFrame() {
             if (shutterView != null) {
-                shutterView.setVisibility(INVISIBLE);
+                shutterView.setVisibility(GONE);
             }
         }
 

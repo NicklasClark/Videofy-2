@@ -17,7 +17,7 @@ import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ErrorBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.data.remote.apicalls.ClientProvider;
+import com.cncoding.teazer.data.local.database.TeazerDB;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
@@ -34,7 +34,9 @@ import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
 import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.clearRetrofitWithAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
+import static com.cncoding.teazer.utilities.SharedPrefs.resetAuthToken;
 
 /**
  *
@@ -164,8 +166,15 @@ public class AuthUtils {
                     }
 
                     private void LTFO() {
-                        SharedPrefs.resetAuthToken(context);
-                        ClientProvider.clearRetrofitWithAuthToken();
+                        resetAuthToken(context);
+                        clearRetrofitWithAuthToken();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TeazerDB.getInstance(context.getApplicationContext()).dao().clearTable();
+                                TeazerDB.destroyInstance();
+                            }
+                        }).start();
                         if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

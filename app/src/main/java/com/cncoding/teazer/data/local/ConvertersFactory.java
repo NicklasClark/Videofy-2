@@ -1,4 +1,4 @@
-package com.cncoding.teazer.data.local.room;
+package com.cncoding.teazer.data.local;
 
 import android.arch.persistence.room.TypeConverter;
 
@@ -9,6 +9,8 @@ import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.ReactedUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,7 @@ public class ConvertersFactory {
 //        return new Gson().toJson(checkIn, new TypeToken<CheckIn>() {}.getType());
 //    }
 
+    @Contract("null -> null")
     @TypeConverter
     public static ArrayList<Medias> mediasListFromString(String value) {
         return new Gson().fromJson(value, new TypeToken<ArrayList<Medias>>() {}.getType());
@@ -49,6 +52,7 @@ public class ConvertersFactory {
         return new Gson().toJson(list, new TypeToken<ArrayList<Medias>>() {}.getType());
     }
 
+    @Contract("null -> null")
     @TypeConverter
     public static ArrayList<PostReaction> reactionsListFromString(String value) {
         return new Gson().fromJson(value, new TypeToken<ArrayList<PostReaction>>() {}.getType());
@@ -59,6 +63,7 @@ public class ConvertersFactory {
         return new Gson().toJson(list, new TypeToken<ArrayList<PostReaction>>() {}.getType());
     }
 
+    @Contract("null -> null")
     @TypeConverter
     public static ArrayList<TaggedUser> taggedUsersFromString(String value) {
         return new Gson().fromJson(value, new TypeToken<ArrayList<TaggedUser>>() {}.getType());
@@ -69,6 +74,7 @@ public class ConvertersFactory {
         return new Gson().toJson(list, new TypeToken<ArrayList<TaggedUser>>() {}.getType());
     }
 
+    @Contract("null -> null")
     @TypeConverter
     public static ArrayList<ReactedUser> reactedUsersFromString(String value) {
         return new Gson().fromJson(value, new TypeToken<ArrayList<ReactedUser>>() {}.getType());
@@ -79,6 +85,7 @@ public class ConvertersFactory {
         return new Gson().toJson(list, new TypeToken<ArrayList<ReactedUser>>() {}.getType());
     }
 
+    @Contract("null -> null")
     @TypeConverter
     public static ArrayList<Category> categoriesFromString(String value) {
         return new Gson().fromJson(value, new TypeToken<ArrayList<Category>>() {}.getType());

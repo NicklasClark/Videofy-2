@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
@@ -26,7 +27,7 @@ import java.util.Objects;
  */
 
 @Entity
-public class PostDetails implements Parcelable {
+public class PostDetails extends BaseModel implements Parcelable {
 
     @PrimaryKey @SerializedName("post_id") @Expose private Integer postId;
     @SerializedName("posted_by") @Expose private Integer postedBy;
@@ -48,7 +49,6 @@ public class PostDetails implements Parcelable {
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
     @SerializedName("categories") @Expose private ArrayList<Category> categories;
-    @Ignore private Throwable error;
 
     public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
                        Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete,
@@ -77,7 +77,7 @@ public class PostDetails implements Parcelable {
         this.categories = categories;
     }
 
-    public PostDetails(Throwable error) {
+    @Ignore public PostDetails(Throwable error) {
         this.error = error;
     }
 
@@ -256,10 +256,6 @@ public class PostDetails implements Parcelable {
         return reactions;
     }
 
-    public Throwable getError() {
-        return error;
-    }
-
     public void setPostId(Integer postId) {
         this.postId = postId;
     }
@@ -353,6 +349,15 @@ public class PostDetails implements Parcelable {
                     Objects.equals(canLike, ((PostDetails) obj).canLike()) &&
                     Objects.equals(checkIn, ((PostDetails) obj).getCheckIn());
             if (reactions != null && ((PostDetails) obj).getReactions() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (taggedUsers != null && ((PostDetails) obj).getTaggedUsers() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (reactedUsers != null && ((PostDetails) obj).getReactedUsers() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (categories != null && ((PostDetails) obj).getCategories() != null) {
                 result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
             }
         } else result = false;

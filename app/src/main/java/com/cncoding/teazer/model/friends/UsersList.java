@@ -1,5 +1,7 @@
 package com.cncoding.teazer.model.friends;
 
+import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.MiniProfile;
 
 import java.util.ArrayList;
@@ -9,10 +11,9 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class UsersList {
+public class UsersList extends BaseModel {
     private boolean next_page;
     private ArrayList<MiniProfile> users;
-    private Throwable error;
 
     public UsersList(boolean next_page, ArrayList<MiniProfile> users) {
         this.next_page = next_page;
@@ -23,15 +24,16 @@ public class UsersList {
         this.error = error;
     }
 
-    public Throwable getError() {
-        return error;
-    }
-
     public boolean isNextPage() {
         return next_page;
     }
 
     public ArrayList<MiniProfile> getUsers() {
         return users;
+    }
+
+    public UsersList setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 }

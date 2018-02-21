@@ -9,7 +9,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cncoding.teazer.home.post.PostDetailsActivity"
+        tools:fragment="com.cncoding.teazer.home.post.PostDetailsActivity"
         android:id="@+id/root_layout"
         android:background="@color/material_grey100"
         android:paddingBottom="?attr/actionBarSize"
@@ -65,7 +65,7 @@
 
                     <LinearLayout
                         android:id="@+id/top_layout"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginTop="5dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:gravity="end"
+                        android:gravity="end|center_vertical"
                         app:drawableStartCompat="@drawable/ic_volume_up"
                         android:paddingTop="@dimen/padding_half"
                         android:paddingBottom="@dimen/padding_half"

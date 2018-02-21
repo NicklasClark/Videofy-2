@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -503,11 +502,12 @@ public class FragmentReactionplayer extends BaseFragment {
 
     private void likeAction(boolean isLiked, boolean animate) {
         if (isLiked) {
-            likeBtn.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_like_filled));
+            likeBtn.setImageResource(R.drawable.ic_like_filled);
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+                        if (PostsListFragment.postDetails != null)
+                            PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;
@@ -516,11 +516,12 @@ public class FragmentReactionplayer extends BaseFragment {
             }
 
         } else {
-            likeBtn.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_like_outline));
+            likeBtn.setImageResource(R.drawable.ic_like_outline);
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+                        if (PostsListFragment.postDetails != null)
+                            PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;

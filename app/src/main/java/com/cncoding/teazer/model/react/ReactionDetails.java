@@ -13,13 +13,13 @@ import com.cncoding.teazer.model.base.MiniProfile;
 public class ReactionDetails implements Parcelable {
     private int react_id;
     private int post_id;
-    private int post_owner_id;
     private String react_title;
+    private int post_owner_id;
     private int likes;
     private int views;
     private boolean can_like;
-    private boolean my_self;
     private boolean can_delete;
+    private boolean my_self;
     private MediaDetail media_detail;
     private MiniProfile react_owner;
     private String reacted_at;

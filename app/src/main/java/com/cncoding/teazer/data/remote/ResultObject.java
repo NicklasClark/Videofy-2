@@ -1,6 +1,6 @@
 package com.cncoding.teazer.data.remote;
 
-import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.CallType;
+import com.cncoding.teazer.utilities.Annotations.AuthCallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +17,8 @@ public class ResultObject {
     @SerializedName("status") @Expose private Boolean status;
     @SerializedName("errorBody") @Expose private ErrorBody errorBody;
     @SerializedName("user_id") @Expose private Integer userId;
-    @CallType private int callType;
+    @AuthCallType
+    private int callType;
     private Throwable error;
 
     public ResultObject(Integer code, String message, String authToken, Boolean status, ErrorBody errorBody, Integer userId) {
@@ -81,11 +82,16 @@ public class ResultObject {
         error = null;
     }
 
-    @CallType public int getCallType() {
+    @AuthCallType
+    public int getCallType() {
         return callType;
     }
 
-    public void setCallType(@CallType int callType) {
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public void setCallType(@AuthCallType int callType) {
         this.callType = callType;
     }
 }

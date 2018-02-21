@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -77,4 +79,12 @@ public class Category extends ViewModel implements Parcelable {
         return my_color;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Category &&
+                ((Category) obj).getCategoryId() == category_id &&
+                Objects.equals(((Category) obj).getCategoryName(), category_name) &&
+                Objects.equals(((Category) obj).getColor(), color) &&
+                Objects.equals(((Category) obj).getMyColor(), my_color);
+    }
 }

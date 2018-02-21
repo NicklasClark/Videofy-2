@@ -10,6 +10,12 @@ import android.util.AttributeSet;
  */
 
 public class CustomStaggeredGridLayoutManager extends StaggeredGridLayoutManager {
+
+    @Override
+    public boolean supportsPredictiveItemAnimations() {
+        return false;
+    }
+
     public CustomStaggeredGridLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

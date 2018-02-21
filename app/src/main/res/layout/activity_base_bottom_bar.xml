@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:animateLayoutChanges="true"
-    tools:context="com.cncoding.teazer.BaseBottomBarActivity">
+    tools:fragment="com.cncoding.teazer.BaseBottomBarActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

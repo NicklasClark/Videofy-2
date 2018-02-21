@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -22,12 +23,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ClientProvider {
 
-//    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static Retrofit retrofitWithAuthToken;
     private static Retrofit retrofitWithoutAuthToken;
 
     public static Retrofit getRetrofitWithAuthToken(@NonNull final String token) {
         if (retrofitWithAuthToken == null) {
+            retrofitWithoutAuthToken = null;
             retrofitWithAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -40,6 +42,7 @@ public class ClientProvider {
 
     public static Retrofit getRetrofitWithoutAuthToken() {
         if (retrofitWithoutAuthToken == null) {
+            retrofitWithAuthToken = null;
             retrofitWithoutAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -68,7 +71,7 @@ public class ClientProvider {
                         }
                     }
                 })
-//                .addInterceptor(logging)
+                .addInterceptor(logging)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .build();
@@ -76,7 +79,7 @@ public class ClientProvider {
 
     @NonNull private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
-//                .addInterceptor(logging)
+                .addInterceptor(logging)
                 .build();
     }
 
