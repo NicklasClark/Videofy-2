@@ -44,7 +44,7 @@ public class AddWaterMarkAsyncTask extends AsyncTask<String, Void, String> {
             videoFolder.mkdirs();
         }
 
-        Bitmap bitMap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        Bitmap bitMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.teazer_watermark_logo);
 
         String fileName ="watermark_logo.png";
         String mPath = null;
