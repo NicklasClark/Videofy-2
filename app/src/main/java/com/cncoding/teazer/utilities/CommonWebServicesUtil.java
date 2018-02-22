@@ -10,8 +10,6 @@ import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.PostReactDetail;
-import com.cncoding.teazer.model.react.ReactOwner;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.user.NotificationsList;
 
@@ -111,18 +109,18 @@ public class CommonWebServicesUtil {
                     public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
                         if (response.code() == 200) {
                             if (response.body() != null) {
-                                PostReactDetail postReactDetail = response.body().getPostReactDetail();
-                                ReactOwner reactOwner = postReactDetail.getReactOwner();
+                                PostReaction postReactDetail = response.body().getPostReactDetail();
+                                MiniProfile reactOwner = postReactDetail.getReactOwner();
                                 MiniProfile miniProfile = new MiniProfile(reactOwner.getUserId(), reactOwner.getUserName(), reactOwner.getFirstName(),
-                                        reactOwner.getLastName(), reactOwner.getHasProfileMedia(), reactOwner.getProfileMedia());
+                                        reactOwner.getLastName(), reactOwner.hasProfileMedia(), reactOwner.getProfileMedia());
 
                                 PostReaction postReaction = new PostReaction(postReactDetail.getReactId(), postReactDetail.getReactTitle(),
                                         postReactDetail.getPostOwnerId(), postReactDetail.getLikes(), postReactDetail.getViews(),
-                                        postReactDetail.getCanLike(), postReactDetail.getCanDelete(),
+                                        postReactDetail.canLike(), postReactDetail.canDelete(),
                                         postReactDetail.getMediaDetail(), miniProfile, postReactDetail.getReactedAt());
 
                                 //play video in exo player
-                                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }

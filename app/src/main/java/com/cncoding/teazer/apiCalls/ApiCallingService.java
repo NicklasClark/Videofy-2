@@ -10,13 +10,14 @@ import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.discover.LandingPosts;
 import com.cncoding.teazer.model.discover.VideosList;
 import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.discover.LandingPosts;
+import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
@@ -25,7 +26,7 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
-import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -554,8 +555,9 @@ public class ApiCallingService {
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
         }
-        public static Call<ReactVideoDetailsResponse> getReactionDetail2(int reactId, Context context) {
-            return getReactService(context).getReactionDetail2(reactId);
+
+        public static Call<ResultObject> createReactionByGiphy(GiphyReactionRequest giphyReactionRequest, Context context) {
+            return getReactService(context).createReactionByGiphy(giphyReactionRequest);
         }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
@@ -749,6 +751,28 @@ public class ApiCallingService {
         }
     }
 
+    public static class Giphy {
+
+        public static Call<TrendingGiphy> getTrendingGiphys(Context context, String api_key, int limit, int offset, String rating) {
+            return getGiphyService(context).getTrendingGiphys(api_key, limit, offset, rating);
+        }
+
+        public static Call<TrendingGiphy> searchGiphy(Context context, String api_key, int limit, int offset, String rating, String lang, String query) {
+            return getGiphyService(context).searchGiphy(api_key, limit, offset, rating, lang, query);
+        }
+
+        private static TeazerApiCall.GiphyCalls getGiphyService(Context context) {
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(context.getString(R.string.giphy_base_url))
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
+                    .build();
+            return retrofit.create(TeazerApiCall.GiphyCalls.class);
+        }
+    }
+
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,
                                                        final ProximaNovaRegularAutoCompleteTextView view,
                                                        final boolean isSignUp) {
@@ -797,11 +821,14 @@ public class ApiCallingService {
                 })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-//                .addInterceptor(logging)
                 .build();
+//                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {
-        return new OkHttpClient.Builder().addInterceptor(logging).build();
+        return new OkHttpClient.Builder()
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(logging).build();
     }
 }

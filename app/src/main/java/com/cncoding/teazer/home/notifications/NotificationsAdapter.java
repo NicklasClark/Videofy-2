@@ -38,7 +38,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.user.Notification;
 import com.cncoding.teazer.model.user.NotificationsList;
 
@@ -51,8 +51,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.Annotations.PUBLIC_ACCOUNT;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -199,10 +199,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN ) {
 
                                 if(holder1.notification.getMetaData().getPostId()!=0) {
-                                    ApiCallingService.React.getReactionDetail2(holder1.notification.getMetaData().getSourceId(), context)
-                                            .enqueue(new Callback<ReactVideoDetailsResponse>() {
+                                    ApiCallingService.React.getReactionDetail(holder1.notification.getMetaData().getSourceId(), context)
+                                            .enqueue(new Callback<ReactionResponse>() {
                                                 @Override
-                                                public void onResponse(Call<ReactVideoDetailsResponse> call, Response<ReactVideoDetailsResponse> response) {
+                                                public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
                                                     if (response.code() == 200) {
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
@@ -219,7 +219,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 }
 
                                                 @Override
-                                                public void onFailure(Call<ReactVideoDetailsResponse> call, Throwable t) {
+                                                public void onFailure(Call<ReactionResponse> call, Throwable t) {
                                                     Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
@@ -248,8 +248,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                     }
                             }
-
-
 
 //                            else if (holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
 //                                    holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {

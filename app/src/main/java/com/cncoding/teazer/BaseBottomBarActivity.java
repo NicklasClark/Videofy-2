@@ -37,6 +37,7 @@ import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowin
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter.ReactionPlayerListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
@@ -52,10 +53,8 @@ import com.cncoding.teazer.home.discover.SubDiscoverFragment;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
-import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser.CallProfileListener;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter.TaggedListInteractionListener;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
@@ -65,12 +64,13 @@ import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.MyReactions;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
@@ -121,7 +121,7 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROG
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
@@ -149,16 +149,14 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnInterestsInteractionListener, onPostOptionsClickListener,
+        OnInterestsInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
         CallProfileListener, TaggedListInteractionListener, ReactionPlayerListener {
-    
-    public static final int ACTION_VIEW_POST = 0;
-    public static final int ACTION_VIEW_PROFILE = 123;
+
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final String POST_ID = "post_id";
@@ -191,6 +189,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
     PostDetails postDetails;
+//    private Call<ReactionResponse> postGiphyCall;
 
     @Contract(value = " -> !null", pure = true)
     private BaseBottomBarActivity getThis() {
@@ -211,7 +210,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-//       Log.d("FCM", SharedPrefs.getFcmToken(this));
+//        Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()
@@ -238,8 +237,6 @@ public class BaseBottomBarActivity extends BaseActivity
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-//        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
         fragmentHistory = new FragmentHistory();
 
@@ -463,7 +460,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 //noinspection ConstantConditions
                 Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
-//                Bundle likedUserProfile = intent.getExtras().getBundle("LikedUserprofileBundle");
+//                Bundle likedUserProfile = intent.getExtras().getBundle("LikedUserProfileBundle");
 
                 if (notificationBundle != null) {
                     Log.d("NOTIFY", "BUNDLE Exists on new Intent");
@@ -563,14 +560,14 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         else {
             if(post_id!=0) {
-                ApiCallingService.React.getReactionDetail2(source_id, getApplicationContext())
-                        .enqueue(new Callback<ReactVideoDetailsResponse>() {
+                ApiCallingService.React.getReactionDetail(source_id, getApplicationContext())
+                        .enqueue(new Callback<ReactionResponse>() {
                             @Override
-                            public void onResponse(Call<ReactVideoDetailsResponse> call, Response<ReactVideoDetailsResponse> response) {
+                            public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
                                 if (response.code() == 200) {
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
-                                        pushFragment(FragmentReactionplayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null));
+                                        pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null));
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                     }
@@ -579,7 +576,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             }
 
                             @Override
-                            public void onFailure(Call<ReactVideoDetailsResponse> call, Throwable t) {
+                            public void onFailure(Call<ReactionResponse> call, Throwable t) {
                                 Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -605,11 +602,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                             }
                         });
-
             }
-
         }
-
     }
 
     private void getBranchDynamicLinks() {
@@ -941,8 +935,11 @@ public class BaseBottomBarActivity extends BaseActivity
     private void checkIfAnyVideoIsUploading() {
         UploadParams videoUploadParams = getVideoUploadSession(getApplicationContext());
         if (videoUploadParams != null) {
-            setupVideoUploadServiceReceiver(videoUploadParams);
-            launchVideoUploadService(this, videoUploadParams, videoUploadReceiver);
+            if (!videoUploadParams.isGiphy()) {
+                setupVideoUploadServiceReceiver(videoUploadParams);
+                launchVideoUploadService(this, videoUploadParams, videoUploadReceiver);
+            }
+            else postGiphyReaction(videoUploadParams);
         }
         UploadParams reactionUploadParams = getReactionUploadSession(getApplicationContext());
         if (reactionUploadParams != null) {
@@ -1071,6 +1068,25 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.body().getCode() == 200)
+                    Toast.makeText(BaseBottomBarActivity.this, "Reaction posted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(BaseBottomBarActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void refreshPosts() {
         if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
             PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
@@ -1152,10 +1168,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
-    @Override
-    public void onPostLikedClicked(PostDetails postDetails) {
-        pushFragment(FragmentLikedUser.newInstance(postDetails));
-    }
+//    @Override
+//    public void onPostLikedClicked(PostDetails postDetails) {
+//        pushFragment(FragmentLikedUser.newInstance(postDetails));
+//    }
 
     @OnClick(R.id.btnToolbarBack)
     public void onViewClicked() {
@@ -1163,8 +1179,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
-        pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction) {
+        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction,reaction));
     }
 
     @Override

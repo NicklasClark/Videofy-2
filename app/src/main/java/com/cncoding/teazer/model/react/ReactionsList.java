@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 public class ReactionsList extends BaseModel {
     private boolean next_page;
-    private ArrayList<Reactions> reactions;
+    private ArrayList<MyReactions> reactions;
 
-    public ReactionsList(boolean next_page, ArrayList<Reactions> reactions) {
+    public ReactionsList(boolean next_page, ArrayList<MyReactions> reactions) {
         this.next_page = next_page;
         this.reactions = reactions;
     }
@@ -32,7 +32,7 @@ public class ReactionsList extends BaseModel {
         return next_page;
     }
 
-    public ArrayList<Reactions> getReactions() {
+    public ArrayList<MyReactions> getReactions() {
         return reactions;
     }
 }
