@@ -20,11 +20,12 @@ import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.cncoding.teazer.TeazerApplication.get;
 import static com.cncoding.teazer.utilities.Annotations.NO_CALL;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 
@@ -36,12 +37,13 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 public abstract class BaseDiscoverFragment extends BaseFragment {
 
     protected static DiscoverViewModel viewModel;
+    protected int currentPage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = ViewModelProviders
-                .of(this, new AuthTokenViewModelFactory(get(getParentActivity()), getAuthToken(getContext())))
+                .of(this, new AuthTokenViewModelFactory(getAuthToken(getContext())))
                 .get(DiscoverViewModel.class);
     }
 
@@ -86,6 +88,10 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
                 handleLiveDataChange(videosList);
             }
         });
+    }
+
+    @Contract(pure = true) public DiscoverViewModel getViewModel() {
+        return viewModel;
     }
 
     private void handleLiveDataChange(BaseModel baseModel) {
@@ -167,8 +173,12 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
         viewModel.loadAllInterestedCategoriesPosts(page, categoryId);
     }
 
-    public void loadTrendingPosts(int page, int categoryId) {
-        viewModel.loadTrendingPosts(page, categoryId);
+    public void loadTrendingPostsByCategory(int page, int categoryId) {
+        viewModel.loadTrendingPostsByCategory(page, categoryId);
+    }
+
+    public void loadTrendingPosts(int page) {
+        viewModel.loadTrendingVideos(page);
     }
 
     public void loadUsersList(int page) {
@@ -181,6 +191,10 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
 
     public void loadVideosWithSearchTerm(int page, String searchTerm) {
         viewModel.loadVideosWithSearchTerm(page, searchTerm);
+    }
+
+    public void loadTrendingVideos(int page) {
+        viewModel.loadTrendingVideos(page);
     }
 
     protected abstract void handleResponse(BaseModel resultObject);

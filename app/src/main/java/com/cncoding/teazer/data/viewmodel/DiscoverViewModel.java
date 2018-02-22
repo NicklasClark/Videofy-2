@@ -24,38 +24,19 @@ public class DiscoverViewModel extends ViewModel {
     private MediatorLiveData<LandingPostsV2> landingPostsLiveData;
     private MediatorLiveData<PostList> postListLiveData;
     private MediatorLiveData<PostList> mostPopularLiveData;
-//    private MediatorLiveData<PostList> featuredPostsLiveData;
-//    private MediatorLiveData<PostList> interestedCategoriesPostsLiveData;
-//    private MediatorLiveData<PostList> trendingPostsLiveData;
     private MediatorLiveData<UsersList> usersLiveData;
     private MediatorLiveData<VideosList> videosLiveData;
-    private DiscoverRepository apiRepository;
-
-//    @Inject public DiscoverViewModel(@NonNull Application application, MediatorLiveData<LandingPostsV2> landingPostsLiveData,
-//                             MediatorLiveData<PostList> mostPopularLiveData, MediatorLiveData<PostList> featuredPostsLiveData,
-//                             MediatorLiveData<PostList> interestedCategoriesPostsLiveData, MediatorLiveData<PostList> trendingPostsLiveData,
-//                             MediatorLiveData<UsersList> usersLiveData, MediatorLiveData<VideosList> videosLiveData,
-//                             DiscoverRepository apiRepository) {
-//        super(application);
-//        this.landingPostsLiveData = landingPostsLiveData;
-//        this.mostPopularLiveData = mostPopularLiveData;
-//        this.featuredPostsLiveData = featuredPostsLiveData;
-//        this.interestedCategoriesPostsLiveData = interestedCategoriesPostsLiveData;
-//        this.trendingPostsLiveData = trendingPostsLiveData;
-//        this.usersLiveData = usersLiveData;
-//        this.videosLiveData = videosLiveData;
-//        this.apiRepository = apiRepository;
-//    }
+    private DiscoverRepository discoverRepository;
 
     @Inject DiscoverViewModel(MediatorLiveData<LandingPostsV2> landingPostsLiveData, MediatorLiveData<PostList> postListLiveData,
-                      MediatorLiveData<PostList> mostPopularLiveData, MediatorLiveData<UsersList> usersLiveData,
-                      MediatorLiveData<VideosList> videosLiveData, DiscoverRepository apiRepository) {
+                              MediatorLiveData<PostList> mostPopularLiveData, MediatorLiveData<UsersList> usersLiveData,
+                              MediatorLiveData<VideosList> videosLiveData, DiscoverRepository discoverRepository) {
         this.landingPostsLiveData = landingPostsLiveData;
         this.postListLiveData = postListLiveData;
         this.mostPopularLiveData = mostPopularLiveData;
         this.usersLiveData = usersLiveData;
         this.videosLiveData = videosLiveData;
-        this.apiRepository = apiRepository;
+        this.discoverRepository = discoverRepository;
     }
 
     public DiscoverViewModel(String token) {
@@ -64,7 +45,7 @@ public class DiscoverViewModel extends ViewModel {
         mostPopularLiveData = new MediatorLiveData<>();
         usersLiveData = new MediatorLiveData<>();
         videosLiveData = new MediatorLiveData<>();
-        apiRepository = new DiscoverRepositoryImpl(token);
+        discoverRepository = new DiscoverRepositoryImpl(token);
     }
 
     //region Getters
@@ -80,18 +61,6 @@ public class DiscoverViewModel extends ViewModel {
         return mostPopularLiveData;
     }
 
-//    public MediatorLiveData<PostList> getFeaturedPosts() {
-//        return featuredPostsLiveData;
-//    }
-//
-//    public MediatorLiveData<PostList> getInterestedCategoriesPosts() {
-//        return interestedCategoriesPostsLiveData;
-//    }
-//
-//    public MediatorLiveData<PostList> getTrendingPosts() {
-//        return trendingPostsLiveData;
-//    }
-
     public MediatorLiveData<UsersList> getUsersList() {
         return usersLiveData;
     }
@@ -105,7 +74,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadLandingPosts() {
         try {
             landingPostsLiveData.addSource(
-                    apiRepository.getNewDiscoverLandingPosts(),
+                    discoverRepository.getNewDiscoverLandingPosts(),
                     new Observer<LandingPostsV2>() {
                         @Override
                         public void onChanged(@Nullable LandingPostsV2 landingPostsV2) {
@@ -122,7 +91,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadMostPopularPosts(int page) {
         try {
             mostPopularLiveData.addSource(
-                    apiRepository.getAllMostPopularVideos(page),
+                    discoverRepository.getAllMostPopularVideos(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -138,7 +107,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadFeaturedPosts(int page) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getFeaturedPosts(page),
+                    discoverRepository.getFeaturedPosts(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -154,7 +123,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadAllInterestedCategoriesPosts(int page, int categoryId) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getAllInterestedCategoriesVideos(page, categoryId),
+                    discoverRepository.getAllInterestedCategoriesVideos(page, categoryId),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -167,10 +136,10 @@ public class DiscoverViewModel extends ViewModel {
         }
     }
 
-    public void loadTrendingPosts(int page, int categoryId) {
+    public void loadTrendingPostsByCategory(int page, int categoryId) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getTrendingVideos(page, categoryId),
+                    discoverRepository.getTrendingVideosByCategory(page, categoryId),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -186,7 +155,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadUsersList(int page) {
         try {
             usersLiveData.addSource(
-                    apiRepository.getUsersListToFollow(page),
+                    discoverRepository.getUsersListToFollow(page),
                     new Observer<UsersList>() {
                         @Override
                         public void onChanged(@Nullable UsersList usersList) {
@@ -202,7 +171,7 @@ public class DiscoverViewModel extends ViewModel {
     public void loadUsersListWithSearchTerm(int page, String searchTerm) {
         try {
             usersLiveData.addSource(
-                    apiRepository.getUsersListToFollowWithSearchTerm(page, searchTerm),
+                    discoverRepository.getUsersListToFollowWithSearchTerm(page, searchTerm),
                     new Observer<UsersList>() {
                         @Override
                         public void onChanged(@Nullable UsersList usersList) {
@@ -215,10 +184,26 @@ public class DiscoverViewModel extends ViewModel {
         }
     }
 
+    public void loadTrendingVideos(int page) {
+        try {
+            videosLiveData.addSource(
+                    discoverRepository.getTrendingVideos(page),
+                    new Observer<VideosList>() {
+                        @Override
+                        public void onChanged(@Nullable VideosList videosList) {
+                            videosLiveData.setValue(videosList);
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadVideosWithSearchTerm(int page, String searchTerm) {
         try {
             videosLiveData.addSource(
-                    apiRepository.getVideosWithSearchTerm(page, searchTerm),
+                    discoverRepository.getVideosWithSearchTerm(page, searchTerm),
                     new Observer<VideosList>() {
                         @Override
                         public void onChanged(@Nullable VideosList videosList) {

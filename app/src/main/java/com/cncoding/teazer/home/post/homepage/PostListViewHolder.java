@@ -55,7 +55,7 @@ import im.ene.toro.media.PlaybackInfo;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.model.base.MiniProfile.MALE;
+import static com.cncoding.teazer.utilities.Annotations.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;

@@ -30,8 +30,6 @@ public interface PostsRepository {
 
     LiveData<ResultObject> deletePost(int postId);
 
-    LiveData<ResultObject> deletePostVideo(int postId);
-
     LiveData<ResultObject> reportPost(ReportPost reportPostDetails);
 
     LiveData<ResultObject> hideOrShowPost(int postId, int status);
@@ -44,9 +42,7 @@ public interface PostsRepository {
 
     LiveData<PostList> getHomePagePosts(int page);
 
-    LiveData<PostList> getPostedVideos(int page);
-
-    LiveData<PostList> getVideosPostedByFriends(int page, int friendId);
+    LiveData<PostList> getMyPostedVideos(int page);
 
     LiveData<PostList> getVideosPostedByFriend(int page, int friendId);
 

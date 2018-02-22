@@ -349,7 +349,7 @@ public class LoginFragment extends AuthFragment {
     }
 
     @Override protected void handleResponse(ResultObject resultObject) {
-        switch (resultObject.getCallType()) {
+        switch (resultObject.getAuthCallType()) {
             case CHECK_USERNAME_AVAILABILITY:
                 markValidity(resultObject.getStatus());
                 break;

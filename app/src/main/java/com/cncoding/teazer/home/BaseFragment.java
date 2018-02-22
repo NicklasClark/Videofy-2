@@ -26,7 +26,7 @@ public class BaseFragment extends Fragment implements NetworkStateListener {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
     private BaseRecyclerView.Adapter adapter;
-    protected boolean isConnected;
+    public boolean isConnected;
     private NetworkStateReceiver networkStateReceiver;
     protected Context context;
 

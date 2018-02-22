@@ -51,7 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.cncoding.teazer.MainActivity.PUBLIC_ACCOUNT;
+import static com.cncoding.teazer.utilities.Annotations.PUBLIC_ACCOUNT;
 import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 
 /**

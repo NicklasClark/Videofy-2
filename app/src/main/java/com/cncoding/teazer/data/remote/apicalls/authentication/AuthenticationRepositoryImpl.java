@@ -156,12 +156,12 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                 try {
                     if (response.isSuccessful()) {
                         ResultObject tempResultObject = response.body();
-                        tempResultObject.setCode(response.code());
-                        tempResultObject.setCallType(callType);
+                        tempResultObject.setCodeOnly(response.code());
+                        tempResultObject.setAuthCallType(callType);
                         if (tempResultObject.getStatus()) {
                             liveData.setValue(tempResultObject);
                         } else {
-                            liveData.setValue(tempResultObject.setError(new Throwable(STATUS_FALSE)));
+                            liveData.setValue(tempResultObject.setErrorOnly(new Throwable(STATUS_FALSE)));
                         }
                     } else
                         liveData.setValue(new ResultObject(new Throwable(NOT_SUCCESSFUL), callType));

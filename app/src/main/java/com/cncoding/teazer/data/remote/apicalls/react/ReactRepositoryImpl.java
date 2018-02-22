@@ -8,6 +8,7 @@ import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;
+import com.cncoding.teazer.utilities.Annotations;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -18,6 +19,7 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.resultObj
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
+import static com.cncoding.teazer.utilities.Annotations.*;
 
 /**
  *
@@ -38,7 +40,9 @@ public class ReactRepositoryImpl implements ReactRepository {
         reactService.uploadReaction(video, postId, title).enqueue(new Callback<ReactionUploadResult>() {
             @Override
             public void onResponse(Call<ReactionUploadResult> call, Response<ReactionUploadResult> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new ReactionUploadResult(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(Annotations.CALL_UPLOAD_REACTION) :
+                        new ReactionUploadResult(new Throwable(NOT_SUCCESSFUL)));
             }
 
             @Override
@@ -53,42 +57,42 @@ public class ReactRepositoryImpl implements ReactRepository {
     @Override
     public LiveData<ResultObject> likeDislikeReaction(int reactId, int status) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.likeDislikeReaction(reactId, status).enqueue(resultObjectCallback(liveData));
+        reactService.likeDislikeReaction(reactId, status).enqueue(resultObjectCallback(liveData, CALL_LIKE_DISLIKE_REACTION));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> incrementReactionViewCount(int mediaId) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.incrementReactionViewCount(mediaId).enqueue(resultObjectCallback(liveData));
+        reactService.incrementReactionViewCount(mediaId).enqueue(resultObjectCallback(liveData, CALL_INCREMENT_REACTION_VIEW_COUNT));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> deleteReaction(int reactId) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.deleteReaction(reactId).enqueue(resultObjectCallback(liveData));
+        reactService.deleteReaction(reactId).enqueue(resultObjectCallback(liveData, CALL_DELETE_REACTION));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> reportReaction(ReportReaction reportReaction) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.reportReaction(reportReaction).enqueue(resultObjectCallback(liveData));
+        reactService.reportReaction(reportReaction).enqueue(resultObjectCallback(liveData, CALL_REPORT_REACTION));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> hideOrShowReaction(int reactId, int status) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.hideOrShowReaction(reactId, status).enqueue(resultObjectCallback(liveData));
+        reactService.hideOrShowReaction(reactId, status).enqueue(resultObjectCallback(liveData, CALL_HIDE_OR_SHOW_REACTION));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> getHiddenReactions(int page) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        reactService.getHiddenReactions(page).enqueue(resultObjectCallback(liveData));
+        reactService.getHiddenReactions(page).enqueue(resultObjectCallback(liveData, CALL_GET_HIDDEN_REACTIONS));
         return liveData;
     }
 
@@ -98,13 +102,15 @@ public class ReactRepositoryImpl implements ReactRepository {
         reactService.getMyReactions(page).enqueue(new Callback<ReactionsList>() {
             @Override
             public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new ReactionsList(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_MY_REACTIONS) :
+                        new ReactionsList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_MY_REACTIONS));
             }
 
             @Override
             public void onFailure(Call<ReactionsList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new ReactionsList(new Throwable(FAILED)));
+                liveData.setValue(new ReactionsList(new Throwable(FAILED)).setCallType(CALL_GET_MY_REACTIONS));
             }
         });
         return liveData;
@@ -116,13 +122,15 @@ public class ReactRepositoryImpl implements ReactRepository {
         reactService.getReactionDetail(reactId).enqueue(new Callback<ReactionResponse>() {
             @Override
             public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new ReactionResponse(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_MY_REACTIONS) :
+                        new ReactionResponse(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_MY_REACTIONS));
             }
 
             @Override
             public void onFailure(Call<ReactionResponse> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new ReactionResponse(new Throwable(FAILED)));
+                liveData.setValue(new ReactionResponse(new Throwable(FAILED)).setCallType(CALL_GET_MY_REACTIONS));
             }
         });
         return liveData;

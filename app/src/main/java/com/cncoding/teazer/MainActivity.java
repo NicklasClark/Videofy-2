@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
         OnForgotPasswordInteractionListener, OnResetForgotPasswordInteractionListener, OnInterestsInteractionListener {
 
-    public static final int PRIVATE_ACCOUNT = 1;
-    public static final int PUBLIC_ACCOUNT = 2;
-
     public static final int DEVICE_TYPE_ANDROID = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";

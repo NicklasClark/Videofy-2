@@ -1,10 +1,10 @@
 package com.cncoding.teazer.model.friends;
 
-import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class UsersList extends BaseModel {
     private boolean next_page;
-    private ArrayList<MiniProfile> users;
+    private List<MiniProfile> users;
 
-    public UsersList(boolean next_page, ArrayList<MiniProfile> users) {
+    public UsersList(boolean next_page, List<MiniProfile> users) {
         this.next_page = next_page;
         this.users = users;
     }
@@ -28,7 +28,7 @@ public class UsersList extends BaseModel {
         return next_page;
     }
 
-    public ArrayList<MiniProfile> getUsers() {
+    public List<MiniProfile> getUsers() {
         return users;
     }
 

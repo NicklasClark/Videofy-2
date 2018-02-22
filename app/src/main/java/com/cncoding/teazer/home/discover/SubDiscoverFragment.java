@@ -232,7 +232,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
     
     private void getTrendingVideos(int page) {
-        loadTrendingPosts(page, categories.get(0).getCategoryId());
+        loadTrendingPostsByCategory(page, categories.get(0).getCategoryId());
     }
     
     private void getFeaturedPosts(int page) {

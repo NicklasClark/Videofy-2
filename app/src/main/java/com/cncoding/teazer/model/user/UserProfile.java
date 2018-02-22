@@ -3,27 +3,29 @@ package com.cncoding.teazer.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class UserProfile implements Parcelable {
+public class UserProfile extends BaseModel implements Parcelable {
     private PublicProfile user_profile;
     private int followers;
     private int followings;
     private int total_videos;
     private boolean can_change_password;
-    private Throwable error;
 
     public UserProfile(Throwable error) {
         this.error = error;
     }
 
-    public Throwable getError() {
-        return error;
+    public UserProfile setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     protected UserProfile(Parcel in) {

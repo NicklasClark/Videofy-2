@@ -25,7 +25,9 @@ public interface DiscoverRepository {
 
     LiveData<PostList> getAllInterestedCategoriesVideos(int page, int categoryId);
 
-    LiveData<PostList> getTrendingVideos(int page, int categoryId);
+    LiveData<PostList> getTrendingVideosByCategory(int page, int categoryId);
+
+    LiveData<VideosList> getTrendingVideos(int page);
 
     LiveData<UsersList> getUsersListToFollow(int page);
 

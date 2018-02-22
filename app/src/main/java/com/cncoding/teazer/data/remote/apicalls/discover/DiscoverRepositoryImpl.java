@@ -15,6 +15,7 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.postListCallback;
 import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.usersListCallback;
+import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.videosListCallback;
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
@@ -22,7 +23,8 @@ import static com.cncoding.teazer.utilities.Annotations.CALL_ALL_INTERESTED_CATE
 import static com.cncoding.teazer.utilities.Annotations.CALL_FEATURED_POSTS;
 import static com.cncoding.teazer.utilities.Annotations.CALL_LANDING_POSTS;
 import static com.cncoding.teazer.utilities.Annotations.CALL_MOST_POPULAR_POSTS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_TRENDING_POSTS;
+import static com.cncoding.teazer.utilities.Annotations.CALL_TRENDING_POSTS_BY_CATEGORY;
+import static com.cncoding.teazer.utilities.Annotations.CALL_TRENDING_VIDEOS;
 import static com.cncoding.teazer.utilities.Annotations.CALL_USERS_LIST;
 import static com.cncoding.teazer.utilities.Annotations.CALL_USERS_LIST_WITH_SEARCH_TERM;
 import static com.cncoding.teazer.utilities.Annotations.CALL_VIDEOS_LIST_WITH_SEARCH_TERM;
@@ -70,9 +72,15 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
         return liveData;
     }
 
-    @Override public LiveData<PostList> getTrendingVideos(int page, int categoryId) {
+    @Override public LiveData<PostList> getTrendingVideosByCategory(int page, int categoryId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        discoverService.getTrendingVideos(page, categoryId).enqueue(postListCallback(liveData, CALL_TRENDING_POSTS));
+        discoverService.getTrendingVideosByCategory(page, categoryId).enqueue(postListCallback(liveData, CALL_TRENDING_POSTS_BY_CATEGORY));
+        return liveData;
+    }
+
+    @Override public LiveData<VideosList> getTrendingVideos(int page) {
+        final MutableLiveData<VideosList> liveData = new MutableLiveData<>();
+        discoverService.getTrendingVideos(page).enqueue(videosListCallback(liveData, CALL_TRENDING_VIDEOS));
         return liveData;
     }
 
@@ -98,19 +106,7 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
 
     @Override public LiveData<VideosList> getVideosWithSearchTerm(int page, String searchTerm) {
         final MutableLiveData<VideosList> liveData = new MutableLiveData<>();
-        discoverService.getVideosWithSearchTerm(page, searchTerm).enqueue(new Callback<VideosList>() {
-            @Override
-            public void onResponse(Call<VideosList> call, Response<VideosList> response) {
-                VideosList videosList = response.body().setCallType(CALL_VIDEOS_LIST_WITH_SEARCH_TERM);
-                liveData.setValue(response.isSuccessful() ? videosList : new VideosList(new Throwable(NOT_SUCCESSFUL)));
-            }
-
-            @Override
-            public void onFailure(Call<VideosList> call, Throwable t) {
-                t.printStackTrace();
-                liveData.setValue(new VideosList(new Throwable(FAILED)).setCallType(CALL_VIDEOS_LIST_WITH_SEARCH_TERM));
-            }
-        });
+        discoverService.getVideosWithSearchTerm(page, searchTerm).enqueue(videosListCallback(liveData, CALL_VIDEOS_LIST_WITH_SEARCH_TERM));
         return liveData;
     }
 

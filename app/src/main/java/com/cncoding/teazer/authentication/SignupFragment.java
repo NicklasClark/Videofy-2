@@ -224,7 +224,7 @@ public class SignupFragment extends AuthFragment {
 
     @Override
     protected void handleResponse(ResultObject resultObject) {
-        if (resultObject.getCallType() == Annotations.CHECK_USERNAME_AVAILABILITY) {
+        if (resultObject.getAuthCallType() == Annotations.CHECK_USERNAME_AVAILABILITY) {
             setEditTextDrawableEnd(usernameView, resultObject.getStatus() ? R.drawable.ic_cross :
                     R.drawable.ic_tick_circle);
         }

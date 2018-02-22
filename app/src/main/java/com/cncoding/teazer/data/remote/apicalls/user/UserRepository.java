@@ -3,7 +3,7 @@ package com.cncoding.teazer.data.remote.apicalls.user;
 import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.data.remote.apicalls.user.UserRepositoryImpl.AccountType;
+import com.cncoding.teazer.utilities.Annotations.AccountType;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.updatemobilenumber.UpdateMobileNumber;
 import com.cncoding.teazer.model.user.DeactivateAccountRequest;

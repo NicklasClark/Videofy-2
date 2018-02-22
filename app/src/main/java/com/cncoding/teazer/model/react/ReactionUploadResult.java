@@ -3,19 +3,20 @@ package com.cncoding.teazer.model.react;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class ReactionUploadResult implements Parcelable {
+public class ReactionUploadResult extends BaseModel implements Parcelable {
     private boolean status;
     private int react_id;
     private String message;
     private PostReaction post_react_detail;
-    private Throwable error;
 
     public ReactionUploadResult(boolean status, int react_id, String message, PostReaction post_react_detail) {
         this.status = status;
@@ -26,6 +27,11 @@ public class ReactionUploadResult implements Parcelable {
 
     public ReactionUploadResult(Throwable error) {
         this.error = error;
+    }
+
+    public ReactionUploadResult setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     protected ReactionUploadResult(Parcel in) {
@@ -59,10 +65,6 @@ public class ReactionUploadResult implements Parcelable {
             return new ReactionUploadResult[size];
         }
     };
-
-    public Throwable getError() {
-        return error;
-    }
 
     public boolean getStatus() {
         return status;

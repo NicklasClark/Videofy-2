@@ -13,6 +13,7 @@ import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -79,6 +80,11 @@ public class PostDetails extends BaseModel implements Parcelable {
 
     @Ignore public PostDetails(Throwable error) {
         this.error = error;
+    }
+
+    public PostDetails setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     protected PostDetails(Parcel in) {

@@ -49,7 +49,6 @@ import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
-import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscoverSearchInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
@@ -78,7 +77,6 @@ import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.cncoding.teazer.utilities.ViewUtils;
 import com.expletus.mobiruck.MobiruckEvent;
 import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
@@ -152,8 +150,6 @@ public class BaseBottomBarActivity extends BaseActivity
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
         OnInterestsInteractionListener, onPostOptionsClickListener,
-//    Discover page listeners
-        OnDiscoverSearchInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
@@ -1087,31 +1083,6 @@ public class BaseBottomBarActivity extends BaseActivity
     //</editor-fold>
 
     //<editor-fold desc="Fragment listener implementations">
-    @Override
-    public void onDiscoverSearchInteraction(boolean isVideosTab, int id) {
-        ViewUtils.hideKeyboard(this, bottomTabLayout);
-        if (isVideosTab) {
-            ApiCallingService.Posts.getPostDetails(id, this)
-                    .enqueue(new Callback<PostDetails>() {
-                        @Override
-                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                            if (response.code() == 200) {
-                                pushFragment(FragmentPostDetails.newInstance(response.body(),
-                                        null, false, false, null, null));
-                            } else
-                                Log.e("Fetching post details", response.code() + "_" + response.message());
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
-                        }
-                    });
-        } else {
-            pushFragment(OthersProfileFragment.newInstance(String.valueOf(id), "Other", "username"));
-        }
-    }
-
     @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {

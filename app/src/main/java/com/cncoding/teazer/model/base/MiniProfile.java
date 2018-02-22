@@ -4,13 +4,11 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.Gender;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
  *
@@ -18,14 +16,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 @Entity
-public class MiniProfile implements Parcelable {
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({MALE, FEMALE})
-    public @interface Gender {}
-
-    public static final int MALE = 1;
-    public static final int FEMALE = 2;
+public class MiniProfile extends BaseModel implements Parcelable {
 
     @SerializedName("user_id") @Expose private Integer userId;
     @SerializedName("user_name") @Expose private String userName;

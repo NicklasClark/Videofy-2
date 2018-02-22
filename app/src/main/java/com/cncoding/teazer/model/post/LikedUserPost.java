@@ -1,5 +1,7 @@
 package com.cncoding.teazer.model.post;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,19 +12,18 @@ import java.util.List;
  * Created by farazhabib on 29/12/17.
  */
 
-public class LikedUserPost {
+public class LikedUserPost extends BaseModel {
 
-
-    @SerializedName("next_page")
-    @Expose
-    private Boolean nextPage;
-    @SerializedName("liked_users")
-    @Expose
-    private List<LikedUser> likedUsers = null;
-    private Throwable error;
+    @SerializedName("next_page") @Expose private Boolean nextPage;
+    @SerializedName("liked_users") @Expose private List<LikedUser> likedUsers = null;
 
     public LikedUserPost(Throwable error) {
         this.error = error;
+    }
+
+    public LikedUserPost setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     public Throwable getError() {

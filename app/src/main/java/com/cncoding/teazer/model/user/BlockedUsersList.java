@@ -1,5 +1,7 @@
 package com.cncoding.teazer.model.user;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Created by farazhabib on 28/11/17.
  */
 
-public class BlockedUsersList {
+public class BlockedUsersList extends BaseModel {
 
     @SerializedName("next_page")
     @Expose
@@ -18,14 +20,14 @@ public class BlockedUsersList {
     @SerializedName("blocked_users")
     @Expose
     private List<BlockedUser> blockedUsers = null;
-    private Throwable error;
 
     public BlockedUsersList(Throwable error) {
         this.error = error;
     }
 
-    public Throwable getError() {
-        return error;
+    public BlockedUsersList setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     public Boolean getNextPage() {

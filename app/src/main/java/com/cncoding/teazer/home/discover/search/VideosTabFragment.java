@@ -6,47 +6,37 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.discover.Videos;
+import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.discover.VideosList;
-
-import java.util.ArrayList;
-import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
 
-public class VideosTabFragment extends BaseFragment {
+public class VideosTabFragment extends BaseDiscoverFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
-    @BindView(R.id.no_posts_2)
-    ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
-    private Call<VideosList> videosListCall;
-    private TreeSet<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
     private boolean isSearchTerm;
 
-    public VideosTabFragment() {
-    }
+    public VideosTabFragment() {}
 
     public static VideosTabFragment newInstance(String searchTerm) {
         VideosTabFragment fragment = new VideosTabFragment();
@@ -56,28 +46,31 @@ public class VideosTabFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
-            isSearchTerm = searchTerm != null && !searchTerm.equals("");
+            isSearchTerm = searchTerm != null && !searchTerm.isEmpty();
         }
-        videosList = new TreeSet<>();
+        currentPage = 1;
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+        adapter = new DiscoverSearchAdapter(this, true, isSearchTerm);
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(context, VERTICAL, false));
+        recyclerView.setAdapter(adapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (is_next_page)
+                if (is_next_page) {
+                    is_next_page = false;
+                    currentPage = page;
                     getVideos(page);
+                }
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -89,111 +82,57 @@ public class VideosTabFragment extends BaseFragment {
                 scrollListener.resetState();
             }
         });
-
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
-            getVideos(1);
-        } else {
-//            TODO: put list of trending videos here
-            noPosts.setVisibility(View.VISIBLE);
-            noPosts.setText(R.string.search_for_videos);
-            noPosts2.setVisibility(View.INVISIBLE);
-        }
-
-    }
-
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
-        if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
-            getVideos(1);
-        }
-        else {
-            noPosts.setVisibility(View.VISIBLE);
-            noPosts.setText(R.string.search_for_videos);
-            noPosts2.setVisibility(View.INVISIBLE);
+        getVideos(1);
+    }
+
+    private void getVideos(int page) {
+        if (isSearchTerm) loadVideosWithSearchTerm(page, searchTerm);
+        else loadTrendingVideos(page);
+    }
+
+    @Override protected void handleResponse(BaseModel resultObject) {
+        if (resultObject instanceof VideosList) {
+            VideosList videosList = (VideosList) resultObject;
+            is_next_page = videosList.isNextPage();
+            if (videosList.getVideos() != null && !videosList.getVideos().isEmpty()) {
+                dataAvailable();
+                adapter.updateVideosList(currentPage, videosList.getVideos());
+            }
+            else if (currentPage == 1) noDataAvailable();
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    private void getVideos(final int page) {
-        if (videosListCall != null && videosListCall.isExecuted())
-            videosListCall.cancel();
-
-        videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
-        
-        if (!videosListCall.isExecuted())
-            videosListCall.enqueue(new Callback<VideosList>() {
-                @Override
-                public void onResponse(Call<VideosList> call, Response<VideosList> response) {
-                    try {
-                        if (isAdded()) {
-                            if (response.code() == 200) {
-                                VideosList videos = response.body();
-                                is_next_page = videos.isNextPage();
-                                if (videos.getVideos() != null && videos.getVideos().size() > 0) {
-
-                                    if (page == 1) {
-                                        scrollListener.resetState();
-                                        videosList.clear();
-                                    }
-                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    noPosts.setVisibility(View.GONE);
-//                                    videosList.clear();
-                                    noPosts2.setVisibility(View.GONE);
-                                    videosList.addAll(videos.getVideos());
-                                    adapter = new DiscoverSearchAdapter(getParentActivity(), VideosTabFragment.this,
-                                            true, null, new ArrayList<>(videosList), isSearchTerm);
-                                    recyclerView.setAdapter(adapter);
-//                                    recyclerView.getRecycledViewPool().clear();
-                                    adapter.notifyDataSetChanged();
-                                } else {
-                                    if (page == 1 && videosList.isEmpty()) {
-                                        swipeRefreshLayout.setVisibility(View.GONE);
-                                        noPosts.setText(R.string.no_videos_match_your_search_criteria);
-                                        noPosts.setVisibility(View.VISIBLE);
-                                        noPosts2.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-                            } else {
-                                Log.e("videosListCallback", response.code() + "_" + response.message());
-                            }
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<VideosList> call, Throwable t) {
-                    if (isAdded()) {
-                        Log.e("videosListCallback", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-            });
+    @Override protected void handleError(BaseModel baseModel) {
+        baseModel.getError().printStackTrace();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onDetach() {
+    private void dataAvailable() {
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        noPosts.setVisibility(View.GONE);
+        noPosts2.setVisibility(View.GONE);
+    }
+
+    private void noDataAvailable() {
+        swipeRefreshLayout.setVisibility(View.GONE);
+        noPosts.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_no_data_placeholder, 0, 0);
+        noPosts.setText(R.string.no_videos_match_your_search_criteria);
+        noPosts.setVisibility(View.VISIBLE);
+        noPosts2.setVisibility(View.INVISIBLE);
+    }
+
+    @Override public void onDetach() {
         super.onDetach();
         try {
             noPosts.setText(R.string.search_for_videos);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (videosListCall != null && videosListCall.isExecuted())
-            videosListCall.cancel();
-        adapter = null;
     }
 }

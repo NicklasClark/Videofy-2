@@ -25,6 +25,7 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.resultObj
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
+import static com.cncoding.teazer.utilities.Annotations.*;
 
 /**
  *
@@ -43,56 +44,50 @@ public class PostsRepositoryImpl implements PostsRepository {
     public LiveData<PostUploadResult> uploadVideo(MultipartBody.Part video, String title, String location,
                                                   double latitude, double longitude, String tags, String categories) {
         final MutableLiveData<PostUploadResult> liveData = new MutableLiveData<>();
-        postService.uploadVideo(video, title, location, latitude, longitude, tags, categories).enqueue(postUploadResultCallback(liveData));
+        postService.uploadVideo(video, title, location, latitude, longitude, tags, categories)
+                .enqueue(postUploadResultCallback(liveData, CALL_UPLOAD_VIDEO));
         return liveData;
     }
 
     @Override
     public LiveData<PostUploadResult> updatePost(UpdatePostRequest updatePostRequest) {
         final MutableLiveData<PostUploadResult> liveData = new MutableLiveData<>();
-        postService.updatePost(updatePostRequest).enqueue(postUploadResultCallback(liveData));
+        postService.updatePost(updatePostRequest).enqueue(postUploadResultCallback(liveData, CALL_UPDATE_POST));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> likeDislikePost(int postId, int status) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.likeDislikePost(postId, status).enqueue(resultObjectCallback(liveData));
+        postService.likeDislikePost(postId, status).enqueue(resultObjectCallback(liveData, CALL_LIKE_DISLIKE_POST));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> incrementViewCount(int mediaId) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.incrementViewCount(mediaId).enqueue(resultObjectCallback(liveData));
+        postService.incrementViewCount(mediaId).enqueue(resultObjectCallback(liveData, CALL_INCREMENT_VIEW_COUNT));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> deletePost(int postId) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.deletePost(postId).enqueue(resultObjectCallback(liveData));
-        return liveData;
-    }
-
-    @Override
-    public LiveData<ResultObject> deletePostVideo(int postId) {
-        final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.deletePostVideo(postId).enqueue(resultObjectCallback(liveData));
+        postService.deletePost(postId).enqueue(resultObjectCallback(liveData, CALL_DELETE_POST));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> reportPost(ReportPost reportPostDetails) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.reportPost(reportPostDetails).enqueue(resultObjectCallback(liveData));
+        postService.reportPost(reportPostDetails).enqueue(resultObjectCallback(liveData, CALL_REPORT_POST));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> hideOrShowPost(int postId, int status) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.hideOrShowPost(postId, status).enqueue(resultObjectCallback(liveData));
+        postService.hideOrShowPost(postId, status).enqueue(resultObjectCallback(liveData, CALL_HIDE_OR_SHOW_POST));
         return liveData;
     }
 
@@ -102,13 +97,15 @@ public class PostsRepositoryImpl implements PostsRepository {
         postService.getPostDetails(postId).enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new PostDetails(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_POST_DETAILS) :
+                        new PostDetails(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_POST_DETAILS));
             }
 
             @Override
             public void onFailure(Call<PostDetails> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new PostDetails(new Throwable(FAILED)));
+                liveData.setValue(new PostDetails(new Throwable(FAILED)).setCallType(CALL_GET_POST_DETAILS));
             }
         });
         return liveData;
@@ -120,13 +117,15 @@ public class PostsRepositoryImpl implements PostsRepository {
         postService.getTaggedUsers(postId, page).enqueue(new Callback<TaggedUsersList>() {
             @Override
             public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new TaggedUsersList(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_POST_DETAILS) :
+                        new TaggedUsersList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_POST_DETAILS));
             }
 
             @Override
             public void onFailure(Call<TaggedUsersList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new TaggedUsersList(new Throwable(FAILED)));
+                liveData.setValue(new TaggedUsersList(new Throwable(FAILED)).setCallType(CALL_GET_POST_DETAILS));
             }
         });
         return liveData;
@@ -135,7 +134,7 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public LiveData<PostList> getHiddenPosts(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getHiddenPosts(page).enqueue(postListCallback(liveData, 0));
+        postService.getHiddenPosts(page).enqueue(postListCallback(liveData, CALL_GET_HIDDEN_POSTS));
         return liveData;
     }
 
@@ -149,17 +148,17 @@ public class PostsRepositoryImpl implements PostsRepository {
                     try {
                         switch (response.code()) {
                             case 200:
-                                PostList tempPostList = response.body();
+                                PostList tempPostList = response.body().setCallType(CALL_GET_HOME_PAGE_POSTS);
                                 if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
                                     liveData.setValue(tempPostList);
                                 } else {
                                     if (page == 1 && tempPostList.getPosts().isEmpty())
                                         liveData.setValue(new PostList(
-                                                new Throwable(TeazerApplication.getContext().getString(R.string.no_posts_available))));
+                                                new Throwable(TeazerApplication.getContext().getString(R.string.no_posts_available))).setCallType(CALL_GET_HOME_PAGE_POSTS));
                                 }
                                 break;
                             default:
-                                liveData.setValue(new PostList(new Throwable("Couldn't load posts")));
+                                liveData.setValue(new PostList(new Throwable("Couldn't load posts")).setCallType(CALL_GET_HOME_PAGE_POSTS));
                                 break;
                         }
                     } catch (Exception e) {
@@ -169,7 +168,7 @@ public class PostsRepositoryImpl implements PostsRepository {
 
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
-                    liveData.setValue(new PostList(t));
+                    liveData.setValue(new PostList(t).setCallType(CALL_GET_HOME_PAGE_POSTS));
                 }
             });
             return liveData;
@@ -180,23 +179,16 @@ public class PostsRepositoryImpl implements PostsRepository {
     }
 
     @Override
-    public LiveData<PostList> getPostedVideos(int page) {
+    public LiveData<PostList> getMyPostedVideos(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getPostedVideos(page).enqueue(postListCallback(liveData, 0));
-        return liveData;
-    }
-
-    @Override
-    public LiveData<PostList> getVideosPostedByFriends(int page, int friendId) {
-        final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getVideosPostedByFriends(page, friendId).enqueue(postListCallback(liveData, 0));
+        postService.getMyPostedVideos(page).enqueue(postListCallback(liveData, CALL_GET_MY_POSTED_VIDEOS));
         return liveData;
     }
 
     @Override
     public LiveData<PostList> getVideosPostedByFriend(int page, int friendId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getVideosPostedByFriend(page, friendId).enqueue(postListCallback(liveData, 0));
+        postService.getVideosPostedByFriend(page, friendId).enqueue(postListCallback(liveData, CALL_GET_VIDEOS_POSTED_BY_FRIEND));
         return liveData;
     }
 
@@ -206,13 +198,15 @@ public class PostsRepositoryImpl implements PostsRepository {
         postService.getReactionsOfPost(postId, page).enqueue(new Callback<PostReactionsList>() {
             @Override
             public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new PostReactionsList(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_REACTIONS_OF_POST) :
+                        new PostReactionsList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_REACTIONS_OF_POST));
             }
 
             @Override
             public void onFailure(Call<PostReactionsList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new PostReactionsList(new Throwable(FAILED)));
+                liveData.setValue(new PostReactionsList(new Throwable(FAILED)).setCallType(CALL_GET_REACTIONS_OF_POST));
             }
         });
         return liveData;
@@ -221,14 +215,14 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public LiveData<PostList> getHiddenVideosList(int page) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        postService.getHiddenVideosList(page).enqueue(postListCallback(liveData, 0));
+        postService.getHiddenVideosList(page).enqueue(postListCallback(liveData, CALL_GET_HIDDEN_VIDEOS_LIST));
         return liveData;
     }
 
     @Override
     public LiveData<ResultObject> getAllHiddenVideosList(int postId) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
-        postService.getAllHiddenVideosList(postId).enqueue(resultObjectCallback(liveData));
+        postService.getAllHiddenVideosList(postId).enqueue(resultObjectCallback(liveData, CALL_GET_ALL_HIDDEN_VIDEOS_LIST));
         return liveData;
     }
 }

@@ -6,47 +6,37 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.friends.UsersList;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
 
-public class PeopleTabFragment extends BaseFragment {
+public class PeopleTabFragment extends BaseDiscoverFragment {
 
-    private static final String TAG = "PeopleTagFragment";
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
-    @BindView(R.id.no_posts_2)
-    ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
-    private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;
-    private Call<UsersList> usersListCall;
     private String searchTerm;
     private boolean isSearchTerm;
 
-    public PeopleTabFragment() {
-    }
+    public PeopleTabFragment() {}
 
     public static PeopleTabFragment newInstance(String searchTerm) {
         PeopleTabFragment fragment = new PeopleTabFragment();
@@ -56,41 +46,31 @@ public class PeopleTabFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        usersList = new ArrayList<>();
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
             isSearchTerm = searchTerm != null && !searchTerm.equals("");
         }
+        currentPage = 1;
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
 
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
-        adapter = new DiscoverSearchAdapter(getParentActivity(), this,
-                false, usersList, null, isSearchTerm);
+        adapter = new DiscoverSearchAdapter(this, false, isSearchTerm);
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(context, VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (is_next_page)
+                if (is_next_page) {
+                    is_next_page = false;
+                    currentPage = page;
                     getUsersList(page);
+                }
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -98,99 +78,60 @@ public class PeopleTabFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.resetState();
                 getUsersList(1);
+                scrollListener.resetState();
             }
         });
-
+        return rootView;
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
-//        if (usersList != null && usersList.isEmpty())
-            getUsersList(1);
+        getUsersList(1);
     }
 
     private void getUsersList(final int page) {
-        if (page == 1)
-            usersList.clear();
-
-        if (usersListCall != null && usersListCall.isExecuted())
-            usersListCall.cancel();
-
-        usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
-                ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
-
-        if (!usersListCall.isExecuted())
-            usersListCall.enqueue(new Callback<UsersList>() {
-                @Override
-                public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                    try {
-                        Log.d(TAG, "onResponse try block");
-                        if (isAdded()) {
-                            if (response.code() == 200) {
-                                Log.d(TAG, "onResponse 200");
-                                UsersList users = response.body();
-                                is_next_page = users.isNextPage();
-                                if (users.getUsers() != null && users.getUsers().size() > 0) {
-                                    Log.d(TAG, "onResponse user list found");
-                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    noPosts.setVisibility(View.GONE);
-                                    noPosts2.setVisibility(View.GONE);
-                                    usersList.addAll(users.getUsers());
-                                    recyclerView.getRecycledViewPool().clear();
-                                    adapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d(TAG, "onResponse No match");
-                                    if (page == 1 && usersList.isEmpty()) {
-                                        swipeRefreshLayout.setVisibility(View.GONE);
-                                        noPosts.setText(isSearchTerm ?
-                                                R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
-                                        noPosts.setVisibility(View.VISIBLE);
-                                        noPosts2.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-                            } else {
-                                noPosts.setVisibility(View.VISIBLE);
-                                noPosts.setText(R.string.error_fetching_data);
-                                noPosts.setCompoundDrawablesWithIntrinsicBounds(
-                                        0, R.drawable.ic_no_data_placeholder, 0, 0);
-                                noPosts2.setVisibility(View.INVISIBLE);
-                                Log.e("getUsersListToFollow", response.code() + "_" + response.message());
-                            }
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            @Override
-            public void onFailure(Call<UsersList> call, Throwable t) {
-                if (isAdded()) {
-                    t.printStackTrace();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+        if (isSearchTerm) loadUsersListWithSearchTerm(page, searchTerm);
+        else loadUsersList(page);
     }
 
-    @Override
-    public void onDetach() {
+    @Override protected void handleResponse(BaseModel resultObject) {
+        if (resultObject instanceof UsersList) {
+            UsersList usersList = (UsersList) resultObject;
+            is_next_page = usersList.isNextPage();
+            if (usersList.getUsers() != null && !usersList.getUsers().isEmpty()) {
+                dataAvailable();
+                adapter.updateUsersList(currentPage, usersList.getUsers());
+            }
+            else if (currentPage == 1) noDataAvailable();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override protected void handleError(BaseModel baseModel) {
+        baseModel.getError().printStackTrace();
+        swipeRefreshLayout.setRefreshing(false);}
+
+    private void dataAvailable() {
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        noPosts.setVisibility(View.GONE);
+        noPosts2.setVisibility(View.GONE);
+    }
+
+    private void noDataAvailable() {
+        swipeRefreshLayout.setVisibility(View.GONE);
+        noPosts.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_no_data_placeholder, 0, 0);
+        noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+        noPosts.setVisibility(View.VISIBLE);
+        noPosts2.setVisibility(View.INVISIBLE);
+    }
+
+    @Override public void onDetach() {
         super.onDetach();
         try {
             noPosts.setText(R.string.search_for_videos);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (usersListCall != null && usersListCall.isExecuted())
-            usersListCall.cancel();
-        adapter = null;
     }
 }

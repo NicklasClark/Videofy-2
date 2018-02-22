@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.Medias;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Videos implements Parcelable, Comparable<Videos> {
+public class Videos extends BaseModel implements Parcelable, Comparable<Videos> {
     private int post_id;
     private int posted_by;
     private int likes;

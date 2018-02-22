@@ -1,6 +1,8 @@
 package com.cncoding.teazer.model.friends;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 
 import java.util.ArrayList;
 
@@ -9,10 +11,10 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class CircleList {
+public class CircleList extends BaseModel {
+
     private boolean next_page;
     private ArrayList<MiniProfile> circles;
-    private Throwable error;
 
     public CircleList(boolean next_page, ArrayList<MiniProfile> circles) {
         this.next_page = next_page;
@@ -23,8 +25,9 @@ public class CircleList {
         this.error = error;
     }
 
-    public Throwable getError() {
-        return error;
+    public CircleList setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     public boolean isNextPage() {

@@ -157,7 +157,7 @@ public class ForgotPasswordFragment extends AuthFragment {
     @Override
     protected void handleResponse(ResultObject resultObject) {
         try {
-            switch (resultObject.getCallType()) {
+            switch (resultObject.getAuthCallType()) {
                 case REQUEST_RESET_PASSWORD_BY_EMAIL:
                     if (resultObject.getStatus()) {
                         mListener.onForgotPasswordInteraction(username, countryCode, true);

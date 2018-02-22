@@ -1,7 +1,7 @@
 package com.cncoding.teazer.model.friends;
 
 import com.cncoding.teazer.model.base.Medias;
-import com.cncoding.teazer.model.base.MiniProfile.Gender;
+import com.cncoding.teazer.utilities.Annotations.Gender;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

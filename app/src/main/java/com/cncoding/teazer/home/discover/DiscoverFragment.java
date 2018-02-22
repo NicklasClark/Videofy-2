@@ -71,7 +71,6 @@ public class DiscoverFragment extends BaseDiscoverFragment {
 
     private static int scrollPosition;
     public static boolean updateMyInterests = false;
-    private int currentPage;
     private FeaturedPostsListAdapter featuredPostsListAdapter;
     private MyInterestsListAdapter myInterestsListAdapter;
     private TrendingListAdapter trendingListAdapter;

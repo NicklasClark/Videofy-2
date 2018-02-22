@@ -277,7 +277,7 @@ public class ConfirmOtpFragment extends AuthFragment {
 
     @Override
     protected void handleResponse(ResultObject resultObject) {
-        switch (resultObject.getCallType()) {
+        switch (resultObject.getAuthCallType()) {
             case SIGNUP:
                 showSnackBar(otpResendBtn, "New otp sent to " + verifySignUp.getPhoneNumber());
                 otpResendBtn.setEnabled(false);

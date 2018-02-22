@@ -24,6 +24,11 @@ public class PostList extends BaseModel {
         this.error = error;
     }
 
+    public PostList setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
+
     public boolean isNextPage() {
         return next_page;
     }
@@ -54,10 +59,5 @@ public class PostList extends BaseModel {
 
     public void clear() {
         posts.clear();
-    }
-
-    public PostList setCallType(@CallType int callType) {
-        setCall(callType);
-        return this;
     }
 }

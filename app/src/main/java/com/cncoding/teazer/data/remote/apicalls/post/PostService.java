@@ -74,10 +74,6 @@ public interface PostService {
     @DELETE("/api/v1/post/delete/{post_id}")
     Call<ResultObject> deletePost(@Path("post_id") int postId);
 
-
-    @DELETE("/api/v1/post/delete/{post_id}")
-    Call<ResultObject> deletePostVideo(@Path("post_id") int postId);
-
     /**
      * Call this service to report a post
      * @return 200 : status <code>true</code> if the post is reported successfully and
@@ -151,11 +147,7 @@ public interface PostService {
      *      or 412 : Validation Failed
      * */
     @GET("/api/v1/post/my/videos/{page}")
-    Call<PostList> getPostedVideos(@Path("page") int page);
-
-
-    @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
-    Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
+    Call<PostList> getMyPostedVideos(@Path("page") int page);
 
     @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
     Call<PostList> getVideosPostedByFriend(@Path("page") int page, @Path("friend_id") int friendId);
