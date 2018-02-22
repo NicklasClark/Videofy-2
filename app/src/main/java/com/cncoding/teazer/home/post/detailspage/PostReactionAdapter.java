@@ -32,8 +32,6 @@ import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -109,23 +107,15 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 .into(holder.profilePic);
 
         String title = postReaction.getReactTitle();
-        try {
-            title = URLDecoder.decode(title, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         holder.caption.setText(decodeUnicodeString(title));
 
         holder.profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Toast.makeText(context,"profile",Toast.LENGTH_SHORT).show();
-
-
             }
         });
-        holder.caption.setText(title);
+        holder.caption.setText(decodeUnicodeString(title));
         String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
         holder.name.setText(nameText);
         String likesText = "  " + postReaction.getLikes();

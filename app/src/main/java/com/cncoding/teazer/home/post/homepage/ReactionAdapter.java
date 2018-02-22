@@ -37,6 +37,7 @@ import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OP
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
  *
@@ -111,7 +112,7 @@ public class ReactionAdapter extends BaseRecyclerViewAdapter {
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
                                         title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(postReaction.getReactTitle());
+                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
@@ -136,7 +137,7 @@ public class ReactionAdapter extends BaseRecyclerViewAdapter {
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
                                         title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(postReaction.getReactTitle());
+                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
@@ -165,7 +166,7 @@ public class ReactionAdapter extends BaseRecyclerViewAdapter {
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
                                         title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(postReaction.getReactTitle());
+                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
