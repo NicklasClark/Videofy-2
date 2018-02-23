@@ -40,7 +40,7 @@ import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
@@ -104,11 +104,11 @@ public class ViewUtils {
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, Reactions reaction) {
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, MyReactions reaction) {
         switch (source) {
             case POST_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getReactMediaUrl());
                 intent.putExtra("POST_INFO", postReaction);
                 intent.putExtra("SOURCE", POST_REACTION);
 //                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -117,7 +117,7 @@ public class ViewUtils {
             }
             case SELF_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
                 intent.putExtra("POST_INFO", reaction);
                 intent.putExtra("SOURCE", SELF_REACTION);
 //                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);

@@ -35,8 +35,10 @@ import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
-import com.cncoding.teazer.adapter.ProfileMyReactionAdapter.ReactionPlayerListener;
+import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
@@ -53,10 +55,9 @@ import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificatio
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
-import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser.CallProfileListener;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
-import com.cncoding.teazer.home.post.detailspage.TagListAdapter.TaggedListInteractionListener;
+import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
@@ -65,20 +66,20 @@ import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.expletus.mobiruck.MobiruckEvent;
-import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -115,13 +116,18 @@ import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
@@ -155,8 +161,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Profile listeners
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
-        CallProfileListener, TaggedListInteractionListener, ReactionPlayerListener {
-    
+        FragmentLikedUser.CallProfileListener,
+        TagListAdapter.TaggedListInteractionListener,
+                ProfileMyReactionAdapter.ReactionPlayerListener,
+                AddWaterMarkAsyncTask.WatermarkAsyncResponse
+{
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
@@ -191,6 +200,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
     PostDetails postDetails;
+    private Call<ReactionResponse> postGiphyCall;
 
     @Contract(value = " -> !null", pure = true)
     private BaseBottomBarActivity getThis() {
@@ -218,11 +228,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .into(loader);
 
         //logging mobiruck event
-        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-
-        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-
-        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
+//        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+//
+//        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+//
+//        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -537,6 +547,10 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void notificationAction(int notification_type, int source_id, int post_id) {
+            if(notification_type == 11) {
+                //do nothing as of now
+                Log.d("Notification", String.valueOf(notification_type));
+            }
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         }
@@ -570,7 +584,11 @@ public class BaseBottomBarActivity extends BaseActivity
                                 if (response.code() == 200) {
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
-                                        pushFragment(FragmentReactionplayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null));
+                                        if (postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF || postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY) {
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                        } else {
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                        }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                     }
@@ -946,8 +964,13 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         UploadParams reactionUploadParams = getReactionUploadSession(getApplicationContext());
         if (reactionUploadParams != null) {
-            setupReactionUploadServiceReceiver(reactionUploadParams);
-            launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
+            if (!reactionUploadParams.isGiphy()) {
+                setupReactionUploadServiceReceiver(reactionUploadParams);
+                launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
+            }
+            else {
+                postGiphyReaction(reactionUploadParams);
+            }
         }
     }
 
@@ -983,6 +1006,15 @@ public class BaseBottomBarActivity extends BaseActivity
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishVideoUploadSession(getApplicationContext());
+
+                            //add watermark for local creations/reactions
+                            if(resultData.getBoolean(ADD_WATERMARK)) {
+                                AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
+                                addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
+                                addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                            }
+                            else
+                                deleteFilePermanently(resultData.getString(VIDEO_PATH));
                             break;
                         case UPLOAD_ERROR_CODE:
                             if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
@@ -1044,6 +1076,15 @@ public class BaseBottomBarActivity extends BaseActivity
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishReactionUploadSession(getApplicationContext());
+                            //add watermark for local creations/reactions
+                            if(resultData.getBoolean(ADD_WATERMARK)) {
+                                AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
+                                addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
+                                addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                            }
+                            else
+                                deleteFilePermanently(resultData.getString(VIDEO_PATH));
+
                             break;
                         case UPLOAD_ERROR_CODE:
                             if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
@@ -1139,6 +1180,30 @@ public class BaseBottomBarActivity extends BaseActivity
     public void ReactionPost(int postId) {
         fetchPostDetails(this, postId);
     }
+    //</editor-fold>
+
+    @Override
+    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
+       deleteFilePermanently(sourcePath);
+    }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.body().getCode() == 200)
+                    Toast.makeText(BaseBottomBarActivity.this, "Reaction posted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(BaseBottomBarActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public void callProfileListener(int id, boolean isMyself) {
@@ -1163,8 +1228,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
-        pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction, boolean isGif) {
+        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction,reaction, isGif));
     }
 
     @Override

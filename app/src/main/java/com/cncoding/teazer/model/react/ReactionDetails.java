@@ -3,6 +3,7 @@ package com.cncoding.teazer.model.react;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.base.MediaDetail;
 import com.cncoding.teazer.model.base.MiniProfile;
 
 /**

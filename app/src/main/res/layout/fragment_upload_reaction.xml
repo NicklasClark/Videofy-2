@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:fragment="com.cncoding.teazer.home.camera.CameraActivity">
+    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/playBtn"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_centerInParent="true"
@@ -49,6 +50,7 @@
                     android:clickable="false"/>
 
                 <ProgressBar
+                    android:visibility="gone"
                     android:id="@+id/thumbnail_progress_bar"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
@@ -74,8 +76,8 @@
             <include layout="@layout/progress_bar_horizontal"/>
 
             <Switch
-                android:visibility="gone"
-                android:text=" Convert to gif"
+                android:visibility="visible"
+                android:text="Convert to gif"
                 android:id="@+id/gifSwitch"
                 android:layout_marginTop="4dp"
                 android:layout_gravity="center_horizontal"

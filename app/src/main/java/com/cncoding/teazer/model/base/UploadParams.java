@@ -11,8 +11,10 @@ import com.cncoding.teazer.model.post.PostDetails;
  */
 
 public class UploadParams implements Parcelable {
+
+    private boolean isGiphy;
     private String videoPath;
-    private boolean isReaction;
+    public boolean isReaction;
     private String title;
     private String location;
     private double latitude;
@@ -23,7 +25,7 @@ public class UploadParams implements Parcelable {
     private boolean isGallery;
 
     public UploadParams(boolean isGallery, String videoPath, String title, String location,
-                        double latitude, double longitude, String tags, String categories, PostDetails postDetails) {
+                        double latitude, double longitude, String tags, String categories, PostDetails postDetails, boolean isGiphy) {
         this.isGallery = isGallery;
         this.videoPath = videoPath;
         this.title = title;
@@ -33,10 +35,11 @@ public class UploadParams implements Parcelable {
         this.tags = tags;
         this.categories = categories;
         this.postDetails = postDetails;
+        this.isGiphy = isGiphy;
     }
 
     public UploadParams(boolean isGallery, String videoPath, String title, String location,
-                        double latitude, double longitude, PostDetails postDetails) {
+                        double latitude, double longitude, PostDetails postDetails, boolean isGiphy) {
         this.isGallery = isGallery;
         this.videoPath = videoPath;
         this.title = title;
@@ -44,6 +47,7 @@ public class UploadParams implements Parcelable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.postDetails = postDetails;
+        this.isGiphy = isGiphy;
     }
 
     public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {
@@ -58,6 +62,7 @@ public class UploadParams implements Parcelable {
     }
 
     protected UploadParams(Parcel in) {
+        isGiphy = in.readByte() != 0;
         videoPath = in.readString();
         isReaction = in.readByte() != 0;
         title = in.readString();
@@ -72,6 +77,7 @@ public class UploadParams implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (isGiphy ? 1 : 0));
         dest.writeString(videoPath);
         dest.writeByte((byte) (isReaction ? 1 : 0));
         dest.writeString(title);
@@ -143,5 +149,13 @@ public class UploadParams implements Parcelable {
 
     public void setGallery(boolean gallery) {
         isGallery = gallery;
+    }
+
+    public boolean isGiphy() {
+        return isGiphy;
+    }
+
+    public void setGiphy(boolean giphy) {
+        isGiphy = giphy;
     }
 }

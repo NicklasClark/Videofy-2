@@ -205,7 +205,7 @@
     <string name="private_account">Private Account</string>
     <string name="videos_save">Videos Saving</string>
     <string name="private_account_detail">When your Account is private, only people you approve can see your posts.</string>
-    <string name="video_saving_detail">When your video Saving is on,you can store your creation and reaction in your device storage</string>
+    <string name="video_saving_detail">When your video saving is on, you can store your creation and reaction in your device storage</string>
     <string name="this_is_embarrassing">This is embarrassing</string>
     <string name="the_username">The username&#160;</string>
     <string name="username_already_exists">&#160;already exists!\nPlease choose another username below.</string>
@@ -343,7 +343,8 @@
     <string name="failed">Failed, please try again</string>
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
-    <string name="base_url">https://api.teazer.online/</string>
+    <!--<string name="base_url">https://api.teazer.online/</string>-->
+    <string name="base_url">http://dev-api.teazer.online/</string>
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
     <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>
@@ -374,4 +375,9 @@
     <string name="location_services_required">Location services are required to get your nearby locations.</string>
     <string name="no_internet_message">Make sure your internet connection is working to enjoy new Videos</string>
     <string name="could_not_load_new_posts">Couldn\'t load new posts.\nCheck your internet connection</string>
+    <string name="reaction_gif">Gif to react</string>
+    <string name="giphy_base_url">https://api.giphy.com</string>
+    <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
+    <string name="search_for_giphys">Search for Gifs</string>
+    <string name="gif_view">Gif View</string>
 </resources>

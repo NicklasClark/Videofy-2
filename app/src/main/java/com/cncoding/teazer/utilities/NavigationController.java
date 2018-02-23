@@ -337,60 +337,64 @@ public class NavigationController {
      * @param transactionOptions Transaction options to be displayed
      */
     public void clearStack(@Nullable NavigationTransactionOptions transactionOptions) {
-        if (selectedTabIndex == NO_TAB) {
-            return;
-        }
-
-        //Grab Current stack
-        Stack<Fragment> fragmentStack = fragmentStacks.get(selectedTabIndex);
-
-        // Only need to start popping and reattach if the stack is greater than 1
-        if (fragmentStack.size() > 1) {
-            Fragment fragment;
-            FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
-
-            //Pop all of the fragments on the stack and remove them from the FragmentManager
-            while (fragmentStack.size() > 1) {
-                fragment = fragmentManager.findFragmentByTag(fragmentStack.pop().getTag());
-                if (fragment != null) {
-                    ft.remove(fragment);
-                }
+        try {
+            if (selectedTabIndex == NO_TAB) {
+                return;
             }
 
-            //Attempt to reattach previous fragment
-            fragment = reattachPreviousFragment(ft);
+            //Grab Current stack
+            Stack<Fragment> fragmentStack = fragmentStacks.get(selectedTabIndex);
 
-            boolean bShouldPush = false;
-            //If we can't reattach, either pull from the stack, or create a new root fragment
-            if (fragment != null) {
-                ft.commit();
-            } else {
-                if (!fragmentStack.isEmpty()) {
-                    fragment = fragmentStack.peek();
-                    ft.add(containerId, fragment, fragment.getTag());
+            // Only need to start popping and reattach if the stack is greater than 1
+            if (fragmentStack.size() > 1) {
+                Fragment fragment;
+                FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
+
+                //Pop all of the fragments on the stack and remove them from the FragmentManager
+                while (fragmentStack.size() > 1) {
+                    fragment = fragmentManager.findFragmentByTag(fragmentStack.pop().getTag());
+                    if (fragment != null) {
+                        ft.remove(fragment);
+                    }
+                }
+
+                //Attempt to reattach previous fragment
+                fragment = reattachPreviousFragment(ft);
+
+                boolean bShouldPush = false;
+                //If we can't reattach, either pull from the stack, or create a new root fragment
+                if (fragment != null) {
                     ft.commit();
                 } else {
-                    fragment = getRootFragment(selectedTabIndex);
-                    ft.add(containerId, fragment, generateTag(fragment));
-                    ft.commit();
+                    if (!fragmentStack.isEmpty()) {
+                        fragment = fragmentStack.peek();
+                        ft.add(containerId, fragment, fragment.getTag());
+                        ft.commit();
+                    } else {
+                        fragment = getRootFragment(selectedTabIndex);
+                        ft.add(containerId, fragment, generateTag(fragment));
+                        ft.commit();
 
-                    bShouldPush = true;
+                        bShouldPush = true;
+                    }
+                }
+
+                executePendingTransactions();
+
+                if (bShouldPush) {
+                    fragmentStacks.get(selectedTabIndex).push(fragment);
+                }
+
+                //Update the stored version we have in the list
+                fragmentStacks.set(selectedTabIndex, fragmentStack);
+
+                currentFragment = fragment;
+                if (transactionListener != null) {
+                    transactionListener.onFragmentTransaction(currentFragment, TransactionType.POP);
                 }
             }
-
-            executePendingTransactions();
-
-            if (bShouldPush) {
-                fragmentStacks.get(selectedTabIndex).push(fragment);
-            }
-
-            //Update the stored version we have in the list
-            fragmentStacks.set(selectedTabIndex, fragmentStack);
-
-            currentFragment = fragment;
-            if (transactionListener != null) {
-                transactionListener.onFragmentTransaction(currentFragment, TransactionType.POP);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -23,7 +23,6 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
@@ -39,6 +38,8 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     public static final String UPLOAD_PROGRESS = "uploadProgress";
     public static final String UPLOAD_ERROR = "uploadErrorMessage";
     public static final String UPLOAD_COMPLETE = "uploadComplete";
+    public static final String ADD_WATERMARK = "addWatermark";
+    public static final String VIDEO_PATH = "videoPath";
 //    public static final String RESPONSE_CODE = "responseCode";
     public static final int UPLOAD_IN_PROGRESS_CODE = 10;
     public static final int UPLOAD_ERROR_CODE = 11;
@@ -48,8 +49,10 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     private Bundle bundle;
 //    private int resultCode;
     private Call<PostUploadResult> videoUploadCall;
+    private static Context activityContext;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
+
         Intent intent = new Intent(context, VideoUploadService.class);
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.putExtra(VIDEO_UPLOAD_RECEIVER, videoUploadReceiver);
@@ -98,7 +101,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                         sendBroadcast(postId, postTitle, postThumbUrl, postOwner);
                     }
                     else {
-                        onUploadError(response.body().getMessage());
+                        onUploadError(null);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -134,12 +137,17 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
 
     @Override
     public void onUploadFinish(String videoPath, boolean gallery) {
-        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
-            deleteFilePermanently(videoPath);
-        }
         bundle.clear();
+
+        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
+            bundle.putBoolean(ADD_WATERMARK, false);
+        }
+        else if(!gallery)
+        {
+            bundle.putBoolean(ADD_WATERMARK, true);
+        }
+        bundle.putString(VIDEO_PATH, videoPath);
         bundle.putString(UPLOAD_COMPLETE, "Video uploaded successfully");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);
     }
-
 }

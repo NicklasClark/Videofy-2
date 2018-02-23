@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:fragment="com.cncoding.teazer.home.camera.CameraActivity">
+    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,15 +25,15 @@
                 android:animateLayoutChanges="true"
                 android:elevation="5dp">
 
-        <ImageView
-            android:id="@+id/video_preview_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_bg_blur"
-            android:background="@color/colorDisabled"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/video_preview_thumbnail" />
+                <ImageView
+                    android:id="@+id/video_preview_thumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bg_blur"
+                    android:background="@color/colorDisabled"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/video_preview_thumbnail" />
 
                 <View
                     android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/playBtn"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_centerInParent="true"

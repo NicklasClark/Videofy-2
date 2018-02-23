@@ -23,6 +23,10 @@ import java.util.List;
 
 public class CommonUtilities {
 
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int MEDIA_TYPE_GIF = 3;
+    public static final int MEDIA_TYPE_GIPHY = 4;
+
     @Nullable
     public static Bitmap getBitmapFromURL(String src) {
         try {

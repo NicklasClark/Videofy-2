@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -44,6 +42,7 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
@@ -62,10 +61,8 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -87,8 +84,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -118,11 +113,14 @@ import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_ZOOM;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
@@ -145,7 +143,7 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class FragmentPostDetails extends BaseFragment {
+public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
@@ -520,13 +518,13 @@ public class FragmentPostDetails extends BaseFragment {
                                     postReactionAdapter.notifyDataSetChanged();
                                     if (postReactions.size() > 0) {
                                         if (postReactions.size() >= 1) {
-                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getReactThumbUrl());
                                         }
                                         if (postReactions.size() >= 2) {
-                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getReactThumbUrl());
                                         }
                                         if (postReactions.size() >= 3) {
-                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getReactThumbUrl());
                                         }
                                     }
                                 } else {
@@ -1253,6 +1251,15 @@ public class FragmentPostDetails extends BaseFragment {
 
                                 finishReactionUploadSession(context);
                                 getPostReactions(postDetails.getPostId(), 1);
+                                //add watermark for local creations/reactions
+                                if(resultData.getBoolean(ADD_WATERMARK)) {
+                                    AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getActivity());
+                                    addWaterMarkAsyncTask.delegate = FragmentPostDetails.this;
+                                    addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                                }
+                                else
+                                    deleteFilePermanently(resultData.getString(VIDEO_PATH));
+
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 uploadProgressText.setText(R.string.failed);
@@ -1280,6 +1287,11 @@ public class FragmentPostDetails extends BaseFragment {
                 });
     }
 
+    @Override
+    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
+        deleteFilePermanently(sourcePath);
+    }
+
     private void checkIfAnyReactionIsUploading() {
         UploadParams uploadParams = getReactionUploadSession(context);
         if (uploadParams != null) {
@@ -1287,46 +1299,37 @@ public class FragmentPostDetails extends BaseFragment {
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.canReact = false;
-            launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
-        }
-    }
 
-    @SuppressWarnings("unused")
-    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
-
-        private WeakReference<FragmentPostDetails> reference;
-
-        ShowShareDialog(FragmentPostDetails context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap bitmap = null;
-            try {
-                final URL url = new URL(strings[0]);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!uploadParams.isGiphy()) {
+                launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
+            } else {
+                postGiphyReaction(uploadParams);
             }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(reference.get());
-            shareDialog.show(content);
-            // ShareApi.share(content, null);
-            super.onPostExecute(bitmap);
         }
     }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200 || response.code() == 201) {
+                    getPostReactions(postDetails.getPostId(), 1);
+                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     //</editor-fold>
 

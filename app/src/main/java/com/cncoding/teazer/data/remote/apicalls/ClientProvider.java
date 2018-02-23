@@ -58,17 +58,17 @@ public class ClientProvider {
                 .addInterceptor(new Interceptor() {
                     @Override
                     public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
-                        try {
+//                        try {
                             Request original = chain.request();
                             Request request = original.newBuilder()
                                     .header("Authorization", "Bearer " + authToken)
                                     .method(original.method(), original.body())
                                     .build();
                             return chain.proceed(request);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return null;
-                        }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            return null;
+//                        }
                     }
                 })
                 .addInterceptor(logging)

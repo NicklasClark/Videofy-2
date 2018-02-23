@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.react;
 
+import com.cncoding.teazer.model.base.MediaDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

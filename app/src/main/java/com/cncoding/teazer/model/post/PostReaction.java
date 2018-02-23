@@ -3,8 +3,8 @@ package com.cncoding.teazer.model.post;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.base.MediaDetail;
 import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.react.MediaDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

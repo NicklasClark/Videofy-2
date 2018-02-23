@@ -137,6 +137,37 @@
 
         </RelativeLayout>
 
+        <!--<com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/swipeCameraTip"
+            app:drawableTopCompat="@drawable/ic_filter_arrow"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="14dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/camera_preview"
+            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/swipe_for_filter_text"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />-->
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/reaction_gif"
+            android:visibility="visible"
+            android:layout_toStartOf="@+id/camera_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_gif_icon"
+            android:foreground="@drawable/ripple_dark_circle"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:padding="@dimen/padding_default"
+            android:contentDescription="@string/reaction_gif"/>
+
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/camera_flash"
             android:layout_width="wrap_content"

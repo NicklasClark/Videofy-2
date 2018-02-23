@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -22,8 +24,9 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -40,6 +43,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -58,6 +62,8 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
@@ -80,25 +86,28 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.root_layout) RelativeLayout rootLayout;
     @BindView(R.id.postDuration) ProximaNovaRegularTextView postDurationView;
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.gif_view) ImageView gifView;
 
     SimpleExoPlayer player;
     private PostReaction postDetails;
-    private Reactions selfPostDetails;
-    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
-    private Handler mHandler;
+    private MyReactions selfPostDetails;
 
     private String reactionTitle;
     private String videoURL;
     private boolean isLiked;
     private boolean playWhenReady = true;
-    private boolean audioAccessGranted = false;
-    private long reactionPlayerCurrentPosition = 0;
     private long playbackPosition;
     private int likesCount;
     private int viewsCount;
     private int reactId;
     private int currentWindow;
     private int playSource;
+
+    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
+    private boolean audioAccessGranted = false;
+    private long reactionPlayerCurrentPosition = 0;
+    private Handler mHandler;
+    private boolean isGif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +127,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                                 // Wait 30 seconds before stopping playback
                                 mHandler.postDelayed(mDelayedStopRunnable,
                                         TimeUnit.SECONDS.toMillis(30));
-                            }
-                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
                                 // Pause playback
                                 player.setPlayWhenReady(false);
                             } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
@@ -144,6 +152,31 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 try {
                     videoURL = getIntent().getStringExtra("VIDEO_URL");
                     postDetails = getIntent().getParcelableExtra("POST_INFO");
+                    isGif = getIntent().getBooleanExtra("IS_GIF", false);
+                    if(isGif) {
+                        gifView.setVisibility(View.VISIBLE);
+
+                        if(postDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY)
+                        {
+                            Gson gson = new Gson();
+                            Images images = gson.fromJson(postDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                            Glide.with(this)
+                                    .load(images.getDownsizedLarge().getUrl())
+                                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                    .into(gifView);
+                        }
+                        else if(postDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            Glide.with(this)
+                                    .load(postDetails.getMediaDetail().getReactMediaUrl())
+                                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                    .into(gifView);
+                        }
+                    }
+                    else {
+                        playerView.setVisibility(View.VISIBLE);
+                    }
+
                     if (postDetails != null)
                         reactId = postDetails.getReactId();
 
@@ -188,6 +221,28 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 try {
                     videoURL = getIntent().getStringExtra("VIDEO_URL");
                     selfPostDetails = getIntent().getParcelableExtra("POST_INFO");
+                    isGif = getIntent().getBooleanExtra("IS_GIF", false);
+                    if(isGif) {
+                        gifView.setVisibility(View.VISIBLE);
+
+                        if (selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            Glide.with(this)
+                                    .load(selfPostDetails.getMediaDetail().getReactMediaUrl())
+                                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                    .into(gifView);
+                        } else if(selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY){
+                            Gson gson = new Gson();
+                            Images images = gson.fromJson(selfPostDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                            Glide.with(this)
+                                    .load(images.getDownsizedLarge().getUrl())
+                                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                    .into(gifView);
+                        }
+                    }
+                    else {
+                        playerView.setVisibility(View.VISIBLE);
+                    }
                     if (selfPostDetails != null)
                         reactId = selfPostDetails.getReactId();
 
@@ -282,8 +337,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 player.setPlayWhenReady(true);
                 player.seekTo(reactionPlayerCurrentPosition);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -463,7 +517,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
                         .setTitle(postDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
+                        .setContentImageUrl(postDetails.getMediaDetail().getReactThumbUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")
@@ -490,13 +544,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 });
                 break;
             }
-            case SELF_REACTION:
-            {
+            case SELF_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(selfPostDetails.getPostOwner().getUserId()))
                         .setTitle(selfPostDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(selfPostDetails.getMediaDetail().getThumbUrl());
+                        .setContentImageUrl(selfPostDetails.getMediaDetail().getReactMediaUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")
