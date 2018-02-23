@@ -163,11 +163,9 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Profile listeners LikedUser
         FragmentLikedUser.CallProfileListener,
         TagListAdapter.TaggedListInteractionListener,
-                ProfileMyReactionAdapter.ReactionPlayerListener,
-                AddWaterMarkAsyncTask.WatermarkAsyncResponse
-{
-    public static final int ACTION_VIEW_POST = 0;
-    public static final int ACTION_VIEW_PROFILE = 123;
+        ProfileMyReactionAdapter.ReactionPlayerListener,
+        AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final String POST_ID = "post_id";
@@ -347,7 +345,7 @@ public class BaseBottomBarActivity extends BaseActivity
                     String notification_type = bundle.getString("notification_type");
                     String source_id = bundle.getString("source_id");
                     String post_id = bundle.getString("post_id");
-                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id),Integer.valueOf(post_id));
+                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id), Integer.valueOf(post_id));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -480,10 +478,8 @@ public class BaseBottomBarActivity extends BaseActivity
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     int post_id = notificationBundle.getInt(POST_ID);
-                    notificationAction(notification_type, source_id,post_id);
-                }
-
-                 else if (profileBundle != null) {
+                    notificationAction(notification_type, source_id, post_id);
+                } else if (profileBundle != null) {
 
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
@@ -520,7 +516,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 String notification_type = notificationBundle.getString("notification_type");
                 String source_id = notificationBundle.getString("source_id");
                 String post_id = notificationBundle.getString("post_id");
-                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id),Integer.valueOf(post_id));
+                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id), Integer.valueOf(post_id));
             } else
                 Log.d("NOTIFY", "BUNDLE not present in onStart");
         } catch (NumberFormatException e) {
@@ -547,14 +543,13 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void notificationAction(int notification_type, int source_id, int post_id) {
-            if(notification_type == 11) {
-                //do nothing as of now
-                Log.d("Notification", String.valueOf(notification_type));
-            }
+        if (notification_type == 11) {
+            //do nothing as of now
+            Log.d("Notification", String.valueOf(notification_type));
+        }
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
-        }
-        else if(notification_type == 5 || notification_type == 7 || notification_type == 9){
+        } else if (notification_type == 5 || notification_type == 7 || notification_type == 9) {
             ApiCallingService.Posts.getPostDetails(source_id, getThis())
                     .enqueue(new Callback<PostDetails>() {
                         @Override
@@ -574,9 +569,8 @@ public class BaseBottomBarActivity extends BaseActivity
                             Toast.makeText(getThis(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                         }
                     });
-        }
-        else {
-            if(post_id!=0) {
+        } else {
+            if (post_id != 0) {
                 ApiCallingService.React.getReactionDetail2(source_id, getApplicationContext())
                         .enqueue(new Callback<ReactVideoDetailsResponse>() {
                             @Override
@@ -585,9 +579,9 @@ public class BaseBottomBarActivity extends BaseActivity
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
                                         if (postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF || postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY) {
-                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true));
                                         } else {
-                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true));
                                         }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
@@ -601,14 +595,13 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                             }
                         });
-            }
-            else {
+            } else {
                 ApiCallingService.Posts.getPostDetails(source_id, getApplicationContext())
                         .enqueue(new Callback<PostDetails>() {
                             @Override
                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                 if (response.code() == 200)
-                                    pushFragment(FragmentPostDetails.newInstance( postDetails, null, false, false, null, null));
+                                    pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
 
                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                     Toast.makeText(getApplicationContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
@@ -617,6 +610,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                     Toast.makeText(getApplicationContext(), "Error fetching post", Toast.LENGTH_SHORT).show();
                                 }
                             }
+
                             @Override
                             public void onFailure(Call<PostDetails> call, Throwable t) {
                                 t.printStackTrace();
@@ -901,7 +895,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void pushFragment(final Fragment fragment) {
         if (navigationController != null) {
-//            currentFragment = fragment;
             if (fragment instanceof FragmentPostDetails) {
                 hideToolbar();
             }
@@ -967,8 +960,7 @@ public class BaseBottomBarActivity extends BaseActivity
             if (!reactionUploadParams.isGiphy()) {
                 setupReactionUploadServiceReceiver(reactionUploadParams);
                 launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
-            }
-            else {
+            } else {
                 postGiphyReaction(reactionUploadParams);
             }
         }
@@ -1008,12 +1000,11 @@ public class BaseBottomBarActivity extends BaseActivity
                             finishVideoUploadSession(getApplicationContext());
 
                             //add watermark for local creations/reactions
-                            if(resultData.getBoolean(ADD_WATERMARK)) {
+                            if (resultData.getBoolean(ADD_WATERMARK)) {
                                 AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
                                 addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
                                 addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
-                            }
-                            else
+                            } else
                                 deleteFilePermanently(resultData.getString(VIDEO_PATH));
                             break;
                         case UPLOAD_ERROR_CODE:
@@ -1077,12 +1068,11 @@ public class BaseBottomBarActivity extends BaseActivity
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishReactionUploadSession(getApplicationContext());
                             //add watermark for local creations/reactions
-                            if(resultData.getBoolean(ADD_WATERMARK)) {
+                            if (resultData.getBoolean(ADD_WATERMARK)) {
                                 AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
                                 addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
                                 addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
-                            }
-                            else
+                            } else
                                 deleteFilePermanently(resultData.getString(VIDEO_PATH));
 
                             break;
@@ -1184,7 +1174,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
-       deleteFilePermanently(sourcePath);
+        deleteFilePermanently(sourcePath);
     }
 
     private void postGiphyReaction(UploadParams uploadParams) {
@@ -1229,7 +1219,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction, boolean isGif) {
-        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction,reaction, isGif));
+        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction, reaction, isGif));
     }
 
     @Override

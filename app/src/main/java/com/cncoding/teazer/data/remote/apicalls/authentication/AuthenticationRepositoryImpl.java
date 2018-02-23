@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.TeazerApplication;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.utilities.Annotations;
-import com.cncoding.teazer.utilities.Annotations.AuthCallType;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
 import com.cncoding.teazer.model.auth.Login;
@@ -17,6 +15,7 @@ import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
 import com.cncoding.teazer.model.auth.SocialSignup;
 import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
 import com.cncoding.teazer.model.auth.VerifySignUp;
+import com.cncoding.teazer.utilities.Annotations.AuthCallType;
 
 import org.jetbrains.annotations.Contract;
 
@@ -29,7 +28,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import static com.cncoding.teazer.utilities.Annotations.*;
+import static com.cncoding.teazer.utilities.Annotations.CHECK_EMAIL_AVAILABILITY;
+import static com.cncoding.teazer.utilities.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
+import static com.cncoding.teazer.utilities.Annotations.CHECK_USERNAME_AVAILABILITY;
+import static com.cncoding.teazer.utilities.Annotations.LOGIN_WITH_OTP;
+import static com.cncoding.teazer.utilities.Annotations.LOGIN_WITH_PASSWORD;
+import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
+import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
+import static com.cncoding.teazer.utilities.Annotations.RESET_PASSWORD_BY_OTP;
+import static com.cncoding.teazer.utilities.Annotations.SIGNUP;
+import static com.cncoding.teazer.utilities.Annotations.SOCIAL_SIGNUP;
+import static com.cncoding.teazer.utilities.Annotations.VERIFY_FORGOT_PASSWORD_OTP;
+import static com.cncoding.teazer.utilities.Annotations.VERIFY_LOGIN_WITH_OTP;
+import static com.cncoding.teazer.utilities.Annotations.VERIFY_SIGNUP;
 
 /**
  *

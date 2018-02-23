@@ -28,7 +28,6 @@ import java.util.Map;
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.BaseBottomBarActivity.POST_ID;
 import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
  *

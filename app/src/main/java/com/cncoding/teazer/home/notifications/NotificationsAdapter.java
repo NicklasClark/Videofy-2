@@ -51,8 +51,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.cncoding.teazer.utilities.Annotations.PUBLIC_ACCOUNT;
 import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.utilities.Annotations.PUBLIC_ACCOUNT;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
