@@ -14,6 +14,9 @@ import com.cncoding.teazer.videoTrim.view.VideoTrimmerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.cncoding.teazer.videoTrim.utils.TrimVideoUtil.VIDEO_MAX_DURATION;
 
 public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoListener {
@@ -23,7 +26,6 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
     public static final int VIDEO_TRIM_REQUEST_CODE = 101;
     @BindView(R.id.trimmer_view)
     VideoTrimmerView trimmerView;
-    private boolean isReaction;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -34,10 +36,8 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
         String path = "";
         if (bd != null) {
             path = bd.getString("path");
-            isReaction = bd.getBoolean("IS_REACTION");
         }
         trimmerView.setMaxDuration(VIDEO_MAX_DURATION);
-        trimmerView.setMinDuration(isReaction);
         trimmerView.setOnTrimVideoListener(this);
         trimmerView.setVideoURI(Uri.parse(path));
     }

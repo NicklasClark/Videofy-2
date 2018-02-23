@@ -9,13 +9,24 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ReactOwner {
-
-    @SerializedName("user_id") @Expose private Integer userId;
-    @SerializedName("user_name") @Expose private String userName;
-    @SerializedName("first_name") @Expose private String firstName;
-    @SerializedName("last_name") @Expose private String lastName;
-    @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
-    @SerializedName("profile_media") @Expose private ProfileMedia profileMedia;
+    @SerializedName("user_id")
+    @Expose
+    private Integer userId;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+    @SerializedName("has_profile_media")
+    @Expose
+    private Boolean hasProfileMedia;
+    @SerializedName("profile_media")
+    @Expose
+    private ProfileMedia profileMedia;
 
     public Integer getUserId() {
         return userId;

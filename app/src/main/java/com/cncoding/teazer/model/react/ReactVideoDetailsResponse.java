@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.react;
 
+import com.cncoding.teazer.model.post.PostReaction;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,7 +20,7 @@ public class ReactVideoDetailsResponse {
     private String message;
     @SerializedName("post_react_detail")
     @Expose
-    private PostReactDetail postReactDetail;
+    private PostReaction postReactDetail;
 
     public Boolean getStatus() {
         return status;
@@ -45,11 +46,11 @@ public class ReactVideoDetailsResponse {
         this.message = message;
     }
 
-    public PostReactDetail getPostReactDetail() {
+    public PostReaction getPostReactDetail() {
         return postReactDetail;
     }
 
-    public void setPostReactDetail(PostReactDetail postReactDetail) {
+    public void setPostReactDetail(PostReaction postReactDetail) {
         this.postReactDetail = postReactDetail;
     }
 

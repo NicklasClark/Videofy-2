@@ -42,19 +42,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
-import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
-import com.cncoding.teazer.home.camera.adapters.TrendingGiphyAdapter;
+import com.cncoding.teazer.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
@@ -65,9 +60,6 @@ import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.giphy.Datum;
-import com.cncoding.teazer.model.giphy.Images;
-import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.videoTrim.TrimmerActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -77,7 +69,6 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
@@ -90,14 +81,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
-import butterknife.OnTextChanged;
-import butterknife.OnTouch;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -105,7 +90,6 @@ import static android.R.anim.fade_in;
 import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
-import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GIFS;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
@@ -113,33 +97,28 @@ import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLA
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSearchEvent;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
 
 public class CameraActivity extends AppCompatActivity
-        implements OnCameraFragmentInteractionListener, UploadFragment.OnUploadFragmentInteractionListener,
+        implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
         TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener, Interests.OnInterestsInteractionListener,
         NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse,
-        EasyPermissions.PermissionCallbacks {
+        EasyPermissions.PermissionCallbacks{
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
     private static final String TAG_UPLOAD_FRAGMENT = "uploadFragment";
     private static final int RC_READ_EXTERNAL_STORAGE = 102;
 
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
-    @BindView(R.id.video_gallery_container) RecyclerView videoGalleryRecyclerView;
-    @BindView(R.id.reaction_gif_container) RecyclerView gifRecyclerView;
+    @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
     @BindView(R.id.up_btn) AppCompatImageView upBtn;
-    @BindView(R.id.giphy_search) ProximaNovaRegularAutoCompleteTextView giphySearch;
 
     private FragmentManager fragmentManager;
     private GoogleApiClient googleApiClient;
@@ -151,15 +130,7 @@ public class CameraActivity extends AppCompatActivity
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
     private String videoPath;
-    boolean checkFromGallery = true;
-    private Call<TrendingGiphy> trendingGiphyCall;
-    private Call<TrendingGiphy> searchGiphyCall;
-    private int offset = 0;
-    private List<Datum> trendingGiphyList = new ArrayList<>();
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private int totalGiphyCount = 0;
-    private String giphySearchTerm = "";
-    private Handler handler;
+    boolean checkFromGallery=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,34 +147,16 @@ public class CameraActivity extends AppCompatActivity
 //                .build());
 
 
+
+
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         //checkFromGallery=true;
         fragmentManager = getSupportFragmentManager();
         videosList = new ArrayList<>();
 
-        videoGalleryRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        videoGalleryRecyclerView.setAdapter(new VideoGalleryAdapter(this, videosList));
-
-        //giphy recycler view
-        GridLayoutManager manager = new GridLayoutManager(this, 3);
-        gifRecyclerView.setLayoutManager(manager);
-        gifRecyclerView.setAdapter(new TrendingGiphyAdapter(CameraActivity.this, trendingGiphyList));
-
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                offset += 30;
-                if (offset < totalGiphyCount) {
-                    if (giphySearchTerm.length() > 0) {
-                        searchGiphys(offset, giphySearchTerm);
-                    } else {
-                        getTrendingGiphys(offset);
-                    }
-                }
-            }
-        };
-        gifRecyclerView.addOnScrollListener(scrollListener);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setAdapter(new VideoGalleryAdapter(this, videosList));
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -211,7 +164,7 @@ public class CameraActivity extends AppCompatActivity
             postDetails = bundle.getParcelable(POST_DETAILS);
         }
         slidingUpPanelLayout.setOverlayed(true);
-        slidingUpPanelLayout.setScrollableView(videoGalleryRecyclerView);
+        slidingUpPanelLayout.setScrollableView(recyclerView);
         cameraFragment = CameraFragment.newInstance(isReaction);
 
         if (savedInstanceState == null) {
@@ -224,125 +177,6 @@ public class CameraActivity extends AppCompatActivity
                 .enableAutoManage(this, 0 /* clientId */, this)
                 .addApi(Places.GEO_DATA_API)
                 .build();
-
-        getTrendingGiphys(offset);
-    }
-
-    private void getTrendingGiphys(final int offset) {
-        trendingGiphyCall = ApiCallingService.Giphy.getTrendingGiphys(this, getString(R.string.giphy_api_key), 30, offset, "g");
-        if (!trendingGiphyCall.isExecuted())
-            trendingGiphyCall.enqueue(new Callback<TrendingGiphy>() {
-                @Override
-                public void onResponse(Call<TrendingGiphy> call, Response<TrendingGiphy> response) {
-                    try {
-                        TrendingGiphy trendingGiphy = response.body();
-                        if (trendingGiphy.getMeta().getStatus() == 200) {
-                            totalGiphyCount = trendingGiphy.getPagination().getTotalCount();
-                            trendingGiphyList.addAll(trendingGiphy.getData());
-
-                            gifRecyclerView.getAdapter().notifyItemRangeChanged(offset, 30);
-                        } else {
-                            Toast.makeText(CameraActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<TrendingGiphy> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-    }
-
-    @OnTextChanged(R.id.giphy_search) public void performSearch(final CharSequence charSequence) {
-        trendingGiphyList.clear();
-        scrollListener.resetState();
-        if (charSequence.length() > 0) {
-            if (giphySearch.getCompoundDrawables()[2] == null)
-                giphySearch.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded,
-                        0, R.drawable.ic_clear_dark, 0);
-        } else {
-            if (giphySearch.getCompoundDrawables()[2] != null)
-                giphySearch.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded, 0, 0, 0);
-        }
-
-        search(charSequence);
-    }
-
-    private void search(CharSequence charSequence) {
-        giphySearchTerm = charSequence.toString();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!giphySearchTerm.isEmpty() && giphySearchTerm != null) {
-                    if (giphySearchTerm.length() > 0) {
-                        logSearchEvent(giphySearchTerm);
-                        trendingGiphyList.clear();
-                        gifRecyclerView.getAdapter().notifyDataSetChanged();
-                        searchGiphys(0, giphySearchTerm);
-                    }
-            } else
-                    getTrendingGiphys(0);
-            }
-        };
-
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        } else {
-            handler = new Handler();
-        }
-        handler.postDelayed(runnable, 200);
-
-    }
-
-    @OnEditorAction(R.id.giphy_search) public boolean searchByKeyboard(int actionId) {
-        if (actionId == EditorInfo.IME_ACTION_GO) {
-            search(giphySearch.getText());
-            hideKeyboard(this, giphySearch);
-            return true;
-        }
-        return false;
-    }
-
-    @OnTouch(R.id.giphy_search) public boolean clearText(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP && giphySearch.getCompoundDrawables()[2] != null &&
-                event.getRawX() >= giphySearch.getRight() - giphySearch.getCompoundDrawables()[2].getBounds().width() * 1.5) {
-            giphySearch.setText("");
-            getTrendingGiphys(0);
-            return true;
-        }
-        return false;
-    }
-
-
-    private void searchGiphys(final int offset, String query) {
-        searchGiphyCall = ApiCallingService.Giphy.searchGiphy(this, getString(R.string.giphy_api_key), 30, offset, "g", "en",query);
-        if (!searchGiphyCall.isExecuted())
-            searchGiphyCall.enqueue(new Callback<TrendingGiphy>() {
-                @Override
-                public void onResponse(Call<TrendingGiphy> call, Response<TrendingGiphy> response) {
-                    try {
-                        TrendingGiphy trendingGiphy = response.body();
-                        if (trendingGiphy.getMeta().getStatus() == 200) {
-                            totalGiphyCount = trendingGiphy.getPagination().getTotalCount();
-                            trendingGiphyList.addAll(trendingGiphy.getData());
-
-                            gifRecyclerView.getAdapter().notifyItemRangeChanged(offset, 30);
-                        } else {
-                            Toast.makeText(CameraActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<TrendingGiphy> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
     }
 
     @Override
@@ -354,8 +188,8 @@ public class CameraActivity extends AppCompatActivity
         Cursor cursor = null;
         try {
             String[] proj = {
-                    MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+                    MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -371,62 +205,68 @@ public class CameraActivity extends AppCompatActivity
         super.onResume();
 
         try {
-            if (checkFromGallery) {
-                checkFromGallery = false;
-                Intent intent = getIntent();
-                if (getIntent() != null) {
-                    String action = intent.getAction();
-                    String type = intent.getType();
+        if (checkFromGallery) {
+            checkFromGallery = false;
+            Intent intent = getIntent();
+            if (getIntent() != null) {
+                String action = intent.getAction();
+                String type = intent.getType();
 
-                    if (Intent.ACTION_SEND.equals(action) && type != null) {
+                if (Intent.ACTION_SEND.equals(action) && type != null) {
 
-                        if ("text/plain".equals(type)) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+                    if ("text/plain".equals(type)) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
 
-                        } else if (type.startsWith("image/")) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+                    } else if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
 
-                        } else if (type.startsWith("video/")) {
-                            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    } else if (type.startsWith("video/")) {
+                        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
-                            MediaPlayer mp = MediaPlayer.create(this, uri);
-                            int duration = mp.getDuration();
-                            mp.release();
+                        MediaPlayer mp = MediaPlayer.create(this, uri);
+                        int duration = mp.getDuration();
+                        mp.release();
 
-                            if (duration >= 5000)
-                                uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
+                        if (duration >= 5000)
+                            uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
 
-                            else {
-                                Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
-                            }
-                            //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
+                        else {
+                            Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-                        if (type.startsWith("image/")) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
-                        }
-                        if (type.startsWith("video/")) {
-                            Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
+                        //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
                     }
+                } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                    if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                    if (type.startsWith("video/")) {
+                        Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
+
+
                 }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+    }
+        catch(Exception e)
+    {
+        e.printStackTrace();
+    }
 
 
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSIONS);
-        } else
+        }
+        else
             prepareVideoGallery();
 
-        if (googleApiClient != null && !googleApiClient.isConnected())
+        if (googleApiClient!= null && !googleApiClient.isConnected())
             googleApiClient.connect();
     }
 
@@ -445,9 +285,11 @@ public class CameraActivity extends AppCompatActivity
                                             SlidingUpPanelLayout.PanelState newState) {
                 if (newState == COLLAPSED) {
                     slidingPanelArrow.setImageResource(R.drawable.ic_up);
-                } else if (newState == EXPANDED) {
+                }
+                else if (newState == EXPANDED) {
                     slidingPanelArrow.setImageResource(R.drawable.ic_down);
-                } else if (newState == ANCHORED) {
+                }
+                else if (newState == ANCHORED) {
                     slidingPanelArrow.setImageResource(R.drawable.ic_drag_handle);
                 }
             }
@@ -460,7 +302,7 @@ public class CameraActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        else videoGalleryRecyclerView.getAdapter().notifyDataSetChanged();
+//        else recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void startVideoUploadFragment() {
@@ -488,23 +330,10 @@ public class CameraActivity extends AppCompatActivity
 //                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                compressVideoAsyncTask.delegate = this;
 //                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
-
-                getVideoDurationAndUpload(uploadParams.getVideoPath(), isReaction, false);
-//                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false, (int) getVideoDuration(videoPath));
-//                startVideoUploadFragment();
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
+                startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
-                giphySearch.setVisibility(View.GONE);
-                videoGalleryRecyclerView.setVisibility(View.VISIBLE);
-                gifRecyclerView.setVisibility(View.GONE);
-                slidingUpPanelLayout.setScrollableView(videoGalleryRecyclerView);
-                slidingUpPanelLayout.setPanelState(ANCHORED);
-                break;
-            case ACTION_SHOW_GIFS:
-                giphySearch.setVisibility(View.VISIBLE);
-                videoGalleryRecyclerView.setVisibility(View.GONE);
-                gifRecyclerView.setVisibility(View.VISIBLE);
-                slidingUpPanelLayout.setScrollableView(gifRecyclerView);
                 slidingUpPanelLayout.setPanelState(ANCHORED);
                 break;
             default:
@@ -525,17 +354,11 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
-    public void onTrendingGiphyAdapterInteraction(Images images) {
-        Gson gson = new Gson();
-        String imageString = gson.toJson(images);
-        uploadFragment = UploadFragment.newInstance(imageString, isReaction, true, 0, true);
-        startVideoUploadFragment();
-
-    }
-
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         uploadOrTrimAction(videoPath);
+
+
     }
 
     @Override
@@ -543,43 +366,37 @@ public class CameraActivity extends AppCompatActivity
 
     }
 
-    private void uploadOrTrimAction(String videoPath) {
+    private void uploadOrTrimAction(String videoPath)
+    {
         try {
             if (new File(videoPath).exists()) {
-                String videoFormat = new File(videoPath).getName();
+                String videoFormat=new File(videoPath).getName();
                 String filenameArray[] = videoFormat.split("\\.");
-                String extension = filenameArray[filenameArray.length - 1];
-                if (extension.equals("mp4") || extension.equals("avi") || extension.equals("mov")) {
-                    long videoDuration = getVideoDuration(videoPath);
+                String extension = filenameArray[filenameArray.length-1];
+                if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
+                    long  videoDuration= getVideoDuration(videoPath);
                     if (videoDuration < 60) {
-                        if (isReaction) {
-                            if (videoDuration >= 3) {
-                                getVideoDurationAndUpload(videoPath, true, true);
-//                                uploadFragment = UploadFragment.newInstance(videoPath, true, true, (int) videoDuration);
-//                                startVideoUploadFragment();
-                            } else {
-                                Toast.makeText(this, "MyReactions can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
-                            }
+
+                        if (videoDuration >= 5) {
+                            uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
+                            startVideoUploadFragment();
                         } else {
-                            if (videoDuration >= 5) {
-                                getVideoDurationAndUpload(videoPath, false, true);
-//                                uploadFragment = UploadFragment.newInstance(videoPath, false, true, (int) videoDuration);
-//                                startVideoUploadFragment();
-                            } else {
-                                Toast.makeText(this, "Posts can not be less than 5 seconds", Toast.LENGTH_SHORT).show();
-                            }
+                            Toast.makeText(this, "Select at least 5 seconds video", Toast.LENGTH_SHORT).show();
+
                         }
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putString("path", videoPath);
                         bundle.putInt("MAX_DURATION", (int) getVideoDuration(videoPath));
-                        bundle.putBoolean("IS_REACTION", isReaction);
                         Intent intent = new Intent(this, TrimmerActivity.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, VIDEO_TRIM_REQUEST_CODE);
                     }
-                } else {
+                }
+                else
+                {
                     Toast.makeText(this, "This video format is not supported", Toast.LENGTH_SHORT).show();
+
                 }
             } else
                 Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
@@ -588,13 +405,13 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
-    public String getVideoFormat(String filename) {
+    public String getVideoFormat(String filename)
+    {
         String filenameArray[] = filename.split("\\.");
-        String extension = filenameArray[filenameArray.length - 1];
+        String extension = filenameArray[filenameArray.length-1];
         Toast.makeText(this, extension, Toast.LENGTH_SHORT).show();
         return extension;
     }
-
     @Override
     public void processFinish(String output) {
 //        File trimmedFile = new File(output);
@@ -606,20 +423,7 @@ public class CameraActivity extends AppCompatActivity
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(videoFile);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInSec = Long.parseLong(time) / 1000;
-
-        retriever.release();
-        return timeInSec;
-    }
-
-    private long getVideoDurationAndUpload(String videoFile, boolean isReaction, boolean isGallery) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(videoFile);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInSec = Long.parseLong(time) / 1000;
-
-        uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
-        startVideoUploadFragment();
+        long timeInSec = Long.parseLong(time)/1000;
 
         retriever.release();
         return timeInSec;
@@ -645,7 +449,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onPlaceClick(ArrayList<NearbyPlacesAdapter.PlaceAutocomplete> mResultList, int position) {
-        if (mResultList != null) {
+        if(mResultList!=null){
             try {
                 final String placeId = String.valueOf(mResultList.get(position).placeId);
 
@@ -657,7 +461,7 @@ public class CameraActivity extends AppCompatActivity
                 placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
                     @Override
                     public void onResult(@NonNull PlaceBuffer places) {
-                        if (places.getCount() == 1) {
+                        if(places.getCount()==1){
                             //Do the things here on Click.....
                             uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
                                     places.get(0).getName().toString(),
@@ -665,12 +469,14 @@ public class CameraActivity extends AppCompatActivity
                                     places.get(0).getLatLng().longitude
                             ));
                             fragmentManager.popBackStack();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-            } catch (Exception e) {
+            }
+            catch (Exception e){
                 Log.e("onPlaceClick()", e.getMessage());
             }
 
@@ -732,17 +538,17 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onInterestsSelected(final String resultToShow, final String resultToSend, final int count) {
         fragmentManager.popBackStack();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                            resultToShow, resultToSend, count);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                                resultToShow, resultToSend, count);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }, 100);
+            }, 100);
     }
 
     @Override
@@ -775,39 +581,6 @@ public class CameraActivity extends AppCompatActivity
             fragmentManager.popBackStack();
         }
     }
-
-//    @Override
-//    public void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
-//                              double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend, boolean isGiphy) {
-//        switch (whichUpload) {
-//            case VIDEO_UPLOAD:
-//                performVideoUpload(this,
-//                        new UploadParams(
-//                                isGallery,
-//                                videoPath,
-//                                title,
-//                                location,
-//                                latitude,
-//                                longitude,
-//                                selectedTagsToSend,
-//                                selectedCategoriesToSend,
-//                                postDetails));
-//                break;
-//            case REACTION_UPLOAD:
-//                performReactionUpload(this,
-//                        new UploadParams(
-//                                isGallery,
-//                                videoPath,
-//                                title,
-//                                location,
-//                                latitude,
-//                                longitude,
-//                                postDetails, isGiphy));
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -855,14 +628,14 @@ public class CameraActivity extends AppCompatActivity
                 if (cursor != null) {
                     columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
                     duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-                    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
                     thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
                     while (cursor.moveToNext()) {
                         try {
                             reference.get().videosList.add(new Videos(
                                     cursor.getString(columnIndexData),              //Video path
-                                    //                            cursor.getString(thumbnailData),                //Thumbnail
+        //                            cursor.getString(thumbnailData),                //Thumbnail
                                     cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
                             ));
                         } catch (Exception e) {
@@ -879,7 +652,7 @@ public class CameraActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            reference.get().videoGalleryRecyclerView.getAdapter().notifyDataSetChanged();
+            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
             super.onPostExecute(aVoid);
         }
     }
@@ -903,12 +676,11 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
+        if (googleApiClient != null && googleApiClient.isConnected())
+        {    googleApiClient.disconnect();}
 
-        // checkFromGallery=true;
-        //  Toast.makeText(getApplicationContext(),"onStop",Toast.LENGTH_SHORT).show();
+       // checkFromGallery=true;
+      //  Toast.makeText(getApplicationContext(),"onStop",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -921,7 +693,7 @@ public class CameraActivity extends AppCompatActivity
             videosList.clear();
             videosList = null;
 //        gridLayoutManager.removeAndRecycleAllViews(recycler);
-            videoGalleryRecyclerView.removeAllViews();
+            recyclerView.removeAllViews();
             if (panelSlideListener != null) {
                 slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
                 panelSlideListener = null;
@@ -938,14 +710,13 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     videoPath = data.getStringExtra("trimmed_path");
-                    getVideoDurationAndUpload(videoPath, isReaction, true);
-//                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int) getVideoDuration(videoPath));
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;
 //                    compressVideoAsyncTask.execute(videoPath);
 
-//                    startVideoUploadFragment();
+                    startVideoUploadFragment();
                 }
                 break;
             default:
@@ -971,11 +742,13 @@ public class CameraActivity extends AppCompatActivity
         if (slidingUpPanelLayout.getPanelState() == ANCHORED ||
                 slidingUpPanelLayout.getPanelState() == EXPANDED) {
             slidingUpPanelLayout.setPanelState(COLLAPSED);
-        } else if (fragmentManager.getBackStackEntryCount() > 0) {
+        }
+        else if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
 //            if (uploadFragment != null)
 //                uploadFragment.toggleInteraction(true);
-        } else {
+        }
+        else {
             if (!isReaction) {
                 startActivity(new Intent(this, BaseBottomBarActivity.class));
                 finish();

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.discover.adapters;
 
-import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,7 +23,6 @@ import butterknife.ButterKnife;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static android.view.LayoutInflater.from;
-import static com.cncoding.teazer.utilities.diffutil.MyInterestsDiffCallback.DIFF_POST_DETAILS_LIST;
 
 /**
  *
@@ -64,13 +62,14 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
             onBindViewHolder(holder, position);
             return;
         }
-
-        if (payloads.get(0) instanceof Bundle) {
-            Bundle diffBundle = (Bundle) payloads.get(0);
-
-            if (diffBundle != null && diffBundle.containsKey(DIFF_POST_DETAILS_LIST)) {
-                ((MyInterestsListItemAdapter) holder.recyclerView.getAdapter())
-                        .updatePosts(diffBundle.<PostDetails>getParcelableArrayList(DIFF_POST_DETAILS_LIST));
+        if (payloads.get(0) instanceof List) {
+            try {
+                //noinspection unchecked
+                List<PostDetails> postDetailsList = (List<PostDetails>) payloads.get(0);
+                if (postDetailsList != null)
+                    ((MyInterestsListItemAdapter) holder.recyclerView.getAdapter()).updatePosts(postDetailsList);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

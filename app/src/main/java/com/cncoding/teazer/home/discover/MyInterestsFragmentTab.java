@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.discover;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -11,12 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +50,7 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
@@ -54,33 +58,35 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         }
     }
 
-    @Override
-    protected void handleResponse(BaseModel resultObject) {
-        if (resultObject instanceof PostList) {
-            PostList tempPostList = (PostList) resultObject;
-            is_next_page = tempPostList.isNextPage();
-            if (!tempPostList.getPosts().isEmpty()) {
-                ((SubDiscoverAdapter) recyclerView.getAdapter()).updatePosts(tempPostList.getPosts());
-            } else if (currentPage == 1){
-                showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+    @Override protected void handleResponse(BaseModel resultObject) {
+        try {
+            if (resultObject instanceof PostList) {
+                PostList postList = (PostList) resultObject;
+                is_next_page = postList.isNextPage();
+                if (!postList.getPosts().isEmpty()) {
+                    //noinspection unchecked
+                    new UpdatePosts(this).execute(postList.getPosts());
+                } else if (currentPage == 1){
+                    showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+                }
             }
+            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    protected void handleError(BaseModel baseModel) {
+    @Override protected void handleError(BaseModel baseModel) {
         baseModel.getError().printStackTrace();
         showErrorMessage(R.string.something_went_wrong, R.string.swipe_down_to_retry);
+        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the searchContainer for this fragment
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
 
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(new SubDiscoverAdapter(this));
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -93,20 +99,23 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        getPosts(1);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.resetState();
                 getPosts(1);
+                scrollListener.resetState();
             }
         });
-
         return rootView;
     }
 
-    private void getPosts(final int page) {
+    @Override public void onResume() {
+        super.onResume();
+        getPosts(1);
+    }
+
+    private void getPosts(int page) {
         loadAllInterestedCategoriesPosts(page, categoryId);
     }
 
@@ -116,5 +125,20 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         noPosts2.setText(message2);
         noPosts.setVisibility(VISIBLE);
         noPosts2.setVisibility(VISIBLE);
+    }
+
+    private static class UpdatePosts extends AsyncTask<List<PostDetails>, Void, Void> {
+
+        private MyInterestsFragmentTab fragment;
+
+        UpdatePosts(MyInterestsFragmentTab fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected Void doInBackground(List<PostDetails>[] lists) {
+            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(lists[0]);
+            return null;
+        }
     }
 }

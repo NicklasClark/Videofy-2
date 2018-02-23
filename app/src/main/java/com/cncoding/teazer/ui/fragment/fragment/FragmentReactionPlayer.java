@@ -34,7 +34,7 @@ import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.MyReactions;
+import com.cncoding.teazer.model.react.Reactions;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -79,7 +79,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
  * Created by farazhabib on 23/01/18.
  */
 
-public class FragmentReactionPlayer extends BaseFragment {
+public class FragmentReactionplayer extends BaseFragment {
 
     public static final int OPENED_FROM_OTHER_SOURCE = 0;
     public static final int OPENED_FROM_PROFILE = 1;
@@ -98,7 +98,7 @@ public class FragmentReactionPlayer extends BaseFragment {
     @BindView(R.id.postTitle) ProximaNovaRegularTextView postTitle;
     private String videoURL;
     private PostReaction othersPostDetails;
-    private MyReactions selfPostDetails;
+    private Reactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -109,6 +109,7 @@ public class FragmentReactionPlayer extends BaseFragment {
     private int currentWindow;
     private boolean playWhenReady = true;
     private int playSource;
+    Reactions reactions;
     SimpleExoPlayer player;
     int getPlaySource;
     Context context;
@@ -124,8 +125,8 @@ public class FragmentReactionPlayer extends BaseFragment {
     TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
     ProfileMyCreationAdapter.myCreationListener myCreationListener;
 
-    public static FragmentReactionPlayer newInstance(int source, PostReaction postReaction, MyReactions selfPostreaction ) {
-        FragmentReactionPlayer fragment = new FragmentReactionPlayer();
+    public static FragmentReactionplayer newInstance(int source, PostReaction postReaction, Reactions selfPostreaction ) {
+        FragmentReactionplayer fragment = new FragmentReactionplayer();
         Bundle args = new Bundle();
         args.putParcelable(SELF_REACTIONS, selfPostreaction);
         args.putParcelable(POST_REACTIONS, postReaction);
@@ -252,11 +253,11 @@ public class FragmentReactionPlayer extends BaseFragment {
             case OPENED_FROM_PROFILE: {
                 try {
                     if (selfPostDetails != null) {
-                        videoURL = selfPostDetails.getMediaDetail().getReactMediaUrl();
+                        videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
 
                         if (selfPostDetails != null) {
                             reactId = selfPostDetails.getReactId();
-                            isLiked = !selfPostDetails.getCanLike();
+                            isLiked = !selfPostDetails.canLike();
                             likesCount = selfPostDetails.getLikes();
                             viewsCount = selfPostDetails.getViews();
                             reactionTitle = selfPostDetails.getReactTitle();
@@ -639,7 +640,7 @@ public class FragmentReactionPlayer extends BaseFragment {
                         .setCanonicalIdentifier(String.valueOf(selfPostDetails.getPostOwner().getUserId()))
                         .setTitle(selfPostDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(selfPostDetails.getMediaDetail().getReactThumbUrl());
+                        .setContentImageUrl(selfPostDetails.getMediaDetail().getThumbUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")

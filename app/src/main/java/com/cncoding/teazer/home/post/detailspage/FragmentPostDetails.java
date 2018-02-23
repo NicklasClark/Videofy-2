@@ -62,7 +62,6 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -189,7 +188,7 @@ public class FragmentPostDetails extends BaseFragment {
     @BindView(R.id.video_upload_progress) ProgressBar uploadProgress;
     @BindView(R.id.uploading_status_layout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.liked_user_layout) FrameLayout frameLayout;
-    public static final String USER_PROFILE = "userprofile";
+
 //    private long playbackPosition;
 //    private int currentWindow;
 //    private boolean enableReactBtn;
@@ -465,7 +464,8 @@ public class FragmentPostDetails extends BaseFragment {
             Glide.with(this)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
                             postDetails.getPostOwner().getProfileMedia().getThumbUrl() : "")
-                    .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.ic_user_male_dp_small))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -572,13 +572,13 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     public void incrementLikes() {
-        likes = likes + 1;
+        likes=likes+1;
         String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
     }
 
     public void decrementLikes() {
-        likes = likes - 1;
+        likes =likes-1;
         if (likes < 0) {likes = 0;}
         String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
@@ -1287,36 +1287,9 @@ public class FragmentPostDetails extends BaseFragment {
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.canReact = false;
-
-            if (!uploadParams.isGiphy()) {
-                launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
-            } else {
-                postGiphyReaction(uploadParams);
-            }
+            launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
         }
     }
-
-    private void postGiphyReaction(UploadParams uploadParams) {
-
-        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
-                uploadParams.getTitle(),
-                uploadParams.getVideoPath());
-        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200 || response.code() == 201) {
-                    getPostReactions(postDetails.getPostId(), 1);
-                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     @SuppressWarnings("unused")
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {

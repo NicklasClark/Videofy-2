@@ -14,8 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -27,9 +27,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -38,9 +36,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
-import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
-import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
@@ -131,66 +127,35 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         String viewsText = "  " + postReaction.getViews();
         holder.views.setText(viewsText);
 
-        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                        Target<Drawable> target, boolean isFirstResource) {
-                return false;
-            }
+        Glide.with(context)
+                .load(postReaction.getMediaDetail().getThumbUrl())
+                .apply(new RequestOptions().skipMemoryCache(false))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
 
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                           DataSource dataSource, boolean isFirstResource) {
-                holder.shimmerLayout.setVisibility(View.INVISIBLE);
-                holder.vignetteLayout.setVisibility(View.VISIBLE);
-                holder.caption.setVisibility(View.VISIBLE);
-                holder.bottomLayout.setVisibility(View.VISIBLE);
-                return false;
-            }
-        };
-
-        if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO) {
-            holder.layout.setEnabled(true);
-            Glide.with(context)
-                    .load(postReaction.getMediaDetail().getThumbUrl())
-                    .apply(new RequestOptions().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .listener(requestListener)
-                    .into(holder.postThumbnail);
-        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-            holder.layout.setEnabled(true);
-            Glide.with(context)
-                    .load(postReaction.getMediaDetail().getMediaUrl())
-                    .apply(new RequestOptions().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .listener(requestListener)
-                    .into(holder.postThumbnail);
-        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
-            holder.layout.setEnabled(true);
-
-            Gson gson = new Gson();
-            Images images = gson.fromJson(postReaction.getMediaDetail().getExternalMeta(), Images.class);
-
-            Glide.with(context)
-                    .load(images.getDownsized().getUrl())
-                    .apply(new RequestOptions().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .listener(requestListener)
-                    .into(holder.postThumbnail);
-        }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
+                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                        holder.vignetteLayout.setVisibility(View.VISIBLE);
+                        holder.caption.setVisibility(View.VISIBLE);
+                        holder.bottomLayout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+//                .animate(R.anim.float_up)
+                .into(holder.postThumbnail);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.root_layout:
-                        if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
-                        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
-                        } else {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, false);
-                        }
                     //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-//                        ye wala mera tha
-//                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null);
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         // If there is a way to know that the person who posted the reaction
@@ -241,6 +206,6 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     }
 
     void playFromDeepLink(PostReaction postReaction) {
-        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
+        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
     }
 }

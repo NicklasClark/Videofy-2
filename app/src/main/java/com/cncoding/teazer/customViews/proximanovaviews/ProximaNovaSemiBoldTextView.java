@@ -28,6 +28,11 @@ public class ProximaNovaSemiBoldTextView extends EmojiAppCompatTextView {
         ProximaNovaSemiboldButton.initAttrs(context, attrs, this);
     }
 
+//    @Override
+//    public void setText(CharSequence text, BufferType type) {
+//        super.setText(decodeUnicodeString(text.toString()), type);
+//    }
+
     private void applyCustomFont(Context context) {
         Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_semibold.otf");
         setTypeface(customFont);

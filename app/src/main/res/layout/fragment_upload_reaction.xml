@@ -42,7 +42,6 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/playBtn"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_centerInParent="true"
@@ -50,7 +49,6 @@
                     android:clickable="false"/>
 
                 <ProgressBar
-                    android:visibility="gone"
                     android:id="@+id/thumbnail_progress_bar"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
@@ -76,8 +74,8 @@
             <include layout="@layout/progress_bar_horizontal"/>
 
             <Switch
-                android:visibility="visible"
-                android:text="Convert to gif"
+                android:visibility="gone"
+                android:text=" Convert to gif"
                 android:id="@+id/gifSwitch"
                 android:layout_marginTop="4dp"
                 android:layout_gravity="center_horizontal"

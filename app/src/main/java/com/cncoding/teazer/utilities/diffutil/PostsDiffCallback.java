@@ -13,6 +13,8 @@ import com.cncoding.teazer.model.post.ReactedUser;
 import java.util.List;
 import java.util.Objects;
 
+import static org.apache.commons.collections4.CollectionUtils.isEqualCollection;
+
 /**
  *
  * Created by Prem $ on 12/25/2017.
@@ -108,7 +110,8 @@ public class PostsDiffCallback extends DiffUtil.Callback {
             diffBundle.putBoolean(DIFF_CAN_REACT, newPostDetails.canReact());
             diffBundle.putParcelableArrayList(DIFF_REACTIONS, newPostDetails.getReactions());
         }
-        if (!Objects.equals(newPostDetails.getReactedUsers(), oldPostDetails.getReactedUsers()))
+        if (oldPostDetails.getReactedUsers() != null && newPostDetails.getReactedUsers() != null &&
+                !isEqualCollection(newPostDetails.getReactedUsers(), oldPostDetails.getReactedUsers()))
             diffBundle.putParcelableArrayList(DIFF_REACTED_USERS, newPostDetails.getReactedUsers());
         if (!Objects.equals(oldPostDetails.isHided(), newPostDetails.isHided()))
             diffBundle.putBoolean(DIFF_IS_HIDED, newPostDetails.isHided());

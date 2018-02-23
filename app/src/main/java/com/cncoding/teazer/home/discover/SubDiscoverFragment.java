@@ -2,6 +2,7 @@ package com.cncoding.teazer.home.discover;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
@@ -33,9 +35,11 @@ import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +94,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
 
         switch (action) {
             case ACTION_VIEW_FEATURED:
-                getParentActivity().updateToolbarTitle(getString(R.string.most_popular));
+                getParentActivity().updateToolbarTitle(getString(R.string.featured_videos));
                 prepareFeaturedLayout();
                 break;
             case ACTION_VIEW_MY_INTERESTS:
@@ -111,7 +115,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     private void prepareFeaturedLayout() {
         listLayout.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubDiscoverAdapter(this));
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -171,7 +175,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     private void prepareTrendingLayout() {
         listLayout.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubDiscoverAdapter(this));
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -240,21 +244,27 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
 
     @SuppressLint("SwitchIntDef") @Override protected void handleResponse(BaseModel resultObject) {
-        if (resultObject instanceof PostList) {
-            PostList postList = (PostList) resultObject;
-            is_next_page = postList.isNextPage();
-            if (!postList.getPosts().isEmpty()) {
-                ((SubDiscoverAdapter) recyclerView.getAdapter()).updatePosts(postList.getPosts());
-            } else if (currentPage == 1) {
-                showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+        try {
+            if (resultObject instanceof PostList && recyclerView.getAdapter() != null) {
+                PostList postList = (PostList) resultObject;
+                is_next_page = postList.isNextPage();
+                if (!postList.getPosts().isEmpty()) {
+                    //noinspection unchecked
+                    new UpdatePosts(this).execute(postList.getPosts());
+                } else if (currentPage == 1) {
+                    showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+                }
+                if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override protected void handleError(BaseModel baseModel) {
-        swipeRefreshLayout.setRefreshing(false);
         showErrorMessage(R.string.something_went_wrong, R.string.swipe_down_to_retry);
         baseModel.getError().printStackTrace();
+        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
     }
 
     private void showErrorMessage(@StringRes int message1, @StringRes int message2) {
@@ -299,6 +309,21 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
         @Override
         public int getCount() {
             return categories.size();
+        }
+    }
+
+    private static class UpdatePosts extends AsyncTask<List<PostDetails>, Void, Void>{
+
+        private SubDiscoverFragment fragment;
+
+        UpdatePosts(SubDiscoverFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected Void doInBackground(List<PostDetails>[] lists) {
+            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(lists[0]);
+            return null;
         }
     }
 }

@@ -118,39 +118,19 @@ public class PostReaction implements Parcelable {
         return postId;
     }
 
-    public void setReactId(Integer reactId) {
-        this.reactId = reactId;
+    public String getReactTitle() {
+        return reactTitle;
     }
 
     public int getPostOwnerId() {
         return postOwnerId;
     }
 
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-
-    public void setPostOwnerId(Integer postOwnerId) {
-        this.postOwnerId = postOwnerId;
-    }
-
-    public String getReactTitle() {
-        return reactTitle;
-    }
-
-    public void setReactTitle(String reactTitle) {
-        this.reactTitle = reactTitle;
-    }
-
-    public Integer getLikes() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Integer getViews() {
+    public int getViews() {
         return views;
     }
 
@@ -174,7 +154,8 @@ public class PostReaction implements Parcelable {
         return reactedAt;
     }
 
-    public Boolean getMySelf() {
+    public Boolean getMySelf()
+    {
         return mySelf;
     }
 }

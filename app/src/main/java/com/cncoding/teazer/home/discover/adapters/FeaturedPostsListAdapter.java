@@ -37,6 +37,8 @@ import butterknife.OnClick;
 
 import static android.support.v7.util.DiffUtil.calculateDiff;
 import static android.view.LayoutInflater.from;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.updatePostDetailsAccordingToDiffBundle;
@@ -149,18 +151,18 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
 
         @Override public void bind() {
             try {
-                toggleShimmer(View.VISIBLE);
+                toggleShimmer(VISIBLE, INVISIBLE);
                 postDetails = featuredPostsList.get(getAdapterPosition());
 
                 title.setText(decodeUnicodeString(postDetails.getTitle()));
                 name.setText(postDetails.getPostOwner().getUserName());
-                String durationText = postDetails.getMedias().get(0).getDuration() + " secs";
+                String durationText = postDetails.getMedias().get(0).getDuration();
                 duration.setText(durationText);
                 likes.setText(String.valueOf(postDetails.getLikes()));
                 views.setText(String.valueOf(postDetails.getMedias().get(0).getViews()));
 
                 if (postDetails.getTotalReactions() > 2) {
-                    reactionCount.setVisibility(View.VISIBLE);
+                    reactionCount.setVisibility(VISIBLE);
                     String reactionText = "+" + String.valueOf(postDetails.getTotalReactions() - 2) + " R";
                     reactionCount.setText(reactionText);
                 }
@@ -174,7 +176,7 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
                         .into(dp);
 
                 if (postDetails.getReactedUsers() != null && postDetails.getReactedUsers().size() > 0) {
-                    reactionImage1.setVisibility(View.VISIBLE);
+                    reactionImage1.setVisibility(VISIBLE);
                     Glide.with(fragment)
                             .load(postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
                                     R.drawable.ic_user_male_dp_small
@@ -182,7 +184,7 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
                             .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                             .into(reactionImage1);
                     if (postDetails.getReactedUsers().size() > 1) {
-                        reactionImage2.setVisibility(View.VISIBLE);
+                        reactionImage2.setVisibility(VISIBLE);
                         Glide.with(fragment)
                                 .load(postDetails.getReactedUsers().get(1).getProfileMedia() == null ?
                                         R.drawable.ic_user_male_dp_small
@@ -210,7 +212,7 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                            DataSource dataSource, boolean isFirstResource) {
-                                toggleShimmer(View.INVISIBLE);
+                                toggleShimmer(INVISIBLE, VISIBLE);
                                 return false;
                             }
                         })
@@ -237,10 +239,10 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
             updatePostDetailsAccordingToDiffBundle(postDetails, bundle);
         }
 
-        private void toggleShimmer(int visibility) {
-            shimmerLayout.setVisibility(visibility);
-            topLayout.setVisibility(visibility);
-            bottomLayout.setVisibility(visibility);
+        private void toggleShimmer(int shimmerVisibility, int layoutVisibility) {
+            shimmerLayout.setVisibility(shimmerVisibility);
+            topLayout.setVisibility(layoutVisibility);
+            bottomLayout.setVisibility(layoutVisibility);
         }
     }
 }

@@ -23,12 +23,9 @@ public class MediaDetail implements Parcelable {
     @SerializedName("react_duration")
     @Expose
     private String reactDuration;
-    @SerializedName("external_meta")
+    @SerializedName("react_is_image")
     @Expose
-    private String externalMeta;
-    @SerializedName("media_type")
-    @Expose
-    private Integer mediaType;
+    private Boolean reactIsImage;
     @SerializedName("media_dimension")
     @Expose
     private MediaDimension mediaDimension;
@@ -42,12 +39,8 @@ public class MediaDetail implements Parcelable {
         reactMediaUrl = in.readString();
         reactThumbUrl = in.readString();
         reactDuration = in.readString();
-        externalMeta = in.readString();
-        if (in.readByte() == 0) {
-            mediaType = null;
-        } else {
-            mediaType = in.readInt();
-        }
+        byte tmpReactIsImage = in.readByte();
+        reactIsImage = tmpReactIsImage == 0 ? null : tmpReactIsImage == 1;
     }
 
     @Override
@@ -61,13 +54,7 @@ public class MediaDetail implements Parcelable {
         dest.writeString(reactMediaUrl);
         dest.writeString(reactThumbUrl);
         dest.writeString(reactDuration);
-        dest.writeString(externalMeta);
-        if (mediaType == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(mediaType);
-        }
+        dest.writeByte((byte) (reactIsImage == null ? 0 : reactIsImage ? 1 : 2));
     }
 
     @Override
@@ -99,7 +86,7 @@ public class MediaDetail implements Parcelable {
         return reactMediaUrl;
     }
 
-    public void setMediaUrl(String reactMediaUrl) {
+    public void setReactMediaUrl(String reactMediaUrl) {
         this.reactMediaUrl = reactMediaUrl;
     }
 
@@ -107,7 +94,7 @@ public class MediaDetail implements Parcelable {
         return reactThumbUrl;
     }
 
-    public void setThumbUrl(String reactThumbUrl) {
+    public void setReactThumbUrl(String reactThumbUrl) {
         this.reactThumbUrl = reactThumbUrl;
     }
 
@@ -119,20 +106,12 @@ public class MediaDetail implements Parcelable {
         this.reactDuration = reactDuration;
     }
 
-    public String getExternalMeta() {
-        return externalMeta;
+    public Boolean getReactIsImage() {
+        return reactIsImage;
     }
 
-    public void setExternalMeta(String externalMeta) {
-        this.externalMeta = externalMeta;
-    }
-
-    public Integer getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(Integer mediaType) {
-        this.mediaType = mediaType;
+    public void setReactIsImage(Boolean reactIsImage) {
+        this.reactIsImage = reactIsImage;
     }
 
     public MediaDimension getReactDimension() {

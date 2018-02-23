@@ -18,7 +18,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.view.LayoutInflater.from;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  *
@@ -127,7 +127,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) void onReactionClick() {
-            fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReaction, null));
+            fragment.navigation.pushFragment(FragmentReactionplayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReaction, null));
         }
     }
 }
