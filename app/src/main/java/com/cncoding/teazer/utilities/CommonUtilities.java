@@ -92,4 +92,14 @@ public class CommonUtilities {
         }
         return true;
     }
+
+    public static int hashCode(List<? extends BaseModel> list) {
+        int hashCode = 1;
+        if (list != null && !list.isEmpty()) {
+            for (BaseModel e : list)
+                hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
+        }
+        else hashCode = 31 * hashCode;
+        return hashCode;
+    }
 }

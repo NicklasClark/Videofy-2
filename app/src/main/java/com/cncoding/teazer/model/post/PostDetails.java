@@ -14,6 +14,7 @@ import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.utilities.CommonUtilities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -343,10 +344,39 @@ public class PostDetails extends BaseModel implements Parcelable {
     }
 
     @Override
+    public int hashCode() {
+        int result = 10;
+        result = 31 * result + postId;
+        result = 31 * result + postedBy;
+        result = 31 * result + likes;
+        result = 31 * result + totalReactions;
+        result = 31 * result + totalTags;
+        result = 31 * result + (hasCheckin ? 1 : 0);
+        result = 31 * result + title.hashCode();
+        result = 31 * result + (canReact ? 1 : 0);
+        result = 31 * result + (canLike ? 1 : 0);
+        result = 31 * result + (canDelete ? 1 : 0);
+        result = 31 * result + (isHided ? 1 : 0);
+        result = 31 * result + (isHidedAll ? 1 : 0);
+        result = 31 * result + createdAt.hashCode();
+        result = 31 * result + checkIn.hashCode();
+        result = 31 * result + CommonUtilities.hashCode(reactions);
+        result = 31 * result + CommonUtilities.hashCode(taggedUsers);
+        result = 31 * result + CommonUtilities.hashCode(reactedUsers);
+        result = 31 * result + CommonUtilities.hashCode(categories);
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        boolean result;
-        if (obj instanceof PostDetails) {
-            result =  Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof PostDetails)) {
+            return false;
+        } else {
+            boolean result;
+            result = Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
                     Objects.equals(likes, ((PostDetails) obj).getLikes()) &&
                     Objects.equals(totalReactions, ((PostDetails) obj).getTotalReactions()) &&
                     Objects.equals(hasCheckin, ((PostDetails) obj).hasCheckin()) &&
@@ -366,7 +396,7 @@ public class PostDetails extends BaseModel implements Parcelable {
             if (categories != null && ((PostDetails) obj).getCategories() != null) {
                 result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
             }
-        } else result = false;
-        return result;
+            return result;
+        }
     }
 }

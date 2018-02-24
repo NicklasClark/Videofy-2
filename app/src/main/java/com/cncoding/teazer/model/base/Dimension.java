@@ -8,6 +8,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -59,4 +62,21 @@ public class Dimension extends ViewModel implements Parcelable {
             return new Dimension[size];
         }
     };
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(10, 31)
+                .append(width)
+                .append(height)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof ProfileMedia &&
+                new EqualsBuilder()
+                        .append(width, ((ProfileMedia) obj).getPictureId())
+                        .append(height, ((ProfileMedia) obj).isImage())
+                        .isEquals();
+    }
 }

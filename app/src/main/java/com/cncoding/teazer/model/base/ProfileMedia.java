@@ -9,22 +9,18 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
 @Entity(tableName = "ProfileMedia")
-//        foreignKeys = {
-//                @ForeignKey(entity = MiniProfile.class, parentColumns = {"user_id"}, childColumns = {"userId"}),
-//                @ForeignKey(entity = TaggedUser.class, parentColumns = {"user_id"}, childColumns = {"userId"}),
-//                @ForeignKey(entity = ReactedUser.class, parentColumns = {"user_id"}, childColumns = {"userId"})
-//})
 public class ProfileMedia extends ViewModel implements Parcelable {
 
-//    @PrimaryKey
     @SerializedName("picture_id") @Expose private int pictureId;
-//    private Integer userId;
     @SerializedName("media_url") @Expose private String mediaUrl;
     @SerializedName("thumb_url") @Expose private String thumbUrl;
     @SerializedName("duration") @Expose private String duration;
@@ -123,5 +119,30 @@ public class ProfileMedia extends ViewModel implements Parcelable {
 
     public void setImage(Boolean image) {
         isImage = image;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(10, 31)
+                .append(pictureId)
+                .append(mediaUrl)
+                .append(thumbUrl)
+                .append(duration)
+                .append(mediaDimension)
+                .append(isImage)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof ProfileMedia &&
+                new EqualsBuilder()
+                        .append(pictureId, ((ProfileMedia) obj).getPictureId())
+                        .append(mediaUrl, ((ProfileMedia) obj).getMediaUrl())
+                        .append(thumbUrl, ((ProfileMedia) obj).getThumbUrl())
+                        .append(duration, ((ProfileMedia) obj).getDuration())
+                        .append(mediaDimension, ((ProfileMedia) obj).getMediaDimension())
+                        .append(isImage, ((ProfileMedia) obj).isImage())
+                        .isEquals();
     }
 }

@@ -3,17 +3,20 @@ package com.cncoding.teazer.model.post;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.MediaDetail;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class PostReaction implements Parcelable {
+public class PostReaction extends BaseModel implements Parcelable {
 
     @SerializedName("react_id") @Expose private int reactId;
     @SerializedName("post_id") @Expose private int postId;
@@ -103,7 +106,18 @@ public class PostReaction implements Parcelable {
 
     @Override
     public int hashCode() {
-        return reactId;
+        return new HashCodeBuilder(10, 31)
+                .append(reactId)
+                .append(postId)
+                .append(reactTitle)
+                .append(postOwnerId)
+                .append(likes)
+                .append(views)
+                .append(canLike)
+                .append(canDelete)
+                .append(reactedAt)
+                .append(mySelf)
+                .toHashCode();
     }
 
     public PostReaction(int reactId) {

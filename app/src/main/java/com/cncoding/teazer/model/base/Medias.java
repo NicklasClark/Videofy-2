@@ -1,11 +1,11 @@
 package com.cncoding.teazer.model.base;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "Medias")
-public class Medias extends ViewModel implements Parcelable {
+public class Medias extends BaseModel implements Parcelable {
 
     @SerializedName("media_id") @Expose private Integer mediaId;
     @SerializedName("media_url") @Expose private String mediaUrl;

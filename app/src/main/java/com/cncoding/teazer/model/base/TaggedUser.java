@@ -1,13 +1,16 @@
 package com.cncoding.teazer.model.base;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  *
@@ -15,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "TaggedUser")
-public class TaggedUser extends ViewModel implements Parcelable {
+public class TaggedUser extends BaseModel implements Parcelable {
 
     @SerializedName("tag_id") @Expose private int tag_id;
     @SerializedName("user_id") @Expose private int user_id;
@@ -116,5 +119,36 @@ public class TaggedUser extends ViewModel implements Parcelable {
 
     public ProfileMedia getProfileMedia() {
         return profile_media;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(10, 31)
+                .append(tag_id)
+                .append(user_id)
+                .append(user_name)
+                .append(first_name)
+                .append(last_name)
+                .append(my_self)
+                .append(is_blocked_you)
+                .append(has_profile_media)
+                .append(profile_media)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof TaggedUser &&
+                new EqualsBuilder()
+                        .append(tag_id, ((TaggedUser) obj).getTagId())
+                        .append(user_id, ((TaggedUser) obj).getUserId())
+                        .append(user_name, ((TaggedUser) obj).getUserName())
+                        .append(first_name, ((TaggedUser) obj).getFirstName())
+                        .append(last_name, ((TaggedUser) obj).getLastName())
+                        .append(my_self, ((TaggedUser) obj).isMySelf())
+                        .append(is_blocked_you, ((TaggedUser) obj).isBlockedYou())
+                        .append(has_profile_media, ((TaggedUser) obj).hasProfileMedia())
+                        .append(profile_media, ((TaggedUser) obj).getProfileMedia())
+                        .isEquals();
     }
 }
