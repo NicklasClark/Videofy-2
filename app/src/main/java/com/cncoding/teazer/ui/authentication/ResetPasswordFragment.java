@@ -1,4 +1,4 @@
-package com.cncoding.teazer.authentication;
+package com.cncoding.teazer.ui.authentication;
 
 import android.content.Context;
 import android.os.Bundle;

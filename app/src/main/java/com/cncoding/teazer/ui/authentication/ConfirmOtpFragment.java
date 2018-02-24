@@ -1,4 +1,4 @@
-package com.cncoding.teazer.authentication;
+package com.cncoding.teazer.ui.authentication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -49,7 +49,7 @@ import static android.Manifest.permission.SEND_SMS;
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
-import static com.cncoding.teazer.authentication.SignupFragment2.ARG_PICTURE_PATH;
+import static com.cncoding.teazer.ui.authentication.SignupFragment2.ARG_PICTURE_PATH;
 import static com.cncoding.teazer.utilities.Annotations.LOGIN_WITH_OTP;
 import static com.cncoding.teazer.utilities.Annotations.SIGNUP;
 import static com.cncoding.teazer.utilities.Annotations.VERIFY_LOGIN_WITH_OTP;

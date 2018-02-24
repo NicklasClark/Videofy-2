@@ -38,7 +38,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.home.BaseRecyclerView;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -109,7 +109,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @OnClick(R.id.content) void viewPost() {
         PostsListFragment.positionToUpdate = getAdapterPosition();
         PostsListFragment.postDetails = postDetails;
-        adapter.fragment.navigation.pushFragment(FragmentPostDetails.newInstance(postDetails, thumbnailDrawable.getBitmap(),
+        adapter.fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails, thumbnailDrawable.getBitmap(),
                 true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
     }
 

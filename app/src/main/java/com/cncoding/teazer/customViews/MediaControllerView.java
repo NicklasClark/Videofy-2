@@ -37,7 +37,7 @@ import java.util.Locale;
 
 import static com.cncoding.teazer.customViews.ViewAnimator.Listeners;
 import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
-import static com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.SPACE;
+import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 
 /**
  *

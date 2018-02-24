@@ -1,4 +1,4 @@
-package com.cncoding.teazer.authentication;
+package com.cncoding.teazer.ui.authentication;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -27,10 +27,10 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 
-import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;

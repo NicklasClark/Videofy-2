@@ -29,7 +29,7 @@ import com.cncoding.teazer.data.viewmodel.FriendsViewModel;
 import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.discover.Videos;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -192,7 +192,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
-                                fragment.navigation.pushFragment(FragmentPostDetails.newInstance(response.body(),
+                                fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(),
                                         null, false, false, null, null));
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());

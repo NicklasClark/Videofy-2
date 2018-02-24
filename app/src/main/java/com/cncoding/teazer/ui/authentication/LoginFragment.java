@@ -1,4 +1,4 @@
-package com.cncoding.teazer.authentication;
+package com.cncoding.teazer.ui.authentication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -45,9 +45,9 @@ import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
-import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
-import static com.cncoding.teazer.authentication.ResetPasswordFragment.ENTERED_TEXT;
-import static com.cncoding.teazer.authentication.ResetPasswordFragment.IS_EMAIL;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.ENTERED_TEXT;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.IS_EMAIL;
 import static com.cncoding.teazer.utilities.Annotations.CHECK_EMAIL_AVAILABILITY;
 import static com.cncoding.teazer.utilities.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
 import static com.cncoding.teazer.utilities.Annotations.CHECK_USERNAME_AVAILABILITY;

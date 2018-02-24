@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -86,7 +86,7 @@ public class CommonWebServicesUtil {
                         if (response.code() == 200) {
                             if (response.body() != null) {
                                 ((BaseBottomBarActivity)context).pushFragment(
-                                FragmentPostDetails.newInstance(response.body(), null, true,
+                                PostDetailsFragment.newInstance(response.body(), null, true,
                                         true, response.body().getMedias().get(0).getThumbUrl(), null));
 
                                 PostsListFragment.postDetails = response.body();

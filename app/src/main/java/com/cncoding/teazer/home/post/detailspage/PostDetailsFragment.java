@@ -143,7 +143,7 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
@@ -222,25 +222,25 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
     private Handler mHandler;
     private onPostOptionsClickListener mListener;
 
-    public FragmentPostDetails() {
+    public PostDetailsFragment() {
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, Bitmap image,
+    public static PostDetailsFragment newInstance(@NonNull PostDetails postDetails, Bitmap image,
                                                   boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
-        FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
+        PostDetailsFragment postDetailsFragment = new PostDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
         if (!isDeepLink) {
             bundle.putParcelable(ARG_THUMBNAIL, image);
         } else {
-            FragmentPostDetails.isDeepLink = true;
+            PostDetailsFragment.isDeepLink = true;
             bundle.putString(ARG_THUMBNAIL, thumbUrl);
             bundle.putString(ARG_REACT_ID, react_id);
         }
         bundle.putBoolean(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
-        fragmentPostDetails.setArguments(bundle);
-        return fragmentPostDetails;
+        postDetailsFragment.setArguments(bundle);
+        return postDetailsFragment;
     }
 
     @Nullable
@@ -346,7 +346,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             @Override
             public void run() {
                 if (isAdded()) {
-                    getCoachMark(getParentActivity(), FragmentPostDetails.this, reactBtn, "postDetails",
+                    getCoachMark(getParentActivity(), PostDetailsFragment.this, reactBtn, "postDetails",
                             R.string.react, R.string.coach_mark_post_details_body, R.string.okay_got_it, TYPE_POST_DETAILS);
                 }
             }
@@ -571,24 +571,24 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
     public void incrementLikes() {
         likes=likes+1;
-        String likesText = FragmentPostDetails.SPACE + likes;
+        String likesText = PostDetailsFragment.SPACE + likes;
         likesView.setText(likesText);
     }
 
     public void decrementLikes() {
         likes =likes-1;
         if (likes < 0) {likes = 0;}
-        String likesText = FragmentPostDetails.SPACE + likes;
+        String likesText = PostDetailsFragment.SPACE + likes;
         likesView.setText(likesText);
     }
 
     public void incrementViews() {
-        String viewsText = FragmentPostDetails.SPACE + ++views;
+        String viewsText = PostDetailsFragment.SPACE + ++views;
         viewsView.setText(viewsText);
     }
 
     public void decrementViews() {
-        String viewsText = FragmentPostDetails.SPACE + --views;
+        String viewsText = PostDetailsFragment.SPACE + --views;
         viewsView.setText(viewsText);
     }
 
@@ -1254,7 +1254,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                                 //add watermark for local creations/reactions
                                 if(resultData.getBoolean(ADD_WATERMARK)) {
                                     AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getActivity());
-                                    addWaterMarkAsyncTask.delegate = FragmentPostDetails.this;
+                                    addWaterMarkAsyncTask.delegate = PostDetailsFragment.this;
                                     addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
                                 }
                                 else

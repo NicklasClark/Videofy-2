@@ -11,11 +11,11 @@ import android.view.MenuItem;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.authentication.ForgotPasswordFragment;
-import com.cncoding.teazer.authentication.ResetPasswordFragment;
-import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.model.auth.BaseAuth;
 import com.cncoding.teazer.model.auth.Login;
+import com.cncoding.teazer.ui.authentication.ForgotPasswordFragment;
+import com.cncoding.teazer.ui.authentication.LoginFragment;
+import com.cncoding.teazer.ui.authentication.ResetPasswordFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,9 +25,9 @@ import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.TAG_FORGOT_PASSWORD_FRAGMENT;
-import static com.cncoding.teazer.MainActivity.TAG_RESET_PASSWORD_FRAGMENT;
 import static com.cncoding.teazer.MainActivity.TAG_LOGIN_FRAGMENT;
 import static com.cncoding.teazer.MainActivity.TAG_OTP_FRAGMENT;
+import static com.cncoding.teazer.MainActivity.TAG_RESET_PASSWORD_FRAGMENT;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
 
 public class ForgotPasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnForgotPasswordInteractionListener,

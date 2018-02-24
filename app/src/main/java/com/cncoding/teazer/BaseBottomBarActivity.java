@@ -55,8 +55,8 @@ import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificatio
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.onPostOptionsClickListener;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
@@ -556,7 +556,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 if (response.body() != null) {
-                                    pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                    pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
                                 } else {
                                     Toast.makeText(getThis(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                 }
@@ -601,7 +601,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             @Override
                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                 if (response.code() == 200)
-                                    pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
+                                    pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, false, null, null));
 
                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                     Toast.makeText(getApplicationContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
@@ -643,12 +643,12 @@ public class BaseBottomBarActivity extends BaseActivity
                                                     if (response.body() != null) {
                                                         if (referringParams.has("react_id")) {
                                                             try {
-                                                                pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id")));
+                                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id")));
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
                                                         } else {
-                                                            pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                                            pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
                                                         }
                                                     } else {
                                                         Toast.makeText(getThis(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
@@ -895,7 +895,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void pushFragment(final Fragment fragment) {
         if (navigationController != null) {
-            if (fragment instanceof FragmentPostDetails) {
+            if (fragment instanceof PostDetailsFragment) {
                 hideToolbar();
             }
             navigationController.pushFragment(fragment);
@@ -1118,7 +1118,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, false, null, null));
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
         }

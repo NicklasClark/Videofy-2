@@ -16,7 +16,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -32,7 +32,7 @@ import butterknife.OnClick;
 import static android.support.v7.util.DiffUtil.calculateDiff;
 import static android.view.LayoutInflater.from;
 import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
-import static com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.SPACE;
+import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
@@ -230,7 +230,7 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) public void viewPost() {
-            fragment.navigation.pushFragment(FragmentPostDetails.newInstance(postDetails,
+            fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
                     null, false, false, null, null));
         }
 

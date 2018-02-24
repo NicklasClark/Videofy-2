@@ -23,7 +23,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -136,7 +136,7 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) public void viewPost() {
-            fragment.navigation.pushFragment(FragmentPostDetails.newInstance(postDetails,
+            fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
                     null, false, false, null, null));
         }
 

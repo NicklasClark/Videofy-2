@@ -30,11 +30,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.TextUtils.isDigitsOnly;
-import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
-import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
-import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
-import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.clearRetrofitWithAuthToken;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.EMAIL_FORMAT;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.USERNAME_FORMAT;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.SharedPrefs.resetAuthToken;
 
