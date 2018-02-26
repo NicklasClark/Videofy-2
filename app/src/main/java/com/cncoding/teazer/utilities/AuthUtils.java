@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.net.ConnectivityManager.TYPE_WIFI;
 import static android.text.TextUtils.isDigitsOnly;
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.clearRetrofitWithAuthToken;
 import static com.cncoding.teazer.ui.authentication.LoginFragment.EMAIL_FORMAT;
@@ -36,6 +39,7 @@ import static com.cncoding.teazer.ui.authentication.LoginFragment.PHONE_NUMBER_F
 import static com.cncoding.teazer.ui.authentication.LoginFragment.USERNAME_FORMAT;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
+import static com.cncoding.teazer.utilities.SharedPrefs.clearMedia;
 import static com.cncoding.teazer.utilities.SharedPrefs.resetAuthToken;
 
 /**
@@ -44,6 +48,28 @@ import static com.cncoding.teazer.utilities.SharedPrefs.resetAuthToken;
  */
 
 public class AuthUtils {
+
+    public static boolean isConnected(Context c) {
+        try {
+            //noinspection ConstantConditions
+            NetworkInfo info = ((ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isConnectedToWifi(Context c) {
+        try {
+            //noinspection ConstantConditions
+            NetworkInfo info = ((ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(TYPE_WIFI);
+            return info != null && info.isConnected();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static boolean isUserLoggedIn(Context context) {
         return SharedPrefs.getAuthToken(context) != null;
@@ -167,6 +193,7 @@ public class AuthUtils {
 
                     private void LTFO() {
                         resetAuthToken(context);
+                        clearMedia(context);
                         clearRetrofitWithAuthToken();
                         new Thread(new Runnable() {
                             @Override

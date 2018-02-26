@@ -344,7 +344,7 @@
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
     <!--<string name="base_url">https://api.teazer.online/</string>-->
-    <string name="base_url">http://dev-api.teazer.online/</string>
+    <string name="base_url">http://dev.teazer.online/</string>
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
     <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>
@@ -380,4 +380,7 @@
     <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
     <string name="search_for_giphys">Search for Gifs</string>
     <string name="gif_view">Gif View</string>
+    <string name="prefetch_media">Prefetch Media only on WiFi</string>
+    <string name="prefetch_media_on_detail">Videos will be fetched when on Wifi</string>
+    <string name="prefetch_media_off_detail">Videos will always be pre-fetched (may incur some data charges)</string>
 </resources>

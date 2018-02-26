@@ -34,6 +34,9 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.FileUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,6 +48,7 @@ import im.ene.toro.media.PlaybackInfo;
 
 import static android.content.Context.POWER_SERVICE;
 import static com.cncoding.teazer.customViews.exoplayer.Common.max;
+import static com.cncoding.teazer.utilities.AuthUtils.isConnected;
 
 /**
  * @author eneim | 5/31/17.
@@ -752,5 +756,13 @@ public class Container extends RecyclerView {
                 return true;
             }
         };
+    }
+
+    public void preDownload(List<PostDetails> list, Context context) {
+        if (!isConnected(context)) return;
+//        prefetch Thumbnails
+        new FileUtils.PreDownloadTask(context, list, false).execute();
+//        prefetch Videos
+        new FileUtils.PreDownloadTask(context, list, true).execute();
     }
 }

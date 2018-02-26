@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -22,10 +21,10 @@ import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
-import com.cncoding.teazer.utilities.SharedPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import io.branch.referral.Branch;
 import retrofit2.Call;
@@ -33,34 +32,30 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
+import static com.cncoding.teazer.utilities.SharedPrefs.getCanSaveMediaOnlyOnWiFi;
+import static com.cncoding.teazer.utilities.SharedPrefs.getSaveVideoFlag;
+import static com.cncoding.teazer.utilities.SharedPrefs.setCanSaveMediaOnlyOnWiFi;
+import static com.cncoding.teazer.utilities.SharedPrefs.setSaveVideoFlag;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
+ *
  * Created by farazhabib on 03/12/17.
  */
 
 public class FragmentSettings extends BaseFragment {
 
-//    @BindView(R.id.text_block_layout) ProximaNovaRegularTextView text_block;
-//    @BindView(R.id.recentlyDeleted) ProximaNovaRegularTextView recentlyDeleted;
-//    @BindView(R.id.logoutLayout) ProximaNovaRegularTextView logout;
-//    @BindView(R.id.changePassword) TextView changePassword;
-//    @BindView(R.id.changeCategoriesLayout) ProximaNovaRegularTextView changeCategoriesLayout;
-//    @BindView(R.id.invite_friends) ProximaNovaSemiBoldTextView inviteFriendsLayout;
-//    @BindView(R.id.deactivateAccountLayout) ProximaNovaRegularTextView deactivateAccountLayout;
+    @BindView(R.id.save_videos_switch) Switch saveVideosSwitch;
+    @BindView(R.id.private_account_switch) Switch privateAccountSwitch;
+    @BindView(R.id.prefetch_videos_switch) Switch prefetchVideosSwitch;
+    @BindView(R.id.text_hide_layout) ProximaNovaRegularTextView hideVideos;
+    @BindView(R.id.prefetch_media_detail) ProximaNovaRegularTextView prefetchMediaDetail;
 
-    Context context;
     private static final int PRIVATE_STATUS = 1;
     private static final int PUBLIC_STATUS = 2;
-    boolean flag = false;
     public static final String ACCOUNT_TYPE = "accountType";
     int accountType;
     ChangeCategoriesListener mListener;
-    Switch simpleSwitch;
-    @BindView(R.id.saveVideosSwitch)
-    Switch saveVideosSwitch;
-    @BindView(R.id.text_hide_layout)
-    ProximaNovaRegularTextView hidevideos;
 
     public static FragmentSettings newInstance(String accountType) {
         FragmentSettings fragment = new FragmentSettings();
@@ -70,13 +65,6 @@ public class FragmentSettings extends BaseFragment {
         return fragment;
 
     }
-//    @NonNull
-//    public Settings getParentActivitySettings() {
-//        if (getActivity() != null && getActivity() instanceof Settings) {
-//            return (Settings) getActivity();
-//        }
-//        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,115 +78,97 @@ public class FragmentSettings extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        simpleSwitch = view.findViewById(R.id.simpleSwitch);
-        context = container.getContext();
+        privateAccountSwitch = view.findViewById(R.id.private_account_switch);
         ButterKnife.bind(this, view);
-
-        hidevideos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mListener.hideVideoList();
-
-            }
-        });
-
-
-//        simpleSwitch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (simpleSwitch.isChecked()) {
-//                    publicprivateProfile(PRIVATE_STATUS);
-//                } else {
-//                    publicprivateProfile(PUBLIC_STATUS);
-//                }
-//
-//            }
-//        });
-        simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if (accountType == 2) {
-                        publicprivateProfile(PRIVATE_STATUS);
-                    }
-                } else {
-                    if (accountType == 1) {
-                        publicprivateProfile(PUBLIC_STATUS);
-                    }
-                }
-            }
-        });
-
-        //save video to gallery switch button
-        saveVideosSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if(!SharedPrefs.getSaveVideoFlag(getContext()))
-                        SharedPrefs.setSaveVideoFlag(getContext(), true);
-                }else {
-                    if(SharedPrefs.getSaveVideoFlag(getContext()))
-                        SharedPrefs.setSaveVideoFlag(getContext(), false);
-                }
-            }
-        });
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (accountType == 1) {
-            simpleSwitch.setChecked(true);
-        } else {
-            simpleSwitch.setChecked(false);
-        }
-
-        if(SharedPrefs.getSaveVideoFlag(getContext()))
-        {
-            saveVideosSwitch.setChecked(true);
-        }
-        else
-            saveVideosSwitch.setChecked(false);
+        privateAccountSwitch.setChecked(accountType == 1);
+        saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
+        prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
     }
 
-    @OnClick(R.id.text_block_layout)
-    public void blockListClicked() {
+    @OnClick(R.id.text_hide_layout) public void hideVideosClicked() {
+        mListener.hideVideoList();
+    }
 
+    @OnClick(R.id.text_block_layout) public void blockListClicked() {
         startActivity(new Intent(context, BlockUserList.class));
     }
 
-    @OnClick(R.id.deactivateAccountLayout)
-    public void deactivateClicked() {
+    @OnClick(R.id.deactivateAccountLayout) public void deactivateClicked() {
         mListener.deactivateAccountListener();
     }
 
-//    @OnClick(R.id.recentlyDeleted) public void recentlyDeletedClicked() {
-//    }
+//    @OnClick(R.id.recentlyDeleted) public void recentlyDeletedClicked() {}
 
-    @OnClick(R.id.changePassword)
-    public void changePasswordClicked() {
-
+    @OnClick(R.id.changePassword) public void changePasswordClicked() {
         startActivity(new Intent(context, PasswordChange.class));
     }
 
-    @OnClick(R.id.invite_friends)
-    public void inviteFriendsClicked() {
-
+    @OnClick(R.id.invite_friends) public void inviteFriendsClicked() {
         startActivity(new Intent(context, InviteFriend.class));
     }
 
-    @OnClick(R.id.changeCategoriesLayout)
-    public void changeCategoriesClicked() {
-
+    @OnClick(R.id.changeCategoriesLayout) public void changeCategoriesClicked() {
         mListener.changeCategoriesListener();
     }
 
-    @OnClick(R.id.logoutLayout)
-    public void logoutClicked() {
+    @OnClick(R.id.logoutLayout) public void logoutClicked() {
         logout(context, getActivity());
         Branch.getInstance(getApplicationContext()).logout();
+    }
+
+    /**
+     * Save video to gallery switch button.
+     */
+    @OnCheckedChanged(R.id.save_videos_switch) public void setSaveVideosSwitch (boolean isChecked) {
+        setSaveVideoFlag(context, isChecked);
+    }
+
+    @OnCheckedChanged(R.id.private_account_switch) public void setPrivateAccountSwitch (boolean isChecked) {
+        publicPrivateProfile(isChecked ?
+                accountType == 2 ? PRIVATE_STATUS : null :
+                accountType == 1 ? PUBLIC_STATUS : null);
+    }
+
+    /**
+     * Prefetch videos only on wifi switch button.
+     */
+    @OnCheckedChanged(R.id.prefetch_videos_switch) public void setPrefetchVideosSwitch (boolean isChecked) {
+        setCanSaveMediaOnlyOnWiFi(context, isChecked);
+        prefetchMediaDetail.setText(isChecked ? R.string.prefetch_media_on_detail : R.string.prefetch_media_off_detail);
+    }
+
+    @OnClick({R.id.facebookLink, R.id.instagramLink, R.id.helpCenterLink, R.id.legalLink, R.id.privacyPolicyLink, R.id.tncLink, R.id.licenceLink})
+    public void onViewClicked(View view) {
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.facebookLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/teaZer.social.media.application/"));
+                break;
+            case R.id.instagramLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/cnapplications/"));
+                break;
+            case R.id.helpCenterLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
+                break;
+            case R.id.legalLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
+                break;
+            case R.id.privacyPolicyLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
+                break;
+            case R.id.tncLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
+                break;
+            case R.id.licenceLink:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
+                break;
+        }
+        if (intent != null) startActivity(intent);
     }
 
     @Override
@@ -207,94 +177,49 @@ public class FragmentSettings extends BaseFragment {
         mListener = (ChangeCategoriesListener) context;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+    public void publicPrivateProfile(final Integer status) {
+        if (status != null) {
+            ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
 
-    public void publicprivateProfile(final int status) {
-        ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
 
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b) {
+                            if (status == 1) {
+                                ProfileFragment.checkprofileupdated = true;
 
-                try {
-                    boolean b = response.body().getStatus();
-                    if (b) {
-                        if (status == 1) {
-                            ProfileFragment.checkprofileupdated = true;
+                                Toast.makeText(context, "Your account has become private", Toast.LENGTH_SHORT).show();
+                            } else {
 
-                            Toast.makeText(context, "Your account has become private", Toast.LENGTH_SHORT).show();
+                                ProfileFragment.checkprofileupdated = true;
+                                Toast.makeText(context, "Your account has become public", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
 
-                            ProfileFragment.checkprofileupdated = true;
-                            Toast.makeText(context, "Your account has become public", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
 
-                        Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
                 }
 
-            }
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @OnClick({R.id.facebookLink, R.id.instagramLink, R.id.helpCenterLink, R.id.legalLink, R.id.privacyPolicyLink, R.id.tncLink, R.id.licenceLink})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.facebookLink:
-                Intent fbBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/teaZer.social.media.application/"));
-                startActivity(fbBrowserIntent);
-                break;
-            case R.id.instagramLink:
-                Intent instaBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/cnapplications/"));
-                startActivity(instaBrowserIntent);
-                break;
-            case R.id.helpCenterLink:
-                Intent hcBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
-                startActivity(hcBrowserIntent);
-                break;
-            case R.id.legalLink:
-                Intent legalBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
-                startActivity(legalBrowserIntent);
-                break;
-            case R.id.privacyPolicyLink:
-                Intent privacyBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
-                startActivity(privacyBrowserIntent);
-                break;
-            case R.id.tncLink:
-                Intent tncBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
-                startActivity(tncBrowserIntent);
-                break;
-            case R.id.licenceLink:
-                Intent licenceBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teazer_support_url)));
-                startActivity(licenceBrowserIntent);
-                break;
+                }
+            });
         }
     }
-
 
     public interface ChangeCategoriesListener {
         void changeCategoriesListener();
         void deactivateAccountListener();
         void hideVideoList();
-
     }
 }

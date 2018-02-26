@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Contract;
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 6;
+    private int visibleThreshold = 8;
     // The current offset index of data you have loaded
     private int currentPage = 1;
     // The total number of items in the data set after the last load

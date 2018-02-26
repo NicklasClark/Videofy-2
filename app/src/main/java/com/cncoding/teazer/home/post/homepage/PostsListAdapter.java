@@ -20,19 +20,11 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
 
     List<PostDetails> posts;
     protected PostsListFragment fragment;
-    private RecyclerView recyclerView;
 
     PostsListAdapter(PostsListFragment fragment) {
         this.fragment = fragment;
         if (posts == null) {
             posts = new ArrayList<>();
-        }
-    }
-
-    @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        if (this.recyclerView == null) {
-            this.recyclerView = recyclerView;
         }
     }
 
@@ -47,7 +39,6 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
 
     @Override public void release() {
         fragment = null;
-        recyclerView = null;
     }
 
     @Override
@@ -66,10 +57,6 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
                 clearData();
                 posts.addAll(postDetailsList);
                 notifyDataSetChanged();
-                if (recyclerView != null) {
-                    recyclerView.smoothScrollBy(0, 1);
-                    recyclerView.smoothScrollBy(0, -1);
-                }
             } else {
                 posts.addAll(postDetailsList);
                 notifyItemRangeInserted((page - 1) * 30, postDetailsList.size());
@@ -90,10 +77,6 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
             if (posts == null) posts = new ArrayList<>();
             posts.addAll(postDetailsList);
             notifyDataSetChanged();
-            if (recyclerView != null) {
-                recyclerView.smoothScrollBy(0, 1);
-                recyclerView.smoothScrollBy(0, -1);
-            }
         }
     }
 

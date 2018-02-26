@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -20,12 +21,19 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-
+import com.cncoding.teazer.data.service.VideoCachingService;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+
+import static com.cncoding.teazer.utilities.SharedPrefs.getMedia;
 
 /**
  * @version 2009-07-03
@@ -508,5 +516,52 @@ public class FileUtils {
         // Only return URIs that can be opened with ContentResolver
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         return intent;
+    }
+
+    public static class PreDownloadTask extends AsyncTask<Void, Void, List<String>> {
+
+        private WeakReference<Context> context;
+        private List<PostDetails> list1;
+        private final boolean isVideo;
+
+        public PreDownloadTask(Context context, List<PostDetails> list1, boolean isVideo) {
+            this.context = new WeakReference<>(context);
+            this.list1 = list1;
+            this.isVideo = isVideo;
+        }
+
+        @Override protected List<String> doInBackground(Void... voids) {
+            HashSet<String> list = new HashSet<>();
+            for (PostDetails postDetails : list1) {
+                try {
+                    list.add(isVideo ? postDetails.getMedias().get(0).getMediaUrl() : postDetails.getMedias().get(0).getThumbUrl());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            List<String> urls = new ArrayList<>();
+            urls.addAll(list);
+            return urls;
+        }
+
+        @Override protected void onPostExecute(List<String> urls) {
+            if (!urls.isEmpty()) {
+                for (int i = 0; i < urls.size(); i++) {
+                    try {
+                        String mediaPath = getMedia(context.get(), urls.get(i));
+                        if (mediaPath == null || !(new File(mediaPath).exists())
+                                && urls.get(i) != null && !urls.get(i).equalsIgnoreCase("null")) {
+                            Intent intent = new Intent(Intent.ACTION_SYNC, null, context.get(), VideoCachingService.class);
+                            intent.putExtra("url", urls.get(i));
+                            intent.putExtra("path", context.get().getCacheDir() + "/TeazerCache");
+                            intent.putExtra("requestId", 101);
+                            context.get().startService(intent);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 }

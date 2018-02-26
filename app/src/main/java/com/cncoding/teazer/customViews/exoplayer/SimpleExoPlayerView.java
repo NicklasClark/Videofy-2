@@ -60,7 +60,10 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.File;
 import java.util.List;
+
+import static com.cncoding.teazer.utilities.SharedPrefs.getMedia;
 
 /**
  * A high level view for {@link SimpleExoPlayer} media playbacks. It displays video, subtitles and
@@ -564,13 +567,15 @@ public final class SimpleExoPlayerView extends FrameLayout {
      */
     public void setShutterBackground(String url) {
         if (shutterView != null) {
+
+            String alreadySavedPhoto = getMedia(getContext(), url);
             Glide.with(getContext())
-                    .load(url)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .load(alreadySavedPhoto != null && new File(alreadySavedPhoto).exists() ? alreadySavedPhoto : url)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                    Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
@@ -30,11 +29,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static android.view.LayoutInflater.from;
+import static com.bumptech.glide.load.engine.DiskCacheStrategy.RESOURCE;
 import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
@@ -105,7 +105,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                         title.setBackgroundResource(R.drawable.bg_shimmer_light);
                         Glide.with(fragment)
                                 .load(postReaction.getMediaDetail().getReactThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
+                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
                                 .listener(new RequestListener<Drawable>() {
                                     @Override
                                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -116,8 +116,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                                     @Override
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
-                                        title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
+                                        setTitle();
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
@@ -128,8 +127,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                         title.setBackgroundResource(R.drawable.bg_shimmer_light);
                         Glide.with(fragment)
                                 .load(postReaction.getMediaDetail().getReactThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
-                                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
                                 .apply(RequestOptions.bitmapTransform(new FitCenter()))
                                 .listener(new RequestListener<Drawable>() {
                                     @Override
@@ -141,8 +139,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                                     @Override
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
-                                        title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
+                                        setTitle();
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
@@ -157,8 +154,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
 
                         Glide.with(fragment)
                                 .load(images.getFixedHeightSmallStill().getUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
-                                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
                                 .apply(RequestOptions.bitmapTransform(new FitCenter()))
                                 .listener(new RequestListener<Drawable>() {
                                     @Override
@@ -170,8 +166,7 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                                     @Override
                                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                                    DataSource dataSource, boolean isFirstResource) {
-                                        title.setBackgroundColor(Color.TRANSPARENT);
-                                        title.setText(decodeUnicodeString(postReaction.getReactTitle()));
+                                        setTitle();
                                         thumb.setImageDrawable(resource);
                                         return false;
                                     }
@@ -187,6 +182,11 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        private void setTitle() {
+            title.setBackgroundColor(Color.TRANSPARENT);
+            title.setText(decodeUnicodeString(postReaction.getReactTitle()));
         }
 
         @OnClick(R.id.root_layout) void onReactionClick() {

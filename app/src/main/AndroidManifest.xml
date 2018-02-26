@@ -364,6 +364,7 @@
 
         <service android:name="com.expletus.mobiruck.service.MobiruckInstallServices" />
         <service android:name="com.expletus.mobiruck.service.MobiruckUpdateServices" />
+        <service android:name=".data.service.VideoCachingService" />
 
         <activity android:name=".ui.fragment.activity.OpenProfilePicActivity"
             android:theme="@style/AppTheme.NoActionBar"/>

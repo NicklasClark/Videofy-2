@@ -45,6 +45,7 @@ import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,6 +58,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.Annotations.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.SharedPrefs.getMedia;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
@@ -149,10 +151,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         return helper != null ? helper.getLatestPlaybackInfo() : new PlaybackInfo();
     }
 
-    @Override
-    public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
+    @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
+        String remoteMediaUrl = postDetails.getMedias().get(0).getMediaUrl();
+        String savedMediaPath = getMedia(adapter.fragment.getContext(), remoteMediaUrl);
         if (helper == null)
-            helper = new ExoPlayerViewHelper(container, this, Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
+            helper = new ExoPlayerViewHelper(container, this,
+                    Uri.parse(savedMediaPath != null && new File(savedMediaPath).exists() ? savedMediaPath : remoteMediaUrl));
         helper.initialize(playbackInfo);
     }
 
@@ -214,7 +218,8 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
                             .placeholder(R.drawable.ic_user_male_dp_small))
                     .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                    Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 

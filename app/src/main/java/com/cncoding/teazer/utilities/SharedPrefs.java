@@ -3,11 +3,14 @@ package com.cncoding.teazer.utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.base.UploadParams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.util.Map;
 
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -30,6 +33,7 @@ public class SharedPrefs {
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
     private static final String SAVE_VIDEO_IN_GALLERY = "saveIntoGallery";
     private static final String ACTIVE = "active";
+    private static final String CAN_SAVE_MEDIA_ONLY_ON_WIFI = "canSaveMedia";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -84,7 +88,7 @@ public class SharedPrefs {
     }
 
     public static void resetAuthToken(Context context) {
-        getSharedPreferences(context).edit().putString(AUTH_TOKEN, null).apply();
+        getSharedPreferences(context).edit().remove(AUTH_TOKEN).apply();
     }
 
     public static void saveFcmToken(Context context, String fcmToken) {
@@ -103,7 +107,7 @@ public class SharedPrefs {
     }
 
     public static void finishVideoUploadSession(Context context) {
-        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, null).apply();
+        getSharedPreferences(context).edit().remove(VIDEO_UPLOAD_SESSION).apply();
     }
 
     public static UploadParams getVideoUploadSession(Context context) {
@@ -119,7 +123,7 @@ public class SharedPrefs {
     }
 
     public static void finishReactionUploadSession(Context context) {
-        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, null).apply();
+        getSharedPreferences(context).edit().remove(REACTION_UPLOAD_SESSION).apply();
     }
 
     public static UploadParams getReactionUploadSession(Context context) {
@@ -188,5 +192,43 @@ public class SharedPrefs {
                 .edit()
                 .putBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), false)
                 .apply();
+    }
+
+    public static void setCanSaveMediaOnlyOnWiFi(Context context, boolean canSaveMedia) {
+        getSharedPreferences(context).edit().putBoolean(CAN_SAVE_MEDIA_ONLY_ON_WIFI, canSaveMedia).apply();
+    }
+
+    public static boolean getCanSaveMediaOnlyOnWiFi(Context context) {
+        return getSharedPreferences(context).getBoolean(CAN_SAVE_MEDIA_ONLY_ON_WIFI, false);
+    }
+
+    public static void saveMedia(Context context, String keyUrl, String valueFilePath) {
+        getSharedPreferences(context).edit().putString("media_" + keyUrl, valueFilePath).apply();
+    }
+
+    public static String getMedia(Context context, String keyUrl) {
+        return getSharedPreferences(context).getString("media_" + keyUrl, null);
+    }
+
+    static void clearMedia(Context context) {
+        new ClearMediaTask(getSharedPreferences(context)).execute();
+    }
+
+    private static class ClearMediaTask extends AsyncTask<Void, Void, Void> {
+
+        private SharedPreferences preferences;
+
+        private ClearMediaTask(SharedPreferences preferences) {
+            this.preferences = preferences;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Map<String,?> keys = preferences.getAll();
+            for(Map.Entry<String,?> entry : keys.entrySet())
+                if (entry.getKey().contains("media_"))
+                    preferences.edit().remove(entry.getKey()).apply();
+            return null;
+        }
     }
 }

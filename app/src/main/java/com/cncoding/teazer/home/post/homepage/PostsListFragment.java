@@ -39,7 +39,9 @@ import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 import static com.cncoding.teazer.TeazerApplication.get;
+import static com.cncoding.teazer.utilities.AuthUtils.isConnectedToWifi;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
+import static com.cncoding.teazer.utilities.SharedPrefs.getCanSaveMediaOnlyOnWiFi;
 
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
@@ -56,8 +58,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     private PostDetailsViewModel viewModel;
     private PostsListAdapter postListAdapter;
 
-    public PostsListFragment() {
-    }
+    public PostsListFragment() {}
     
     @NonNull
     public static PostsListFragment newInstance() {
@@ -146,14 +147,15 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
-        if (isConnected) {
-            if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
-            if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
-            toggleRecyclerViewScrolling(false);
-            if (scrollListener != null && scrollToTop) scrollListener.resetState();
-            getHomePagePosts(1);
+        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
+        if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
+        toggleRecyclerViewScrolling(false);
+        if (scrollListener != null && scrollToTop) scrollListener.resetState();
+        if (isConnected) getHomePagePosts(1);
+        else {
+            Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_LONG).show();
+            toggleRecyclerViewScrolling(true);
         }
-        else Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_SHORT).show();
     }
 
     public void getHomePagePosts(int page) {
@@ -205,6 +207,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void handleResponse(List<PostDetails> postDetailsList) {
+        preDownloadVideos(postDetailsList);
         toggleRecyclerViewScrolling(true);
         if (manualRefreshTriggered) {
             manualRefreshTriggered = false;
@@ -239,12 +242,20 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void toggleRecyclerViewScrolling(boolean enabled) {
-        CustomLinearLayoutManager manager = (CustomLinearLayoutManager) recyclerView.getLayoutManager();
-        manager.setScrollEnabled(enabled);
+        ((CustomLinearLayoutManager) recyclerView.getLayoutManager()).setScrollEnabled(enabled);
     }
 
     public PostDetailsViewModel getViewModel() {
         return viewModel;
+    }
+
+    private void preDownloadVideos(List<PostDetails> postDetailsList) {
+        if (isConnected) {
+            if (!getCanSaveMediaOnlyOnWiFi(context))
+                recyclerView.preDownload(postDetailsList, context);
+            else if (isConnectedToWifi(context))
+                recyclerView.preDownload(postDetailsList, context);
+        }
     }
 
     public static class InitialRetrieveTask extends AsyncTask<Void, Void, ArrayList<PostDetails>> {
