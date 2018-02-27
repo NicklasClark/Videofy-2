@@ -18,10 +18,13 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
 import com.cncoding.teazer.utilities.SharedPrefs;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,41 +56,43 @@ public class FragmentSettings extends BaseFragment {
     private static final int PUBLIC_STATUS = 2;
     boolean flag = false;
     public static final String ACCOUNT_TYPE = "accountType";
+    public static final String PREFRENCES = "prefrences";
     int accountType;
+    ArrayList<Preference> preferencesList;
     ChangeCategoriesListener mListener;
     Switch simpleSwitch;
     @BindView(R.id.saveVideosSwitch)
     Switch saveVideosSwitch;
+    @BindView(R.id.simpleSwitchshowingreactions)
+    Switch simpleSwitchshowingreactions;
     @BindView(R.id.text_hide_layout)
     ProximaNovaRegularTextView hidevideos;
 
-    public static FragmentSettings newInstance(String accountType) {
+    public static FragmentSettings newInstance(String accountType, ArrayList<Preference> list) {
         FragmentSettings fragment = new FragmentSettings();
         Bundle args = new Bundle();
         args.putString(ACCOUNT_TYPE, accountType);
+        args.putParcelableArrayList(PREFRENCES,list);
         fragment.setArguments(args);
         return fragment;
-
     }
-//    @NonNull
-//    public Settings getParentActivitySettings() {
-//        if (getActivity() != null && getActivity() instanceof Settings) {
-//            return (Settings) getActivity();
-//        }
-//        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
+
         if (bundle != null) {
             accountType = Integer.parseInt(bundle.getString(ACCOUNT_TYPE));
+            preferencesList=bundle.getParcelableArrayList(PREFRENCES);
+
+
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         simpleSwitch = view.findViewById(R.id.simpleSwitch);
         context = container.getContext();
@@ -101,8 +106,6 @@ public class FragmentSettings extends BaseFragment {
 
             }
         });
-
-
         simpleSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +113,23 @@ public class FragmentSettings extends BaseFragment {
                     publicprivateProfile(PRIVATE_STATUS);
                 } else {
                     publicprivateProfile(PUBLIC_STATUS);
+                }
+
+            }
+        });
+        simpleSwitchshowingreactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simpleSwitchshowingreactions.isChecked()) {
+                    
+                    resetPrefrences(1,"show reactions to other",1);
+
+
+                } else {
+                    resetPrefrences(1,"hide reactions to other",0);
+
+
+
                 }
 
             }
@@ -139,12 +159,15 @@ public class FragmentSettings extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         if (accountType == 1) {
             simpleSwitch.setChecked(true);
         } else {
             simpleSwitch.setChecked(false);
         }
+        simpleSwitchshowingreactions.setChecked(false);
     }
+
 
     @OnClick(R.id.text_block_layout)
     public void blockListClicked() {
@@ -191,7 +214,8 @@ public class FragmentSettings extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
     }
 
@@ -233,6 +257,50 @@ public class FragmentSettings extends BaseFragment {
 
             }
         });
+    }
+
+
+    public void resetPrefrences(int prefrenceId, String prefrencesname, int prefrenceValue)
+    {
+        ArrayList<Preference>list=new ArrayList<>();
+
+        list.add(new Preference(prefrenceId,prefrencesname,prefrenceValue));
+
+        ApiCallingService.User.resetPrefrences(context,preferencesList).enqueue(new Callback<ResultObject>() {
+
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+
+                try {
+                    boolean b = response.body().getStatus();
+                    if (b == true) {
+
+                        if (true) {
+
+                            Toast.makeText(context, "Your reacition  is visible", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(context, "Your reaction is invisible", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                    Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
     }
 
 

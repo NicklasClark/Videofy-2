@@ -27,6 +27,7 @@ import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.CoverImageResponse;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
@@ -749,8 +750,12 @@ public class ApiCallingService {
         public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
             return getUserService(context).resetUnreadNotification(type);
         }
+
         public static Call<ResultObject> removeProfilepic(Context context) {
             return getUserService(context).removeProfilePic();
+        }
+        public static Call<ResultObject> resetPrefrences(Context context, ArrayList<Preference>list) {
+            return getUserService(context).resetPrefrences(list);
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {

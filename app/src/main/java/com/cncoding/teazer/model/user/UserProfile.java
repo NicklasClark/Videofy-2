@@ -4,8 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.profile.Preference;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -22,24 +25,14 @@ public class UserProfile implements Parcelable {
     @Expose
     private Integer totalReactions;
 
+    @SerializedName("total_profile_likes")
+    @Expose
+    private Integer totalProfileLikes;
 
+    @SerializedName("preferences")
+    @Expose
+    private ArrayList<Preference> preferences = null;
 
-    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
-        this.user_profile = user_profile;
-        this.followers = followers;
-        this.followings = followings;
-        this.total_videos = total_videos;
-        this.can_change_password = can_change_password;
-    }
-
-    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password, Integer totalReactions) {
-        this.user_profile = user_profile;
-        this.followers = followers;
-        this.followings = followings;
-        this.total_videos = total_videos;
-        this.can_change_password = can_change_password;
-        this.totalReactions = totalReactions;
-    }
 
     protected UserProfile(Parcel in) {
         user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
@@ -52,6 +45,12 @@ public class UserProfile implements Parcelable {
         } else {
             totalReactions = in.readInt();
         }
+        if (in.readByte() == 0) {
+            totalProfileLikes = null;
+        } else {
+            totalProfileLikes = in.readInt();
+        }
+        preferences = in.createTypedArrayList(Preference.CREATOR);
     }
 
     @Override
@@ -67,6 +66,13 @@ public class UserProfile implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(totalReactions);
         }
+        if (totalProfileLikes == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalProfileLikes);
+        }
+        dest.writeTypedList(preferences);
     }
 
     @Override
@@ -112,5 +118,17 @@ public class UserProfile implements Parcelable {
 
     public void setcanChangePassword(boolean can_change_password) {
         this.can_change_password = can_change_password;
+    }
+
+    public PublicProfile getUser_profile() {
+        return user_profile;
+    }
+
+    public Integer getTotalProfileLikes() {
+        return totalProfileLikes;
+    }
+
+    public ArrayList<Preference> getPreferences() {
+        return preferences;
     }
 }

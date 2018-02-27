@@ -31,10 +31,13 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularChecke
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +92,9 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     private String userProfileThumbnail;
     private String userCoverUrl;
     private String userProfileUrl;
+
+    ArrayList<Preference> userPrefrences;
+
     ImageView placeholder;
 
     Context context;
@@ -102,6 +108,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public static boolean checkpostupdated = false;
     public static boolean checkprofileupdated = false;
     public static boolean checkpicUpdated = false;
+
 
     public static FragmentNewProfile2 newInstance(int page) {
         return new FragmentNewProfile2();
@@ -129,6 +136,9 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
+
+
+
 
         placeholder = view.findViewById(R.id.background);
         _name = view.findViewById(R.id.name);
@@ -308,7 +318,13 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             case R.id.ic_settings:
                 Intent mintent = new Intent(context, Settings.class);
                 mintent.putExtra("AccountType", String.valueOf(accountType));
-                mintent.putExtra("UserProfile", userProfile);
+               // mintent.putExtra("UserProfile", userProfile);
+
+
+              //  Bundle bundle = new Bundle();
+             //   bundle.putParcelableArrayList("UserPrefrences", userPrefrences);
+               // mintent.putExtras(bundle);
+                mintent.putParcelableArrayListExtra("UserPrefrences", userPrefrences);
                 startActivity(mintent);
                 break;
 
@@ -425,7 +441,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 try {
 
-
                     userProfile = response.body().getUserProfile();
                     firstname = userProfile.getFirstName();
                     lastname = userProfile.getLastName();
@@ -442,6 +457,12 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     detail = userProfile.getDescription();
                     gender = userProfile.getGender();
                     reactions=response.body().getTotalReactions();
+                    userPrefrences=response.body().getPreferences();
+                  //  int i=userPrefrences.get(0).getPreferenceId();
+                 //   Toast.makeText(context,String.valueOf(i),Toast.LENGTH_SHORT).show();
+
+
+
 
                     Long mobilno = userProfile.getPhoneNumber();
 

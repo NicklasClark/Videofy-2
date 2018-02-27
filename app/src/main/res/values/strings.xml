@@ -200,8 +200,11 @@
     <string name="termsofservice">Terms of Service</string>
     <string name="Licence">Licence</string>
     <string name="private_account">Private Account</string>
+    <string name="showing_reactions_to_other">Showing Reactions to Others</string>
     <string name="videos_save">Videos Saving</string>
     <string name="private_account_detail">When your Account is private, only people you approve can see your posts.</string>
+    <string name="showing_reactions_detail">When Showing reactions to others is enabled, then only people can see your reactions.</string>
+
     <string name="video_saving_detail">When your video Saving is on,you can store your creation and reaction in your device storage</string>
     <string name="this_is_embarrassing">This is embarrassing</string>
     <string name="the_username">The username&#160;</string>

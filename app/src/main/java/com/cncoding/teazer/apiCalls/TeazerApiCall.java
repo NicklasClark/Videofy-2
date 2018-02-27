@@ -23,6 +23,7 @@ import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.CoverImageResponse;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
@@ -818,5 +819,9 @@ import retrofit2.http.Query;
 
         @PUT("api/v1/user/reset/notification/count")
         Call<ResultObject> resetUnreadNotification(@Query("type") int notificatioType);
+
+        @PUT("/api/v1/user/update/profile/preference")
+        Call<ResultObject> resetPrefrences(@Body ArrayList<Preference> preference);
     }
+
 }
