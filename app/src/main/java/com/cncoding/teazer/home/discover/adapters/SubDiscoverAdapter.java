@@ -28,7 +28,7 @@ import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
+import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
 
     public void updatePosts(List<PostDetails> postDetailsList) {
         try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
+            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
             postDetailsArrayList.clear();
             postDetailsArrayList.addAll(postDetailsList);
             fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -137,7 +137,7 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.root_layout) public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
-                    null, false, false, null, null));
+                    null, false, null));
         }
 
         @OnClick(R.id.dp) public void dpClicked() {

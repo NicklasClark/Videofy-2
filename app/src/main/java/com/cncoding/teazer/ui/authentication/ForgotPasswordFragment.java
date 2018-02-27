@@ -29,7 +29,7 @@ import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 @SuppressLint("SwitchIntDef")
-public class ForgotPasswordFragment extends AuthFragment {
+public class ForgotPasswordFragment extends BaseAuthFragment {
 
     private static final String USERNAME = "username";
 
@@ -195,13 +195,13 @@ public class ForgotPasswordFragment extends AuthFragment {
     @Override
     protected boolean isFieldValidated(int whichType) {
         switch (whichType) {
-            case AuthFragment.CHECK_EMAIL:
+            case BaseAuthFragment.CHECK_EMAIL:
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
                         "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                 java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                 java.util.regex.Matcher m = p.matcher(username);
                 return m.matches();
-            case AuthFragment.CHECK_PHONE_NUMBER:
+            case BaseAuthFragment.CHECK_PHONE_NUMBER:
                 String ePattern1 = "\\d+";
                 java.util.regex.Pattern p1 = java.util.regex.Pattern.compile(ePattern1);
                 java.util.regex.Matcher m1 = p1.matcher(username);
@@ -214,9 +214,9 @@ public class ForgotPasswordFragment extends AuthFragment {
     @Override
     protected boolean isFieldFilled(int whichType) {
         switch (whichType) {
-            case AuthFragment.CHECK_EMAIL:
+            case BaseAuthFragment.CHECK_EMAIL:
                 return !forgotPasswordEditText.getText().toString().isEmpty();
-            case AuthFragment.CHECK_USERNAME:
+            case BaseAuthFragment.CHECK_USERNAME:
                 return username != null && !username.isEmpty();
             default:
                 return false;

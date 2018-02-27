@@ -18,7 +18,7 @@ import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.giphy.TrendingGiphy;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.post.PostReactionsList;
@@ -29,7 +29,6 @@ import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
@@ -402,7 +401,7 @@ public class ApiCallingService {
             return getFriendsService(context).blockUnblockUser(userId, status);
 
         }
-        public static Call<LikedUserPost> getLikedUsers(int postId, int page, Context context){
+        public static Call<LikedUserList> getLikedUsers(int postId, int page, Context context){
             return getFriendsService(context).getLikedUsers(postId, page);
         }
 
@@ -447,7 +446,7 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ReactionUploadResult> uploadReaction(MultipartBody.Part video, int postId, Context context, String title) {
+        public static Call<ReactionResponse> uploadReaction(MultipartBody.Part video, int postId, Context context, String title) {
             return getReactService(context).uploadReaction(video, postId, title);
         }
 
@@ -556,6 +555,7 @@ public class ApiCallingService {
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
         }
+
         public static Call<ReactVideoDetailsResponse> getReactionDetail2(int reactId, Context context) {
             return getReactService(context).getReactionDetail2(reactId);
         }

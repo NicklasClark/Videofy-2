@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
+import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,32 +51,41 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
         });
     }
 
-    void addPosts(int page, List<PostDetails> postDetailsList) {
+    void addPosts(final int page, final List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
                 clearData();
                 posts.addAll(postDetailsList);
-                notifyDataSetChanged();
+                notifyDataChanged();
             } else {
                 posts.addAll(postDetailsList);
-                notifyItemRangeInserted((page - 1) * 30, postDetailsList.size());
+                fragment.getParentActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemRangeInserted((page - 1) * 30, postDetailsList.size());
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void updateNewPosts(List<PostDetails> postDetailsList) {
+    void updateNewPosts(final List<PostDetails> postDetailsList) {
         try {
-            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDiffCallback(new ArrayList<>(posts.subList(0, 30)), postDetailsList));
+            final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                    new PostsDetailsDiffCallback(new ArrayList<>(posts.subList(0, 30)), postDetailsList));
             clearData();
             posts.addAll(postDetailsList);
-            result.dispatchUpdatesTo(this);
+            fragment.getParentActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    result.dispatchUpdatesTo(PostsListAdapter.this);
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-            if (posts == null) posts = new ArrayList<>();
-            posts.addAll(postDetailsList);
-            notifyDataSetChanged();
+            addPosts(1, postDetailsList);
         }
     }
 

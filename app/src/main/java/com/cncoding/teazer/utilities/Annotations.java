@@ -17,16 +17,34 @@ public class Annotations {
     //region Gender types
     public static final int MALE = 1;
     public static final int FEMALE = 2;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({MALE, FEMALE})
+    public @interface Gender {}
     //endregion
 
     //region Account types
     public static final int PRIVATE_ACCOUNT = 1;
     public static final int PUBLIC_ACCOUNT = 2;
-    //endregion
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PUBLIC_ACCOUNT, PRIVATE_ACCOUNT})
     public @interface AccountType {}
+    //endregion
+
+    public static final int SEND_LIKE = 1;
+    public static final int SEND_DISLIKE = 2;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SEND_LIKE, SEND_DISLIKE})
+    public @interface LikeDislike {}
+
+    public static final int HIDE = 1;
+    public static final int SHOW = 2;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({HIDE, SHOW})
+    public @interface HideOrShow {}
 
     //region Authentication calls
     /**
@@ -119,15 +137,21 @@ public class Annotations {
      * React calls
      */
     public static final int CALL_UPLOAD_REACTION = 59;
+    public static final int CALL_CREATE_REACTION_BY_GIPHY = 591;
     public static final int CALL_LIKE_DISLIKE_REACTION = 60;
     public static final int CALL_INCREMENT_REACTION_VIEW_COUNT = 61;
     public static final int CALL_DELETE_REACTION = 62;
     public static final int CALL_REPORT_REACTION = 63;
     public static final int CALL_HIDE_OR_SHOW_REACTION = 64;
     public static final int CALL_GET_MY_REACTIONS = 65;
+    public static final int CALL_GET_FRIENDS_REACTIONS = 651;
     public static final int CALL_GET_HIDDEN_REACTIONS = 66;
     public static final int CALL_GET_REACTION_DETAIL = 67;
-    
+    public static final int CALL_GET_OLD_LIKED_USERS_OF_REACTION = 671;
+    public static final int CALL_GET_OLD_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM = 672;
+    public static final int CALL_GET_LIKED_USERS_OF_REACTION = 673;
+    public static final int CALL_GET_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM = 674;
+
     /**
      * User calls
      */
@@ -179,6 +203,8 @@ public class Annotations {
 
             CALL_UPLOAD_REACTION, CALL_LIKE_DISLIKE_REACTION, CALL_INCREMENT_REACTION_VIEW_COUNT, CALL_DELETE_REACTION,
             CALL_REPORT_REACTION, CALL_HIDE_OR_SHOW_REACTION, CALL_GET_MY_REACTIONS, CALL_GET_HIDDEN_REACTIONS, CALL_GET_REACTION_DETAIL,
+            CALL_CREATE_REACTION_BY_GIPHY, CALL_GET_FRIENDS_REACTIONS, CALL_GET_LIKED_USERS_OF_REACTION, CALL_GET_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM,
+            CALL_GET_OLD_LIKED_USERS_OF_REACTION, CALL_GET_OLD_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM,
 
             CALL_UPDATE_USER_PROFILE_MEDIA, CALL_RESET_FCM_TOKEN, CALL_SET_ACCOUNT_VISIBILITY, CALL_GET_USER_PROFILE, CALL_CHANGE_MOBILE_NUMBER,
             CALL_UPDATE_MOBILE_NUMBER, CALL_GET_USER_PROFILE_DETAIL, CALL_UPDATE_USER_PROFILE, CALL_UPDATE_PASSWORD, CALL_SET_PASSWORD,
@@ -186,8 +212,4 @@ public class Annotations {
             CALL_REPORT_USER, CALL_DEACTIVATE_ACCOUNT, CALL_RESET_UNREAD_NOTIFICATION
     })
     public @interface CallType {}
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({MALE, FEMALE})
-    public @interface Gender {}
 }

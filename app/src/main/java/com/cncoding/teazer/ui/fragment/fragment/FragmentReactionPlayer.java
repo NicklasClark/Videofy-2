@@ -32,11 +32,12 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.MyReactions;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -130,7 +131,6 @@ public class FragmentReactionPlayer extends BaseFragment {
     public static final String SELF_REACTIONS = "self_reactions";
     public static final String POST_REACTIONS = "post_reactions";
     public static final String IS_GIF = "is_gif";
-    TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
     ProfileMyCreationAdapter.myCreationListener myCreationListener;
 
     public static FragmentReactionPlayer newInstance(int source, PostReaction postReaction, MyReactions selfPostreaction, boolean isGIF) {
@@ -353,13 +353,14 @@ public class FragmentReactionPlayer extends BaseFragment {
         reactionPostDp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selfPostDetails!=null) {
-                    taggedListInteractionListener.onTaggedUserInteraction(selfPostDetails.getPostOwner().getUserId(), false);
+                if(selfPostDetails != null) {
+                    navigation.pushFragment(OthersProfileFragment.newInstance(
+                            String.valueOf(selfPostDetails.getPostOwner().getUserId()), "", ""));
                 }
-                 else if(othersPostDetails !=null)
-                {
-                    taggedListInteractionListener.onTaggedUserInteraction(othersPostDetails.getReactOwner().getUserId(), othersPostDetails.getMySelf());
-
+                 else if(othersPostDetails !=null) {
+                    navigation.pushFragment(othersPostDetails.getMySelf() ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(
+                                    String.valueOf(othersPostDetails.getReactOwner().getUserId()), "", ""));
                 }
             }
         });
@@ -367,7 +368,6 @@ public class FragmentReactionPlayer extends BaseFragment {
         reactionPostName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
@@ -414,7 +414,6 @@ public class FragmentReactionPlayer extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        taggedListInteractionListener=(TagListAdapter.TaggedListInteractionListener)context;
         myCreationListener=(ProfileMyCreationAdapter.myCreationListener)context;
     }
 

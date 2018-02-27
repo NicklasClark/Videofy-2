@@ -38,10 +38,10 @@ import static com.cncoding.teazer.data.remote.apicalls.authentication.Authentica
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class AuthFragment extends Fragment implements NetworkStateListener {
+public abstract class BaseAuthFragment extends Fragment implements NetworkStateListener {
 
     /**
-     * Field Validation types for any {@link Fragment} extending {@link AuthFragment}.
+     * Field Validation types for any {@link Fragment} extending {@link BaseAuthFragment}.
      */
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CHECK_USERNAME, CHECK_PASSWORD, CHECK_EMAIL, CHECK_PHONE_NUMBER})
@@ -58,7 +58,7 @@ public abstract class AuthFragment extends Fragment implements NetworkStateListe
     protected  boolean isPasswordShown = true;
     AuthViewModel authViewModel;
 
-    public AuthFragment() {
+    public BaseAuthFragment() {
         // Required empty public constructor
     }
 

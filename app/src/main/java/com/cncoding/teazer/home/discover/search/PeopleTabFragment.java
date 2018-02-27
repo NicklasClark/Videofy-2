@@ -52,7 +52,6 @@ public class PeopleTabFragment extends BaseDiscoverFragment {
             searchTerm = getArguments().getString(SEARCH_TERM);
             isSearchTerm = searchTerm != null && !searchTerm.equals("");
         }
-        currentPage = 1;
     }
 
     @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

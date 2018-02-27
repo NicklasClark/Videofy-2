@@ -9,7 +9,7 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 import com.cncoding.teazer.utilities.Annotations;
 
@@ -248,20 +248,20 @@ public class FriendsRepositoryImpl implements FriendsRepository {
     }
 
     @Override
-    public LiveData<LikedUserPost> getLikedUsers(int postId, int page) {
-        final MutableLiveData<LikedUserPost> liveData = new MutableLiveData<>();
-        friendsService.getLikedUsers(postId, page).enqueue(new Callback<LikedUserPost>() {
+    public LiveData<LikedUserList> getLikedUsers(int postId, int page) {
+        final MutableLiveData<LikedUserList> liveData = new MutableLiveData<>();
+        friendsService.getLikedUsers(postId, page).enqueue(new Callback<LikedUserList>() {
             @Override
-            public void onResponse(Call<LikedUserPost> call, Response<LikedUserPost> response) {
+            public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
                 liveData.setValue(response.isSuccessful() ?
                         response.body().setCallType(CALL_GET_LIKED_USERS) :
-                        new LikedUserPost(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_LIKED_USERS));
+                        new LikedUserList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_LIKED_USERS));
             }
 
             @Override
-            public void onFailure(Call<LikedUserPost> call, Throwable t) {
+            public void onFailure(Call<LikedUserList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new LikedUserPost(new Throwable(FAILED)).setCallType(CALL_GET_LIKED_USERS));
+                liveData.setValue(new LikedUserList(new Throwable(FAILED)).setCallType(CALL_GET_LIKED_USERS));
             }
         });
         return liveData;

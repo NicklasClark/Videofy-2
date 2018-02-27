@@ -12,16 +12,16 @@ import java.util.List;
  * Created by farazhabib on 29/12/17.
  */
 
-public class LikedUserPost extends BaseModel {
+public class LikedUserList extends BaseModel {
 
     @SerializedName("next_page") @Expose private Boolean nextPage;
-    @SerializedName("liked_users") @Expose private List<LikedUser> likedUsers = null;
+    @SerializedName("liked_users") @Expose private List<LikedUser> likedUsers;
 
-    public LikedUserPost(Throwable error) {
+    public LikedUserList(Throwable error) {
         this.error = error;
     }
 
-    public LikedUserPost setCallType(@CallType int callType) {
+    public LikedUserList setCallType(@CallType int callType) {
         setCall(callType);
         return this;
     }

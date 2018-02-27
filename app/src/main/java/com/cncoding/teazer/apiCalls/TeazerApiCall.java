@@ -14,7 +14,7 @@ import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.giphy.TrendingGiphy;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.post.PostReactionsList;
@@ -25,7 +25,6 @@ import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
@@ -420,7 +419,7 @@ import retrofit2.http.Query;
         Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
 
         @GET("/api/v1/post/liked/users/{post_id}/{page}")
-        Call<LikedUserPost>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
+        Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
 
 
     }
@@ -440,7 +439,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/react/create")
-        Call<ReactionUploadResult> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
+        Call<ReactionResponse> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
 
         /**
          * Call this service to like/dislike a reacted video.

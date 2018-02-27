@@ -39,7 +39,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class SignupFragment2 extends AuthFragment {
+public class SignupFragment2 extends BaseAuthFragment {
 
     private static final String ARG_SIGNUP_INFO = "info";
     public static final String ARG_PICTURE_PATH = "picturePath";

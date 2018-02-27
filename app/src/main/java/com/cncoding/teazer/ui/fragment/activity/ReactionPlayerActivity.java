@@ -23,7 +23,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.MyReactions;
@@ -426,7 +425,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+//                        PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;
@@ -439,7 +438,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+//                        PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;

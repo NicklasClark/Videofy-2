@@ -33,7 +33,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class ResetPasswordFragment extends AuthFragment {
+public class ResetPasswordFragment extends BaseAuthFragment {
     public static final String ENTERED_TEXT = "enteredText";
     public static final String COUNTRY_CODE = "countryCode";
     public static final String IS_EMAIL = "isEmail";

@@ -42,9 +42,12 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders
-                .of(this, new AuthTokenViewModelFactory(getAuthToken(getContext())))
-                .get(DiscoverViewModel.class);
+        if (viewModel == null) {
+            viewModel = ViewModelProviders
+                    .of(this, new AuthTokenViewModelFactory(getAuthToken(getContext())))
+                    .get(DiscoverViewModel.class);
+        }
+        currentPage = 1;
     }
 
     /**
@@ -95,17 +98,14 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
     }
 
     private void handleLiveDataChange(BaseModel baseModel) {
-        if (isConnected) {
-            if (baseModel != null) {
-                if (baseModel.getError() != null) handleError(baseModel);
-                else handleResponse(baseModel);
-            }
-            else handleError(
-                    new BaseModel()
-                            .loadError(new Throwable(getString(R.string.something_went_wrong)))
-                            .loadCallType(NO_CALL));
+        if (baseModel != null) {
+            if (baseModel.getError() != null) handleError(baseModel);
+            else handleResponse(baseModel);
         }
-        else notifyNoInternetConnection();
+        else handleError(
+                new BaseModel()
+                        .loadError(new Throwable(getString(R.string.something_went_wrong)))
+                        .loadCallType(NO_CALL));
     }
 
     private void notifyNoInternetConnection() {

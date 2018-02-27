@@ -56,15 +56,15 @@ import im.ene.toro.media.PlaybackInfo;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.utilities.Annotations.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.SharedPrefs.getMedia;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.updatePostDetailsAccordingToDiffBundle;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
 /**
  *
@@ -109,10 +109,8 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     @OnClick(R.id.content) void viewPost() {
-        PostsListFragment.positionToUpdate = getAdapterPosition();
-        PostsListFragment.postDetails = postDetails;
-        adapter.fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails, thumbnailDrawable.getBitmap(),
-                true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
+        adapter.fragment.navigation.pushFragment(
+                PostDetailsFragment.newInstance(postDetails, thumbnailDrawable.getBitmap(), true, null));
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
@@ -154,10 +152,11 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
         String remoteMediaUrl = postDetails.getMedias().get(0).getMediaUrl();
         String savedMediaPath = getMedia(adapter.fragment.getContext(), remoteMediaUrl);
-        if (helper == null)
+        if (helper == null) {
             helper = new ExoPlayerViewHelper(container, this,
                     Uri.parse(savedMediaPath != null && new File(savedMediaPath).exists() ? savedMediaPath : remoteMediaUrl));
-        helper.initialize(playbackInfo);
+            helper.initialize(playbackInfo);
+        }
     }
 
     @Override public void play() {
@@ -207,15 +206,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
 
             shimmerize(new View[]{title, location, category}, new View[]{username});
 
-            @DrawableRes int placeholder = postDetails.getPostOwner().getGender() == MALE ? R.drawable.ic_user_male_dp_small :
-                    R.drawable.ic_user_female_dp;
+            @DrawableRes int placeholder = getGenderSpecificDpSmall(postDetails.getPostOwner().getGender());
 
             Glide.with(adapter.fragment)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
                             postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
-                    .apply(new RequestOptions()
-                            .skipMemoryCache(false)
-                            .placeholder(R.drawable.ic_user_male_dp_small))
+                    .apply(new RequestOptions().skipMemoryCache(false).placeholder(placeholder))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model,

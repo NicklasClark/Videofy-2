@@ -10,6 +10,9 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.ReactionResponse;
+import com.cncoding.teazer.utilities.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
 
@@ -22,9 +25,11 @@ public interface PostsRepository {
 
     LiveData<PostUploadResult> uploadVideo(MultipartBody.Part video, String title, String location, double latitude, double longitude, String tags, String categories);
 
+    LiveData<ReactionResponse> createReactionByGiphy(GiphyReactionRequest giphyReactionRequest);
+
     LiveData<PostUploadResult> updatePost(UpdatePostRequest updatePostRequest);
 
-    LiveData<ResultObject> likeDislikePost(int postId, int status);
+    LiveData<ResultObject> likeDislikePost(int postId, @LikeDislike int status);
 
     LiveData<ResultObject> incrementViewCount(int mediaId);
 

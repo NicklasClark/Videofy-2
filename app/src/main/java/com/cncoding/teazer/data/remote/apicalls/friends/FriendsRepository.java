@@ -8,7 +8,7 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 
 /**
@@ -62,5 +62,5 @@ public interface FriendsRepository {
 
     LiveData<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm);
 
-    LiveData<LikedUserPost>getLikedUsers(int postId, int page);
+    LiveData<LikedUserList>getLikedUsers(int postId, int page);
 }

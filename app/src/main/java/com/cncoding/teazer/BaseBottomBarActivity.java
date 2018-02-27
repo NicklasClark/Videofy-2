@@ -54,10 +54,7 @@ import com.cncoding.teazer.home.discover.SubDiscoverFragment;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
-import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.onPostOptionsClickListener;
-import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
@@ -155,14 +152,12 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnInterestsInteractionListener, onPostOptionsClickListener,
+        OnInterestsInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
-//    Profile listeners LikedUser
-        FragmentLikedUser.CallProfileListener,
-        TagListAdapter.TaggedListInteractionListener,
+//    Profile listeners
         ProfileMyReactionAdapter.ReactionPlayerListener,
         AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
@@ -556,7 +551,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 if (response.body() != null) {
-                                    pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                    pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, null));
                                 } else {
                                     Toast.makeText(getThis(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                 }
@@ -601,7 +596,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             @Override
                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                 if (response.code() == 200)
-                                    pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, false, null, null));
+                                    pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, null));
 
                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                     Toast.makeText(getApplicationContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
@@ -617,11 +612,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                             }
                         });
-
             }
-
         }
-
     }
 
     private void getBranchDynamicLinks() {
@@ -643,12 +635,12 @@ public class BaseBottomBarActivity extends BaseActivity
                                                     if (response.body() != null) {
                                                         if (referringParams.has("react_id")) {
                                                             try {
-                                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id")));
+                                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, referringParams.getString("react_id")));
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
                                                         } else {
-                                                            pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                                            pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, null));
                                                         }
                                                     } else {
                                                         Toast.makeText(getThis(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
@@ -941,10 +933,13 @@ public class BaseBottomBarActivity extends BaseActivity
     //</editor-fold>
 
     //<editor-fold desc="On click methods">
-    @OnClick(R.id.camera_btn)
-    public void startCamera() {
+    @OnClick(R.id.camera_btn) public void startCamera() {
         launchVideoUploadCamera(this);
         finish();
+    }
+
+    @OnClick(R.id.btnToolbarBack) public void onViewClicked() {
+        onBackPressed();
     }
     //</editor-fold>
 
@@ -1062,8 +1057,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                     }
                                 }, 2000);
 
-                                if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.canReact = false;
+//                                if (PostsListFragment.postDetails != null)
+//                                    PostsListFragment.postDetails.canReact = false;
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishReactionUploadSession(getApplicationContext());
@@ -1118,7 +1113,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, false, null, null));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, null));
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
         }
@@ -1193,28 +1188,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 Toast.makeText(BaseBottomBarActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void callProfileListener(int id, boolean isMyself) {
-        pushFragment(isMyself ? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
-    }
-
-    @Override
-    public void onTaggedUserInteraction(int userId, boolean isSelf) {
-        pushFragment(isSelf ? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
-    }
-
-    @Override
-    public void onPostLikedClicked(PostDetails postDetails) {
-        pushFragment(FragmentLikedUser.newInstance(postDetails));
-    }
-
-    @OnClick(R.id.btnToolbarBack)
-    public void onViewClicked() {
-        onBackPressed();
     }
 
     @Override

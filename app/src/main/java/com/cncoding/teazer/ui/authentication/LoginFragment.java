@@ -66,7 +66,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 @SuppressLint("SwitchIntDef")
-public class LoginFragment extends AuthFragment {
+public class LoginFragment extends BaseAuthFragment {
 
     private static final int LOGIN_STATE_PASSWORD = 1;
     private static final int LOGIN_STATE_OTP = 2;

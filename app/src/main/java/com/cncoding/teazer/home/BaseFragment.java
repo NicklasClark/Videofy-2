@@ -13,6 +13,7 @@ import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.cncoding.teazer.utilities.NetworkStateReceiver.NetworkStateListener;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
+import static com.cncoding.teazer.utilities.AuthUtils.isConnected;
 
 /**
  *
@@ -34,6 +35,7 @@ public class BaseFragment extends Fragment implements NetworkStateListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
+        isConnected = isConnected(context);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
     }
@@ -47,7 +49,6 @@ public class BaseFragment extends Fragment implements NetworkStateListener {
     @Override
     public void onPause() {
         super.onPause();
-        networkStateReceiver.removeListener(this);
         context.unregisterReceiver(networkStateReceiver);
     }
 
@@ -88,6 +89,7 @@ public class BaseFragment extends Fragment implements NetworkStateListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        networkStateReceiver.removeListener(this);
         navigation = null;
         if (scrollListener != null) {
             scrollListener.resetState();

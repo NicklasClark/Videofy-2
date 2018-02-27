@@ -11,9 +11,9 @@ import java.util.ArrayList;
  */
 
 public class ReactionsList extends BaseModel {
+
     private boolean next_page;
     private ArrayList<MyReactions> reactions;
-    private Throwable error;
 
     public ReactionsList(boolean next_page, ArrayList<MyReactions> reactions) {
         this.next_page = next_page;

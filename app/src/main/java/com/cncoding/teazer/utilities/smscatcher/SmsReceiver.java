@@ -14,7 +14,7 @@ import android.util.Log;
  */
 
 public class SmsReceiver extends BroadcastReceiver {
-    private OnSmsCatchListener<String> callback;
+    private OnSmsCatchListener callback;
     private String phoneNumberFilter;
     private String filter;
 
@@ -22,7 +22,7 @@ public class SmsReceiver extends BroadcastReceiver {
      * Set result callback
      * @param callback OnSmsCatchListener
      */
-    public void setCallback(OnSmsCatchListener<String> callback) {
+    public void setCallback(OnSmsCatchListener callback) {
         this.callback = callback;
     }
 

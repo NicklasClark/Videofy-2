@@ -61,7 +61,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 @SuppressLint("SwitchIntDef")
-public class ConfirmOtpFragment extends AuthFragment {
+public class ConfirmOtpFragment extends BaseAuthFragment {
 
     private static final String ARG_INITIAL_SIGNUP_DETAILS = "userDetails";
     private static final String LAUNCH_ACTION = "launchAction";
@@ -126,11 +126,10 @@ public class ConfirmOtpFragment extends AuthFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
         LoginFragment.isAlreadyOTP = true;
-        smsVerifyCatcher = new SmsVerifyCatcher(getParentActivity(), this, new OnSmsCatchListener<String>() {
+        smsVerifyCatcher = new SmsVerifyCatcher(getParentActivity(), this, new OnSmsCatchListener() {
             @Override
             public void onSmsCatch(String message) {
                 String code = parseCode(message);//Parse verification code
@@ -333,18 +332,20 @@ public class ConfirmOtpFragment extends AuthFragment {
 //                    Failed, Invalid JSON or validation failed
                     default:
                         showSnackBar(otpResendBtn, getString(R.string.signup_failed));
+                        otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                         break;
                 }
                 break;
             case LOGIN_WITH_OTP:
                 startCountDownTimer();
                 showSnackBar(otpResendBtn, "New otp sent to " + initiateLoginWithOtp.getPhoneNumber());
+                otpResendBtn.setEnabled(false);
+                otpResendBtn.setAlpha(0.5f);
                 break;
             default:
                 break;
         }
-        otpResendBtn.setEnabled(true);
-        otpResendBtn.setAlpha(1);
     }
 
     @Override
@@ -387,12 +388,17 @@ public class ConfirmOtpFragment extends AuthFragment {
                         MILLISECONDS.toSeconds(millisUntilFinished) -
                                 MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
                 otpVerifiedTextView.setText(remainingTime);
+                if (otpResendBtn.isEnabled()) {
+                    otpResendBtn.setEnabled(false);
+                    otpResendBtn.setAlpha(0.5f);
+                }
             }
 
             @Override
             public void onFinish() {
                 otpVerifiedTextView.setText(R.string.you_can_try_again);
                 otpResendBtn.setEnabled(true);
+                otpResendBtn.setAlpha(1);
             }
         }.start();
     }

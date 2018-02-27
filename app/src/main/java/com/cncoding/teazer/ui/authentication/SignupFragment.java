@@ -43,7 +43,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 @SuppressLint("SwitchIntDef")
-public class SignupFragment extends AuthFragment {
+public class SignupFragment extends BaseAuthFragment {
 
     @BindView(R.id.dp) CircularAppCompatImageView dp;
     @BindView(R.id.dp_edit_btn) CircularAppCompatImageView dpEditBtn;

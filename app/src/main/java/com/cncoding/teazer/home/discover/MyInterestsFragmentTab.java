@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.utilities.Annotations.CALL_ALL_INTERESTED_CATEGORIES_POSTS;
 
 public class MyInterestsFragmentTab extends BaseDiscoverFragment {
 
@@ -38,7 +39,6 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
     @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private int categoryId;
-    private int currentPage;
 
     public MyInterestsFragmentTab() {}
 
@@ -54,13 +54,12 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
-            currentPage = 1;
         }
     }
 
     @Override protected void handleResponse(BaseModel resultObject) {
         try {
-            if (resultObject instanceof PostList) {
+            if (resultObject instanceof PostList && resultObject.getCallType() == (CALL_ALL_INTERESTED_CATEGORIES_POSTS + categoryId)) {
                 PostList postList = (PostList) resultObject;
                 is_next_page = postList.isNextPage();
                 if (!postList.getPosts().isEmpty()) {

@@ -74,5 +74,5 @@
     <color name="DialogBoxConfirm">#666666</color>
     <color name="DialogBoxCancel">#999999</color>
     <color name="colorShimmer">#C1C1C1</color>
-    <color name="seperater_color">#DDDDDD</color>
+    <color name="separator_color">#DDDDDD</color>
 </resources>

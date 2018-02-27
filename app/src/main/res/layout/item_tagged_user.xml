@@ -5,6 +5,7 @@
     android:layout_width="32dp"
     android:layout_height="32dp"
     android:padding="1dp"
+    android:scaleType="centerCrop"
     android:background="@drawable/bg_circle_dark_outlined"
     android:layout_marginEnd="@dimen/padding_half"
     android:layout_gravity="center_vertical"/>

@@ -9,6 +9,7 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -94,32 +95,6 @@ public class PostReaction extends BaseModel implements Parcelable {
         return 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PostReaction that = (PostReaction) o;
-
-        return reactId == that.reactId;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(10, 31)
-                .append(reactId)
-                .append(postId)
-                .append(reactTitle)
-                .append(postOwnerId)
-                .append(likes)
-                .append(views)
-                .append(canLike)
-                .append(canDelete)
-                .append(reactedAt)
-                .append(mySelf)
-                .toHashCode();
-    }
-
     public PostReaction(int reactId) {
         this.reactId = reactId;
     }
@@ -168,8 +143,58 @@ public class PostReaction extends BaseModel implements Parcelable {
         return reactedAt;
     }
 
-    public Boolean getMySelf()
-    {
+    public Boolean getMySelf() {
         return mySelf;
+    }
+
+    public void setReactTitle(String reactTitle) {
+        this.reactTitle = reactTitle;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public void setCanLike(boolean canLike) {
+        this.canLike = canLike;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || !(o == null || getClass() != o.getClass()) &&
+                o instanceof PostReaction &&
+                new EqualsBuilder()
+                        .append(reactId, ((PostReaction) o).reactId)
+                        .append(postId, ((PostReaction) o).postId)
+                        .append(reactTitle, ((PostReaction) o).reactTitle)
+                        .append(postOwnerId, ((PostReaction) o).postOwnerId)
+                        .append(likes, ((PostReaction) o).likes)
+                        .append(views, ((PostReaction) o).views)
+                        .append(canLike, ((PostReaction) o).canLike)
+                        .append(canDelete, ((PostReaction) o).canDelete)
+                        .append(reactedAt, ((PostReaction) o).reactedAt)
+                        .append(mySelf, ((PostReaction) o).mySelf)
+                        .isEquals();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(10, 31)
+                .append(reactId)
+                .append(postId)
+                .append(reactTitle)
+                .append(postOwnerId)
+                .append(likes)
+                .append(views)
+                .append(canLike)
+                .append(canDelete)
+                .append(reactedAt)
+                .append(mySelf)
+                .toHashCode();
     }
 }

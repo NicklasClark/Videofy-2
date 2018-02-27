@@ -20,7 +20,7 @@ import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
+import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,8 @@ import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
 import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.updatePostDetailsAccordingToDiffBundle;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
 /**
  *
@@ -80,7 +80,7 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
 
     void updatePosts(List<PostDetails> postDetailsList) {
         try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
+            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
             postDetailsArrayList.clear();
             postDetailsArrayList.addAll(postDetailsList);
             fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -231,7 +231,7 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.root_layout) public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
-                    null, false, false, null, null));
+                    null, false, null));
         }
 
         @OnClick(R.id.dp) public void dpClicked() {

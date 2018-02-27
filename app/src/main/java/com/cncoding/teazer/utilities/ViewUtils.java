@@ -43,12 +43,16 @@ import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
+import com.cncoding.teazer.utilities.Annotations.Gender;
+
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
+import static com.cncoding.teazer.utilities.Annotations.MALE;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 
@@ -60,7 +64,7 @@ import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
-    //    private String email;
+//    private String email;
 //    public static final int GALLERY_ACTIVITY_CODE=200;
 //    public static final int RESULT_CROP = 400;
     public static final String BLANK_SPACE = " ";
@@ -473,6 +477,18 @@ public class ViewUtils {
         gradientDrawable.setStroke(getPixels(title.getContext(), 1), color);
         title.setTextColor(color);
         return gradientDrawable;
+    }
+
+    @Contract(pure = true) @DrawableRes public static int getGenderSpecificDpSmall(@Gender int gender) {
+        return gender == MALE ?
+                R.drawable.ic_user_male_dp_small :
+                R.drawable.ic_user_female_dp;
+    }
+
+    @Contract(pure = true) @DrawableRes public static int getGenderSpecificDpLarge(@Gender int gender) {
+        return gender == MALE ?
+                R.drawable.ic_user_male_dp :
+                R.drawable.ic_user_female_dp;
     }
 
 //    public static void unbindDrawables(View view) {

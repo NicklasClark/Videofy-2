@@ -6,7 +6,7 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 
 import retrofit2.Call;
@@ -167,5 +167,5 @@ public interface FriendsService {
     Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
 
     @GET("/api/v1/post/liked/users/{post_id}/{page}")
-    Call<LikedUserPost>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
+    Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
 }

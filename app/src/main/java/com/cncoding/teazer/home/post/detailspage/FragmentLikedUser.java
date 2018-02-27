@@ -19,7 +19,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.post.LikedUser;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 29/12/17.
  */
 
@@ -46,8 +47,6 @@ public class FragmentLikedUser extends BaseFragment {
     RecyclerView.LayoutManager layoutManager;
     List<LikedUser> likedUsersList;
     LikedUserAdapter likedUserAdapter;
-    CallProfileListener callProfileListener;
-    private EndlessRecyclerViewScrollListener scrollListener;
     boolean next;
 
 
@@ -86,7 +85,7 @@ public class FragmentLikedUser extends BaseFragment {
         likedUserAdapter = new LikedUserAdapter(context, likedUsersList, postDetails, this);
         recyclerView.setAdapter(likedUserAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (next) {
@@ -120,18 +119,16 @@ public class FragmentLikedUser extends BaseFragment {
 
     public void getLikedUser(final int postId, final int pageId) {
 
-        ApiCallingService.Friends.getLikedUsers(postId, pageId, context).enqueue(new Callback<LikedUserPost>() {
+        ApiCallingService.Friends.getLikedUsers(postId, pageId, context).enqueue(new Callback<LikedUserList>() {
 
             @Override
-            public void onResponse(Call<LikedUserPost> call, Response<LikedUserPost> response) {
+            public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
 
                 try {
 
                     likedUsersList.addAll(response.body().getLikedUsers());
 
-                    if ((likedUsersList == null || likedUsersList.size() == 0) && pageId == 1) {
-
-                    } else {
+                    if ((likedUsersList != null && likedUsersList.size() != 0) || pageId != 1) {
                         next = response.body().getNextPage();
                         recyclerView.getAdapter().notifyDataSetChanged();
                         likedUserAdapter.notifyItemRangeInserted(likedUserAdapter.getItemCount(), likedUsersList.size() - 1);
@@ -144,37 +141,10 @@ public class FragmentLikedUser extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<LikedUserPost> call, Throwable t) {
+            public void onFailure(Call<LikedUserList> call, Throwable t) {
                 Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }
         });
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            if (context instanceof CallProfileListener) {
-                callProfileListener = (CallProfileListener) context;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    public void callFragmentLikedUser(int userId, boolean isMyself) {
-        callProfileListener.callProfileListener(userId, isMyself);
-
-    }
-
-    public interface CallProfileListener {
-        public void callProfileListener(int id, boolean myself);
-    }
-
 }

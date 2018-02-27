@@ -11,7 +11,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.react.ReactionUploadResult;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
     private static final String VIDEO_PATH = "videoPath";
     private ResultReceiver receiver;
     private Bundle bundle;
-    private Call<ReactionUploadResult> reactionUploadCall;
+    private Call<ReactionResponse> reactionUploadCall;
 //    private int resultCode;
 
     public static void launchReactionUploadService(Context context, UploadParams uploadParams, ReactionUploadReceiver reactionUploadReceiver) {
@@ -83,7 +83,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
 
                 try {
                     if (!reactionUploadCall.isExecuted()) {
-                        Response<ReactionUploadResult> response = reactionUploadCall.execute();
+                        Response<ReactionResponse> response = reactionUploadCall.execute();
 
                         if (response.isSuccessful()) {
                             try {

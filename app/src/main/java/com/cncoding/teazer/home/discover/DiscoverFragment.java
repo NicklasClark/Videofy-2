@@ -89,9 +89,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
         getParentActivity().updateToolbarTitle(getString(R.string.discover));
         View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         ButterKnife.bind(this, rootView);
-
         initStuff();
-
         return rootView;
     }
 
@@ -108,7 +106,6 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     private void initStuff() {
-        currentPage = 1;
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {

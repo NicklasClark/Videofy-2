@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.post.detailspage;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,20 +8,22 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,12 +43,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.exoplayer.PlayerEventListener;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
@@ -53,31 +57,24 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularChecke
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
-import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
-import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.home.post.BasePostFragment;
+import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -85,7 +82,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -99,11 +95,9 @@ import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
 import pl.droidsonroids.gif.GifTextView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.STREAM_MUSIC;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -119,6 +113,17 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_C
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
+import static com.cncoding.teazer.utilities.Annotations.CALL_CREATE_REACTION_BY_GIPHY;
+import static com.cncoding.teazer.utilities.Annotations.CALL_DELETE_POST;
+import static com.cncoding.teazer.utilities.Annotations.CALL_GET_POST_DETAILS;
+import static com.cncoding.teazer.utilities.Annotations.CALL_GET_REACTIONS_OF_POST;
+import static com.cncoding.teazer.utilities.Annotations.CALL_GET_TAGGED_USERS;
+import static com.cncoding.teazer.utilities.Annotations.CALL_HIDE_OR_SHOW_POST;
+import static com.cncoding.teazer.utilities.Annotations.CALL_INCREMENT_VIEW_COUNT;
+import static com.cncoding.teazer.utilities.Annotations.CALL_LIKE_DISLIKE_POST;
+import static com.cncoding.teazer.utilities.Annotations.HIDE;
+import static com.cncoding.teazer.utilities.Annotations.SEND_DISLIKE;
+import static com.cncoding.teazer.utilities.Annotations.SEND_LIKE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
@@ -127,7 +132,6 @@ import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
-import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
@@ -143,14 +147,12 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+public class PostDetailsFragment extends BasePostFragment implements WatermarkAsyncResponse, OnAudioFocusChangeListener {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
     public static final String ARG_THUMBNAIL = "thumbnail";
     public static final String ARG_REACT_ID = "react_id";
-    //    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
-    public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
 
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.tags_container) RelativeLayout tagsLayout;
@@ -187,104 +189,82 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
     @BindView(R.id.uploading_status_layout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.liked_user_layout) FrameLayout frameLayout;
 
-//    private long playbackPosition;
-//    private int currentWindow;
-//    private boolean enableReactBtn;
-    private boolean isComingFromHomePage;
-    private Bitmap image;
-    private boolean is_next_page;
+    private static boolean isDeepLink = false;
     private int currentVolume;
     private boolean isAudioEnabled;
-    private int likes;
-    private int views;
     private long totalDuration;
     private boolean oneShotFlag;
-    Context context;
-
-    //    StartCountDownClass startCountDownClass;
-    private Handler customHandler = new Handler();
-
-    private SimpleExoPlayer player;
-    private PostDetails postDetails;
-    private Call<PostReactionsList> postReactionsListCall;
-    private Call<TaggedUsersList> taggedUsersListCall;
-    private ArrayList<PostReaction> postReactions;
-    private ArrayList<TaggedUser> taggedUsersList;
-    private PostReactionAdapter postReactionAdapter;
-    private AudioManager audioManager;
-    private ReactionUploadReceiver reactionUploadReceiver;
-    private static boolean isDeepLink = false;
-    private String thumbUrl;
-
-    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
     public long playerCurrentPosition = 0;
+
+    private Handler customHandler = new Handler();
     private Handler mHandler;
-    private onPostOptionsClickListener mListener;
 
-    public PostDetailsFragment() {
+    private Bitmap image;
+    private SimpleExoPlayer player;
+    private PostDetails postDetails;
+    private PostReactionAdapter postReactionAdapter;
+    private TagListAdapter tagListAdapter;
+    private AudioManager audioManager;
+    private ReactionUploadReceiver reactionUploadReceiver;
+    private int taggedUsersPage;
+    private boolean taggedUsersIsNextPage;
+    private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (player != null) player.setPlayWhenReady(false);
+        }
+    };
 
-    }
+    public PostDetailsFragment() {}
 
-    public static PostDetailsFragment newInstance(@NonNull PostDetails postDetails, Bitmap image,
-                                                  boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
+    public static PostDetailsFragment newInstance(@NonNull PostDetails postDetails, Bitmap image, boolean isDeepLink, String react_id) {
         PostDetailsFragment postDetailsFragment = new PostDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
-        if (!isDeepLink) {
-            bundle.putParcelable(ARG_THUMBNAIL, image);
-        } else {
+        bundle.putParcelable(ARG_THUMBNAIL, image);
+        if (isDeepLink) {
             PostDetailsFragment.isDeepLink = true;
-            bundle.putString(ARG_THUMBNAIL, thumbUrl);
             bundle.putString(ARG_REACT_ID, react_id);
         }
-        bundle.putBoolean(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
         postDetailsFragment.setArguments(bundle);
         return postDetailsFragment;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post_details, container, false);
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            postDetails = bundle.getParcelable(ARG_POST_DETAILS);
+            image = bundle.getParcelable(ARG_THUMBNAIL);
+            if (isDeepLink) {
+                String reactId = bundle.getString(ARG_REACT_ID);
+                if (reactId != null) {
+                    fetchReactionDetails(context, Integer.parseInt(reactId));
+                }
+            }
+        }
+        taggedUsersPage = 1;
+        audioManager = (AudioManager) getParentActivity().getSystemService(Context.AUDIO_SERVICE);
+    }
 
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, view);
 
-        if (image != null && !isDeepLink)
-            playerView.setShutterBackground(image);
-        else playerView.setShutterBackground(thumbUrl);
+        if (image != null) playerView.setShutterBackground(image);
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
-        postReactions = new ArrayList<>();
-        taggedUsersList = new ArrayList<>();
         previousTitle = getParentActivity().getToolbarTitle();
         getParentActivity().updateToolbarTitle(getString(R.string.post));
-
-        profilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.callProfileListener(postDetails.getPostOwner().getUserId(), postDetails.canDelete());
-            }
-        });
-
-        likesView.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View view) {
-                if(likes>0) {
-                    mListener.onPostLikedClicked(postDetails);
-                }
-            }
-        });
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        loadPostDetails(postDetails.getPostId());
         oneShotFlag = true;
 
         updateTextureViewSize(postDetails.getMedias().get(0).getMediaDimension().getWidth(),
@@ -293,55 +273,11 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         likeAction(postDetails.canLike(), false);
         if (!postDetails.canReact()) disableView(reactBtn, true);
 
-        prepareController();
-
-        postReactionAdapter = new PostReactionAdapter(postReactions, context);
-        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(postReactionAdapter);
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(manager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (is_next_page)
-                    getPostReactions(postDetails.getPostId(), page);
-            }
-        };
-        recyclerView.addOnScrollListener(scrollListener);
-        taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList,this));
-        getTaggedUsers(1);
+        prepareViews();
+        prepareRecyclerViews();
 
         //audio state change listener
         mHandler = new Handler();
-        audioFocusChangeListener =
-                new AudioManager.OnAudioFocusChangeListener() {
-                    public void onAudioFocusChange(int focusChange) {
-                        if (player != null) {
-                            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                                // Permanent loss of audio focus
-                                // Pause playback immediately
-                                player.setPlayWhenReady(false);
-                                // Wait 30 seconds before stopping playback
-                                mHandler.postDelayed(mDelayedStopRunnable,
-                                        TimeUnit.SECONDS.toMillis(30));
-                            }
-                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
-                                // Pause playback
-                                player.setPlayWhenReady(false);
-                            }
-//                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-//                                // Lower the volume, keep playing
-//                            }
-                            else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                                // Your app has been granted audio focus again
-                                // Raise volume to normal, restart playback if necessary
-                                player.setPlayWhenReady(true);
-                                player.seekTo(playerCurrentPosition);
-                            }
-                        }
-                    }
-                };
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -354,51 +290,14 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle bundle = getArguments();
-        context = getContext();
-
-        if (bundle != null) {
-            postDetails = bundle.getParcelable(ARG_POST_DETAILS);
-            if (!isDeepLink) {
-                image = bundle.getParcelable(ARG_THUMBNAIL);
-            }
-            else {
-                thumbUrl = bundle.getString(ARG_THUMBNAIL);
-                String reactId = bundle.getString(ARG_REACT_ID);
-
-                if (reactId != null) {
-                    fetchReactionDetails(context, Integer.parseInt(reactId));
-                }
-            }
-            isComingFromHomePage = bundle.getBoolean(ARG_IS_COMING_FROM_HOME_PAGE, false);
-        }
-        audioManager = (AudioManager) getParentActivity().getSystemService(Context.AUDIO_SERVICE);
-    }
-
-    private Runnable mDelayedStopRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (player != null) {
-                player.setPlayWhenReady(false);
-            }
-        }
-    };
-
-    @Override
     public void onResume() {
         super.onResume();
         getParentActivity().hideToolbar();
         //acquire audio play access(transient)
-        audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
+        audioAccessGranted = acquireAudioLock(getContext(), this);
 
         checkIfAnyReactionIsUploading();
-        if (postDetails != null) {
-            postReactions.clear();
-            getPostReactions(postDetails.getPostId(), 1);
-        }
+
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -409,35 +308,36 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         isAudioEnabled = currentVolume > 0;
     }
 
-    private void prepareController() {
+    private void prepareViews() {
         if (postDetails != null) {
             String title = postDetails.getTitle();
             caption.setText(decodeUnicodeString(title));
+
             locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
             locationView.setText(locationView.getVisibility() == VISIBLE ?
-                    (postDetails.hasCheckin() ?
-                            SPACE + postDetails.getCheckIn().getLocation() :
-                            null) :
-                    null);
+                    (postDetails.hasCheckin() && postDetails.getCheckIn() != null ?
+                            postDetails.getCheckIn().getLocation() : null) : null);
             profileNameView.setText(postDetails.getPostOwner().getUserName());
 
-            this.likes = postDetails.getLikes();
-            String likes = SPACE + this.likes;
+            String likes = String.valueOf(this.postDetails.getLikes());
             likesView.setText(likes);
 
-            this.views = postDetails.getMedias().get(0).getViews();
-            String views = SPACE + this.views;
+            String views = String.valueOf(this.postDetails.getMedias().get(0).getViews());
             viewsView.setText(views);
 
             String categories = getUserCategories();
-            if (categories != null && categories.length() > 1) {
-                categories = "  " + categories;
+            if (categories != null && !categories.isEmpty()) {
+                categoriesView.setVisibility(VISIBLE);
                 categoriesView.setText(categories);
             } else categoriesView.setVisibility(GONE);
 
             try {
-                String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
+                String duration = postDetails.getMedias().get(0).getDuration();
                 remainingTime.setText(duration);
+                setTextViewDrawableStart(remainingTime,
+                        audioManager.getStreamVolume(STREAM_MUSIC) == 0 ?
+                                R.drawable.ic_volume_off :
+                                R.drawable.ic_volume_up);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd mm:ss", Locale.getDefault());
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = sdf.parse("1970-01-01 " + duration);
@@ -447,13 +347,12 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                 e.printStackTrace();
             }
 
-            if (postDetails.getTotalReactions() <= 3) {
-                String reactionCountText = String.valueOf(postDetails.getTotalReactions()) + " R";
-                reactionCountView.setText(reactionCountText);
-            } else {
-                String reactionCountText = "+" + String.valueOf(postDetails.getTotalReactions()-3) + " R";
+            if (postDetails.getTotalReactions() > 3) {
+                reactionCountView.setVisibility(VISIBLE);
+                String reactionCountText = "+" + String.valueOf(postDetails.getTotalReactions() - 3) + " R";
                 reactionCountView.setText(reactionCountText);
             }
+            else reactionCountView.setVisibility(GONE);
 
             tagsCountBadge.setVisibility(postDetails.getTotalTags() != null && postDetails.getTotalTags() > 0 ? VISIBLE : GONE);
             tagsLayout.setVisibility(postDetails.getTotalTags() != null && postDetails.getTotalTags() > 0 ? VISIBLE : GONE);
@@ -483,121 +382,193 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         }
     }
 
-    private String getUserCategories() {
+    private void prepareRecyclerViews() {
+//        Preparing reactions list
+        CustomStaggeredGridLayoutManager manager1 = new CustomStaggeredGridLayoutManager(2, VERTICAL);
+        manager1.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(manager1);
+        postReactionAdapter = new PostReactionAdapter(this);
+        recyclerView.setAdapter(postReactionAdapter);
+        EndlessRecyclerViewScrollListener scrollListener1 = new EndlessRecyclerViewScrollListener(manager1) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (isConnected) {
+                    if (is_next_page) {
+                        currentPage = page;
+                        loadReactionsOfPost(postDetails.getPostId(), page);
+                    }
+                }
+                else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener1);
+        loadReactionsOfPost(postDetails.getPostId(), 1);
+
+//        Preparing tagged users list
+        CustomLinearLayoutManager manager2 = new CustomLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        taggedUserListView.setLayoutManager(manager2);
+        tagListAdapter = new TagListAdapter(this);
+        taggedUserListView.setAdapter(tagListAdapter);
+        EndlessRecyclerViewScrollListener scrollListener2 = new EndlessRecyclerViewScrollListener(manager2) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (isConnected) {
+                    if (taggedUsersIsNextPage) {
+                        taggedUsersPage = page;
+                        loadTaggedUsers(postDetails.getPostId(), page);
+                    }
+                }
+                else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
+            }
+        };
+        taggedUserListView.addOnScrollListener(scrollListener2);
+        loadTaggedUsers(postDetails.getPostId(), 1);
+    }
+
+    @SuppressLint("SwitchIntDef") @Override
+    protected void handleResponse(BaseModel resultObject) {
+        switch (resultObject.getCallType()) {
+            case CALL_GET_POST_DETAILS:
+                if (resultObject instanceof PostDetails) {
+                    postDetails = (PostDetails) resultObject;
+                    prepareViews();
+                }
+                break;
+            case CALL_INCREMENT_VIEW_COUNT:
+                incrementViews();
+                viewModel.incrementLocalViews(postDetails.getMedias(), postDetails.getPostId());
+                break;
+            case CALL_LIKE_DISLIKE_POST:
+                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() &&
+                        ((ResultObject) resultObject).getMessage().contains("Unlike"))
+                    viewModel.dislikeLocalPost(postDetails.getPostId());
+                else viewModel.likeLocalPost(postDetails.getPostId());
+                break;
+            case CALL_GET_REACTIONS_OF_POST:
+                if (resultObject instanceof PostReactionsList) {
+                    PostReactionsList reactionsList = (PostReactionsList) resultObject;
+                    if (reactionsList.getReactions() != null && !reactionsList.getReactions().isEmpty()) {
+//                        viewModel.updateLocalReactions(reactionsList.getReactions(), postDetails.canReact(), postDetails.getPostId());
+                        postLoadErrorLayout.setVisibility(GONE);
+                        is_next_page = reactionsList.isNextPage();
+                        postReactionAdapter.updateReactions(reactionsList.getReactions());
+                        if (reactionsList.getReactions().size() > 0) {
+                            if (reactionsList.getReactions().size() >= 1)
+                                setReactionPic(reactionsList.getReactions().get(0).getMediaDetail().getReactThumbUrl(), reaction1Pic);
+                            if (reactionsList.getReactions().size() >= 2)
+                                setReactionPic(reactionsList.getReactions().get(1).getMediaDetail().getReactThumbUrl(), reaction2Pic);
+                            if (reactionsList.getReactions().size() >= 3)
+                                setReactionPic(reactionsList.getReactions().get(2).getMediaDetail().getReactThumbUrl(), reaction3Pic);
+                        }
+                    } else {
+                        setNoReactions();
+                        showNoReactionMessage();
+                    }
+                }
+                break;
+            case CALL_GET_TAGGED_USERS:
+                if (resultObject instanceof TaggedUsersList) {
+                    TaggedUsersList taggedList = (TaggedUsersList) resultObject;
+                    taggedUsersIsNextPage = taggedList.isNextPage();
+                    tagListAdapter.addPosts(taggedUsersPage, taggedList.getTaggedUsers());
+                }
+                break;
+            case CALL_HIDE_OR_SHOW_POST:
+                Toast.makeText(context, resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() ?
+                        R.string.video_hide_successful : R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                navigation.popFragment();
+                break;
+            case CALL_DELETE_POST:
+                Toast.makeText(context, resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() ?
+                        R.string.video_has_been_deleted : R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                navigation.popFragment();
+                break;
+            case CALL_CREATE_REACTION_BY_GIPHY:
+                loadReactionsOfPost(postDetails.getPostId(), 1);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @SuppressLint("SwitchIntDef") @Override
+    protected void handleError(BaseModel baseModel) {
+        switch (baseModel.getCallType()) {
+            case CALL_GET_REACTIONS_OF_POST:
+                showErrorMessage(R.string.could_not_load_reactions);
+                break;
+            case CALL_GET_TAGGED_USERS:
+                noTaggedUsers.setVisibility(VISIBLE);
+                taggedUserListView.setVisibility(GONE);
+                noTaggedUsers.setText(R.string.error_getting_tagged_users);
+                break;
+            case CALL_HIDE_OR_SHOW_POST:
+                Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                break;
+            case CALL_DELETE_POST:
+                Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                break;
+            case CALL_CREATE_REACTION_BY_GIPHY:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showErrorMessage(@StringRes int message) {
+        postLoadErrorLayout.setVisibility(VISIBLE);
+        postLoadErrorTextView.setText(message);
+        postLoadErrorSubtitle.setText(R.string.tap_to_retry);
+    }
+
+    @Nullable private String getUserCategories() {
         if (postDetails.getCategories() != null) {
             StringBuilder categories = new StringBuilder();
+            categories.append(postDetails.getCategories().size() > 1 ? "Categories : " : "Category : ");
             for (int i = 0; i < postDetails.getCategories().size(); i++) {
                 categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
                     categories.append(", ");
-//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
-//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
+//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+
+//                postDetails.getCategories().get(i).getCategoryName()+"</font> ");
+//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+
+//                postDetails.getCategories().get(i).getCategoryName()+"</font> ");
             }
 //            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
             return categories.toString();
         } else return null;
     }
 
-    private void getPostReactions(final int postId, final int pageNumber) {
-        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
-
-        if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
-            postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
-                @Override
-                public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                    try {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getReactions().size() > 0) {
-                                    postLoadErrorLayout.setVisibility(GONE);
-                                    is_next_page = response.body().isNextPage();
-                                    if (pageNumber == 1) postReactions.clear();
-
-                                    postReactions.addAll(response.body().getReactions());
-//                                    recyclerView.setVisibility(View.VISIBLE);
-                                    postReactionAdapter.notifyDataSetChanged();
-                                    if (postReactions.size() > 0) {
-                                        if (postReactions.size() >= 1) {
-                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getReactThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 2) {
-                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getReactThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 3) {
-                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getReactThumbUrl());
-                                        }
-                                    }
-                                } else {
-                                    setNoReactions();
-                                    showNoReactionMessage();
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() + ": " + response.message());
-                                break;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                private void showErrorMessage(String message) {
-                    postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
-                    postLoadErrorLayout.setVisibility(VISIBLE);
-                    message = getString(R.string.could_not_load_posts) + message;
-                    postLoadErrorTextView.setText(message);
-                    postLoadErrorSubtitle.setText(R.string.tap_to_retry);
-                }
-
-                @Override
-                public void onFailure(Call<PostReactionsList> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-    }
-
     private void showNoReactionMessage() {
         reactionsHeader.setVisibility(GONE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-        if (postDetails.canDelete()) {
-            postLoadErrorSubtitle.setText(R.string.there_is_no_reaction_yet);
-
-        } else {
-            postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
-
-        }
+        postLoadErrorSubtitle.setText(postDetails.canDelete() ? R.string.there_is_no_reaction_yet : R.string.be_the_first_one_to_react);
     }
 
     public void incrementLikes() {
-        likes=likes+1;
-        String likesText = PostDetailsFragment.SPACE + likes;
+        postDetails.setLikes(postDetails.getLikes() + 1);
+        String likesText = String.valueOf(postDetails.getLikes());
         likesView.setText(likesText);
     }
 
     public void decrementLikes() {
-        likes =likes-1;
-        if (likes < 0) {likes = 0;}
-        String likesText = PostDetailsFragment.SPACE + likes;
+        postDetails.setLikes(postDetails.getLikes() - 1);
+        String likesText = String.valueOf(postDetails.getLikes());
         likesView.setText(likesText);
     }
 
     public void incrementViews() {
-        String viewsText = PostDetailsFragment.SPACE + ++views;
+        postDetails.getMedias().get(0).setViews(postDetails.getMedias().get(0).getViews() + 1);
+        String viewsText = String.valueOf(postDetails.getMedias().get(0).getViews());
         viewsView.setText(viewsText);
     }
 
-    public void decrementViews() {
-        String viewsText = PostDetailsFragment.SPACE + --views;
-        viewsView.setText(viewsText);
-    }
-
-    public void setReaction1Pic(String reaction1PicUrl) {
+    public void setReactionPic(String reactionPicUrl, final AppCompatImageView view) {
         reaction1Pic.setVisibility(VISIBLE);
         Glide.with(this)
-                .load(reaction1PicUrl)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.ic_user_male_dp_small))
+                .load(reactionPicUrl)
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -607,62 +578,29 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                    DataSource dataSource, boolean isFirstResource) {
-                        reaction1Pic.setImageDrawable(resource);
+                        view.setImageDrawable(resource);
                         return false;
                     }
                 })
-                .into(reaction1Pic);
-    }
-
-    public void setReaction2Pic(String reaction2PicUrl) {
-        reaction2Pic.setVisibility(VISIBLE);
-        Glide.with(this)
-                .load(reaction2PicUrl)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.ic_user_male_dp_small))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        reaction2Pic.setImageDrawable(resource);
-                        return false;
-                    }
-                })
-                .into(reaction2Pic);
-    }
-
-    public void setReaction3Pic(String reaction3PicUrl) {
-        reaction3Pic.setVisibility(VISIBLE);
-        Glide.with(this)
-                .load(reaction3PicUrl)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.ic_user_male_dp_small))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                   DataSource dataSource, boolean isFirstResource) {
-                        reaction3Pic.setImageDrawable(resource);
-                        return false;
-                    }
-                })
-                .into(reaction3Pic);
+                .into(view);
     }
 
     public void setNoReactions() {
         reactionCountView.setText("");
     }
 
-    @OnClick(R.id.btnClose)
-    public void goBack() {
+    @OnClick(R.id.media_controller_likes) public void likeClicked() {
+        if(postDetails.getLikes() > 0) {
+            navigation.pushFragment(FragmentLikedUser.newInstance(postDetails));
+        }
+    }
+
+    @OnClick(R.id.media_controller_dp) public void profilePicClicked() {
+        navigation.pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
+                OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+    }
+
+    @OnClick(R.id.up_btn) public void goBack() {
         customHandler.removeCallbacks(updateTimerThread);
         mHandler.removeCallbacks(mDelayedStopRunnable);
         playerCurrentPosition = 0;
@@ -672,10 +610,8 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
 
     @OnClick(R.id.media_controller_eta) public void toggleSound() {
         if (audioManager != null) {
-            int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
+            int midVolume = (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) / 2;
             int volume;
-
             if (isAudioEnabled) {
                 volume = 0;
                 setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_off);
@@ -683,16 +619,14 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
-                else volume = maxVolume;
+                else volume = midVolume;
 //                volume = 100 * maxVolume + currentVolume;
                 setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
-
-            if (volume > maxVolume) {
-                volume = maxVolume;
+            if (volume > midVolume) {
+                volume = midVolume;
             }
-
             if (volume < 0) {
                 volume = 0;
             }
@@ -705,103 +639,15 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
     }
 
     @OnClick(R.id.like) public void likePost() {
-        Callback<ResultObject> callback = new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() != 200) {
-                    if (response.body() != null)
-                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
-                    else
-                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        };
-        if (!likeBtn.isChecked()) {
-//            Like the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, context).enqueue(callback);
-        } else {
-//            Unlike the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, context).enqueue(callback);
-        }
+        likeDislikePost(postDetails.getPostId(), !likeBtn.isChecked() ? SEND_LIKE : SEND_DISLIKE);
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags)
-    public void getTaggedList() {
+    @OnClick(R.id.tags) public void getTaggedList() {
         if (horizontalListViewParent.getVisibility() == GONE) {
             horizontalListViewParent.setVisibility(VISIBLE);
         } else {
             horizontalListViewParent.setVisibility(GONE);
-        }
-    }
-
-    private void getTaggedUsers(final int page) {
-        taggedUsersListCall = ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), page, context);
-        taggedUsersListCall.enqueue(new Callback<TaggedUsersList>() {
-
-            @Override
-            public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
-                try {
-                    if(response.code()==200) {
-                        TaggedUsersList taggedList = response.body();
-                        boolean next= taggedList.isNextPage();
-                        taggedUsersList.addAll(taggedList.getTaggedUsers());
-                        if ((taggedUsersList != null && taggedUsersList.size() != 0) || page != 1) {
-                            if(next) {
-                                int pages = page + 1;
-                                getTaggedUsers(pages) ;
-                            }
-                            taggedUserListView.getAdapter().notifyDataSetChanged();
-                            taggedUserListView.getAdapter().notifyItemRangeInserted( taggedUserListView.getAdapter().getItemCount(), taggedUsersList.size() - 1);
-                        }
-                    }
-                    else {
-                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
-                    }
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TaggedUsersList> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
-
-    private void likeAction(boolean isChecked, boolean animate) {
-        if (!isChecked) {
-            likeBtn.setChecked(true);
-            likeBtn.setText(R.string.liked);
-            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
-            if (animate) {
-                if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes += 1;
-                    PostsListFragment.postDetails.canLike = false;
-                }
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
-                incrementLikes();
-            }
-        } else {
-            likeBtn.setChecked(false);
-            likeBtn.setText(R.string.like);
-            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_likebig, 0, 0);
-            if (animate) {
-                if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes -= 1;
-                   if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
-                    PostsListFragment.postDetails.canLike = true;
-                }
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
-                decrementLikes();
-            }
         }
     }
 
@@ -817,64 +663,11 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
 
     @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
         try {
-
-//            if(player.getPlayWhenReady())
-//                startCountDownClass.pause();
-//            else
-//                startCountDownClass.resume();
-
             player.setPlayWhenReady(!player.getPlayWhenReady());
-
-
-            //  playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
-            //          : R.drawable.ic_pause_big);
             togglePlayPauseBtnVisibility(!player.getPlayWhenReady());
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void updateTextureViewSize(int viewWidth, int viewHeight) {
-        Point point = new Point();
-        getParentActivity().getWindowManager().getDefaultDisplay().getSize(point);
-        int systemWidth = point.x;
-        viewHeight = systemWidth * viewHeight / viewWidth;
-        viewWidth = systemWidth;
-        if (viewHeight < viewWidth) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-            //noinspection SuspiciousNameCombination
-            params.height = viewWidth;
-            relativeLayout.setLayoutParams(params);
-        }
-//        float scaleX = 1.0f;
-//        float scaleY = 1.0f;
-//
-//        if (videoWidth > viewWidth && videoHeight > viewHeight) {
-//            scaleX = videoWidth / viewWidth;
-//            scaleY = videoHeight / viewHeight;
-//        } else if (videoWidth < viewWidth && videoHeight < viewHeight) {
-//            scaleY = viewWidth / videoWidth;
-//            scaleX = viewHeight / videoHeight;
-//        } else if (viewWidth > videoWidth) {
-//            scaleY = (viewWidth / videoWidth) / (viewHeight / videoHeight);
-//        } else if (viewHeight > videoHeight) {
-//            scaleX = (viewHeight / videoHeight) / (viewWidth / videoWidth);
-//        }
-//        /* Calculate pivot points, in our case crop from center*/
-//        int pivotPointX = viewWidth / 2;
-//        int pivotPointY = viewHeight / 2;
-//        Matrix matrix = new Matrix();
-//        matrix.setScale(1, 1, pivotPointX, pivotPointY);
-//        textureView.setTransform(matrix);
-//        textureView.setLayoutParams(params);
-//        textureView.animate().alpha(1).setDuration(280).start();
-//        textureView.setVisibility(GONE);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        playerView.setLayoutParams(params);
-        playerView.setResizeMode(RESIZE_MODE_ZOOM);
     }
 
     @OnClick(R.id.share) public void onViewClicked() {
@@ -899,17 +692,77 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                 if (error == null) {
                     //fabric event
                     logVideoShareEvent("Branch", postDetails.getTitle(), "Post", String.valueOf(postDetails.getPostId()));
-
                     loader.setVisibility(GONE);
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, url);
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-                } else
-                    loader.setVisibility(GONE);
+                }
+                else loader.setVisibility(GONE);
             }
         });
+    }
+
+    private void likeAction(boolean isChecked, boolean animate) {
+        if (!isChecked) {
+            likeBtn.setChecked(true);
+            likeBtn.setText(R.string.liked);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
+            if (animate) {
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
+                incrementLikes();
+            }
+        } else {
+            likeBtn.setChecked(false);
+            likeBtn.setText(R.string.like);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_likebig, 0, 0);
+            if (animate) {
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
+                decrementLikes();
+            }
+        }
+    }
+
+    private void updateTextureViewSize(int viewWidth, int viewHeight) {
+        Point point = new Point();
+        getParentActivity().getWindowManager().getDefaultDisplay().getSize(point);
+        int systemWidth = point.x;
+        viewHeight = systemWidth * viewHeight / viewWidth;
+        viewWidth = systemWidth;
+        if (viewHeight < viewWidth) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+            //noinspection SuspiciousNameCombination
+            params.height = viewWidth;
+            relativeLayout.setLayoutParams(params);
+        }
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        playerView.setLayoutParams(params);
+        playerView.setResizeMode(RESIZE_MODE_ZOOM);
+    }
+
+    @Override public void onAudioFocusChange(int focusChange) {
+        if (player != null) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Permanent loss of audio focus. Pause playback immediately
+                player.setPlayWhenReady(false);
+                // Wait 30 seconds before stopping playback
+                mHandler.postDelayed(mDelayedStopRunnable, TimeUnit.SECONDS.toMillis(30));
+            }
+            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Pause playback
+                player.setPlayWhenReady(false);
+            }
+//            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+//                Lower the volume, keep playing
+//            }
+            else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Your app has been granted audio focus again. Raise volume to normal, restart playback if necessary
+                player.setPlayWhenReady(true);
+                player.seekTo(playerCurrentPosition);
+            }
+        }
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -917,65 +770,10 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_hide:
-                    new AlertDialog.Builder(context)
-                            .setTitle(R.string.hiding_post)
-                            .setMessage(R.string.hide_post_confirm)
-                            .setPositiveButton(getString(R.string.yes_hide), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, context)
-                                            .enqueue(new Callback<ResultObject>() {
-                                                @Override
-                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.body().getStatus()) {
-                                                        Toast.makeText(context,
-                                                                R.string.video_hide_successful,
-                                                                Toast.LENGTH_SHORT).show();
-                                                        navigation.popFragment();
-
-                                                    } else {
-                                                        Toast.makeText(context,
-                                                                R.string.something_went_wrong,
-                                                                Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                                @Override
-                                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    t.printStackTrace();
-                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            })
-                            .show();
+                    showAlertDialog(R.string.hiding_post, R.string.hide_post_confirm);
                     return true;
                 case R.id.action_delete:
-                    new AlertDialog.Builder(context)
-                            .setTitle(R.string.confirm)
-                            .setMessage("Are you sure you want to delete this video?")
-                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteVideo(postDetails.getPostId());
-   //                                 PostsListFragment.postDetails = null;
-                                    navigation.popFragment();
-
-//                                    getActivity().finish();
-                                }
-                            })
-                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
+                    showAlertDialog(R.string.alert, R.string.delete_post_confirm);
                     return true;
                 case R.id.action_profile_report:
                     if (!postDetails.canDelete()) {
@@ -996,27 +794,31 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         }
     }
 
-    private void deleteVideo(int postId) {
-        ApiCallingService.Posts.deletePosts(postId, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                try {
-                    if (response.code() == 200) {
-                        Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+    private void showAlertDialog(@StringRes final int title, @StringRes int message) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (title) {
+                            case R.string.hide_post_confirm:
+                                hideOrShowPost(postDetails.getPostId(), HIDE);
+                                break;
+                            case R.string.delete_post_confirm:
+                                deletePost(postDetails.getPostId());
+                                break;
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -1034,13 +836,7 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isComingFromHomePage)
-            PostsListFragment.isRefreshing = true;
         postReactionAdapter = null;
-        if (postReactionsListCall != null)
-            postReactionsListCall.cancel();
-        if (taggedUsersListCall != null)
-            taggedUsersListCall.cancel();
         customHandler.removeCallbacks(updateTimerThread);
     }
 
@@ -1049,7 +845,7 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         super.onStart();
         if (Util.SDK_INT > 23) {
             //acquire audio play access(transient)
-            audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
+            audioAccessGranted = acquireAudioLock(getContext(), this);
             initializePlayer();
         }
     }
@@ -1063,13 +859,11 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
         }
-        releaseAudioLock(getContext(), audioFocusChangeListener);
+        releaseAudioLock(getContext(), this);
     }
 
     private void releasePlayer() {
         if (player != null) {
-//            playbackPosition = player.getCurrentPosition();
-//            currentWindow = player.getCurrentWindowIndex();
             player.release();
             player = null;
         }
@@ -1094,7 +888,7 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                             .setDuration(200)
                             .setInterpolator(new DecelerateInterpolator())
                             .start();
-                    //          playPauseButton.setVisibility(INVISIBLE);
+            //          playPauseButton.setVisibility(INVISIBLE);
                 }
             }, 500);
         }
@@ -1105,12 +899,11 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-            player.addListener(new Player.EventListener() {
+            player.addListener(new PlayerEventListener() {
                 @Override
-                public void onPlayerStateChanged(boolean b, int i) {
-                    switch (i) {
+                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                    switch (playbackState) {
                         case STATE_IDLE:
-                            // playPauseButton.setImageResource(R.drawable.ic_play_big);
                             togglePlayPauseBtnVisibility(true);
                             break;
                         case STATE_BUFFERING:
@@ -1119,98 +912,32 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                             break;
                         case STATE_READY:
                             if (player.getPlayWhenReady()) {
-                                //  playPauseButton.setImageResource(R.drawable.ic_pause_big);
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
                                 image = null;
-//                                startCountDownClass = new StartCountDownClass(player.getDuration(), 1000, remainingTime);
-//                                startCountDownClass.start();
                                 customHandler.postDelayed(updateTimerThread, 0);
                             }
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
-                                    incrementViews();
-                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
-                                            .enqueue(new Callback<ResultObject>() {
-                                                @Override
-                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    try {
-                                                        if (response.code() == 200 && response.body().getStatus()) {
-                                                            if (PostsListFragment.postDetails != null)
-                                                                PostsListFragment.postDetails.getMedias().get(0).views++;
-                                                        }
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                        decrementViews();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    decrementViews();
-                                                }
-                                            });
+                                    incrementViewCount(postDetails.getMedias().get(0).getMediaId());
                                 }
                             }
                             break;
                         case STATE_ENDED:
-//                            startCountDownClass.cancel();
                             break;
                         default:
                             break;
                     }
                 }
-
-                @Override
-                public void onRepeatModeChanged(int repeatMode) {
-                }
-
-                @Override
-                public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-                }
-
-                @Override
-                public void onTimelineChanged(Timeline timeline, Object o) {
-                }
-
-                @Override
-                public void onTracksChanged(TrackGroupArray trackGroupArray, TrackSelectionArray trackSelectionArray) {
-                }
-
-                @Override
-                public void onLoadingChanged(boolean b) {
-                }
-
-                @Override
-                public void onPlayerError(ExoPlaybackException e) {
-                }
-
-                @Override
-                public void onPositionDiscontinuity(int reason) {
-                }
-
-                @Override
-                public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-                }
-
-                @Override
-                public void onSeekProcessed() {
-                }
             });
 
-            Uri videoURI = Uri.parse(postDetails.getMedias().get(0).getMediaUrl());
-
-            DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
-            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-            MediaSource mediaSource =
-                    new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
-
-            LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
-            player.prepare(loopingMediaSource);
-//            player.setVideoSurface(surface);
+            player.prepare(new LoopingMediaSource(
+                    new ExtractorMediaSource(Uri.parse(postDetails.getMedias().get(0).getMediaUrl()),
+                    new DefaultHttpDataSourceFactory("exoplayer_video"),
+                    new DefaultExtractorsFactory(), null, null)));
             if (audioAccessGranted) {
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
@@ -1246,11 +973,9 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                                 }, 2000);
 
                                 disableView(reactBtn, true);
-                                if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.canReact = false;
 
                                 finishReactionUploadSession(context);
-                                getPostReactions(postDetails.getPostId(), 1);
+                                loadReactionsOfPost(postDetails.getPostId(), 1);
                                 //add watermark for local creations/reactions
                                 if(resultData.getBoolean(ADD_WATERMARK)) {
                                     AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getActivity());
@@ -1272,8 +997,6 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
                                 }, 2000);
 
                                 enableView(reactBtn);
-                                if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.canReact = true;
 
                                 finishReactionUploadSession(context);
                                 break;
@@ -1297,8 +1020,6 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         if (uploadParams != null) {
             finishReactionUploadSession(context);
             disableView(reactBtn, true);
-            if (PostsListFragment.postDetails != null)
-                PostsListFragment.postDetails.canReact = false;
 
             if (!uploadParams.isGiphy()) {
                 launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
@@ -1309,46 +1030,16 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
     }
 
     private void postGiphyReaction(UploadParams uploadParams) {
-
-        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
-                uploadParams.getTitle(),
-                uploadParams.getVideoPath());
-        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200 || response.code() == 201) {
-                    getPostReactions(postDetails.getPostId(), 1);
-                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
+        createReactionByGiphy(new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(), uploadParams.getVideoPath()));
     }
-
-
-
     //</editor-fold>
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        getParentActivity().hideToolbar();
-        if (context instanceof onPostOptionsClickListener) {
-            mListener = (onPostOptionsClickListener) context;
-        }
-    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         try {
-//            getParentActivity().updateToolbarTitle(previousTitle);
-//            getParentActivity().showToolbar();
-            releaseAudioLock(getContext(), audioFocusChangeListener);
+            releaseAudioLock(getContext(), this);
             mHandler.removeCallbacks(mDelayedStopRunnable);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1357,7 +1048,7 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);
-        releaseAudioLock(getContext(), audioFocusChangeListener);
+        releaseAudioLock(getContext(), this);
         //  onBackPressed();
         playerCurrentPosition = 0;
         mHandler.removeCallbacks(mDelayedStopRunnable);
@@ -1369,7 +1060,7 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         public void run() {
             try {
                 long timeInMilliseconds = totalDuration - player.getCurrentPosition();
-                String duration = BLANK_SPACE + String.format(Locale.getDefault(), "%02d:%02d",
+                String duration = String.format(Locale.getDefault(), "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds),
                         TimeUnit.MILLISECONDS.toSeconds(timeInMilliseconds) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds)) + 1);
@@ -1381,13 +1072,4 @@ public class PostDetailsFragment extends BaseFragment implements AddWaterMarkAsy
         }
 
     };
-
-    public void callUserProfile(int userId, boolean isMyself) {
-        mListener.callProfileListener(userId,isMyself);
-    }
-
-    public interface onPostOptionsClickListener {
-        void onPostLikedClicked(PostDetails postDetails);
-        void callProfileListener(int userid, boolean isMyself);
-    }
 }

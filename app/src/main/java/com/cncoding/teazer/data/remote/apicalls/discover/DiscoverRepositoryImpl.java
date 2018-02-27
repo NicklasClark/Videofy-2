@@ -87,7 +87,7 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
     @Override public LiveData<PostList> getAllInterestedCategoriesVideos(int page, int categoryId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
         discoverService.getAllInterestedCategoriesVideos(page, categoryId)
-                .enqueue(postListCallback(liveData, CALL_ALL_INTERESTED_CATEGORIES_POSTS));
+                .enqueue(postListCallback(liveData, CALL_ALL_INTERESTED_CATEGORIES_POSTS + categoryId));
         return liveData;
     }
     @Override

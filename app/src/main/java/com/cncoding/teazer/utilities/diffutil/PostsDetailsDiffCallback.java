@@ -20,10 +20,11 @@ import static org.apache.commons.collections4.CollectionUtils.isEqualCollection;
  * Created by Prem $ on 12/25/2017.
  */
 
-public class PostsDiffCallback extends DiffUtil.Callback {
+public class PostsDetailsDiffCallback extends DiffUtil.Callback {
 
     public static final String DIFF_POST_DETAILS = "postDetails";
     private static final String DIFF_LIKES = "likes";
+    private static final String DIFF_VIEWS = "views";
     private static final String DIFF_TOTAL_REACTIONS = "totalReactions";
     private static final String DIFF_REACTED_USERS = "reactedUsers";
     private static final String DIFF_TOTAL_TAGS = "totalTags";
@@ -40,7 +41,7 @@ public class PostsDiffCallback extends DiffUtil.Callback {
     private List<PostDetails> oldPostDetails;
     private List<PostDetails> newPostDetails;
 
-    public PostsDiffCallback(List<PostDetails> oldPostDetails, List<PostDetails> newPostDetails) {
+    public PostsDetailsDiffCallback(List<PostDetails> oldPostDetails, List<PostDetails> newPostDetails) {
         this.oldPostDetails = oldPostDetails;
         this.newPostDetails = newPostDetails;
     }
@@ -63,7 +64,7 @@ public class PostsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return Objects.equals(newPostDetails.get(newItemPosition).getPostId(), oldPostDetails.get(oldItemPosition).getPostId());
+        return Objects.equals(newPostDetails.get(newItemPosition), oldPostDetails.get(oldItemPosition));
     }
 
     @Nullable
@@ -93,6 +94,8 @@ public class PostsDiffCallback extends DiffUtil.Callback {
     private Bundle getDiffBundle(PostDetails oldPostDetails, PostDetails newPostDetails, Bundle diffBundle) {
         if (!Objects.equals(oldPostDetails.getLikes(), newPostDetails.getLikes()))
             diffBundle.putInt(DIFF_LIKES, newPostDetails.getLikes());
+        if (!Objects.equals(oldPostDetails.getMedias().get(0).getViews(), newPostDetails.getMedias().get(0).getViews()))
+            diffBundle.putInt(DIFF_VIEWS, newPostDetails.getMedias().get(0).getViews());
         if (!Objects.equals(oldPostDetails.getTitle(), newPostDetails.getTitle()))
             diffBundle.putString(DIFF_TITLE, newPostDetails.getTitle());
         if (!Objects.equals(oldPostDetails.canReact(), newPostDetails.canReact()))
@@ -128,6 +131,9 @@ public class PostsDiffCallback extends DiffUtil.Callback {
                 switch (key) {
                     case DIFF_LIKES:
                         postDetails.setLikes(bundle.getInt(DIFF_LIKES));
+                        break;
+                    case DIFF_VIEWS:
+                        postDetails.getMedias().get(0).setViews(bundle.getInt(DIFF_VIEWS));
                         break;
                     case DIFF_TITLE:
                         postDetails.setTitle(bundle.getString(DIFF_TITLE));

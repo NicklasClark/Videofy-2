@@ -26,7 +26,7 @@ import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
+import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +40,8 @@ import static android.view.LayoutInflater.from;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
-import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.updatePostDetailsAccordingToDiffBundle;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
 /**
  *
@@ -80,7 +80,7 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
 
     public void updatePosts(List<PostDetails> postDetailsList) {
         try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDiffCallback(new ArrayList<>(featuredPostsList), postDetailsList));
+            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(featuredPostsList), postDetailsList));
             featuredPostsList.clear();
             featuredPostsList.addAll(postDetailsList);
             fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -131,7 +131,7 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.root_layout) public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
-                    null, false, false, null, null));
+                    null, false, null));
         }
 
         @OnClick(R.id.dp) public void dpClicked() {

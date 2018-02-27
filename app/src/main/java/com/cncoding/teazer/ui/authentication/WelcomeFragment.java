@@ -74,7 +74,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class WelcomeFragment extends AuthFragment implements NetworkStateReceiver.NetworkStateListener {
+public class WelcomeFragment extends BaseAuthFragment implements NetworkStateReceiver.NetworkStateListener {
 
     @BindView(R.id.login_page_btn) ProximaNovaSemiboldButton loginBtn;
     @BindView(R.id.fb_login_btn) LoginButton fbLoginButton;

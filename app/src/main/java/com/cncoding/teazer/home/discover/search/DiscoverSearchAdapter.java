@@ -193,7 +193,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(),
-                                        null, false, false, null, null));
+                                        null, false, null));
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }

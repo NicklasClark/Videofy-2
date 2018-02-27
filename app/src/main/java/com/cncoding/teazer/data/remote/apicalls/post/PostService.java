@@ -8,6 +8,9 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.ReactionResponse;
+import com.cncoding.teazer.utilities.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -52,7 +55,7 @@ public interface PostService {
      *      or 412 : Validation Failed
      */
     @POST("/api/v1/post/like/{post_id}/{status}")
-    Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @Path("status") int status);
+    Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @LikeDislike @Path("status") int status);
 
     /**
      * Call this service to increase the video view count
@@ -169,4 +172,10 @@ public interface PostService {
 
     @POST("/api/v1/post/unhide/all/posts/{user_id}")
     Call<ResultObject> getAllHiddenVideosList(@Path("user_id") int postId);
+
+    /**
+     * Call this service to post reaction using Giphy.
+     */
+    @POST("/api/v1/react/by/gif")
+    Call<ReactionResponse> createReactionByGiphy(@Body GiphyReactionRequest giphyReactionRequest);
 }

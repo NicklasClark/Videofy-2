@@ -21,13 +21,8 @@
             android:textSize="14sp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="wrap_content"
@@ -49,6 +44,8 @@
             android:textSize="14sp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
+
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
@@ -72,13 +69,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/recentlyDeleted"
@@ -142,13 +133,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -197,13 +182,7 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -251,6 +230,8 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+
+        <include layout="@layout/separator"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -300,13 +281,7 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
@@ -331,13 +306,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <!--<include layout="@layout/separator"/>-->
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/instagramLink"
@@ -351,14 +320,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <!--<include layout="@layout/separator"/>-->
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/helpCenterLink"
@@ -372,13 +334,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
             android:id="@+id/legalLink"
@@ -404,14 +360,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <!--<include layout="@layout/separator"/>-->
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/tncLink"
@@ -425,14 +374,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <!--<include layout="@layout/separator"/>-->
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/licenceLink"
@@ -446,13 +388,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <View
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/seperater_color" />
+        <include layout="@layout/separator"/>
 
         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/deactivateAccountLayout"

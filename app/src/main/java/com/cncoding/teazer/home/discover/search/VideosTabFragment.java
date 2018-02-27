@@ -52,7 +52,6 @@ public class VideosTabFragment extends BaseDiscoverFragment {
             searchTerm = getArguments().getString(SEARCH_TERM);
             isSearchTerm = searchTerm != null && !searchTerm.isEmpty();
         }
-        currentPage = 1;
     }
 
     @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
