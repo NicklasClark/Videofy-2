@@ -35,6 +35,7 @@ import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
 import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
@@ -80,7 +81,8 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
 
     void updatePosts(List<PostDetails> postDetailsList) {
         try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
+            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(
+                    new ArrayList<>(postDetailsArrayList), postDetailsList));
             postDetailsArrayList.clear();
             postDetailsArrayList.addAll(postDetailsList);
             fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -173,9 +175,9 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
                     Glide.with(fragment)
                             .load(!(postDetails.getPostOwner().hasProfileMedia() &&
                                     postDetails.getPostOwner().getProfileMedia() != null) ?
-                                    R.drawable.ic_user_male_dp_small :
+                                    getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()) :
                                     postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                            .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                            .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                             .into(dp);
 
                     /*Setting reaction thumbnails*/
@@ -183,18 +185,18 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
                         reactionImage1.setVisibility(View.VISIBLE);
                         Glide.with(fragment)
                                 .load(postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
-                                        R.drawable.ic_user_male_dp_small :
+                                        getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()) :
                                         postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                                .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                                 .into(reactionImage1);
 
                         if (postDetails.getReactedUsers().size() > 1) {
                             reactionImage2.setVisibility(View.VISIBLE);
                             Glide.with(fragment)
                                     .load(postDetails.getReactedUsers().get(1).getProfileMedia() == null ?
-                                            R.drawable.ic_user_male_dp_small :
+                                            getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()) :
                                             postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                                    .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                                    .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                                     .into(reactionImage2);
                         } else {
                             reactionImage2.setVisibility(View.VISIBLE);

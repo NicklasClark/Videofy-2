@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -219,7 +219,7 @@
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
                 android:layout_below="@+id/landing_posts_container"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                     android:layout_width="match_parent"

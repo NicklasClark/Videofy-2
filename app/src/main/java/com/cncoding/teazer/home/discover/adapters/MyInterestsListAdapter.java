@@ -1,6 +1,6 @@
 package com.cncoding.teazer.home.discover.adapters;
 
-import android.support.v7.util.DiffUtil;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.utilities.diffutil.MyInterestsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
                 //noinspection unchecked
                 List<PostDetails> postDetailsList = (List<PostDetails>) payloads.get(0);
                 if (postDetailsList != null)
-                    ((MyInterestsListItemAdapter) holder.recyclerView.getAdapter()).updatePosts(postDetailsList);
+                    new AddListItemPostsTask((MyInterestsListItemAdapter) holder.recyclerView.getAdapter(), postDetailsList).execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -83,33 +82,33 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         });
     }
 
-    public void updatePosts(Map<String, ArrayList<PostDetails>> newMyInterests) {
-        try {
-            final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new MyInterestsDiffCallback(myInterests, newMyInterests));
-            myInterests.clear();
-            myInterests.putAll(newMyInterests);
-            fragment.getParentActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    result.dispatchUpdatesTo(MyInterestsListAdapter.this);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                addPosts(newMyInterests);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    private void addPosts(Map<String, ArrayList<PostDetails>> myInterestsMap) {
+    public void addPosts(Map<String, ArrayList<PostDetails>> myInterestsMap) {
         if (myInterests == null) myInterests = new HashMap<>();
         else myInterests.clear();
         myInterests.putAll(myInterestsMap);
         notifyDataChanged();
     }
+
+//    public void updatePosts(Map<String, ArrayList<PostDetails>> newMyInterests) {
+//        try {
+//            final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new MyInterestsDiffCallback(myInterests, newMyInterests));
+//            myInterests.clear();
+//            myInterests.putAll(newMyInterests);
+//            fragment.getParentActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    result.dispatchUpdatesTo(MyInterestsListAdapter.this);
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            try {
+//                addPosts(newMyInterests);
+//            } catch (Exception e1) {
+//                e1.printStackTrace();
+//            }
+//        }
+//    }
 
     @Override public int getItemCount() {
         return myInterests.size() >= 3 ? 3 : myInterests.size();
@@ -124,6 +123,23 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         MyInterestsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    private static class AddListItemPostsTask extends AsyncTask<Void, Void, Void> {
+
+        private MyInterestsListItemAdapter adapter;
+        private List<PostDetails> postDetailsList;
+
+        private AddListItemPostsTask(MyInterestsListItemAdapter adapter, List<PostDetails> postDetailsList) {
+            this.adapter = adapter;
+            this.postDetailsList = postDetailsList;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            adapter.updatePosts(postDetailsList);
+            return null;
         }
     }
 }

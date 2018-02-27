@@ -41,6 +41,7 @@ import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPAC
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.getClassicCategoryBackground;
+import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
 import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
@@ -81,13 +82,23 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
         });
     }
 
+    private void notifyItemInserted(final int positionStart, final int itemCount) {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemRangeInserted(positionStart, itemCount);
+            }
+        });
+    }
+
     public void updatePosts(int page, List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
-                addPosts(postDetailsList);
-            } else {
-                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
-                        new PostsDetailsDiffCallback(new ArrayList<>(mostPopularList.subList(0, 10)), postDetailsList));
+                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDetailsDiffCallback(
+                        postDetailsList.size() >= 10 ?
+                                new ArrayList<>(mostPopularList.subList(0, 10)) :
+                                new ArrayList<PostDetails>(),
+                        postDetailsList));
                 mostPopularList.clear();
                 mostPopularList.addAll(postDetailsList);
                 fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -96,23 +107,28 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
                         result.dispatchUpdatesTo(MostPopularListAdapter.this);
                     }
                 });
-            }
+            } else addPosts(page, postDetailsList);
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                addPosts(postDetailsList);
+                addPosts(page, postDetailsList);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
     }
 
-    private void addPosts(List<PostDetails> postDetailsList) {
+    private void addPosts(int page, List<PostDetails> postDetailsList) {
         try {
-            if (mostPopularList == null) mostPopularList = new ArrayList<>();
-            else mostPopularList.clear();
-            mostPopularList.addAll(postDetailsList);
-            notifyDataChanged();
+            if (page == 1) {
+                if (mostPopularList == null) mostPopularList = new ArrayList<>();
+                else mostPopularList.clear();
+                mostPopularList.addAll(postDetailsList);
+                notifyDataChanged();
+            } else {
+                mostPopularList.addAll(postDetailsList);
+                notifyItemInserted((page - 1) * 10, postDetailsList.size());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,8 +199,9 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
 
             Glide.with(fragment)
                     .load(postDetails.getPostOwner().hasProfileMedia() ?
-                            postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                    .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                            postDetails.getPostOwner().getProfileMedia().getThumbUrl() :
+                            getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()))
+                    .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                     .into(dp);
 
             Glide.with(fragment)
@@ -215,11 +232,11 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
                     null, false, null));
         }
 
-        @OnClick(R.id.dp) public void dpClicked() {
+        @OnClick(R.id.dp) void dpClicked() {
             viewProfile();
         }
 
-        @OnClick(R.id.name) public void nameClicked() {
+        @OnClick(R.id.name) void nameClicked() {
             viewProfile();
         }
 

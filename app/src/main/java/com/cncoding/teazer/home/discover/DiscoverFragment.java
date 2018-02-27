@@ -176,19 +176,8 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     @SuppressLint("SwitchIntDef") @SuppressWarnings("unchecked") @Override protected void handleResponse(BaseModel resultObject) {
         switch (resultObject.getCallType()) {
             case CALL_LANDING_POSTS:
-                if (resultObject instanceof LandingPostsV2) {
-                    final LandingPostsV2 landingPosts = (LandingPostsV2) resultObject;
-                    new NotifyDataSetChanged(this, landingPosts).execute();
-                    landingPostsContainer.setVisibility(VISIBLE);
-                    if (landingPosts.getUserInterests() == null || landingPosts.getUserInterests().isEmpty()) {
-                        myInterestsList.setVisibility(GONE);
-                        noMyInterests.setVisibility(VISIBLE);
-                    }
-                    if (landingPosts.getMyInterests() == null || landingPosts.getMyInterests().isEmpty()) {
-                        myInterestsList.setVisibility(GONE);
-                        noMyInterests.setVisibility(VISIBLE);
-                    }
-                }
+                if (resultObject instanceof LandingPostsV2)
+                    new NotifyLandingDataSetChanged(this, (LandingPostsV2) resultObject).execute();
                 break;
             case CALL_MOST_POPULAR_POSTS:
                 if (resultObject instanceof PostList) {
@@ -218,12 +207,12 @@ public class DiscoverFragment extends BaseDiscoverFragment {
         mostPopularLoadingProgressBar.setVisibility(GONE);
     }
 
-    private static class NotifyDataSetChanged extends AsyncTask<Void, Void, Void> {
+    private static class NotifyLandingDataSetChanged extends AsyncTask<Void, Void, Void> {
 
         private DiscoverFragment fragment;
         private LandingPostsV2 landingPosts;
 
-        NotifyDataSetChanged(DiscoverFragment fragment, LandingPostsV2 landingPosts) {
+        NotifyLandingDataSetChanged(DiscoverFragment fragment, LandingPostsV2 landingPosts) {
             this.fragment = fragment;
             this.landingPosts = landingPosts;
         }
@@ -244,11 +233,21 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                 landingPosts.getMyInterests().clear();
                 landingPosts.getMyInterests().putAll(tempMap);
 
-                fragment.myInterestsListAdapter.updatePosts(landingPosts.getMyInterests());
+                fragment.myInterestsListAdapter.addPosts(landingPosts.getMyInterests());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            fragment.landingPostsContainer.setVisibility(VISIBLE);
+            if (landingPosts.getUserInterests() == null || landingPosts.getUserInterests().isEmpty() ||
+                    landingPosts.getMyInterests() == null || landingPosts.getMyInterests().isEmpty()) {
+                fragment.myInterestsList.setVisibility(GONE);
+                fragment.noMyInterests.setVisibility(VISIBLE);
+            }
         }
     }
 

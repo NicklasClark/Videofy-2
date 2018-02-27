@@ -40,6 +40,7 @@ import static android.view.LayoutInflater.from;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
@@ -169,27 +170,27 @@ public class FeaturedPostsListAdapter extends BaseRecyclerView.Adapter {
                 else reactionCount.setVisibility(View.GONE);
 
                 Glide.with(fragment)
-                        .load(postDetails.getPostOwner().getProfileMedia() != null &&
-                                postDetails.getPostOwner().hasProfileMedia() ?
-                                postDetails.getPostOwner().getProfileMedia().getThumbUrl() : "")
-                        .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                        .load(postDetails.getPostOwner().getProfileMedia() != null ?
+                                postDetails.getPostOwner().getProfileMedia().getThumbUrl() :
+                                getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()))
+                        .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                         .into(dp);
 
                 if (postDetails.getReactedUsers() != null && postDetails.getReactedUsers().size() > 0) {
                     reactionImage1.setVisibility(VISIBLE);
                     Glide.with(fragment)
-                            .load(postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
-                                    R.drawable.ic_user_male_dp_small
-                                    : postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                            .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                            .load(postDetails.getReactedUsers().get(0).getProfileMedia() != null ?
+                                    postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl() :
+                                    getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()))
+                            .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                             .into(reactionImage1);
                     if (postDetails.getReactedUsers().size() > 1) {
                         reactionImage2.setVisibility(VISIBLE);
                         Glide.with(fragment)
-                                .load(postDetails.getReactedUsers().get(1).getProfileMedia() == null ?
-                                        R.drawable.ic_user_male_dp_small
-                                        : postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                                .load(postDetails.getReactedUsers().get(1).getProfileMedia() != null ?
+                                        postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl() :
+                                        getGenderSpecificDpSmall(postDetails.getPostOwner().getGender()))
+                                .apply(new RequestOptions().placeholder(getGenderSpecificDpSmall(postDetails.getPostOwner().getGender())))
                                 .into(reactionImage2);
                     } else {
                         reactionImage2.setVisibility(View.GONE);
