@@ -82,7 +82,6 @@ import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -611,27 +610,27 @@ public class CameraActivity extends AppCompatActivity
     private void getVideoDurationAndUpload(String videoFile, boolean isReaction, boolean isGallery) {
         try {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            FileInputStream inputStream = new FileInputStream(videoFile);
-            retriever.setDataSource(inputStream.getFD());
-            inputStream.close();
+            retriever.setDataSource(videoFile);
             String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInSec = Long.parseLong(time) / 1000;
-
-            uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
-            final Handler handler = new Handler(getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startVideoUploadFragment();
-                }
-            }, 3000);
-
+            startUploadFragment(Long.parseLong(time), videoFile, isReaction, isGallery);
             retriever.release();
         } catch (Exception e) {
             e.printStackTrace();
+            if (!isGallery) startUploadFragment(cameraFragment.getUpdatedTime(), videoFile, isReaction, false);
         }
     }
 
+    private void startUploadFragment(long duration, String videoFile, boolean isReaction, boolean isGallery) {
+        long timeInSec = duration / 1000;
+        uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
+        final Handler handler = new Handler(getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startVideoUploadFragment();
+            }
+        }, 3000);
+    }
 
     @Override
     public void onNearbyPlacesAdapterInteraction(final SelectedPlace selectedPlace) {

@@ -158,10 +158,8 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
     @BindView(R.id.reaction_gif) AppCompatImageView cameraGifView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
-    @BindView(R.id.swipeCameraTip)
-    ProximaNovaSemiBoldTextView swipeForFilterTip;
-    @BindView(R.id.swipeCameraFilterTip)
-    ProximaNovaSemiBoldTextView swipeForFilterNameTip;
+    @BindView(R.id.swipeCameraTip) ProximaNovaSemiBoldTextView swipeForFilterTip;
+    @BindView(R.id.swipeCameraFilterTip) ProximaNovaSemiBoldTextView swipeForFilterNameTip;
 //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;
@@ -1050,6 +1048,10 @@ public class CameraFragment extends Fragment {
         }
 
     };
+
+    public long getUpdatedTime() {
+        return updatedTime;
+    }
 
     public void closePreviewSession() {
         if (mPreviewSession != null) {

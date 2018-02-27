@@ -73,12 +73,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        new InitialRetrieveTask(PostsListFragment.this).execute();
-    }
-
     private void prepareRecyclerView() {
         postListAdapter = new PostsListAdapter(this);
         recyclerView.setAdapter(postListAdapter);
@@ -87,6 +81,11 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
         if (scrollListener == null)
             scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                @Override
+                public void loadFirstPage() {
+                    new InitialRetrieveTask(PostsListFragment.this).execute();
+                }
+
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     if (isConnected) {

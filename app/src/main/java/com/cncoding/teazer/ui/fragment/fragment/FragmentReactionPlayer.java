@@ -327,7 +327,7 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
                 incrementLikes();
             }
         } else {
-            likeBtn.setImageResource(R.drawable.ic_likebig);
+            likeBtn.setImageResource(R.drawable.ic_like_outline);
             if (animate) {
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 decrementLikes();

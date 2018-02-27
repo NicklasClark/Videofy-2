@@ -7,9 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
-    android:layout_marginTop="6dp"
-    android:elevation="2dp"
-    android:background="@drawable/bg_card_no_margin_white">
+    android:layout_marginTop="10dp"
+    android:background="@color/white">
 
     <com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout
         android:id="@+id/shimmer_layout_top"
