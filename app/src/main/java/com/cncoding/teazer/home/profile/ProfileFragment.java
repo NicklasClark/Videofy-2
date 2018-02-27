@@ -338,7 +338,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         if(ProfileFragment.checkpostupdated)
         {
 
-            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
             tabLayout.setupWithViewPager(viewPager);
             checkpostupdated=false;
         }
@@ -355,7 +355,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getParentActivity().updateToolbarTitle("My Profile");
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
     }

@@ -9,12 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -116,6 +111,11 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        try {
+            previousTitle = getParentActivity().getToolbarTitle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -153,6 +153,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             @Override
             public void onClick(View view) {
                 mListener.onFollowingListListener(String.valueOf(0), "User");
+
             }
         });
 
@@ -174,13 +175,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
 
         });
 
-
-
-//        ViewPager viewPager = view.findViewById(R.id.viewpager);
-//        viewPager.setAdapter(new TestPagerAdapter(getActivity().getSupportFragmentManager()));
-//        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-//        tabLayout.setupWithViewPager(viewPager);
-
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -189,35 +183,44 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     _name.setTextColor(Color.parseColor("#FFFFFF"));
                     _username.setTextColor(Color.parseColor("#FFFFFF"));
                     toolbar.setBackgroundResource(R.color.blur);
-                    //Blurry.with(getContext()).from(photobitmap).into(placeholder);
 
                 }
-                else if (verticalOffset <-200&& verticalOffset>-400)
+                else if(verticalOffset<-650)
+                {
+                    _name.setTextColor(Color.parseColor("#c6c6c6"));
+                    _username.setTextColor(Color.parseColor("#c6c6c6"));
+                    toolbar.setBackgroundResource(R.color.blur3);
+                }
+                else if (verticalOffset <-450 && verticalOffset>-650)
+                {
+                    _name.setTextColor(Color.parseColor("#c6c6c6"));
+                    _username.setTextColor(Color.parseColor("#c6c6c6"));
+                    toolbar.setBackgroundResource(R.color.blur4);
+                }
+                else if (verticalOffset <-300 && verticalOffset>-450)
                 {
                     _name.setTextColor(Color.parseColor("#c6c6c6"));
                     _username.setTextColor(Color.parseColor("#c6c6c6"));
                     toolbar.setBackgroundResource(R.color.blur2);
-
-
                 }
-                else if (verticalOffset <0 && verticalOffset>-200)
+                else if (verticalOffset < 0 && verticalOffset>-300)
                 {
                     _name.setTextColor(Color.parseColor("#88232323"));
                     _username.setTextColor(Color.parseColor("#88232323"));
-                    toolbar.setBackgroundResource(R.color.blur2);
+                    toolbar.setBackgroundResource(R.color.blur0);
 
                 }
                 else if (verticalOffset == 0) {
                     // Expanded
                     _name.setTextColor(Color.parseColor("#000000"));
                     _username.setTextColor(Color.parseColor("#000000"));
-                    toolbar.setBackgroundResource(R.color.blur2);
+                    toolbar.setBackgroundResource(R.color.blur0);
 
 
                 } else {
                     // Somewhere in between
-//                    _name.setTextColor(Color.parseColor("#c6c6c6"));
-//                    _username.setTextColor(Color.parseColor("#c6c6c6"));
+                    _name.setTextColor(Color.parseColor("#c6c6c6"));
+                    _username.setTextColor(Color.parseColor("#c6c6c6"));
                     toolbar.setBackgroundResource(R.color.blur2);
 
 
@@ -226,11 +229,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         });
         return view;
     }
-
-
-
-
-
 
     @Override
     public void onResume() {
@@ -244,7 +242,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         if(FragmentNewProfile2.checkpostupdated)
         {
 
-            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(), FragmentNewProfile2.this,0));
             tabLayout.setupWithViewPager(viewPager);
             FragmentNewProfile2.checkpostupdated=false;
         }
@@ -261,6 +259,8 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     @Override
     public void onStop() {
         super.onStop();
+        getParentActivity().showToolbar();
+
 
     }
 
@@ -268,7 +268,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),FragmentNewProfile2.this,0));
         tabLayout.setupWithViewPager(viewPager);
 
         getProfileDetail();
@@ -278,10 +278,9 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public void onAttach(Context context) {
 
         super.onAttach(context);
-        if (context instanceof NewProfileFragment.FollowerListListener) {
+        if (context instanceof FragmentNewProfile2.FollowerListListener) {
             mListener = (FragmentNewProfile2.FollowerListListener) context;
         }
-
 
     }
 
@@ -289,6 +288,8 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public void onDetach() {
         super.onDetach();
         getParentActivity().showToolbar();
+        getParentActivity().updateToolbarTitle(previousTitle);
+
 
     }
 
@@ -491,6 +492,10 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     }
                     else
                     {
+                        Glide.with(context)
+                                .load(R.drawable.backgroundprofile)
+                                .into(placeholder);
+
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
@@ -639,74 +644,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     }
 
 
-    static class TestPagerAdapter extends FragmentPagerAdapter {
-
-        public TestPagerAdapter(FragmentManager fm) {
-
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return new TestFragment();
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-
-            return "Tab " + (position + 1);
-        }
-    }
-
-
-
-
-    public static class TestFragment extends Fragment {
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-            View view = inflater.inflate(R.layout.tab_page, container, false);
-
-            RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(new TestAdapter());
-
-            return view;
-        }
-    }
-
-    static class TestAdapter extends RecyclerView.Adapter<ViewHolder> {
-
-        @Override
-        public int getItemCount() {
-            return 100;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            ((TextView) holder.itemView).setText("List Item " + (position + 1));
-        }
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
 
 }
 

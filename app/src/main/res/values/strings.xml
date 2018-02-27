@@ -331,6 +331,7 @@
     <string name="no_hideList_message">Your hidden list is empty.</string>
     <string name="no_creations_message2">This Profile does not have any video</string>
     <string name="no_reactions_message">You haven\'t reacted on any post yet.</string>
+    <string name="no_reactions_message2">User has not reacted on any post yet.</string>
     <string name="could_not_find_location">Couldn\'t find your location, try searching for it.</string>
     <string name="logo">logo</string>
     <string name="teazer_universal_link">https://teazer.app.link/kCJ5vr85CI</string>

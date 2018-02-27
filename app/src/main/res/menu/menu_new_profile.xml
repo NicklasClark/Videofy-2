@@ -10,7 +10,7 @@
     </item>
     <item
         android:id="@+id/share"
-        android:icon="@drawable/ic_share_white"
+        android:icon="@drawable/ic_share_black_24dp"
         app:showAsAction="ifRoom"
         android:title="Compose">
     </item>

@@ -20,26 +20,26 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         app:cardElevation="2dp"
-        android:layout_height="250dp">
+        android:layout_height="180dp">
         <RelativeLayout
 
             android:id="@+id/layout1"
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="180dp">
             <ImageView
                 android:id="@+id/demoimage"
                 android:layout_width="match_parent"
                 android:scaleType="centerCrop"
-                android:layout_height="250dp"
+                android:layout_height="180dp"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:layout_height="180dp">
                 <ImageView
 
                     android:layout_width="match_parent"
                     android:background="@drawable/bg_vignette"
-                    android:layout_height="250dp" />
+                    android:layout_height="180dp" />
 
 
             </RelativeLayout>
@@ -58,7 +58,7 @@
                     android:padding="5dp"
                     android:layout_toLeftOf="@+id/duration"
                     android:layout_alignParentLeft="true"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     />
@@ -77,6 +77,7 @@
                 <TextView
                     android:layout_centerVertical="true"
                     android:id="@+id/duration"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:padding="5dp"
@@ -91,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="21dp"
                 android:text="To"
+                android:visibility="gone"
                 android:textSize="12sp"
                 android:textColor="@color/cardview_light_background"
                 android:layout_below="@+id/descriptionlayout"
@@ -99,6 +101,7 @@
                 android:id="@+id/post_owner"
                 android:layout_width="wrap_content"
                 android:text=""
+                android:visibility="gone"
                 android:textSize="12sp"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/cardview_light_background"

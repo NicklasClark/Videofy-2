@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
@@ -149,32 +148,32 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 //                .animate(R.anim.float_up)
                 .into(holder.postThumbnail);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.root_layout:
-                    //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null);
-                        break;
-                    case R.id.reaction_post_dp | R.id.reaction_post_name:
-                        //region TODO
-                        // If there is a way to know that the person who posted the reaction
-                        // is the user-self or some other, apply that logic here.
-                        // call
-//                        if (context instanceof PostDetailsActivity) {
-//                            ((PostDetailsActivity) context).onTaggedUserInteraction(
-//                                    postReaction.getReactOwner().getUserId(),
-//                                    /*apply "isSelf logic here"*/);
-//                        }
-                        //endregion
-                        break;
-                }
-            }
-        };
-        holder.layout.setOnClickListener(listener);
-        holder.profilePic.setOnClickListener(listener);
-        holder.name.setOnClickListener(listener);
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                switch (view.getId()) {
+//                    case R.id.root_layout:
+//                    //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+//                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null);
+//                        break;
+//                    case R.id.reaction_post_dp | R.id.reaction_post_name:
+//                        //region TODO
+//                        // If there is a way to know that the person who posted the reaction
+//                        // is the user-self or some other, apply that logic here.
+//                        // call
+////                        if (context instanceof PostDetailsActivity) {
+////                            ((PostDetailsActivity) context).onTaggedUserInteraction(
+////                                    postReaction.getReactOwner().getUserId(),
+////                                    /*apply "isSelf logic here"*/);
+////                        }
+//                        //endregion
+//                        break;
+//                }
+//            }
+//        };
+  //      holder.layout.setOnClickListener(listener);
+    //    holder.profilePic.setOnClickListener(listener);
+    //    holder.name.setOnClickListener(listener);
     }
 
     @Override

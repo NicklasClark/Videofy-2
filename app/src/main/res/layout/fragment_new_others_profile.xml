@@ -11,7 +11,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <com.cncoding.teazer.utilities.CollapsingImageLayout
+        <com.cncoding.teazer.utilities.CollapsingImageLayoutOthersProfile
             android:id="@+id/collapsing_imagelayout"
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -76,6 +76,7 @@
                             android:text="Creations"
                             android:textColor="#212121"
                             android:textSize="12dp"
+
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
 
@@ -94,7 +95,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="12dp"
+
                             android:layout_marginTop="5dp"
+
+
                             android:textSize="16dp"
                             android:textColor="#212121"
                             android:textStyle="bold"
@@ -107,9 +111,10 @@
                             android:text="Reaction"
                             android:textColor="#212121"
                             android:textSize="12dp"
+
+
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -124,6 +129,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="12dp"
+
                             android:layout_marginTop="5dp"
                             android:textStyle="bold"
                             android:textSize="16dp"
@@ -155,7 +161,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="12dp"
+
                             android:text="49"
+
                             android:textStyle="bold"
                             android:layout_marginTop="5dp"
                             android:textSize="16dp"
@@ -169,8 +177,8 @@
                             android:text="Following"
                             android:textSize="12dp"
                             android:textColor="#212121"
-
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
                     </LinearLayout>
 
 
@@ -180,16 +188,19 @@
                     android:id="@+id/detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
                     android:layout_marginLeft="17dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="100dp"
                     android:text="I am not speeding"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:layout_above="@+id/informationLayout"
                     android:textColor="#212121"
                     android:textSize="14sp"/>
 
-            </RelativeLayout>
 
+            </RelativeLayout>
 
             <com.cncoding.teazer.customViews.CircularAppCompatImageView
                 android:id="@+id/profilepic"
@@ -211,7 +222,7 @@
                 android:layout_marginLeft="125dp"
                 android:layout_marginRight="25dp"
                 android:textColor="#000000"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:gravity="left"
                 android:text="arifrocks0786"
                 />
@@ -227,12 +238,23 @@
                 android:textColor="#000000"
                 android:textSize="14dp"
                 android:gravity="start"
-                android:text="Mohd Arif"
-                />
+                android:text="Mohd Arif"/>
+            <Button
+                android:id="@+id/follow"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:padding="7dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="60dp"
+                android:background="@drawable/border_layout"
+                android:textColor="#ffffff"
+                android:textSize="10sp"/>
 
 
+        </com.cncoding.teazer.utilities.CollapsingImageLayoutOthersProfile>.
 
-        </com.cncoding.teazer.utilities.CollapsingImageLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
@@ -242,6 +264,35 @@
             app:tabSelectedTextColor="@color/colorTabindicator"
             app:tabTextColor="#3e3e3e"
             app:layout_scrollFlags="scroll|enterAlways"/>
+        <RelativeLayout
+            android:id="@+id/message1"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
+            android:layout_gravity="bottom|center_horizontal">
+
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/alert1"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Oops this is private Account "
+                android:layout_margin="5dp"
+                android:textColor="#505050"
+                android:textSize="14sp"
+                />
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/alert1"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/backbutton"
+                android:text="To view the details,Please follow the user"
+                android:textColor="#505050"
+                android:textSize="14sp"/>
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 

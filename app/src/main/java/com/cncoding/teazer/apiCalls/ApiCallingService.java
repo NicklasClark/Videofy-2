@@ -15,6 +15,7 @@ import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
@@ -341,7 +342,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the my followers list
          * */
-        public static Call<FollowersList> getMyFollowers(int page, Context context) {
+        public static Call<UserFollowerList> getMyFollowers(int page, Context context) {
             return getFriendsService(context).getMyFollowers(page);
         }
 
@@ -535,7 +536,7 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ResultObject> getFriendsReactions(int page, int friend_id, Context context) {
+        public static Call<ReactionsList> getFriendsReactions(int page, int friend_id, Context context) {
             return getReactService(context).getFriendsReactions(page, friend_id);
         }
 

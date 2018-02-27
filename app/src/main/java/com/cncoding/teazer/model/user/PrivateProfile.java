@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.ProfileMedia;
+import com.cncoding.teazer.model.profile.CoverMedia;
 
 /**
  *
@@ -19,6 +20,9 @@ public class PrivateProfile implements Parcelable {
     private int account_type;
     private boolean has_profile_media;
     private ProfileMedia profile_media;
+    private CoverMedia cover_media;
+    private boolean has_cover_media;
+
 
     protected PrivateProfile(Parcel in) {
         user_id = in.readString();
@@ -29,6 +33,7 @@ public class PrivateProfile implements Parcelable {
         account_type = in.readInt();
         has_profile_media = in.readByte() != 0;
         profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+        has_cover_media = in.readByte() != 0;
     }
 
     @Override
@@ -41,6 +46,7 @@ public class PrivateProfile implements Parcelable {
         dest.writeInt(account_type);
         dest.writeByte((byte) (has_profile_media ? 1 : 0));
         dest.writeParcelable(profile_media, flags);
+        dest.writeByte((byte) (has_cover_media ? 1 : 0));
     }
 
     @Override
@@ -90,5 +96,14 @@ public class PrivateProfile implements Parcelable {
 
     public ProfileMedia getProfileMedia() {
         return profile_media;
+    }
+
+    public CoverMedia getCover_media() {
+
+        return cover_media;
+    }
+
+    public boolean isHas_cover_media() {
+        return has_cover_media;
     }
 }

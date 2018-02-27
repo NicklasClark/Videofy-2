@@ -1,15 +1,15 @@
 package com.cncoding.teazer.model.friends;
 
-import com.cncoding.teazer.model.base.Medias;
+import com.cncoding.teazer.model.base.ProfileMedia;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- *
- * Created by farazhabib on 17/11/17.
+ * Created by farazhabib on 24/02/18.
  */
 
-public class UserInfo {
+public class NewUserInfo {
+
 
     @SerializedName("user_id")
     @Expose
@@ -23,15 +23,9 @@ public class UserInfo {
     @SerializedName("last_name")
     @Expose
     private String lastName;
-    @SerializedName("is_blocked_you")
+    @SerializedName("gender")
     @Expose
-    private Boolean isBlockedYou;
-    @SerializedName("you_blocked")
-    @Expose
-    private Boolean youBlocked;
-    @SerializedName("my_self")
-    @Expose
-    private Boolean mySelf;
+    private Integer gender;
     @SerializedName("account_type")
     @Expose
     private Integer accountType;
@@ -47,35 +41,12 @@ public class UserInfo {
     @SerializedName("request_sent")
     @Expose
     private Boolean requestSent;
-    @SerializedName("request_id")
+    @SerializedName("follow_info")
     @Expose
-    private Integer requestId;
-    @SerializedName("request_recieved")
-    @Expose
-    private Boolean requestRecieved;
+    private FollowInfo followInfo;
     @SerializedName("profile_media")
     @Expose
-    private Medias profileMedia;
-
-    public UserInfo(Integer userId, String userName, String firstName, String lastName, Boolean isBlockedYou, Boolean youBlocked,
-                    Boolean mySelf, Integer accountType, Boolean hasProfileMedia, Boolean following, Boolean follower, Boolean requestSent,
-                    Integer requestId, Boolean requestRecieved, Medias profileMedia) {
-        this.userId = userId;
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.isBlockedYou = isBlockedYou;
-        this.youBlocked = youBlocked;
-        this.mySelf = mySelf;
-        this.accountType = accountType;
-        this.hasProfileMedia = hasProfileMedia;
-        this.following = following;
-        this.follower = follower;
-        this.requestSent = requestSent;
-        this.requestId = requestId;
-        this.requestRecieved = requestRecieved;
-        this.profileMedia = profileMedia;
-    }
+    private ProfileMedia profileMedia;
 
     public Integer getUserId() {
         return userId;
@@ -109,28 +80,12 @@ public class UserInfo {
         this.lastName = lastName;
     }
 
-    public Boolean getIsBlockedYou() {
-        return isBlockedYou;
+    public Integer getGender() {
+        return gender;
     }
 
-    public void setIsBlockedYou(Boolean isBlockedYou) {
-        this.isBlockedYou = isBlockedYou;
-    }
-
-    public Boolean getYouBlocked() {
-        return youBlocked;
-    }
-
-    public void setYouBlocked(Boolean youBlocked) {
-        this.youBlocked = youBlocked;
-    }
-
-    public Boolean getMySelf() {
-        return mySelf;
-    }
-
-    public void setMySelf(Boolean mySelf) {
-        this.mySelf = mySelf;
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     public Integer getAccountType() {
@@ -173,29 +128,20 @@ public class UserInfo {
         this.requestSent = requestSent;
     }
 
-    public Integer getRequestId() {
-        return requestId;
+    public FollowInfo getFollowInfo() {
+        return followInfo;
     }
 
-    public void setRequestId(Integer requestId) {
-        this.requestId = requestId;
+    public void setFollowInfo(FollowInfo followInfo) {
+        this.followInfo = followInfo;
     }
 
-    public Boolean getRequestRecieved() {
-        return requestRecieved;
-    }
-
-    public void setRequestRecieved(Boolean requestRecieved) {
-        this.requestRecieved = requestRecieved;
-    }
-
-    public Medias getProfileMedia() {
+    public ProfileMedia getProfileMedia() {
         return profileMedia;
     }
 
-    public void setProfileMedia(Medias profileMedia) {
+    public void setProfileMedia(ProfileMedia profileMedia) {
         this.profileMedia = profileMedia;
     }
 
 }
-

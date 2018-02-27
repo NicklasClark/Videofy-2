@@ -365,6 +365,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onClick(View view) {
                         switch (view.getId()) {
                             case R.id.root_layout:
+
                                 if (mListener != null) {
                                     String userType;
 

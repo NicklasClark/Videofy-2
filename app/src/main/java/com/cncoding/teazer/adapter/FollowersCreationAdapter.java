@@ -1,6 +1,5 @@
 package com.cncoding.teazer.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
@@ -160,6 +159,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
+
                                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
                                     ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
                                             newInstance(postDetails.getPostId(), postDetails.canReact(), postDetails.getPostOwner().getUserName());

@@ -64,7 +64,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         for (int i = 0; i < otherlist.size(); i++) {
             selectedPositions[i] = false;
         }
-        for (int i = 0; i < otherlist.size(); i++) {
+
+     //   for (int i = 0; i < otherlist.size(); i++) {
 
 //            Integer userId, String userName, String firstName, String lastName, Boolean isBlockedYou, Boolean youBlocked,
 //                    Boolean mySelf, Integer accountType, Boolean hasProfileMedia, Boolean following, Boolean follower, Boolean requestSent,
@@ -72,7 +73,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 //
 //            updateFollowings.add(new UserInfo(otherlist.get(i).getUserId(), otherlist.get(i).getIsBlockedYou(), otherlist.get(i).getYouBlocked(), otherlist.get(i).getMySelf(), otherlist.get(i).getAccountType(), otherlist.get(i).getFollowing(),
 //                    otherlist.get(i).getFollower(), otherlist.get(i).getRequestSent(), otherlist.get(i).getRequestRecieved()));
-        }
+     //   }
     }
 
     public FollowingAdapter(Context context, List<UserInfo> list, int userfollowingstatus) {

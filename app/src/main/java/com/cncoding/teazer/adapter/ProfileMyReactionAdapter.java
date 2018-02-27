@@ -53,6 +53,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         this.context = context;
         this.list = list;
         reactionPlayerListener=( ReactionPlayerListener)context;
+
         if (fragment instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {
             this.fragment = (ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) fragment;
         }

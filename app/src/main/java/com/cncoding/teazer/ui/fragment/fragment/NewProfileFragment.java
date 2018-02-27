@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -291,9 +290,9 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
         if(NewProfileFragment.checkpostupdated)
         {
 
-            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
-            tabLayout.setupWithViewPager(viewPager);
-            NewProfileFragment.checkpostupdated=false;
+//            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),NewProfileFragment.this));
+//            tabLayout.setupWithViewPager(viewPager);
+//            NewProfileFragment.checkpostupdated=false;
         }
 
     }
@@ -326,8 +325,8 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 //                collapsingToolbar.setStatusBarScrimColor(palette.getMutedColor(R.attr.colorPrimaryDark));
 //            }
 //        });
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
-        tabLayout.setupWithViewPager(viewPager);
+//        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),NewProfileFragment.this));
+//        tabLayout.setupWithViewPager(viewPager);
 
 
     }

@@ -11,6 +11,7 @@ import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
@@ -343,7 +344,7 @@ import retrofit2.http.Query;
          * Call this service to get the my followers list
          * */
         @GET("/api/v1/friend/my/followers/{page}")
-        Call<FollowersList> getMyFollowers(@Path("page") int page);
+        Call<UserFollowerList> getMyFollowers(@Path("page") int page);
 
         /**
          * Call this service to get the my followers list with search term
@@ -514,7 +515,7 @@ import retrofit2.http.Query;
          *         {@value RESPONSE_CODE_412} : Validation failed.
          * */
         @GET("/api/v1/react/friend/reactions/{friend_id}/{page}")
-        Call<ResultObject> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
+        Call<ReactionsList> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
 
         /**
          * Call this service to get the reactions hidden by 

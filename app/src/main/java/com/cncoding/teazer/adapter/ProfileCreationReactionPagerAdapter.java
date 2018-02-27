@@ -17,10 +17,14 @@ public class ProfileCreationReactionPagerAdapter extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[]{"My Creations", "My Reactions"};
     private Context context;
+    Fragment fragment;
+    int userId;
 
-    public ProfileCreationReactionPagerAdapter(FragmentManager fm, Context context) {
+    public ProfileCreationReactionPagerAdapter(FragmentManager fm, Context context, Fragment fragment,int userId) {
         super(fm);
         this.context = context;
+        this.fragment = fragment;
+        this.userId = userId;
     }
 
     @Override
@@ -33,15 +37,16 @@ public class ProfileCreationReactionPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
 
-
-                return FragmentProfileMyCreations.newInstance(position);
+                return FragmentProfileMyCreations.newInstance(userId);
 
             case 1:
 
-                return FragmentProfileMyReactions.newInstance(position);
+                return FragmentProfileMyReactions.newInstance(userId);
 
             default:
-                return FragmentProfileMyCreations.newInstance(position);
+
+                return FragmentProfileMyCreations.newInstance(userId);
+
 
         }
     }

@@ -77,7 +77,6 @@ import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentLikedUserReaction;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
@@ -211,6 +210,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private NavigationTransactionOptions transactionOptions;
     public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
+    FragmentNewProfile2 fragmentNewProfile2;
     String Identifier;
     PostDetails postDetails;
 
@@ -474,9 +474,9 @@ public class BaseBottomBarActivity extends BaseActivity
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
                     if (isSelf) {
-                        pushFragment(ProfileFragment.newInstance());
+                        pushFragment(FragmentNewProfile2.newInstance(0));
                     } else {
-                        pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+                        pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
                     }
 //                    pushFragment(isSelf ? ProfileFragment.newInstance() :
 //                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
@@ -540,7 +540,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private void notificationAction(int notification_type, int source_id, int post_id) {
 
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
-            pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
+            pushFragment(FragmentNewOtherProfile.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         }
         else if(notification_type == 5 || notification_type == 7 || notification_type == 9){
             ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)
@@ -659,9 +659,9 @@ public class BaseBottomBarActivity extends BaseActivity
                             } else if (referringParams.has("user_id")) {
                                 String userId = referringParams.getString("user_id");
                                 if (SharedPrefs.getUserId(BaseBottomBarActivity.this) == Integer.parseInt(userId)) {
-                                    pushFragment(ProfileFragment.newInstance());
+                                    pushFragment(FragmentNewProfile2.newInstance(0));
                                 } else {
-                                    pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                    pushFragment(FragmentNewOtherProfile.newInstance(userId, "", ""));
                                 }
                             }
                         }
@@ -972,7 +972,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 String username = postDetails.getPostOwner().getUserName();
                 String userType = "";
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(postOwnerId), userType, username));
+                        FragmentNewOtherProfile.newInstance(String.valueOf(postOwnerId), userType, username));
         }
     }
 
@@ -1000,8 +1000,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         null, false, false, null, null));
                 break;
             case ACTION_VIEW_PROFILE:
-                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
+                pushFragment(postDetails.canDelete() ? FragmentNewProfile2.newInstance(0) :
+                        FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
                                 "", postDetails.getPostOwner().getUserName()));
                 break;
         }
@@ -1015,8 +1015,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         null, false, false, null, null));
                 break;
             case ACTION_VIEW_PROFILE:
-                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(
+                pushFragment(postDetails.canDelete() ? FragmentNewProfile2.newInstance(0) :
+                    FragmentNewOtherProfile.newInstance(
                                 String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
                 break;
         }
@@ -1043,7 +1043,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         }
                     });
         } else {
-            pushFragment(OthersProfileFragment.newInstance(String.valueOf(id), "Other", "username"));
+            pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(id), "Other", "username"));
         }
     }
 
@@ -1060,7 +1060,7 @@ public class BaseBottomBarActivity extends BaseActivity
         if (isFollowingTab) {
             pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
         } else {
-            pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
+            pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(profileId), userType, "name"));
         }
     }
 
@@ -1077,12 +1077,14 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void viewOthersProfile(String id, String username, String type) {
      //   pushFragment(OthersProfileFragment.newInstance(id, type, username));
-        pushFragment(FragmentNewOtherProfile.newInstance(1));
+        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
     }
 
     @Override
     public void viewOthersProfileFollowing(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance2(id, type, username));
+       // pushFragment(OthersProfileFragment.newInstance2(id, type, username));
+        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
+
     }
 
     @Override
@@ -1184,13 +1186,13 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void callProfileListener(int id, boolean isMyself) {
-        pushFragment(isMyself ? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
+        pushFragment(isMyself ? FragmentNewProfile2.newInstance(0) :
+              FragmentNewOtherProfile.newInstance(String.valueOf(id), "", ""));
     }
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
-        pushFragment(isSelf ? ProfileFragment.newInstance() : OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+        pushFragment(isSelf ? FragmentNewProfile2.newInstance(0) : FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
     }
 
     public void popFragment() {
@@ -1285,8 +1287,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewUserProfile() {
-        profilefragment = ProfileFragment.newInstance();
-        pushFragment(profilefragment);
+        fragmentNewProfile2 = FragmentNewProfile2.newInstance(0);
+        pushFragment(fragmentNewProfile2);
     }
 
     @Override

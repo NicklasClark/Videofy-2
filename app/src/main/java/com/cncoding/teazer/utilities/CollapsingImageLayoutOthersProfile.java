@@ -1,9 +1,5 @@
 package com.cncoding.teazer.utilities;
 
-/**
- * Created by farazhabib on 19/02/18.
- */
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -19,9 +15,13 @@ import android.widget.FrameLayout;
 
 import com.cncoding.teazer.R;
 
-public class CollapsingImageLayout extends FrameLayout {
+/**
+ * Created by farazhabib on 22/02/18.
+ */
 
-    private static final String TAG = "CollapsingImageLayout";
+public class CollapsingImageLayoutOthersProfile extends FrameLayout {
+
+    private static final String TAG = "CollapsingImageLayoutO";
 
     private WindowInsetsCompat mLastInsets;
 
@@ -44,11 +44,14 @@ public class CollapsingImageLayout extends FrameLayout {
     private int mImageLeftCollapsed;
 
     private int mImageTopCollapsed;
+
     private int mLayoutTopCollapsed;
 
     private int mLayoutLeftCollapsed;
 
     private int mTitleLeftCollapsed;
+
+    private int mFollowLeftCollapsed;
 
     private int mTitleTopCollapsed;
 
@@ -64,25 +67,33 @@ public class CollapsingImageLayout extends FrameLayout {
 
     private int mDetailLeftExpanded;
 
+    private int mFollowTopExpaned;
 
-    private OnOffsetChangedListener mOnOffsetChangedListener;
+    private int mFollowLeftExpaned;
 
-    public CollapsingImageLayout(Context context) {
+    private int mFollowTopCollapsed;
+
+
+    private CollapsingImageLayoutOthersProfile.OnOffsetChangedListener mOnOffsetChangedListener;
+
+    public CollapsingImageLayoutOthersProfile(Context context) {
         this(context, null);
     }
 
-    public CollapsingImageLayout(Context context, AttributeSet attrs) {
+    public CollapsingImageLayoutOthersProfile(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CollapsingImageLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CollapsingImageLayoutOthersProfile(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        mImageLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.image_left_margin_collapsed);
+        mImageLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.image_left_margin_collapsed2);
         mImageTopCollapsed = getResources().getDimensionPixelOffset(R.dimen.image_top_margin_collapsed);
-        mTitleLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.title_left_margin_collapsed);
+        mTitleLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.title_left_margin_collapsed2);
+        mFollowLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.follow_left_margin_collapsed);
+        mFollowTopCollapsed = getResources().getDimensionPixelOffset(R.dimen.follow_top_margin_collapsed);
         mTitleTopCollapsed = getResources().getDimensionPixelOffset(R.dimen.title_top_margin_collapsed);
-        mSubtitleLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.subtitle_left_margin_collapsed);
+        mSubtitleLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.subtitle_left_margin_collapsed2);
         mSubtitleTopCollapsed = getResources().getDimensionPixelOffset(R.dimen.subtitle_top_margin_collapsed);
         mLayoutTopCollapsed = getResources().getDimensionPixelOffset(R.dimen.layout_top_margin_collapsed);
         mLayoutLeftCollapsed = getResources().getDimensionPixelOffset(R.dimen.layout_left_margin_collapsed);
@@ -99,7 +110,7 @@ public class CollapsingImageLayout extends FrameLayout {
     }
 
     @TargetApi(21)
-    public CollapsingImageLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CollapsingImageLayoutOthersProfile(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -111,7 +122,7 @@ public class CollapsingImageLayout extends FrameLayout {
         final ViewParent parent = getParent();
         if (parent instanceof AppBarLayout) {
             if (mOnOffsetChangedListener == null) {
-                mOnOffsetChangedListener = new OnOffsetChangedListener();
+                mOnOffsetChangedListener = new CollapsingImageLayoutOthersProfile.OnOffsetChangedListener();
             }
             ((AppBarLayout) parent).addOnOffsetChangedListener(mOnOffsetChangedListener);
         }
@@ -169,6 +180,12 @@ public class CollapsingImageLayout extends FrameLayout {
                     mLayoutTopExpanded = child.getTop();
                     break;
 
+
+                    case R.id.follow:
+                        mFollowLeftExpaned = child.getLeft();
+                        mFollowTopExpaned = child.getTop();
+                    break;
+
 //                case R.id.detail:
 //                    mDetailLeftExpanded = child.getLeft();
 //                    mDetailTopExpanded = child.getTop();
@@ -206,7 +223,7 @@ public class CollapsingImageLayout extends FrameLayout {
             int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
-                final ViewOffsetHelper offsetHelper = getViewOffsetHelper(child);
+                final CollapsingImageLayoutOthersProfile.ViewOffsetHelper offsetHelper = getViewOffsetHelper(child);
 
                 if (child instanceof Toolbar) {
                     if (getHeight() - insetTop + verticalOffset >= child.getHeight()) {
@@ -252,6 +269,14 @@ public class CollapsingImageLayout extends FrameLayout {
                     offsetHelper.setLeftAndRightOffset(leftOffset);
                 }
 
+                if (child.getId() == R.id.follow) {
+
+                    int topOffset = (int) ((mFollowTopCollapsed - mFollowTopExpaned) * offsetFactor) - verticalOffset;
+                    int leftOffset = (int) ((mFollowLeftCollapsed - mFollowLeftExpaned) * offsetFactor);
+                    offsetHelper.setTopAndBottomOffset(topOffset);
+                    offsetHelper.setLeftAndRightOffset(leftOffset);
+                }
+
                 if (child.getId() == R.id.detaillayout) {
                     int offset = Math.round(-verticalOffset * .4F);
                     offsetHelper.setTopAndBottomOffset(offset);
@@ -267,7 +292,7 @@ public class CollapsingImageLayout extends FrameLayout {
 //                    child.setPivotY(0);
 //                    offsetHelper.setTopAndBottomOffset(topOffset);
 //                    offsetHelper.setLeftAndRightOffset(leftOffset);
-               }
+                }
 //                if (child.getId() == R.id.detail) {
 //
 //                    int offset = Math.round(-verticalOffset * .2F);
@@ -283,9 +308,9 @@ public class CollapsingImageLayout extends FrameLayout {
 //                    child.setPivotY(0);
 //                    offsetHelper.setTopAndBottomOffset(topOffset);
 //                    offsetHelper.setLeftAndRightOffset(leftOffset);
-             //   }
+                //   }
 
-              //  if (child.getId() == R.id.sliding_tabs) {
+                //  if (child.getId() == R.id.sliding_tabs) {
 
 //                    int offset = Math.round(-verticalOffset * .2F);
 //                    offsetHelper.setTopAndBottomOffset(offset);
@@ -300,15 +325,15 @@ public class CollapsingImageLayout extends FrameLayout {
 //                    child.setPivotY(0);
 //                    offsetHelper.setTopAndBottomOffset(topOffset);
 //                    offsetHelper.setLeftAndRightOffset(leftOffset);
-               // }
+                // }
             }
         }
     }
 
-    private static ViewOffsetHelper getViewOffsetHelper(View view) {
-        ViewOffsetHelper offsetHelper = (ViewOffsetHelper) view.getTag(R.id.view_offset_helper);
+    private static CollapsingImageLayoutOthersProfile.ViewOffsetHelper getViewOffsetHelper(View view) {
+        CollapsingImageLayoutOthersProfile.ViewOffsetHelper offsetHelper = (CollapsingImageLayoutOthersProfile.ViewOffsetHelper) view.getTag(R.id.view_offset_helper);
         if (offsetHelper == null) {
-            offsetHelper = new ViewOffsetHelper(view);
+            offsetHelper = new CollapsingImageLayoutOthersProfile.ViewOffsetHelper(view);
             view.setTag(R.id.view_offset_helper, offsetHelper);
         }
         return offsetHelper;
@@ -357,7 +382,7 @@ public class CollapsingImageLayout extends FrameLayout {
         }
 
         /**
-         * Set the top and bottom offset for this {@link ViewOffsetHelper}'s view.
+         * Set the top and bottom offset for this {@link CollapsingImageLayoutOthersProfile.ViewOffsetHelper}'s view.
          *
          * @param offset the offset in px.
          * @return true if the offset has changed
@@ -372,7 +397,7 @@ public class CollapsingImageLayout extends FrameLayout {
         }
 
         /**
-         * Set the left and right offset for this {@link ViewOffsetHelper}'s view.
+         * Set the left and right offset for this {@link CollapsingImageLayoutOthersProfile.ViewOffsetHelper}'s view.
          *
          * @param offset the offset in px.
          * @return true if the offset has changed

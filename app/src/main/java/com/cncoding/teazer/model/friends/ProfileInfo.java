@@ -14,6 +14,14 @@ public class ProfileInfo {
     @SerializedName("total_videos")
     @Expose
     private Integer totalVideos;
+    @SerializedName("total_reactions")
+    @Expose
+    private Integer totalReactions;
+
+    public Integer getTotalReactions() {
+        return totalReactions;
+    }
+
     @SerializedName("private_profile")
     @Expose
     private PrivateProfile privateProfile;

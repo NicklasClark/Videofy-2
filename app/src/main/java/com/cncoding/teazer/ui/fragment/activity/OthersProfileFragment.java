@@ -117,6 +117,7 @@ public class OthersProfileFragment extends BaseFragment {
 //893
     Context context;
     ProfileInfo profileInfo;
+
     public static final int PRIVATE_ACCOUNT = 1;
     public static final int PUBLIC_ACCOUNT = 2;
     public static final boolean FRIENDS = true;
@@ -126,11 +127,12 @@ public class OthersProfileFragment extends BaseFragment {
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     @BindView(R.id.userCreationTitle)
+
     ProximaNovaBoldTextView userCreationTitle;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     private static final int UNBLOCK_STATUS = 2;
-//
+
     int accountType;
     boolean requestRecieved;
     String status;
@@ -285,10 +287,12 @@ public class OthersProfileFragment extends BaseFragment {
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (accountType == 1) {
 
                     if (isfollowing) {
                         followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+
                     } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
@@ -340,13 +344,10 @@ public class OthersProfileFragment extends BaseFragment {
         });
 
 
-
         endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
                 if (next) {
-
                     if (page > 2) {
                         loader.setVisibility(View.VISIBLE);
                     }
@@ -359,6 +360,7 @@ public class OthersProfileFragment extends BaseFragment {
         };
 
         _recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener);
+
 
         _unHideAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -716,9 +718,7 @@ public class OthersProfileFragment extends BaseFragment {
 
     }
 
-
     public void profileBlur(final String pic) {
-
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
