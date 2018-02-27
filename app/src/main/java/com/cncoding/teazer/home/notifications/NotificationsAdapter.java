@@ -207,7 +207,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
                                                             if (postReactDetail != null) {
-                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true);
+                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, true);
                                                             } else {
                                                                 Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
                                                             }

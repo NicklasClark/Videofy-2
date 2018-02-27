@@ -19,7 +19,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.model.react.MyReactions;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.ReactionsList;
 
 import java.util.ArrayList;
@@ -42,13 +42,12 @@ public class FragmentProfileMyReactions extends Fragment {
     ProfileMyReactionAdapter profileMyReactionAdapter;
     RecyclerView.LayoutManager layoutManager;
     Context context;
-    List<MyReactions> myReactions;
+    List<PostReaction> myReactions;
     int page;
     ProximaNovaSemiBoldTextView alert1;
     ProximaNovaRegularTextView alert2;
     GifTextView loader;
 
-    private EndlessRecyclerViewScrollListener scrollListener;
     boolean next;
 
     public static FragmentProfileMyReactions newInstance(int page) {
@@ -77,14 +76,12 @@ public class FragmentProfileMyReactions extends Fragment {
         recyclerView.setAdapter(profileMyReactionAdapter);
         getReactions(1);
 
-        scrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
-                if(next)
-                {
-                    if(page>2)
-                    {
+                if (next) {
+                    if (page > 2) {
                         loader.setVisibility(View.VISIBLE);
                     }
                     getReactions(page);

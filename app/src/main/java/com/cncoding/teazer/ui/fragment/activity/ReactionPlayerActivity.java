@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.CheckImageButton;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -80,7 +81,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView reactionPostName;
     @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView reactionPostLikes;
     @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView reactionPostViews;
-    @BindView(R.id.btnLike) ImageView likeBtn;
+    @BindView(R.id.like) CheckImageButton likeBtn;
     @BindView(R.id.reaction_post_name_popularity_layout) RelativeLayout reactionPostNamePopularityLayout;
     @BindView(R.id.root_layout) RelativeLayout rootLayout;
     @BindView(R.id.postDuration) ProximaNovaRegularTextView postDurationView;
@@ -341,7 +342,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.btnClose, R.id.btnLike})
+    @OnClick({R.id.btnClose, R.id.like})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
@@ -349,7 +350,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 releasePlayer();
                 onBackPressed();
                 break;
-            case R.id.btnLike:
+            case R.id.like:
                 if (!isLiked) {
 //            Like the post
                     isLiked = true;

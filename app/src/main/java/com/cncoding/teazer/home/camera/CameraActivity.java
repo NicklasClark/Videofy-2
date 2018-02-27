@@ -82,6 +82,7 @@ import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -607,23 +608,28 @@ public class CameraActivity extends AppCompatActivity
         return timeInSec;
     }
 
-    private long getVideoDurationAndUpload(String videoFile, boolean isReaction, boolean isGallery) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(videoFile);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInSec = Long.parseLong(time) / 1000;
+    private void getVideoDurationAndUpload(String videoFile, boolean isReaction, boolean isGallery) {
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            FileInputStream inputStream = new FileInputStream(videoFile);
+            retriever.setDataSource(inputStream.getFD());
+            inputStream.close();
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInSec = Long.parseLong(time) / 1000;
 
-        uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
-        final Handler handler = new Handler(getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startVideoUploadFragment();
-            }
-        }, 3000);
+            uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
+            final Handler handler = new Handler(getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startVideoUploadFragment();
+                }
+            }, 3000);
 
-        retriever.release();
-        return timeInSec;
+            retriever.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

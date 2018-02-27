@@ -125,6 +125,7 @@
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
+                    android:drawablePadding="4dp"
                     android:hint="@string/enter_location"
                     app:drawableStartCompat="@drawable/ic_place"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -159,6 +160,7 @@
                     android:id="@+id/video_upload_tag_friends"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:hint="@string/tag_friends"
+                    android:drawablePadding="4dp"
                     app:drawableStartCompat="@drawable/ic_person_left"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 

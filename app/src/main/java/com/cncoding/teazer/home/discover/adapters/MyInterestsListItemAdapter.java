@@ -32,7 +32,6 @@ import butterknife.OnClick;
 import static android.support.v7.util.DiffUtil.calculateDiff;
 import static android.view.LayoutInflater.from;
 import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
-import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
@@ -151,11 +150,11 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
                     name.setText(nameText);
 
                     /*Setting likes*/
-                    String likeText = SPACE + String.valueOf(postDetails.getLikes());
+                    String likeText = String.valueOf(postDetails.getLikes());
                     likes.setText(likeText);
 
                     /*Setting views*/
-                    String viewText = SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
+                    String viewText = String.valueOf(postDetails.getMedias().get(0).getViews());
                     views.setText(viewText);
 
                     /*Setting reaction count*/

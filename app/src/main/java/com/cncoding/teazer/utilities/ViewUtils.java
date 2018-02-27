@@ -35,24 +35,28 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
+import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.Annotations.Gender;
 
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.utilities.Annotations.MALE;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 
@@ -108,27 +112,15 @@ public class ViewUtils {
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, MyReactions reaction) {
-        switch (source) {
-            case POST_REACTION: {
-                Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getReactMediaUrl());
-                intent.putExtra("POST_INFO", postReaction);
-                intent.putExtra("SOURCE", POST_REACTION);
-//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-                break;
-            }
-            case SELF_REACTION: {
-                Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
-                intent.putExtra("POST_INFO", reaction);
-                intent.putExtra("SOURCE", SELF_REACTION);
-//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-                break;
-            }
-        }
+    public static void playOnlineVideoInExoPlayer(BaseFragment fragment, PostReaction postReaction) {
+        fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(postReaction,
+                Objects.equals(postReaction.getMediaDetail().getMediaType(), MEDIA_TYPE_GIF) ||
+                Objects.equals(postReaction.getMediaDetail().getMediaType(), MEDIA_TYPE_GIPHY)));
+        Intent intent = new Intent(fragment.getParentActivity(), ReactionPlayerActivity.class);
+        intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getReactMediaUrl());
+        intent.putExtra("POST_INFO", postReaction);
+//        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        fragment.startActivity(intent);
     }
 
     /**

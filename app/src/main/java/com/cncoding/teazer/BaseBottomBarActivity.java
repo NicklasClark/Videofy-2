@@ -64,7 +64,6 @@ import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
@@ -121,7 +120,6 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRES
 import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
@@ -574,9 +572,9 @@ public class BaseBottomBarActivity extends BaseActivity
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
                                         if (postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF || postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY) {
-                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true));
+                                            pushFragment(FragmentReactionPlayer.newInstance(postReactDetail, true));
                                         } else {
-                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true));
+                                            pushFragment(FragmentReactionPlayer.newInstance(postReactDetail, true));
                                         }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
@@ -1191,8 +1189,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction, boolean isGif) {
-        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction, reaction, isGif));
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, boolean isGif) {
+        pushFragment(FragmentReactionPlayer.newInstance(postReaction, isGif));
     }
 
     @Override

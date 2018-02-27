@@ -26,7 +26,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.MyReactions;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -48,12 +47,12 @@ import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReactionAdapter.ViewHolder> {
 
-    private List<MyReactions> list;
+    private List<PostReaction> list;
     private Context context;
     ReactionPlayerListener reactionPlayerListener;
     private boolean isPostClicked = false;
 
-    public ProfileMyReactionAdapter(Context context, List<MyReactions> list) {
+    public ProfileMyReactionAdapter(Context context, List<PostReaction> list) {
         this.context = context;
         this.list = list;
         reactionPlayerListener=( ReactionPlayerListener)context;
@@ -65,14 +64,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
     @Override
     public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
-        final MyReactions reactions = list.get(i);
+        final PostReaction reactions = list.get(i);
         final int reactId = reactions.getReactId();
         String videoTitle = reactions.getReactTitle();
         final int likes = reactions.getLikes();
         final int views = reactions.getViews();
         final String reactDuration = reactions.getMediaDetail().getReactDuration();
         final String thumb_url = reactions.getMediaDetail().getReactThumbUrl();
-        final String postOwner = reactions.getPostOwner().getFirstName();
+        final String postOwner = reactions.getReactOwner().getFirstName();
         final int reaction = reactions.getReactedBy();
 
 
@@ -115,11 +114,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 if (!isPostClicked) {
                     isPostClicked = true;
                     if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, true);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, true);
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, false);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, false);
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY){
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, true);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, true);
                     }
                     isPostClicked = false;
                 }
@@ -227,6 +226,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
 
     public interface ReactionPlayerListener {
-        void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction, boolean isGif);
+        void reactionPlayer(int selfReaction, PostReaction postReaction, boolean isGif);
     }
 }

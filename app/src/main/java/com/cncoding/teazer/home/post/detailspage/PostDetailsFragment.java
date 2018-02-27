@@ -240,7 +240,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
             if (isDeepLink) {
                 String reactId = bundle.getString(ARG_REACT_ID);
                 if (reactId != null) {
-                    fetchReactionDetails(context, Integer.parseInt(reactId));
+                    fetchReactionDetails(this, Integer.parseInt(reactId));
                 }
             }
         }

@@ -37,7 +37,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.view.LayoutInflater.from;
-import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.getClassicCategoryBackground;
@@ -190,11 +189,11 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
             name.setText(nameText);
 
             /*Setting likes*/
-            String likesText = SPACE + String.valueOf(postDetails.getLikes());
+            String likesText = String.valueOf(postDetails.getLikes());
             likes.setText(likesText);
 
             /*Setting views*/
-            String viewsText = SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
+            String viewsText = String.valueOf(postDetails.getMedias().get(0).getViews());
             views.setText(viewsText);
 
             Glide.with(fragment)

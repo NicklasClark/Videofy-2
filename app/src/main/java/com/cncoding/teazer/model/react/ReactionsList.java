@@ -1,6 +1,7 @@
 package com.cncoding.teazer.model.react;
 
 import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.utilities.Annotations.CallType;
 
 import java.util.ArrayList;
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 public class ReactionsList extends BaseModel {
 
     private boolean next_page;
-    private ArrayList<MyReactions> reactions;
+    private ArrayList<PostReaction> reactions;
 
-    public ReactionsList(boolean next_page, ArrayList<MyReactions> reactions) {
+    public ReactionsList(boolean next_page, ArrayList<PostReaction> reactions) {
         this.next_page = next_page;
         this.reactions = reactions;
     }
@@ -33,7 +34,7 @@ public class ReactionsList extends BaseModel {
         return next_page;
     }
 
-    public ArrayList<MyReactions> getReactions() {
+    public ArrayList<PostReaction> getReactions() {
         return reactions;
     }
 }

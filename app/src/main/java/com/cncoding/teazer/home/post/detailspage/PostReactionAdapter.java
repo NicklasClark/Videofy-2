@@ -41,7 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
@@ -254,13 +253,13 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
         @OnClick(R.id.root_layout) void viewReaction() {
             switch (postReaction.getMediaDetail().getMediaType()) {
                 case MEDIA_TYPE_GIF:
-                    openReaction(OPENED_FROM_OTHER_SOURCE, postReaction, true);
+                    openReaction(postReaction, true);
                     break;
                 case MEDIA_TYPE_GIPHY:
-                    openReaction(OPENED_FROM_OTHER_SOURCE, postReaction, true);
+                    openReaction(postReaction, true);
                     break;
                 default:
-                    openReaction(OPENED_FROM_OTHER_SOURCE, postReaction, false);
+                    openReaction(postReaction, false);
                     break;
             }
         }
@@ -270,8 +269,8 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
                     OthersProfileFragment.newInstance(String.valueOf(postReaction.getPostOwnerId()), "", ""));
         }
 
-        private void openReaction(int selfReaction, PostReaction postReaction, boolean isGif) {
-            fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction, null, isGif));
+        private void openReaction(PostReaction postReaction, boolean isGif) {
+            fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(postReaction, isGif));
         }
 
         @Override public String toString() {

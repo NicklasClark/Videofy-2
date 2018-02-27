@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -35,7 +34,6 @@ import retrofit2.Response;
 
 public class FragmentProfileMyCreations extends Fragment {
 
-    CircularAppCompatImageView menuitem;
     Context context;
     ArrayList<PostDetails> list = new ArrayList<>();
     RecyclerView recyclerView;

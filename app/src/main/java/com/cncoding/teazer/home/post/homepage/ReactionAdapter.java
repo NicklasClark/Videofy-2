@@ -31,7 +31,6 @@ import butterknife.OnClick;
 
 import static android.view.LayoutInflater.from;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.RESOURCE;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
@@ -195,13 +194,13 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                     isPostClicked = true;
                     if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
                         fragment.navigation.pushFragment(
-                                FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReaction,null, true));
+                                FragmentReactionPlayer.newInstance(postReaction, true));
                     } else if(postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
                         fragment.navigation.pushFragment(
-                                FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReaction,null, false));
+                                FragmentReactionPlayer.newInstance(postReaction, false));
                     } else if(postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY){
                         fragment.navigation.pushFragment(
-                                FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReaction,null, true));
+                                FragmentReactionPlayer.newInstance(postReaction, true));
                     }
                     isPostClicked = false;
                 }

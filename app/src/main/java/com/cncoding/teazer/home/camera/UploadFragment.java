@@ -95,7 +95,6 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
-import static com.cncoding.teazer.home.post.detailspage.PostDetailsFragment.SPACE;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.CommonUtilities.encodeUnicodeString;
@@ -735,7 +734,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
-        final String placeName = SPACE + selectedPlace.getPlaceName();
+        final String placeName = selectedPlace.getPlaceName();
         if (!placeName.contains("null")) {
             addLocationBtn.requestFocus();
             new Handler().postDelayed(new Runnable() {
@@ -750,21 +749,20 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, final int count) {
-        final String finalResultToShow = SPACE + resultToShow;
+    public void onTagsAndCategoriesInteraction(String action, final String resultToShow, String resultToSend, final int count) {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagCount = count;
-                selectedTagsToShow = finalResultToShow;
+                selectedTagsToShow = resultToShow;
                 selectedTagsToSend = resultToSend;
-                if (finalResultToShow.trim().isEmpty()) {
+                if (resultToShow.trim().isEmpty()) {
                     tagFriendsBtn.setText(null);
                 } else {
                     tagFriendsBtn.requestFocus();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            tagFriendsBtn.setText(finalResultToShow);
+                            tagFriendsBtn.setText(resultToShow);
                         }
                     }, 500);
                 }
@@ -772,16 +770,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
-                selectedCategoriesToShow = finalResultToShow;
+                selectedCategoriesToShow = resultToShow;
                 selectedCategoriesToSend = resultToSend;
-                if (finalResultToShow.trim().isEmpty() || finalResultToShow.equals(""))
+                if (resultToShow.trim().isEmpty() || resultToShow.equals(""))
                     uploadCategoriesBtn.setText(null);
                 else {
                     uploadCategoriesBtn.requestFocus();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            uploadCategoriesBtn.setText(finalResultToShow);
+                            uploadCategoriesBtn.setText(resultToShow);
                             setBadge(uploadCategoriesBadge, count, TAGGED_CATEGORIES);
                         }
                     }, 500);
