@@ -8,13 +8,21 @@
     android:paddingBottom="?attr/actionBarSize"
     android:visibility="visible">
 
-    <include layout="@layout/toolbar" />
+    <!--<include layout="@layout/toolbar" />-->
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:visibility="gone"
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:controller_layout_id="@layout/exo_reaction_playback_control_view" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/gif_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/gif_view" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -149,6 +157,7 @@
                 android:layout_toEndOf="@+id/reaction_post_dp"
                 android:gravity="end|center_vertical"
                 android:textColor="@android:color/white"
+                android:drawablePadding="4dp"
                 android:textSize="@dimen/text_size_12sp"
                 app:drawableStartCompat="@drawable/ic_like_smaller" />
 
@@ -165,17 +174,19 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
+                android:drawablePadding="4dp"
                 android:textSize="@dimen/text_size_12sp"
                 app:drawableStartCompat="@drawable/ic_view_outline_smaller" />
 
-            <ImageView
-                android:id="@+id/btnLike"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+            <com.cncoding.teazer.customViews.CheckImageButton
+                android:id="@+id/like"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:src="@drawable/ic_like_outline"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="14dp"
-                android:contentDescription="@string/like"
-                android:src="@drawable/ic_like_outline" />
+                android:layout_marginEnd="14dp" />
 
         </RelativeLayout>
 

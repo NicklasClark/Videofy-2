@@ -9,27 +9,14 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class UpdatePostRequest {
-    @SerializedName("post_id")
-    @Expose
-    private Integer postId;
-    @SerializedName("location")
-    @Expose
-    private String location;
-    @SerializedName("title")
-    @Expose
-    private String title;
-    @SerializedName("latitude")
-    @Expose
-    private Double latitude;
-    @SerializedName("longitude")
-    @Expose
-    private Double longitude;
-    @SerializedName("tags")
-    @Expose
-    private String tags;
-    @SerializedName("categories")
-    @Expose
-    private String categories;
+
+    @SerializedName("post_id") @Expose private Integer postId;
+    @SerializedName("location") @Expose private String location;
+    @SerializedName("title") @Expose private String title;
+    @SerializedName("latitude") @Expose private Double latitude;
+    @SerializedName("longitude") @Expose private Double longitude;
+    @SerializedName("tags") @Expose private String tags;
+    @SerializedName("categories") @Expose private String categories;
 
     public UpdatePostRequest(Integer postId, String location, String title, Double latitude, Double longitude, String tags, String categories) {
         this.postId = postId;

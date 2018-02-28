@@ -19,7 +19,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.NewUserInfo;
+import com.cncoding.teazer.model.friends.MyUserInfo;
 import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UserInfo;
 
@@ -41,7 +41,7 @@ public class FollowersListActivity extends BaseFragment {
     String followerid;
     Context context;
     List<UserInfo> list;
-    List<NewUserInfo> userfollowerlist;
+    List<MyUserInfo> userfollowerlist;
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;

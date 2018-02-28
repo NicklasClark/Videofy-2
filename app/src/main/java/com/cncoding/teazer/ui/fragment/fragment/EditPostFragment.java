@@ -143,7 +143,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     ProgressBar topProgressBar;
     @BindView(R.id.video_upload_retake_btn)
     Button cancelBtn;
-    @BindView(R.id.video_upload_check_btn)
+    @BindView(R.id.video_upload_btn)
     Button uploadBtn;
     @BindView(R.id.video_upload_title)
     ProximaNovaRegularTextInputEditText videoTitle;

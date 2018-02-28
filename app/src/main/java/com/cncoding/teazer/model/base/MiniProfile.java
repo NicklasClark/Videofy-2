@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.Gender;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,22 +16,19 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity
-public class MiniProfile implements Parcelable {
-
-    public static final int MALE = 1;
-    public static final int FEMALE = 2;
+public class MiniProfile extends BaseModel implements Parcelable {
 
     @SerializedName("user_id") @Expose private Integer userId;
     @SerializedName("user_name") @Expose private String userName;
     @SerializedName("first_name") @Expose private String firstName;
     @SerializedName("last_name") @Expose private String lastName;
+    @Gender @SerializedName("gender") @Expose private Integer gender;
     @SerializedName("account_type") @Expose private Integer accountType;
     @SerializedName("request_id") @Expose private Integer requestId;
     @SerializedName("request_recieved") @Expose private Boolean requestRecieved;
     @SerializedName("following") @Expose private Boolean following;
     @SerializedName("follower") @Expose private Boolean follower;
     @SerializedName("request_sent") @Expose private Boolean requestSent;
-    @SerializedName("gender") @Expose private Integer gender;
     @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
     @SerializedName("you_blocked") @Expose private Boolean youBlocked;
     @Embedded(prefix = "profileMedia_") @SerializedName("profile_media") @Expose private ProfileMedia profileMedia;
@@ -68,7 +67,7 @@ public class MiniProfile implements Parcelable {
 
     public MiniProfile(Integer userId, String userName, String firstName, String lastName, Integer accountType,
                        Integer requestId, Boolean requestRecieved, Boolean following, Boolean follower, Boolean requestSent,
-                       Integer gender, Boolean hasProfileMedia, Boolean youBlocked, ProfileMedia profileMedia) {
+                       @Gender Integer gender, Boolean hasProfileMedia, Boolean youBlocked, ProfileMedia profileMedia) {
         this.userId = userId;
         this.userName = userName;
         this.firstName = firstName;
@@ -220,11 +219,11 @@ public class MiniProfile implements Parcelable {
         this.requestSent = requestSent;
     }
 
-    public Integer getGender() {
+    @Gender public Integer getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(@Gender Integer gender) {
         this.gender = gender;
     }
 

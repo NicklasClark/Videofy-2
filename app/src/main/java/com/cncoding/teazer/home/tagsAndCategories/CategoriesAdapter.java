@@ -61,7 +61,7 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
                 if (categorySparseArray.size() < 5) {
                     boolean isChecked = !holder.nameView.isChecked();
                     selectedCategoriesArray.put(holder.getAdapterPosition(), isChecked);
-                    ((TagsAndCategoryFragment) fragment).changeDoneBtnVisibility(View.VISIBLE);
+//                    ((TagsAndCategoryFragment) fragment).changeDoneBtnVisibility(View.VISIBLE);
                     setCheck(holder.nameView, holder.getAdapterPosition(), category, !holder.nameView.isChecked());
                 } else {
                     Toast.makeText(fragment.getContext(), "Maximum 5 categories can be selected", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,7 @@ import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.discover.LandingPosts;
 import com.cncoding.teazer.model.discover.VideosList;
 import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
@@ -13,8 +14,8 @@ import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LandingPosts;
-import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.giphy.TrendingGiphy;
+import com.cncoding.teazer.model.post.LikedUserList;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.post.PostReactionsList;
@@ -24,9 +25,9 @@ import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.CoverImageResponse;
 import com.cncoding.teazer.model.profile.Preference;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
@@ -344,6 +345,9 @@ import retrofit2.http.Query;
         /**
          * Call this service to get the my followers list
          * */
+//        @GET("/api/v1/friend/my/followers/{page}")
+//        Call<FollowersList> getMyFollowers(@Path("page") int page);
+
         @GET("/api/v1/friend/my/followers/{page}")
         Call<UserFollowerList> getMyFollowers(@Path("page") int page);
 
@@ -421,10 +425,7 @@ import retrofit2.http.Query;
         Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
 
         @GET("/api/v1/post/liked/users/{post_id}/{page}")
-        Call<LikedUserPost>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
-
-
-
+        Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
     }
 
     /**
@@ -442,7 +443,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/react/create")
-        Call<ReactionUploadResult> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
+        Call<ReactionResponse> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
 
         /**
          * Call this service to like/dislike a reacted video.
@@ -533,12 +534,16 @@ import retrofit2.http.Query;
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactionResponse> getReactionDetail(@Path("react_id") int reactId);
 
+
        @GET("/api/v1/react/liked/users/{react_id}/{page}")
-       Call<LikedUserPost>getLikedUsersReaction(@Path("react_id") int postId, @Path("page") int page);
+       Call<LikedUserList>getLikedUsersReaction(@Path("react_id") int postId, @Path("page") int page);
 
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactVideoDetailsResponse> getReactionDetail2(@Path("react_id") int reactId);
 
+        //Call this service to post reaction using Giphy
+        @POST("/api/v1/react/by/gif")
+        Call<ResultObject> createReactionByGiphy(@Body GiphyReactionRequest giphyReactionRequest);
     }
 
 
@@ -824,4 +829,15 @@ import retrofit2.http.Query;
         Call<ResultObject> resetPrefrences(@Body ArrayList<Preference> preference);
     }
 
+    /**
+     * Giphy actions
+     */
+    interface GiphyCalls {
+
+        @GET("/v1/gifs/trending")
+        Call<TrendingGiphy> getTrendingGiphys(@Query("api_key") String api_key, @Query("limit") int limit, @Query("offset") int offset, @Query("rating") String rating);
+
+        @GET("/v1/gifs/search")
+        Call<TrendingGiphy> searchGiphy(@Query("api_key") String api_key, @Query("limit") int limit, @Query("offset") int offset, @Query("rating") String rating, @Query("lang") String lang, @Query("q") String query);
+    }
 }

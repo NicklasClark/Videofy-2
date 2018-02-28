@@ -1,6 +1,7 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
+import org.jetbrains.annotations.Contract;
+
 import iknow.android.utils.BaseUtils;
 import io.branch.referral.Branch;
 
@@ -25,9 +28,6 @@ import io.branch.referral.Branch;
 
 public class TeazerApplication extends Application  {
 
-    private static final String TAG = "Application";
-
-    //    private ApplicationComponent applicationComponent;
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
@@ -80,8 +80,13 @@ public class TeazerApplication extends Application  {
 //        return applicationComponent;
 //    }
 
+    @Contract(pure = true)
     public static Context getContext() {
         return context;
+    }
+
+    public static TeazerApplication get(Activity activity) {
+        return (TeazerApplication) activity.getApplication();
     }
 
     private void initFFmpegBinary(Context context) {

@@ -43,6 +43,8 @@ import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.user.PrivateProfile;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 
 import butterknife.BindView;
@@ -90,7 +92,6 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
     @BindView(R.id.follow)
     Button _btnfollow;
-    private FragmentNewProfile2.FollowerListListener mListener;
     AppBarLayout app_bar;
 
 
@@ -211,10 +212,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                 if (accountType == 1) {
 
                     if (isfollowing) {
-                        mListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
-                    } else if (hassentrequest == true) {
-                        if (requestRecieved == true) {
-                            mListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                        navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    } else if (hassentrequest) {
+                        if (requestRecieved) {
+                            navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
@@ -224,8 +225,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
                 }
                 else {
-
-                    mListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                    navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
 
             }
@@ -239,12 +239,11 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                 if (accountType == 1) {
 
                     if (isfollowing == true) {
-
-                        mListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                        navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
 
                     } else if (hassentrequest == true) {
                         if (requestRecieved == true) {
-                            mListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                            navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
@@ -252,8 +251,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                 }
                 else {
-
-                    mListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                    navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
             }
         });
@@ -324,7 +322,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
+        getParentActivity().hideToolbarOnly();
 
 
 
@@ -352,18 +350,6 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
 
     }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-        if (context instanceof NewProfileFragment.FollowerListListener) {
-            mListener = (FragmentNewProfile2.FollowerListListener) context;
-        }
-
-
-    }
-
 
     @Override
     public void onDetach() {

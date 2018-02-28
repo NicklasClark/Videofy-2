@@ -1,11 +1,11 @@
 package com.cncoding.teazer.model.base;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,51 +15,63 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "Medias")
-public class Medias extends ViewModel implements Parcelable {
+public class Medias extends BaseModel implements Parcelable {
 
-    @SerializedName("media_id") @Expose private int media_id;
-    @SerializedName("media_url") @Expose private String media_url;
-    @SerializedName("thumb_url") @Expose private String thumb_url;
+    @SerializedName("media_id") @Expose private Integer mediaId;
+    @SerializedName("media_url") @Expose private String mediaUrl;
+    @SerializedName("thumb_url") @Expose private String thumbUrl;
     @SerializedName("duration") @Expose private String duration;
-    @Embedded(prefix = "dimension_") @SerializedName("media_dimension") @Expose private Dimension media_dimension;
-    @SerializedName("is_image") @Expose private boolean is_image;
-    @SerializedName("views") @Expose public int views;
-    @SerializedName("created_at") @Expose private String created_at;
+    @Embedded(prefix = "dimension_") @SerializedName("media_dimension") @Expose private Dimension mediaDimension;
+    @SerializedName("is_image") @Expose private Boolean isImage;
+    @SerializedName("views") @Expose public Integer views;
+    @SerializedName("created_at") @Expose private String createdAt;
 
-    public int getMediaId() {
-        return media_id;
+    public Medias(Integer mediaId, String mediaUrl, String thumbUrl, String duration, Dimension mediaDimension,
+                  Boolean isImage, Integer views, String createdAt) {
+        this.mediaId = mediaId;
+        this.mediaUrl = mediaUrl;
+        this.thumbUrl = thumbUrl;
+        this.duration = duration;
+        this.mediaDimension = mediaDimension;
+        this.isImage = isImage;
+        this.views = views;
+        this.createdAt = createdAt;
+    }
+
+    public Integer getMediaId() {
+        return mediaId;
     }
 
     public String getMediaUrl() {
-        return media_url;
+        return mediaUrl;
     }
 
     public String getThumbUrl() {
-        return thumb_url;
+        return thumbUrl;
     }
 
     public String getDuration() {
         return duration;
     }
 
-    public Dimension getDimension() {
-        return media_dimension;
+    public Dimension getMediaDimension() {
+        return mediaDimension;
     }
 
-    public boolean isImage() {
-        return is_image;
+    public Boolean isImage() {
+        return isImage;
     }
 
-    public int getViews() {
+    public Integer getViews() {
         return views;
     }
 
-    public void setViews(int views) {
+    public void setViews(Integer views) {
         this.views = views;
     }
 
     public String getCreatedAt() {
-        return created_at;
+        return createdAt;
     }
 
     @Override
@@ -69,25 +81,25 @@ public class Medias extends ViewModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(media_id);
-        parcel.writeString(media_url);
-        parcel.writeString(thumb_url);
+        parcel.writeInt(mediaId);
+        parcel.writeString(mediaUrl);
+        parcel.writeString(thumbUrl);
         parcel.writeString(duration);
-        parcel.writeParcelable(media_dimension, i);
-        parcel.writeByte((byte) (is_image ? 1 : 0));
+        parcel.writeParcelable(mediaDimension, i);
+        parcel.writeByte((byte) (isImage ? 1 : 0));
         parcel.writeInt(views);
-        parcel.writeString(created_at);
+        parcel.writeString(createdAt);
     }
 
     protected Medias(Parcel in) {
-        media_id = in.readInt();
-        media_url = in.readString();
-        thumb_url = in.readString();
+        mediaId = in.readInt();
+        mediaUrl = in.readString();
+        thumbUrl = in.readString();
         duration = in.readString();
-        media_dimension = in.readParcelable(Dimension.class.getClassLoader());
-        is_image = in.readByte() != 0;
+        mediaDimension = in.readParcelable(Dimension.class.getClassLoader());
+        isImage = in.readByte() != 0;
         views = in.readInt();
-        created_at = in.readString();
+        createdAt = in.readString();
     }
 
     public static final Creator<Medias> CREATOR = new Creator<Medias>() {

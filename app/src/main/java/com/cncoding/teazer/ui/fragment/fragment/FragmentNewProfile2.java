@@ -34,6 +34,8 @@ import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 
@@ -57,9 +59,7 @@ import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logProfileShareE
  * Created by farazhabib on 19/02/18.
  */
 
-public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction
-
-{
+public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
     private static final int RC_REQUEST_STORAGE = 1001;
 
     PublicProfile userProfile;
@@ -102,7 +102,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     ViewPager viewPager;
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
-    private FragmentNewProfile2.FollowerListListener mListener;
     AppBarLayout app_bar;
 
     public static boolean checkpostupdated = false;
@@ -110,7 +109,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public static boolean checkpicUpdated = false;
 
 
-    public static FragmentNewProfile2 newInstance(int page) {
+    public static FragmentNewProfile2 newInstance() {
         return new FragmentNewProfile2();
     }
 
@@ -155,14 +154,14 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowerListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(0), "User"));
             }
         });
 
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowingListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(0), "User"));
 
             }
         });
@@ -243,7 +242,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
+        getParentActivity().hideToolbarOnly();
 
         if (FragmentNewProfile2.checkprofileupdated) {
             updateProfile();
@@ -282,16 +281,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         tabLayout.setupWithViewPager(viewPager);
 
         getProfileDetail();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-        if (context instanceof FragmentNewProfile2.FollowerListListener) {
-            mListener = (FragmentNewProfile2.FollowerListListener) context;
-        }
-
     }
 
     @Override
@@ -657,14 +646,9 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             }
         });
     }
-
-    public interface FollowerListListener {
-
-        void onFollowerListListener(String id, String identifier);
-        void onFollowingListListener(String id, String identifier);
-    }
-
-
-
+//    public interface FollowerListListener {
+//
+//        void onFollowerListListener(String id, String identifier);
+//        void onFollowingListListener(String id, String identifier);
+//    }
 }
-

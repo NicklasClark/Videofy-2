@@ -3,8 +3,10 @@ package com.cncoding.teazer.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.profile.Preference;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,24 +17,25 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class UserProfile implements Parcelable {
-    private PublicProfile user_profile;
-    private int followers;
-    private int followings;
-    private int total_videos;
-    private boolean can_change_password;
-    @SerializedName("total_reactions")
-    @Expose
-    private Integer totalReactions;
+public class UserProfile extends BaseModel implements Parcelable {
 
-    @SerializedName("total_profile_likes")
-    @Expose
-    private Integer totalProfileLikes;
+    @SerializedName("user_profile") @Expose private PublicProfile user_profile;
+    @SerializedName("followers") @Expose private int followers;
+    @SerializedName("followings") @Expose private int followings;
+    @SerializedName("total_videos") @Expose private int total_videos;
+    @SerializedName("can_change_password") @Expose private boolean can_change_password;
+    @SerializedName("total_reactions") @Expose private Integer totalReactions;
+    @SerializedName("total_profile_likes") @Expose private Integer totalProfileLikes;
+    @SerializedName("preferences") @Expose private ArrayList<Preference> preferences = null;
 
-    @SerializedName("preferences")
-    @Expose
-    private ArrayList<Preference> preferences = null;
+    public UserProfile(Throwable error) {
+        this.error = error;
+    }
 
+    public UserProfile setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     protected UserProfile(Parcel in) {
         user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
@@ -51,6 +54,14 @@ public class UserProfile implements Parcelable {
             totalProfileLikes = in.readInt();
         }
         preferences = in.createTypedArrayList(Preference.CREATOR);
+    }
+
+    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
+        this.user_profile = user_profile;
+        this.followers = followers;
+        this.followings = followings;
+        this.total_videos = total_videos;
+        this.can_change_password = can_change_password;
     }
 
     @Override

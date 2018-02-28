@@ -1,11 +1,18 @@
 package com.cncoding.teazer.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.base.UploadParams;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.Map;
+
+import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 /**
  *
@@ -20,16 +27,13 @@ public class SharedPrefs {
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
-    private static final String BLURRED_PROFILE_PIC = "homePageCache";
+//    private static final String BLURRED_PROFILE_PIC = "homePageCache";
     private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
     private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
     private static final String SAVE_VIDEO_IN_GALLERY = "saveIntoGallery";
-    private static final String FIRST_START_POST_LIST = "firstStartPostList";
-    private static final String FIRST_START_DISCOVER = "firstStartDiscover";
-    private static final String FIRST_START_PROFILE = "firstStartProfile";
-    private static final String FIRST_START_POST_DETAILS = "firstStartPostDetails";
-    private static final String FIRST_START_MY_INTERESTS = "firstStartMyInterests";
+    private static final String ACTIVE = "active";
+    private static final String CAN_SAVE_MEDIA_ONLY_ON_WIFI = "canSaveMedia";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -53,21 +57,21 @@ public class SharedPrefs {
 //                .apply();
 //    }
 
-    public static void saveBlurredProfilePic(Context context, String path) {
-        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, path).apply();
-    }
-
-    public static String getBlurredProfilePic(Context context) {
-        return getSharedPreferences(context).getString(BLURRED_PROFILE_PIC, null);
-    }
-
-    public static boolean isBlurredProfilePicSaved(Context context) {
-        return getBlurredProfilePic(context) != null;
-    }
-
-    public static void deleteSavedBlurredProfilePic(Context context) {
-        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, null).apply();
-    }
+//    public static void saveBlurredProfilePic(Context context, String path) {
+//        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, path).apply();
+//    }
+//
+//    public static String getBlurredProfilePic(Context context) {
+//        return getSharedPreferences(context).getString(BLURRED_PROFILE_PIC, null);
+//    }
+//
+//    public static boolean isBlurredProfilePicSaved(Context context) {
+//        return getBlurredProfilePic(context) != null;
+//    }
+//
+//    public static void deleteSavedBlurredProfilePic(Context context) {
+//        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, null).apply();
+//    }
 
     public static void saveAuthToken(Context context, String authToken) {
         getSharedPreferences(context).edit().putString(AUTH_TOKEN, authToken).apply();
@@ -76,8 +80,7 @@ public class SharedPrefs {
     @Nullable
     public static String getAuthToken(Context context) {
         try {
-            return getSharedPreferences(context)
-                    .getString(AUTH_TOKEN, null);
+            return getSharedPreferences(context).getString(AUTH_TOKEN, null);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -85,39 +88,47 @@ public class SharedPrefs {
     }
 
     public static void resetAuthToken(Context context) {
-        getSharedPreferences(context).edit().putString(AUTH_TOKEN, null).apply();
+        getSharedPreferences(context).edit().remove(AUTH_TOKEN).apply();
     }
 
     public static void saveFcmToken(Context context, String fcmToken) {
         getSharedPreferences(context).edit().putString(FCM_TOKEN, fcmToken).apply();
     }
 
-    public static String getFcmToken(Context context) {
+    static String getFcmToken(Context context) {
         return getSharedPreferences(context).getString(FCM_TOKEN, null);
     }
 
     public static void saveVideoUploadSession(Context context, UploadParams uploadParams) {
-        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+        getSharedPreferences(context)
+                .edit()
+                .putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams, new TypeToken<UploadParams>() {}.getType()))
+                .apply();
     }
 
     public static void finishVideoUploadSession(Context context) {
-        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, null).apply();
+        getSharedPreferences(context).edit().remove(VIDEO_UPLOAD_SESSION).apply();
     }
 
     public static UploadParams getVideoUploadSession(Context context) {
-        return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
+        return new Gson().fromJson(getSharedPreferences(context)
+                .getString(VIDEO_UPLOAD_SESSION, null), new TypeToken<UploadParams>() {}.getType());
     }
 
     public static void saveReactionUploadSession(Context context, UploadParams uploadParams) {
-        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+        getSharedPreferences(context)
+                .edit()
+                .putString(REACTION_UPLOAD_SESSION, new Gson().toJson(uploadParams, new TypeToken<UploadParams>() {}.getType()))
+                .apply();
     }
 
     public static void finishReactionUploadSession(Context context) {
-        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, null).apply();
+        getSharedPreferences(context).edit().remove(REACTION_UPLOAD_SESSION).apply();
     }
 
     public static UploadParams getReactionUploadSession(Context context) {
-        return new Gson().fromJson(getSharedPreferences(context).getString(REACTION_UPLOAD_SESSION, null), UploadParams.class);
+        return new Gson().fromJson(getSharedPreferences(context)
+                .getString(REACTION_UPLOAD_SESSION, null), new TypeToken<UploadParams>() {}.getType());
     }
 
     public static void setCurrentPassword(Context context, String password) {
@@ -149,8 +160,7 @@ public class SharedPrefs {
 
     public static int getUserId(Context context) {
         try {
-            return getSharedPreferences(context)
-                    .getInt(USER_ID, -1);
+            return getSharedPreferences(context).getInt(USER_ID, -1);
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -165,44 +175,60 @@ public class SharedPrefs {
         return getSharedPreferences(context).getBoolean(SAVE_VIDEO_IN_GALLERY, false);
     }
 
-    public static void setFirstStartPostList(Context context) {
-        getSharedPreferences(context).edit().putBoolean(FIRST_START_POST_LIST, false).apply();
+    public static void onActivityActive(Activity activity) {
+        getSharedPreferences(activity.getApplicationContext())
+                .edit()
+                .putBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), true)
+                .apply();
     }
 
-    public static boolean isFirstStartPostList(Context context) {
-        return getSharedPreferences(context).getBoolean(FIRST_START_POST_LIST, true);
+    public static boolean isActivityActive(Activity activity) {
+        return getSharedPreferences(activity.getApplicationContext())
+                .getBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), true);
     }
 
-    public static void setFirstStartDiscover(Context context) {
-        getSharedPreferences(context).edit().putBoolean(FIRST_START_DISCOVER, false).apply();
+    public static void onActivityInactive(Activity activity) {
+        getSharedPreferences(activity.getApplicationContext())
+                .edit()
+                .putBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), false)
+                .apply();
     }
 
-    public static boolean isFirstStartDiscover(Context context) {
-        return getSharedPreferences(context).getBoolean(FIRST_START_DISCOVER, true);
+    public static void setCanSaveMediaOnlyOnWiFi(Context context, boolean canSaveMedia) {
+        getSharedPreferences(context).edit().putBoolean(CAN_SAVE_MEDIA_ONLY_ON_WIFI, canSaveMedia).apply();
     }
 
-    public static void setFirstStartProfile(Context context) {
-        getSharedPreferences(context).edit().putBoolean(FIRST_START_PROFILE, false).apply();
+    public static boolean getCanSaveMediaOnlyOnWiFi(Context context) {
+        return getSharedPreferences(context).getBoolean(CAN_SAVE_MEDIA_ONLY_ON_WIFI, false);
     }
 
-    public static boolean isFirstStartProfile(Context context) {
-        return getSharedPreferences(context).getBoolean(FIRST_START_PROFILE, true);
+    public static void saveMedia(Context context, String keyUrl, String valueFilePath) {
+        getSharedPreferences(context).edit().putString("media_" + keyUrl, valueFilePath).apply();
     }
 
-    public static void setFirstStartPostDetails(Context context) {
-        getSharedPreferences(context).edit().putBoolean(FIRST_START_POST_DETAILS, false).apply();
+    public static String getMedia(Context context, String keyUrl) {
+        return getSharedPreferences(context).getString("media_" + keyUrl, null);
     }
 
-    public static boolean isFirstStartPostDetails(Context context) {
-        return getSharedPreferences(context).getBoolean(FIRST_START_POST_DETAILS, true);
+    static void clearMedia(Context context) {
+        new ClearMediaTask(getSharedPreferences(context)).execute();
     }
 
-    public static void setFirstStartMyInterests(Context context) {
-        getSharedPreferences(context).edit().putBoolean(FIRST_START_MY_INTERESTS, false).apply();
-    }
+    private static class ClearMediaTask extends AsyncTask<Void, Void, Void> {
 
-    public static boolean isFirstStartMyInterests(Context context) {
-        return getSharedPreferences(context).getBoolean(FIRST_START_MY_INTERESTS, true);
-    }
+        private SharedPreferences preferences;
 
+        private ClearMediaTask(SharedPreferences preferences) {
+            this.preferences = preferences;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Map<String,?> keys = preferences.getAll();
+            for(Map.Entry<String,?> entry : keys.entrySet())
+                if (entry.getKey().contains("media_"))
+                    preferences.edit().remove(entry.getKey()).apply();
+            return null;
+        }
+    }
 }

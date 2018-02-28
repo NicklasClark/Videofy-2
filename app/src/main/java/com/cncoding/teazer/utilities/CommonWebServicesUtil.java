@@ -4,9 +4,10 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
+import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
@@ -21,7 +22,6 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.SharedPrefs.setFollowingNotificationCount;
 import static com.cncoding.teazer.utilities.SharedPrefs.setRequestNotificationCount;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
@@ -86,11 +86,8 @@ public class CommonWebServicesUtil {
                         if (response.code() == 200) {
                             if (response.body() != null) {
                                 ((BaseBottomBarActivity)context).pushFragment(
-                                FragmentPostDetails.newInstance(response.body(), null, true,
-                                        true, response.body().getMedias().get(0).getThumbUrl(), null));
-
-                                PostsListFragment.postDetails = response.body();
- //                               listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+                                PostDetailsFragment.newInstance(response.body(), null, true, null));
+//                                PostsListFragment.postDetails = response.body();
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }
@@ -105,8 +102,8 @@ public class CommonWebServicesUtil {
                 });
     }
 
-    public static void fetchReactionDetails(final Context context, final int postId) {
-        ApiCallingService.React.getReactionDetail(postId, context)
+    public static void fetchReactionDetails(final BaseFragment fragment, final int postId) {
+        ApiCallingService.React.getReactionDetail(postId, fragment.getContext())
                 .enqueue(new Callback<ReactionResponse>() {
                     @Override
                     public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
@@ -114,26 +111,34 @@ public class CommonWebServicesUtil {
                             if (response.body() != null) {
                                 PostReactDetail postReactDetail = response.body().getPostReactDetail();
                                 ReactOwner reactOwner = postReactDetail.getReactOwner();
-                                MiniProfile miniProfile = new MiniProfile(reactOwner.getUserId(), reactOwner.getUserName(), reactOwner.getFirstName(),
-                                        reactOwner.getLastName(), reactOwner.getHasProfileMedia(), reactOwner.getProfileMedia());
-
-                                PostReaction postReaction = new PostReaction(postReactDetail.getReactId(), postReactDetail.getReactTitle(),
-                                        postReactDetail.getPostOwnerId(), postReactDetail.getLikes(), postReactDetail.getViews(),
-                                        postReactDetail.getCanLike(), postReactDetail.getCanDelete(),
-                                        postReactDetail.getMediaDetail(), miniProfile, postReactDetail.getReactedAt());
-
+                                PostReaction postReaction = new PostReaction(
+                                        postReactDetail.getReactId(),
+                                        postReactDetail.getReactTitle(),
+                                        postReactDetail.getPostOwnerId(),
+                                        postReactDetail.getLikes(),
+                                        postReactDetail.getViews(),
+                                        postReactDetail.getCanLike(),
+                                        postReactDetail.getCanDelete(),
+                                        postReactDetail.getMediaDetail(),
+                                        new MiniProfile(reactOwner.getUserId(),
+                                                reactOwner.getUserName(),
+                                                reactOwner.getFirstName(),
+                                                reactOwner.getLastName(),
+                                                reactOwner.getHasProfileMedia(),
+                                                reactOwner.getProfileMedia()),
+                                        postReactDetail.getReactedAt());
                                 //play video in exo player
-                                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                                playOnlineVideoInExoPlayer(fragment, postReaction);
                             } else {
-                                Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(fragment.getContext(), R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
                             }
                         } else
-                            Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(fragment.getContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<ReactionResponse> call, Throwable t) {
-                        Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

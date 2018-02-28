@@ -140,9 +140,8 @@ public class ExoPlayerHelper {
                     drmSessionManager = buildDrmSessionManager(drmSchemeUuid, drmLicenseUrl,  //
                             keyRequestPropertiesArray, mainHandler);
                 } catch (UnsupportedDrmException e) {
-                    int errorStringId = Util.SDK_INT < 18 ? im.ene.toro.R.string.error_drm_not_supported
-                            : (e.reason == REASON_UNSUPPORTED_SCHEME ?  //
-                            im.ene.toro.R.string.error_drm_unsupported_scheme : im.ene.toro.R.string.error_drm_unknown);
+                    int errorStringId = e.reason == REASON_UNSUPPORTED_SCHEME ?  //
+                            im.ene.toro.R.string.error_drm_unsupported_scheme : im.ene.toro.R.string.error_drm_unknown;
                     Toast.makeText(context, errorStringId, Toast.LENGTH_SHORT).show();
                     return;
                 }

@@ -38,7 +38,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 
@@ -54,8 +53,7 @@ public class TagsAndCategoryFragment extends Fragment {
     @BindView(R.id.headerTextView) ProximaNovaRegularAutoCompleteTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_save) ProximaNovaSemiboldButton doneBtn;
-    @BindView(R.id.no_friends_text_view)
-    ProximaNovaBoldTextView noFriendsTextView;
+    @BindView(R.id.no_friends_text_view) ProximaNovaBoldTextView noFriendsTextView;
 
     private String action;
     private ArrayList<Category> categories;
@@ -146,17 +144,17 @@ public class TagsAndCategoryFragment extends Fragment {
             default:
                 break;
         }
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 5) {
-                    changeDoneBtnVisibility(INVISIBLE);
-                }
-                else if (dy < -5) {
-                    changeDoneBtnVisibility(VISIBLE);
-                }
-            }
-        });
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (dy > 5) {
+//                    changeDoneBtnVisibility(INVISIBLE);
+//                }
+//                else if (dy < -5) {
+//                    changeDoneBtnVisibility(VISIBLE);
+//                }
+//            }
+//        });
     }
 
     private void getCategories() {

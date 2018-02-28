@@ -1,6 +1,8 @@
 package com.cncoding.teazer.model.friends;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.user.PrivateProfile;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,38 +11,25 @@ import com.google.gson.annotations.SerializedName;
  * Created by farazhabib on 13/11/17.
  */
 
-public class ProfileInfo {
+public class ProfileInfo extends BaseModel {
 
-    @SerializedName("total_videos")
-    @Expose
-    private Integer totalVideos;
-    @SerializedName("total_reactions")
-    @Expose
-    private Integer totalReactions;
+    @SerializedName("total_videos") @Expose private Integer totalVideos;
+    @SerializedName("total_reactions") @Expose private Integer totalReactions;
+    @SerializedName("private_profile") @Expose private PrivateProfile privateProfile;
+    @SerializedName("public_profile") @Expose private PublicProfile publicProfile;
+    @SerializedName("followers") @Expose private Integer followers;
+    @SerializedName("followings") @Expose private Integer followings;
+    @SerializedName("follow_info") @Expose private FollowInfo followInfo;
+    @SerializedName("is_hided_all_posts") @Expose private Boolean isHidedAllPosts;
 
-    public Integer getTotalReactions() {
-        return totalReactions;
+    public ProfileInfo(Throwable error) {
+        this.error = error;
     }
 
-    @SerializedName("private_profile")
-    @Expose
-    private PrivateProfile privateProfile;
-    @SerializedName("public_profile")
-    @Expose
-    private PublicProfile publicProfile;
-    @SerializedName("followers")
-    @Expose
-    private Integer followers;
-    @SerializedName("followings")
-    @Expose
-    private Integer followings;
-    @SerializedName("follow_info")
-    @Expose
-    private FollowInfo followInfo;
-
-    @SerializedName("is_hided_all_posts")
-    @Expose
-    private Boolean isHidedAllPosts;
+    public ProfileInfo setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     public Integer getTotalVideos() {
         return totalVideos;
@@ -92,6 +81,14 @@ public class ProfileInfo {
 
     public Boolean getIsHidedAllPosts() {
         return isHidedAllPosts;
+    }
+
+    public Integer getTotalReactions() {
+        return totalReactions;
+    }
+
+    public void setTotalReactions(Integer totalReactions) {
+        this.totalReactions = totalReactions;
     }
 
     public void setIsHidedAllPosts(Boolean isHidedAllPosts) {

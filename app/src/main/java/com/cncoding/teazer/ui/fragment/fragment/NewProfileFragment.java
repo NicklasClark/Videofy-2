@@ -141,14 +141,14 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = container.getContext();
-        View view = inflater.inflate(R.layout.fragment_profile_scrol, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_profile3, container, false);
         ButterKnife.bind(this, view);
         mToolbar = view.findViewById(R.id.main_toolbar);
         mTitle = view.findViewById(R.id.main_textview_title);
         mTitleContainer = view.findViewById(R.id.main_linearlayout_title);
         mAppBarLayout = view.findViewById(R.id.main_appbar);
 
-        placeholder = view.findViewById(R.id.placeholder);
+//        placeholder = view.findViewById(R.id.placeholder);
         _name = view.findViewById(R.id.name);
         _username = view.findViewById(R.id.username);
         _detail = view.findViewById(R.id.detail);

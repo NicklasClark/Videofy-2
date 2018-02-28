@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.react;
 
+import com.cncoding.teazer.model.base.MediaDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,42 +9,19 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class PostReactDetail {
-    @SerializedName("react_id")
-    @Expose
-    private Integer reactId;
-    @SerializedName("post_id")
-    @Expose
-    private Integer postId;
-    @SerializedName("post_owner_id")
-    @Expose
-    private Integer postOwnerId;
-    @SerializedName("react_title")
-    @Expose
-    private String reactTitle;
-    @SerializedName("likes")
-    @Expose
-    private Integer likes;
-    @SerializedName("views")
-    @Expose
-    private Integer views;
-    @SerializedName("can_like")
-    @Expose
-    private Boolean canLike;
-    @SerializedName("my_self")
-    @Expose
-    private Boolean mySelf;
-    @SerializedName("can_delete")
-    @Expose
-    private Boolean canDelete;
-    @SerializedName("media_detail")
-    @Expose
-    private MediaDetail mediaDetail;
-    @SerializedName("react_owner")
-    @Expose
-    private ReactOwner reactOwner;
-    @SerializedName("reacted_at")
-    @Expose
-    private String reactedAt;
+
+    @SerializedName("react_id") @Expose private Integer reactId;
+    @SerializedName("post_id") @Expose private Integer postId;
+    @SerializedName("post_owner_id") @Expose private Integer postOwnerId;
+    @SerializedName("react_title") @Expose private String reactTitle;
+    @SerializedName("likes") @Expose private Integer likes;
+    @SerializedName("views") @Expose private Integer views;
+    @SerializedName("can_like") @Expose private Boolean canLike;
+    @SerializedName("my_self") @Expose private Boolean mySelf;
+    @SerializedName("can_delete") @Expose private Boolean canDelete;
+    @SerializedName("media_detail") @Expose private MediaDetail mediaDetail;
+    @SerializedName("react_owner") @Expose private ReactOwner reactOwner;
+    @SerializedName("reacted_at") @Expose private String reactedAt;
 
     public Integer getReactId() {
         return reactId;

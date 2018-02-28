@@ -1,18 +1,19 @@
 package com.cncoding.teazer.utilities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.view.View;
 
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 
 import java.lang.annotation.Retention;
@@ -58,40 +59,47 @@ public class NavigationController {
     @NonNull private final List<Stack<Fragment>> fragmentStacks;
     @NonNull private final FragmentManager fragmentManager;
     private final NavigationTransactionOptions defaultTransactionOptions;
+    private final Activity activity;
     @TabIndex private int selectedTabIndex;
     private int tagCount;
     @Nullable private Fragment currentFragment;
-    @Nullable private DialogFragment currentDialogFragment;
+//    @Nullable private DialogFragment currentDialogFragment;
     @Nullable private RootFragmentListener rootFragmentListener;
     @Nullable private TransactionListener transactionListener;
     private boolean executingTransaction;
 
     //region Construction and setup
 
-    private NavigationController(Builder builder, @Nullable Bundle savedInstanceState) {
+    private NavigationController(final Builder builder, @Nullable final Bundle savedInstanceState) {
         fragmentManager = builder.fragmentManager;
         containerId = builder.containerId;
         fragmentStacks = new ArrayList<>(builder.numberOfTabs);
         rootFragmentListener = builder.rootFragmentListener;
         transactionListener = builder.transactionListener;
+        activity = builder.activity;
         defaultTransactionOptions = builder.defaultTransactionOptions;
         selectedTabIndex = builder.mSelectedTabIndex;
 
-        //Attempt to restore from bundle, if not, initialize
-        if (!restoreFromBundle(savedInstanceState, builder.rootFragments)) {
+        new Thread(new Runnable() {
+            public void run() {
+                //Attempt to restore from bundle, if not, initialize
+                if (!restoreFromBundle(savedInstanceState, builder.rootFragments)) {
 
-            for (int i = 0; i < builder.numberOfTabs; i++) {
-                Stack<Fragment> stack = new Stack<>();
-                if (builder.rootFragments != null) {
-                    stack.add(builder.rootFragments.get(i));
+                    for (int i = 0; i < builder.numberOfTabs; i++) {
+                        Stack<Fragment> stack = new Stack<>();
+                        if (builder.rootFragments != null) {
+                            stack.add(builder.rootFragments.get(i));
+                        }
+                        fragmentStacks.add(stack);
+                    }
+
+                    initialize(builder.mSelectedTabIndex);
                 }
-                fragmentStacks.add(stack);
             }
-
-            initialize(builder.mSelectedTabIndex);
-        }
+        }).start();
     }
 
+    @NonNull
     public static Builder newBuilder(@Nullable Bundle savedInstanceState, FragmentManager fragmentManager, int containerId) {
         return new Builder(savedInstanceState, fragmentManager, containerId);
     }
@@ -165,7 +173,7 @@ public class NavigationController {
      * @param fragment           The fragment that is to be pushed
      * @param transactionOptions Transaction options to be displayed
      */
-    public void pushFragment(@Nullable Fragment fragment, @Nullable NavigationTransactionOptions transactionOptions) {
+    public void pushFragment(@Nullable final Fragment fragment, @Nullable NavigationTransactionOptions transactionOptions) {
         if (fragment != null && selectedTabIndex != NO_TAB) {
             FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
@@ -176,7 +184,12 @@ public class NavigationController {
 
             executePendingTransactions();
 
-            fragmentStacks.get(selectedTabIndex).push(fragment);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentStacks.get(selectedTabIndex).push(fragment);
+                }
+            }).start();
 
             currentFragment = fragment;
             if (transactionListener != null) {
@@ -190,7 +203,7 @@ public class NavigationController {
      *
      * @param fragment The fragment that is to be pushed
      */
-    public void pushFragmentOnto(@Nullable Fragment fragment) {
+    public void pushFragmentOnto(@Nullable final Fragment fragment) {
         if (fragment != null && selectedTabIndex != NO_TAB) {
             FragmentTransaction ft = createTransactionWithOptions(null);
 
@@ -202,7 +215,12 @@ public class NavigationController {
 
                 executePendingTransactions();
 
-                fragmentStacks.get(selectedTabIndex).push(fragment);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentStacks.get(selectedTabIndex).push(fragment);
+                    }
+                }).start();
 
                 currentFragment = fragment;
 
@@ -319,60 +337,64 @@ public class NavigationController {
      * @param transactionOptions Transaction options to be displayed
      */
     public void clearStack(@Nullable NavigationTransactionOptions transactionOptions) {
-        if (selectedTabIndex == NO_TAB) {
-            return;
-        }
-
-        //Grab Current stack
-        Stack<Fragment> fragmentStack = fragmentStacks.get(selectedTabIndex);
-
-        // Only need to start popping and reattach if the stack is greater than 1
-        if (fragmentStack.size() > 1) {
-            Fragment fragment;
-            FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
-
-            //Pop all of the fragments on the stack and remove them from the FragmentManager
-            while (fragmentStack.size() > 1) {
-                fragment = fragmentManager.findFragmentByTag(fragmentStack.pop().getTag());
-                if (fragment != null) {
-                    ft.remove(fragment);
-                }
+        try {
+            if (selectedTabIndex == NO_TAB) {
+                return;
             }
 
-            //Attempt to reattach previous fragment
-            fragment = reattachPreviousFragment(ft);
+            //Grab Current stack
+            Stack<Fragment> fragmentStack = fragmentStacks.get(selectedTabIndex);
 
-            boolean bShouldPush = false;
-            //If we can't reattach, either pull from the stack, or create a new root fragment
-            if (fragment != null) {
-                ft.commit();
-            } else {
-                if (!fragmentStack.isEmpty()) {
-                    fragment = fragmentStack.peek();
-                    ft.add(containerId, fragment, fragment.getTag());
+            // Only need to start popping and reattach if the stack is greater than 1
+            if (fragmentStack.size() > 1) {
+                Fragment fragment;
+                FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
+
+                //Pop all of the fragments on the stack and remove them from the FragmentManager
+                while (fragmentStack.size() > 1) {
+                    fragment = fragmentManager.findFragmentByTag(fragmentStack.pop().getTag());
+                    if (fragment != null) {
+                        ft.remove(fragment);
+                    }
+                }
+
+                //Attempt to reattach previous fragment
+                fragment = reattachPreviousFragment(ft);
+
+                boolean bShouldPush = false;
+                //If we can't reattach, either pull from the stack, or create a new root fragment
+                if (fragment != null) {
                     ft.commit();
                 } else {
-                    fragment = getRootFragment(selectedTabIndex);
-                    ft.add(containerId, fragment, generateTag(fragment));
-                    ft.commit();
+                    if (!fragmentStack.isEmpty()) {
+                        fragment = fragmentStack.peek();
+                        ft.add(containerId, fragment, fragment.getTag());
+                        ft.commit();
+                    } else {
+                        fragment = getRootFragment(selectedTabIndex);
+                        ft.add(containerId, fragment, generateTag(fragment));
+                        ft.commit();
 
-                    bShouldPush = true;
+                        bShouldPush = true;
+                    }
+                }
+
+                executePendingTransactions();
+
+                if (bShouldPush) {
+                    fragmentStacks.get(selectedTabIndex).push(fragment);
+                }
+
+                //Update the stored version we have in the list
+                fragmentStacks.set(selectedTabIndex, fragmentStack);
+
+                currentFragment = fragment;
+                if (transactionListener != null) {
+                    transactionListener.onFragmentTransaction(currentFragment, TransactionType.POP);
                 }
             }
-
-            executePendingTransactions();
-
-            if (bShouldPush) {
-                fragmentStacks.get(selectedTabIndex).push(fragment);
-            }
-
-            //Update the stored version we have in the list
-            fragmentStacks.set(selectedTabIndex, fragmentStack);
-
-            currentFragment = fragment;
-            if (transactionListener != null) {
-                transactionListener.onFragmentTransaction(currentFragment, TransactionType.POP);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -428,106 +450,15 @@ public class NavigationController {
     public void replaceFragment(@NonNull Fragment fragment) {
         replaceFragment(fragment, null);
     }
-
-    /**
-     * @return Current DialogFragment being displayed. Null if none
-     */
-    @Nullable
-    @CheckResult
-    public DialogFragment getCurrentDialogFragment() {
-        if (currentDialogFragment != null) {
-            return currentDialogFragment;
-        }
-        //Else try to find one in the FragmentManager
-        else {
-            FragmentManager fragmentManager;
-            if (currentFragment != null) {
-                fragmentManager = currentFragment.getChildFragmentManager();
-            } else {
-                fragmentManager = this.fragmentManager;
-            }
-            if (fragmentManager.getFragments() != null) {
-                for (Fragment fragment : fragmentManager.getFragments()) {
-                    if (fragment instanceof DialogFragment) {
-                        currentDialogFragment = (DialogFragment) fragment;
-                        break;
-                    }
-                }
-            }
-        }
-        return currentDialogFragment;
-    }
-
-    /**
-     * Clear any DialogFragments that may be shown
-     */
-    public void clearDialogFragment() {
-        if (currentDialogFragment != null) {
-            currentDialogFragment.dismiss();
-            currentDialogFragment = null;
-        }
-        // If we don't have the current dialog, try to find and dismiss it
-        else {
-            FragmentManager fragmentManager;
-            if (currentFragment != null) {
-                fragmentManager = currentFragment.getChildFragmentManager();
-            } else {
-                fragmentManager = this.fragmentManager;
-            }
-
-            if (fragmentManager.getFragments() != null) {
-                for (Fragment fragment : fragmentManager.getFragments()) {
-                    if (fragment instanceof DialogFragment) {
-                        ((DialogFragment) fragment).dismiss();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Display a DialogFragment on the screen
-     *
-     * @param dialogFragment The Fragment to be Displayed
-     */
-    public void showDialogFragment(@Nullable DialogFragment dialogFragment) {
-        if (dialogFragment != null) {
-            FragmentManager fragmentManager;
-            if (currentFragment != null) {
-                fragmentManager = currentFragment.getChildFragmentManager();
-            } else {
-                fragmentManager = this.fragmentManager;
-            }
-
-            //Clear any current dialog fragments
-            if (fragmentManager.getFragments() != null) {
-                for (Fragment fragment : fragmentManager.getFragments()) {
-                    if (fragment instanceof DialogFragment) {
-                        ((DialogFragment) fragment).dismiss();
-                        currentDialogFragment = null;
-                    }
-                }
-            }
-
-            currentDialogFragment = dialogFragment;
-            try {
-                dialogFragment.show(fragmentManager, dialogFragment.getClass().getName());
-            } catch (IllegalStateException e) {
-                // Activity was likely destroyed before we had a chance to show, nothing can be done here.
-            }
-        }
-    }
-
     //endregion
 
     //region Private helper functions
-
     /**
      * Helper function to make sure that we are starting with a clean slate and to perform our first fragment interaction.
      *
      * @param index the tab index to initialize to
      */
-    private void initialize(@TabIndex int index) {
+    private void initialize(@TabIndex final int index) {
         selectedTabIndex = index;
         if (selectedTabIndex > fragmentStacks.size()) {
             throw new IndexOutOfBoundsException("Starting index cannot be larger than the number of stacks");
@@ -535,24 +466,25 @@ public class NavigationController {
 
         selectedTabIndex = index;
         clearFragmentManager();
-        clearDialogFragment();
 
         if (index == NO_TAB) {
             return;
         }
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                FragmentTransaction ft = createTransactionWithOptions(null);
+                Fragment fragment = getRootFragment(index);
+                ft.add(containerId, fragment, generateTag(fragment));
+                ft.commit();
+                executePendingTransactions();
 
-        FragmentTransaction ft = createTransactionWithOptions(null);
-
-        Fragment fragment = getRootFragment(index);
-        ft.add(containerId, fragment, generateTag(fragment));
-        ft.commit();
-
-        executePendingTransactions();
-
-        currentFragment = fragment;
-        if (transactionListener != null) {
-            transactionListener.onTabTransaction(currentFragment, selectedTabIndex);
-        }
+                currentFragment = fragment;
+                if (transactionListener != null) {
+                    transactionListener.onTabTransaction(currentFragment, selectedTabIndex);
+                }
+            }
+        });
     }
 
     /**
@@ -671,16 +603,21 @@ public class NavigationController {
      * Private helper function to clear out the fragment manager on initialization. All fragment management should be done via FragNav.
      */
     private void clearFragmentManager() {
-        if (fragmentManager.getFragments() != null) {
-            FragmentTransaction ft = createTransactionWithOptions(null);
-            for (Fragment fragment : fragmentManager.getFragments()) {
-                if (fragment != null) {
-                    ft.remove(fragment);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (fragmentManager.getFragments() != null) {
+                    FragmentTransaction ft = createTransactionWithOptions(null);
+                    for (Fragment fragment : fragmentManager.getFragments()) {
+                        if (fragment != null) {
+                            ft.remove(fragment);
+                        }
+                    }
+                    ft.commit();
+                    executePendingTransactions();
                 }
             }
-            ft.commit();
-            executePendingTransactions();
-        }
+        });
     }
 
     /**
@@ -923,14 +860,12 @@ public class NavigationController {
     //Declare the TabIndex annotation
     @IntDef({NO_TAB, TAB1, TAB2, TAB4, TAB5})// TAB3,
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TabIndex {
-    }
+    public @interface TabIndex {}
 
     // Declare Transit Styles
     @IntDef({FragmentTransaction.TRANSIT_NONE, FragmentTransaction.TRANSIT_FRAGMENT_OPEN, FragmentTransaction.TRANSIT_FRAGMENT_CLOSE, FragmentTransaction.TRANSIT_FRAGMENT_FADE})
     @Retention(RetentionPolicy.SOURCE)
-    @interface Transit {
-    }
+    @interface Transit {}
 
     public interface RootFragmentListener {
         /**
@@ -943,9 +878,7 @@ public class NavigationController {
     }
 
     public interface TransactionListener {
-
         void onTabTransaction(Fragment fragment, int index);
-
         void onFragmentTransaction(Fragment fragment, TransactionType transactionType);
     }
 
@@ -955,6 +888,7 @@ public class NavigationController {
         private RootFragmentListener rootFragmentListener;
         @TabIndex private int mSelectedTabIndex = TAB1;
         private TransactionListener transactionListener;
+        private Activity activity;
         private NavigationTransactionOptions defaultTransactionOptions;
         private int numberOfTabs = 0;
         private List<Fragment> rootFragments;
@@ -1029,11 +963,18 @@ public class NavigationController {
             return this;
         }
 
+        @NonNull
         public NavigationController build() {
             if (rootFragmentListener == null && rootFragments == null) {
                 throw new IndexOutOfBoundsException("Either a root fragment(s) needs to be set, or a fragment listener");
             }
             return new NavigationController(this, savedInstanceState);
+        }
+
+        @Contract(pure = true)
+        public Builder activity(Activity activity) {
+            this.activity = activity;
+            return this;
         }
     }
 }

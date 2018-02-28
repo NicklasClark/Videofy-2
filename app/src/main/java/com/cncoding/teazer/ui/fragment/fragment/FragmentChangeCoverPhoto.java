@@ -15,11 +15,12 @@ import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ChangeCoverPhotoAdapter;
-import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 
 /**
+ *
  * Created by farazhabib on 14/02/18.
  */
 
@@ -30,7 +31,6 @@ public class FragmentChangeCoverPhoto extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progress_bar;
     ChangeCoverPhotoAdapter changeCoverPhotoAdapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
     ArrayList<Object> coverPicList;
 
@@ -87,15 +87,14 @@ public class FragmentChangeCoverPhoto extends Fragment {
 
         recyclerView.setAdapter(changeCoverPhotoAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
-
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(next) {
-                    if(page>2)
-                    {
+                if (next) {
+                    if (page > 2) {
                     }
-                }}
+                }
+            }
         };
 
         recyclerView.addOnScrollListener(scrollListener);

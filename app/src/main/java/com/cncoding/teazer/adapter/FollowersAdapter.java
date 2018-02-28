@@ -21,7 +21,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.friends.NewUserInfo;
+import com.cncoding.teazer.model.friends.MyUserInfo;
 import com.cncoding.teazer.model.friends.UserInfo;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 
@@ -42,13 +42,13 @@ import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.ViewHolder> {
 
     private List<UserInfo> list;
-    private List<NewUserInfo> userlist;
+    private List<MyUserInfo> userlist;
     private Context context;
     private final int UNBLOCK_STATUS = 2;
     private int userfollowerstatus;
     private OtherProfileListener otherProfileListener;
 
-    public FollowersAdapter(Context context, List<NewUserInfo> userlist, int userfollowerstatus) {
+    public FollowersAdapter(Context context, List<MyUserInfo> userlist, int userfollowerstatus) {
         this.context = context;
         this.userlist = userlist;
         this.userfollowerstatus = userfollowerstatus;
@@ -84,7 +84,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                 final String usertype;
                 final  int requestId;
-                final NewUserInfo cont = userlist.get(i);
+                final MyUserInfo cont = userlist.get(i);
                 final String followername = cont.getUserName();
                 final boolean isfollowersDp = cont.getHasProfileMedia();
 

@@ -83,7 +83,7 @@
         android:paddingTop="7dp"
         android:paddingStart="@dimen/padding_half"
         android:paddingEnd="@dimen/padding_half"
-        android:layout_alignTop="@+id/reaction_post_thumb"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
     <RelativeLayout
@@ -123,6 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
+            android:drawablePadding="4dp"
             android:paddingTop="2dp"
             android:layout_marginEnd="6dp"
             android:textColor="@android:color/white"
@@ -136,6 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
+            android:drawablePadding="4dp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline_smaller"
             android:gravity="start|center_vertical"

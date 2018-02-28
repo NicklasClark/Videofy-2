@@ -71,7 +71,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 //                    Boolean mySelf, Integer accountType, Boolean hasProfileMedia, Boolean following, Boolean follower, Boolean requestSent,
 ////                    Integer requestId, Boolean requestRecieved, Medias profileMedia
 //
-//            updateFollowings.add(new UserInfo(otherlist.get(i).getUserId(), otherlist.get(i).getIsBlockedYou(), otherlist.get(i).getYouBlocked(), otherlist.get(i).getMySelf(), otherlist.get(i).getAccountType(), otherlist.get(i).getFollowing(),
+//            updateFollowings.add(new UserInfo(otherlist.get(i).getUserId(), otherlist.get(i).getIsBlockedYou(), otherlist.get(i).getYouBlocked(), otherlist.get(i).isMySelf(), otherlist.get(i).getAccountType(), otherlist.get(i).getFollowing(),
 //                    otherlist.get(i).getFollower(), otherlist.get(i).getRequestSent(), otherlist.get(i).getRequestRecieved()));
      //   }
     }

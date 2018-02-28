@@ -11,10 +11,11 @@ import android.view.MenuItem;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.authentication.ForgotPasswordFragment;
-import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
-import com.cncoding.teazer.authentication.LoginFragment;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.model.auth.BaseAuth;
+import com.cncoding.teazer.model.auth.Login;
+import com.cncoding.teazer.ui.authentication.ForgotPasswordFragment;
+import com.cncoding.teazer.ui.authentication.LoginFragment;
+import com.cncoding.teazer.ui.authentication.ResetPasswordFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,13 +25,13 @@ import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.TAG_FORGOT_PASSWORD_FRAGMENT;
-import static com.cncoding.teazer.MainActivity.TAG_FORGOT_PASSWORD_RESET_FRAGMENT;
 import static com.cncoding.teazer.MainActivity.TAG_LOGIN_FRAGMENT;
 import static com.cncoding.teazer.MainActivity.TAG_OTP_FRAGMENT;
+import static com.cncoding.teazer.MainActivity.TAG_RESET_PASSWORD_FRAGMENT;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
 
 public class ForgotPasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnForgotPasswordInteractionListener,
-        ForgotPasswordResetFragment.OnResetForgotPasswordInteractionListener,
+        ResetPasswordFragment.OnResetForgotPasswordInteractionListener,
         LoginFragment.LoginInteractionListener {
 
     @BindView(R.id.toolbar)
@@ -64,7 +65,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ForgotP
 
     @Override
     public void onForgotPasswordInteraction(String enteredText, int countryCode, boolean isEmail) {
-        setFragment(TAG_FORGOT_PASSWORD_RESET_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
+        setFragment(TAG_RESET_PASSWORD_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
     }
     private void setFragment(String tag, boolean addToBackStack, Object[] args) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -78,10 +79,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ForgotP
                 transaction.replace(R.id.main_fragment_container,
                         ForgotPasswordFragment.newInstance((String) args[0]), TAG_FORGOT_PASSWORD_FRAGMENT);
                 break;
-            case TAG_FORGOT_PASSWORD_RESET_FRAGMENT:
+            case TAG_RESET_PASSWORD_FRAGMENT:
                 if (args.length >= 3) {
                     transaction.replace(R.id.main_fragment_container,
-                            ForgotPasswordResetFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
+                            ResetPasswordFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
                             TAG_FORGOT_PASSWORD_FRAGMENT);
                 }
                 break;
@@ -99,19 +100,25 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ForgotP
     }
 
     @Override
-    public void onLoginFragmentInteraction(int action, Authorize authorize) {
-        switch (action) {
-            case LOGIN_WITH_PASSWORD_ACTION:
-                successfullyLoggedIn();
-                break;
-            case LOGIN_WITH_OTP_ACTION:
-                setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
-                break;
-            case FORGOT_PASSWORD_ACTION:
-                setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[] {authorize.getUsername()});
-                break;
-            default:
-                break;
+    public void onLoginFragmentInteraction(int action, BaseAuth baseAuth) {
+        try {
+            switch (action) {
+                case LOGIN_WITH_PASSWORD_ACTION:
+                    successfullyLoggedIn();
+                    break;
+                case LOGIN_WITH_OTP_ACTION:
+//                    InitiateLoginWithOtp initiateLoginWithOtp = (InitiateLoginWithOtp) baseAuth;
+                    setFragment(TAG_OTP_FRAGMENT, true, new Object[]{baseAuth, LOGIN_WITH_OTP_ACTION});
+                    break;
+                case FORGOT_PASSWORD_ACTION:
+                    Login login = (Login) baseAuth;
+                    setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[] {login.getUserName()});
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,8 +1,8 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -106,7 +106,7 @@ public class OpenProfilePicActivity extends AppCompatActivity {
     {
 
 
-        ApiCallingService.User.removeProfilepic(getApplicationContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.removeProfilePicture(getApplicationContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {

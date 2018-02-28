@@ -10,12 +10,9 @@ import java.util.List;
  */
 
 public class UserFollowerList {
-    @SerializedName("next_page")
-    @Expose
-    private Boolean nextPage;
-    @SerializedName("followers")
-    @Expose
-    private List<NewUserInfo> followers = null;
+
+    @SerializedName("next_page") @Expose private Boolean nextPage;
+    @SerializedName("followers") @Expose private List<MyUserInfo> followers = null;
 
     public Boolean getNextPage() {
         return nextPage;
@@ -25,11 +22,11 @@ public class UserFollowerList {
         this.nextPage = nextPage;
     }
 
-    public List<NewUserInfo> getFollowers() {
+    public List<MyUserInfo> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<NewUserInfo> followers) {
+    public void setFollowers(List<MyUserInfo> followers) {
         this.followers = followers;
     }
 

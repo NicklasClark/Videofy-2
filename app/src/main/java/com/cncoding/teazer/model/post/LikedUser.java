@@ -12,40 +12,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class LikedUser {
 
-
-    @SerializedName("user_id")
-    @Expose
-    private Integer userId;
-    @SerializedName("user_name")
-    @Expose
-    private String userName;
-    @SerializedName("first_name")
-    @Expose
-    private String firstName;
-    @SerializedName("last_name")
-    @Expose
-    private String lastName;
-    @SerializedName("my_self")
-    @Expose
-    private Boolean mySelf;
-    @SerializedName("is_blocked_you")
-    @Expose
-    private Boolean isBlockedYou;
-    @SerializedName("has_profile_media")
-    @Expose
-    private Boolean hasProfileMedia;
-    @SerializedName("you_blocked")
-    @Expose
-    private Boolean youBlocked;
-    @SerializedName("account_type")
-    @Expose
-    private Integer accountType;
-    @SerializedName("follow_info")
-    @Expose
-    private FollowInfo followInfo;
-    @SerializedName("profile_media")
-    @Expose
-    private ProfileMedia profileMedia;
+    @SerializedName("user_id") @Expose private Integer userId;
+    @SerializedName("user_name") @Expose private String userName;
+    @SerializedName("first_name") @Expose private String firstName;
+    @SerializedName("last_name") @Expose private String lastName;
+    @SerializedName("gender") @Expose private Integer gender;
+    @SerializedName("my_self") @Expose private Boolean mySelf;
+    @SerializedName("is_blocked_you") @Expose private Boolean isBlockedYou;
+    @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
+    @SerializedName("follow_info") @Expose private FollowInfo followInfo;
+    @SerializedName("you_blocked") @Expose private Boolean youBlocked;
+    @SerializedName("account_type") @Expose private Integer accountType;
+    @SerializedName("profile_media") @Expose private ProfileMedia profileMedia;
 
     public Integer getUserId() {
         return userId;
@@ -135,4 +113,11 @@ public class LikedUser {
         this.profileMedia = profileMedia;
     }
 
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 }

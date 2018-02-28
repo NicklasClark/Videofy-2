@@ -41,7 +41,7 @@
                     android:id="@+id/background_profile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ic_default_bg"
+                    android:background="@drawable/ic_bg_blur"
                     android:scaleType="centerCrop" />
 
                 <RelativeLayout

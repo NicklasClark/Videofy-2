@@ -1,14 +1,9 @@
 package com.cncoding.teazer.home.discover.adapters;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.util.DiffUtil;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -26,19 +21,28 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.home.BaseRecyclerView;
+import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
+import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
+import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
-import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
+import static android.support.v7.util.DiffUtil.calculateDiff;
+import static android.view.LayoutInflater.from;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
+import static com.cncoding.teazer.utilities.ViewUtils.getClassicCategoryBackground;
 import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
 import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
@@ -47,122 +51,21 @@ import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
  * Created by Prem $ on 11/24/2017.
  */
 
-public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.ViewHolder> {
+public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
 
-    private OnSubSearchInteractionListener mListener;
     private ArrayList<PostDetails> postDetailsArrayList;
     private SparseArray<Dimension> dimensionSparseArray;
-    private Context context;
-    private SparseIntArray colorArray;
+    private BaseDiscoverFragment fragment;
 
-    public SubDiscoverAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
-        this.postDetailsArrayList = postDetailsArrayList;
-        this.context = context;
-        dimensionSparseArray = new SparseArray<>();
-        if (context instanceof OnSubSearchInteractionListener) {
-            mListener = (SubDiscoverAdapter.OnSubSearchInteractionListener) context;
-        }
-        colorArray = new SparseIntArray();
+    public SubDiscoverAdapter(BaseDiscoverFragment fragment) {
+        this.fragment = fragment;
+        if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
+        if (dimensionSparseArray == null) dimensionSparseArray = new SparseArray<>();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sub_discover_post, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            initializeShimmer(holder.shimmerLayout, holder.topLayout, holder.bottomLayout, holder.vignetteLayout);
-
-            holder.postDetails = postDetailsArrayList.get(position);
-
-            /*Adjust view size before loading anything*/
-            if (dimensionSparseArray.get(position) == null) {
-                adjustViewSize(context, holder.postDetails.getMedias().get(0).getDimension().getWidth(),
-                        holder.postDetails.getMedias().get(0).getDimension().getHeight(),
-                        holder.layout.getLayoutParams(), position, dimensionSparseArray, false);
-            } else {
-                holder.layout.getLayoutParams().width = dimensionSparseArray.get(position).getWidth();
-                holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
-            }
-
-            holder.title.setText(decodeUnicodeString(holder.postDetails.getTitle()));
-
-            holder.category.setVisibility(holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0 ?
-                    View.VISIBLE : View.GONE);
-            if (holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0) {
-                holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
-                holder.category.setBackground(
-                        getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
-            }
-
-            String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
-            holder.name.setText(name);
-
-            String likes = BLANK_SPACE + String.valueOf(holder.postDetails.getLikes());
-            holder.likes.setText(likes);
-
-            String views = BLANK_SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
-            holder.views.setText(views);
-
-            if (holder.postDetails.getPostOwner().hasProfileMedia() && holder.postDetails.getPostOwner().getProfileMedia() != null) {
-                Glide.with(context)
-                        .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                        .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
-                        .into(holder.dp);
-            } else {
-                Glide.with(context)
-                        .load(R.drawable.ic_user_male_dp_small)
-                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                        .into(holder.dp);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Glide.with(context)
-                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .apply(new RequestOptions().skipMemoryCache(false))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                   DataSource dataSource, boolean isFirstResource) {
-                        prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
-                                holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
-                        return false;
-                    }
-                })
-                .into(holder.postThumbnail);
-
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.root_layout:
-                        mListener.onSubSearchInteraction(ACTION_VIEW_POST, holder.postDetails);
-                        break;
-                    case R.id.dp:
-                        mListener.onSubSearchInteraction(ACTION_VIEW_PROFILE, holder.postDetails);
-                        break;
-                    case R.id.name:
-                        mListener.onSubSearchInteraction(ACTION_VIEW_PROFILE, holder.postDetails);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-
-        holder.layout.setOnClickListener(listener);
-        holder.name.setOnClickListener(listener);
-        holder.dp.setOnClickListener(listener);
+    public SubDiscoverViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new SubDiscoverViewHolder(from(parent.getContext()).inflate(R.layout.item_sub_discover_post, parent, false));
     }
 
     @Override
@@ -170,7 +73,48 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         return postDetailsArrayList.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void release() {}
+
+    @Override
+    public void notifyDataChanged() {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void updatePosts(List<PostDetails> postDetailsList) {
+        try {
+            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
+            postDetailsArrayList.clear();
+            postDetailsArrayList.addAll(postDetailsList);
+            fragment.getParentActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    result.dispatchUpdatesTo(SubDiscoverAdapter.this);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                addPosts(postDetailsList);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private void addPosts(List<PostDetails> postDetailsList) {
+        if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
+        else postDetailsArrayList.clear();
+        postDetailsArrayList.addAll(postDetailsList);
+        notifyDataChanged();
+    }
+
+    protected class SubDiscoverViewHolder extends BaseRecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
@@ -186,25 +130,104 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         PostDetails postDetails;
 
-        public ViewHolder(View itemView) {
+        SubDiscoverViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
 
-    public interface OnSubSearchInteractionListener {
-        void onSubSearchInteraction(int action, PostDetails postDetails);
-    }
-
-    private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
-        GradientDrawable gradientDrawable = new GradientDrawable();
-        if (colorArray.get(position) == 0) {
-            colorArray.put(position, color);
+        @OnClick(R.id.root_layout) public void viewPost() {
+            fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
+                    null, false, null));
         }
-        gradientDrawable.setColor(Color.TRANSPARENT);
-        gradientDrawable.setCornerRadius(3);
-        gradientDrawable.setStroke(1, colorArray.get(position));
-        title.setTextColor(colorArray.get(position));
-        return gradientDrawable;
+
+        @OnClick(R.id.dp) public void dpClicked() {
+            viewProfile();
+        }
+
+        @OnClick(R.id.name) public void nameClicked() {
+            viewProfile();
+        }
+
+        private void viewProfile() {
+            fragment.navigation.pushFragment(postDetails.canDelete() ?
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
+                            "", postDetails.getPostOwner().getUserName()));
+        }
+
+        @Override
+        public void bind() {
+            try {
+                initializeShimmer(shimmerLayout, topLayout, bottomLayout, vignetteLayout);
+
+                postDetails = postDetailsArrayList.get(getAdapterPosition());
+
+                /*Adjust view size before loading anything*/
+                if (dimensionSparseArray.get(getAdapterPosition()) == null) {
+                    adjustViewSize(fragment.getContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                            postDetails.getMedias().get(0).getMediaDimension().getHeight(),
+                            layout.getLayoutParams(), getAdapterPosition(), dimensionSparseArray, false);
+                } else {
+                    layout.getLayoutParams().width = dimensionSparseArray.get(getAdapterPosition()).getWidth();
+                    layout.getLayoutParams().height = dimensionSparseArray.get(getAdapterPosition()).getHeight();
+                }
+
+                title.setText(decodeUnicodeString(postDetails.getTitle()));
+
+                category.setVisibility(postDetails.getCategories() != null && postDetails.getCategories().size() > 0 ?
+                        View.VISIBLE : View.GONE);
+                if (postDetails.getCategories() != null && postDetails.getCategories().size() > 0) {
+                    category.setText(postDetails.getCategories().get(0).getCategoryName());
+                    category.setBackground(getClassicCategoryBackground(category, postDetails.getCategories().get(0).getColor()));
+                }
+
+                String nameText = postDetails.getPostOwner().getFirstName() + BLANK_SPACE + postDetails.getPostOwner().getLastName();
+                name.setText(nameText);
+
+                String likesText = BLANK_SPACE + String.valueOf(postDetails.getLikes());
+                likes.setText(likesText);
+
+                String viewsText = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
+                views.setText(viewsText);
+
+                if (postDetails.getPostOwner().hasProfileMedia() && postDetails.getPostOwner().getProfileMedia() != null) {
+                    Glide.with(fragment)
+                            .load(postDetails.getPostOwner().getProfileMedia().getThumbUrl())
+                            .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                            .into(dp);
+                } else {
+                    Glide.with(fragment)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                            .into(dp);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Glide.with(fragment)
+                    .load(postDetails.getMedias().get(0).getThumbUrl())
+                    .apply(new RequestOptions().skipMemoryCache(false))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                       DataSource dataSource, boolean isFirstResource) {
+                            prepareLayout(layout, shimmerLayout, topLayout, bottomLayout,
+                                    vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                            return false;
+                        }
+                    })
+                    .into(postThumbnail);
+        }
+
+        @Override
+        public void bind(List<Object> payloads) {
+            super.bind(payloads);
+        }
     }
 }

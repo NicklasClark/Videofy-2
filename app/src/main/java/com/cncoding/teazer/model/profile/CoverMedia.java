@@ -1,10 +1,11 @@
 package com.cncoding.teazer.model.profile;
 
-import com.cncoding.teazer.model.react.MediaDimension;
+import com.cncoding.teazer.model.base.Dimension;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ *
  * Created by farazhabib on 16/02/18.
  */
 
@@ -33,7 +34,7 @@ public class CoverMedia {
     private String duration;
     @SerializedName("media_dimension")
     @Expose
-    private MediaDimension mediaDimension;
+    private Dimension mediaDimension;
 
     public Integer getCoverImageId() {
         return coverImageId;
@@ -91,11 +92,11 @@ public class CoverMedia {
         this.duration = duration;
     }
 
-    public MediaDimension getMediaDimension() {
+    public Dimension getMediaDimension() {
         return mediaDimension;
     }
 
-    public void setMediaDimension(MediaDimension mediaDimension) {
+    public void setMediaDimension(Dimension mediaDimension) {
         this.mediaDimension = mediaDimension;
     }
 

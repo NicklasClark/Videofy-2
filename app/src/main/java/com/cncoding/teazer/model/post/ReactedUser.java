@@ -1,14 +1,17 @@
 package com.cncoding.teazer.model.post;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.model.base.ProfileMedia;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.cncoding.teazer.model.base.ProfileMedia;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  *
@@ -16,13 +19,13 @@ import com.cncoding.teazer.model.base.ProfileMedia;
  */
 
 @Entity(tableName = "ReactedUser")
-public class ReactedUser extends ViewModel implements Parcelable {
+public class ReactedUser extends BaseModel implements Parcelable {
 
     @SerializedName("user_id") @Expose private Integer user_id;
     @SerializedName("user_name") @Expose private String user_name;
     @SerializedName("first_name") @Expose private String first_name;
     @SerializedName("last_name") @Expose private String last_name;
-    @SerializedName("is_blocked_you") @Expose boolean is_blocked_you;
+    @SerializedName("is_blocked_you") @Expose private boolean is_blocked_you;
     @SerializedName("my_self") @Expose private boolean my_self;
     @SerializedName("has_profile_media") @Expose private boolean has_profile_media;
     @Embedded(prefix = "profileMedia_") @SerializedName("profile_media") @Expose private ProfileMedia profile_media;
@@ -104,19 +107,48 @@ public class ReactedUser extends ViewModel implements Parcelable {
         return last_name;
     }
 
-    public Boolean hasBlockedYou() {
+    public boolean hasBlockedYou() {
         return is_blocked_you;
     }
 
-    public Boolean getMySelf() {
+    public boolean isMySelf() {
         return my_self;
     }
 
-    public Boolean hasProfileMedia() {
+    public boolean hasProfileMedia() {
         return has_profile_media;
     }
 
     public ProfileMedia getProfileMedia() {
         return profile_media;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(10, 31)
+                .append(user_id)
+                .append(user_name)
+                .append(first_name)
+                .append(last_name)
+                .append(my_self)
+                .append(is_blocked_you)
+                .append(has_profile_media)
+                .append(profile_media)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof ReactedUser &&
+                new EqualsBuilder()
+                        .append(user_id, ((ReactedUser) obj).getUserId())
+                        .append(user_name, ((ReactedUser) obj).getUserName())
+                        .append(first_name, ((ReactedUser) obj).getFirstName())
+                        .append(last_name, ((ReactedUser) obj).getLastName())
+                        .append(my_self, ((ReactedUser) obj).isMySelf())
+                        .append(is_blocked_you, ((ReactedUser) obj).hasBlockedYou())
+                        .append(has_profile_media, ((ReactedUser) obj).hasProfileMedia())
+                        .append(profile_media, ((ReactedUser) obj).getProfileMedia())
+                        .isEquals();
     }
 }

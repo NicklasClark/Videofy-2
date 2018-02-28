@@ -1,12 +1,14 @@
 package com.cncoding.teazer.model.base;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 /**
  *
@@ -14,7 +16,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "CheckIn")
-public class CheckIn extends ViewModel implements Parcelable {
+public class CheckIn extends BaseModel implements Parcelable {
 
     @SerializedName("checkin_id") @Expose private int checkinId;
     @SerializedName("latitude") @Expose private double latitude;
@@ -74,5 +76,22 @@ public class CheckIn extends ViewModel implements Parcelable {
 
     public String getLocation() {
         return location;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 10;
+        result = 31 * result + checkinId;
+        long latitudeBits = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (latitudeBits ^ (latitudeBits >>> 32));
+        long longitudeBits = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (longitudeBits ^ (longitudeBits >>> 32));
+        result = 31 * result + location.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CheckIn && Objects.equals(getCheckinId(), ((CheckIn) obj).getCheckinId());
     }
 }

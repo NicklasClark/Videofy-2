@@ -4,33 +4,22 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.CountDownTimer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.cncoding.teazer.MainActivity;
-import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ErrorBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
-import com.cncoding.teazer.authentication.LoginFragment.LoginInteractionListener;
-import com.cncoding.teazer.authentication.SignupFragment2;
-import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.local.database.TeazerDB;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
@@ -42,15 +31,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
-import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
-import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
-import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
-import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
+import static android.net.ConnectivityManager.TYPE_WIFI;
+import static android.text.TextUtils.isDigitsOnly;
+import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.clearRetrofitWithAuthToken;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.EMAIL_FORMAT;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
+import static com.cncoding.teazer.ui.authentication.LoginFragment.USERNAME_FORMAT;
+import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static com.cncoding.teazer.utilities.SharedPrefs.clearMedia;
+import static com.cncoding.teazer.utilities.SharedPrefs.resetAuthToken;
 
 /**
  *
@@ -59,33 +49,30 @@ import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 public class AuthUtils {
 
-    public static boolean isUserLoggedIn(Context context) {
-        return SharedPrefs.getAuthToken(context) != null;
+    public static boolean isConnected(Context c) {
+        try {
+            //noinspection ConstantConditions
+            NetworkInfo info = ((ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, Context context) {
-        if (view.getCompoundDrawables()[2] != null) {
-            switch (view.getInputType()) {
-                case InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT:
-                    view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    view.setTypeface(new TypeFactory(context).regular);
-                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_viewfilled_cross, 0, 0, 0);
-
-                    view.setSelection(view.getText().length());
-                    return true;
-                case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
-                    view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
-                    view.setTypeface(new TypeFactory(context).regular);
-                    view.setSelection(view.getText().length());
-                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_view_filled, 0, 0, 0);
-
-                    view.setTypeface(new TypeFactory(context).regular);
-                    return true;
-                default:
-                    return false;
-            }
+    public static boolean isConnectedToWifi(Context c) {
+        try {
+            //noinspection ConstantConditions
+            NetworkInfo info = ((ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(TYPE_WIFI);
+            return info != null && info.isConnected();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
+    }
+
+    public static boolean isUserLoggedIn(Context context) {
+        return SharedPrefs.getAuthToken(context) != null;
     }
 
     public static void setCountryCode(Context context, int countryCode) {
@@ -127,11 +114,12 @@ public class AuthUtils {
                     }
                 }
             }
+            return "IN";
         }
         catch (Exception e) {
             e.printStackTrace();
+            return "US";
         }
-        return "US";
     }
 
     @NonNull
@@ -141,10 +129,7 @@ public class AuthUtils {
     }
 
     public static String getFcmToken(Context context) {
-//        Log.d("FCM Token", FirebaseInstanceId.getInstance().getToken());
         return SharedPrefs.getFcmToken(context) == null ? FirebaseInstanceId.getInstance().getToken() : SharedPrefs.getFcmToken(context);
-
-
     }
 
     /**
@@ -155,9 +140,9 @@ public class AuthUtils {
      *         12, if the text entered is a username.
      *         -1, if the entered text is empty.
      * */
-    private static int getEnteredUserFormat(String text) {
+    public static int getEnteredUserFormat(String text) {
         if (!text.isEmpty()) {
-            if (TextUtils.isDigitsOnly(text)) {
+            if (isDigitsOnly(text)) {
 //                    Phone number is entered
                 return PHONE_NUMBER_FORMAT;
             }
@@ -173,239 +158,28 @@ public class AuthUtils {
     }
 
     public static boolean isValidEmailAddress(String email) {
-//        boolean result = true;
-//        try {
-//            InternetAddress emailAddress = new InternetAddress(email);
-//            emailAddress.validate();
-//        } catch (AddressException ex) {
-//            result = false;
-//        }
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
-        char[] chars = phoneNumber.toCharArray();
-        return chars.length >= 4 && chars.length <= 13;
-    }
-
-    public static void validateUsername(ProximaNovaRegularAutoCompleteTextView usernameView, FragmentActivity activity) {
-        if (!usernameView.getText().toString().isEmpty()) {
-            switch (getEnteredUserFormat(usernameView.getText().toString())) {
-                case PHONE_NUMBER_FORMAT:
-//                    countryCode = getCountryCode(countryCodePicker, getActivity());
-//                    if (countryCode == -1)
-//                        countryCodePicker.launchCountrySelectionDialog();
-//                    else
-                    if (isValidPhoneNumber(usernameView.getText().toString()))
-                        ApiCallingService.Auth.checkPhoneNumber(activity, getCountryCode(null, activity), usernameView, false);
-                    else
-                        ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
-                    break;
-                case EMAIL_FORMAT:
-                    if (AuthUtils.isValidEmailAddress(usernameView.getText().toString()))
-                        ApiCallingService.Auth.checkEmail(activity, usernameView, false);
-                    else
-                        ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
-                    break;
-                case USERNAME_FORMAT:
-                    ApiCallingService.Auth.checkUsername(activity, usernameView, false);
-                    break;
-                default:
-                    break;
-            }
+        if (isDigitsOnly(phoneNumber)) {
+            char[] chars = phoneNumber.toCharArray();
+            return chars.length >= 4 && chars.length <= 13;
         } else {
-            ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+            return false;
         }
     }
 
-    public static boolean isPasswordValid(ProximaNovaRegularAutoCompleteTextView view) {
-        return view.getText().toString().length() >= 5;
-    }
-
-    public static void performInitialSignUp(Context context, final SignupFragment2.OnFinalSignupInteractionListener mListener,
-                                            final Authorize authorize, final ProximaNovaSemiboldButton signupBtn,
-                                            final String picturePath) {
-        ApiCallingService.Auth.performSignUp(context, authorize).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    if (response.body().getStatus()) {
-                        mListener.onFinalEmailSignupInteraction(authorize, picturePath);
-                    } else {
-                        showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
-                                "Or you may have reached maximum OTP retry attempts");
-                    }
-                } else
-                    showSnackBar(signupBtn, getErrorMessage(response.errorBody()));
-                signupBtn.setEnabled(true);
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-                signupBtn.setEnabled(true);
-            }
-        });
-    }
-
-    public static void performFinalSignup(final Context context, final Authorize verify, final CountDownTimer countDownTimer,
-                                          final ProximaNovaRegularTextView otpVerifiedTextView,
-                                          final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn,
-                                          final String picturePath) {
-        ApiCallingService.Auth.verifySignUp(context, verify)
-
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, final Response<ResultObject> response) {
-                        switch (response.code()) {
-//                    Authorize successful
-                            case 201:
-                                countDownTimer.cancel();
-                                otpVerifiedTextView.setText(context.getString(R.string.verified));
-                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
-                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.btn_checked);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mListener.onOtpInteraction(verify, picturePath);
-                                    }
-                                }, 1000);
-                                break;
-//                    Username, Email or Phone Number already exists
-                            case 200:
-                                countDownTimer.cancel();
-                                otpVerifiedTextView.setText(R.string.wrong_otp);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        otpVerifiedTextView.setText("");
-                                    }
-                                }, 2800);
-                                otpResendBtn.setEnabled(true);
-                                otpResendBtn.setAlpha(1);
-                                break;
-//                    Failed, Invalid JSON or validation failed
-                            default:
-                                showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
-    }
-
-    public static void stopCircularReveal(final View view) {
-        view.animate().alpha(0).setDuration(280).start();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                view.setVisibility(View.INVISIBLE);
-            }
-        }, 280);
-    }
-
-    /**
-     * Login Step 1.
-     * */
-    public static void loginWithOtp(final Context context, final String username, final int countryCode,
-                                    final LoginInteractionListener mListener, final ProximaNovaSemiboldButton loginBtn,
-                                    final ProgressBar progressBar, final ProximaNovaRegularTextView otpVerifiedTextView,
-                                    final CountDownTimer[] countDownTimer, final boolean isResendAction) {
-        final Authorize authorize = new Authorize(Long.parseLong(username), countryCode);
-        ApiCallingService.Auth.loginWithOtp(context, authorize).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    if (response.body().getStatus()) {
-                        if (!isResendAction) {
-                            if (mListener != null)
-
-                                //fabric event
-                                logLoginEvent("OTP", true, username);
-
-                            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, authorize);
-                        } else {
-                            countDownTimer[0] = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, loginBtn);
-                            countDownTimer[0].start();
-                            Snackbar.make(loginBtn, "New otp sent to " + username, Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                    else Snackbar.make(loginBtn, R.string.login_through_otp_error, Snackbar.LENGTH_LONG).show();
-                } else
-                    showSnackBar(loginBtn, getErrorMessage(response.errorBody()));
-                loginBtn.setEnabled(true);
-                if (!isResendAction)
-                    stopCircularReveal(progressBar);
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-                loginBtn.setEnabled(true);
-                if (!isResendAction)
-                    stopCircularReveal(progressBar);
-
-                //fabric event
-                logLoginEvent("OTP", false, username);
-
-            }
-        });
-    }
-
-    /**
-     * Login step 2.
-     * */
-    public static void verifyOtpLogin(final Context context, Authorize userSignUpDetails, int otp, final CountDownTimer countDownTimer,
-                                      final ProximaNovaRegularTextView otpVerifiedTextView,
-                                      final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
-        ApiCallingService.Auth.verifyLoginWithOtp(context,
-                new Authorize(
-                        getFcmToken(context),
-                        getDeviceId(context),
-                        DEVICE_TYPE_ANDROID,
-                        userSignUpDetails.getPhoneNumber(),
-                        userSignUpDetails.getCountryCode(),
-                        otp))
-
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, final Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            if (response.body().getStatus()) {
-                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
-                                SharedPrefs.saveUserId(context, response.body().getUser_id());//1
-                                countDownTimer.cancel();
-                                otpVerifiedTextView.setText(context.getString(R.string.verified));
-                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_check);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mListener != null)
-                                            mListener.onOtpInteraction(null, null);
-                                    }
-                                }, 1000);
-                            } else {
-                                Snackbar.make(otpVerifiedTextView, R.string.wrong_otp,
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } else
-                            showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
-
-                        otpResendBtn.setEnabled(true);
-                        otpResendBtn.setAlpha(1);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        otpResendBtn.setEnabled(true);
-                        otpResendBtn.setAlpha(1);
-                    }
-                });
+    public static void removeView(final View view) {
+        if (view.getVisibility() == View.VISIBLE) {
+            view.animate().alpha(0).setDuration(280).start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    view.setVisibility(View.INVISIBLE);
+                }
+            }, 280);
+        }
     }
 
     public static void logout(final Context context, @Nullable final Activity activity) {
@@ -414,18 +188,20 @@ public class AuthUtils {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-//                        if (response.code() == 200) {
-//                            if (response.body().getStatus()) {
-//                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                        else
-//                            Toast.makeText(context, "Logout failed, logging out manually...", Toast.LENGTH_SHORT).show();
                         LTFO();
                     }
 
                     private void LTFO() {
-                        SharedPrefs.resetAuthToken(context);
+                        resetAuthToken(context);
+                        clearMedia(context);
+                        clearRetrofitWithAuthToken();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TeazerDB.getInstance(context.getApplicationContext()).dao().clearTable();
+                                TeazerDB.destroyInstance();
+                            }
+                        }).start();
                         if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -455,11 +231,26 @@ public class AuthUtils {
             return "Something went wrong, Please try again";
     }
 
-//    public static void onLoginSuccessful(FragmentActivity activity) {
-//
-//    }
-//
-//    public static void onSignupSuccessful(FragmentActivity activity) {
-//
+//    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, Context context) {
+//        if (view.getCompoundDrawables()[2] != null) {
+//            switch (view.getInputType()) {
+//                case InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT:
+//                    view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    view.setTypeface(new TypeFactory(context).regular);
+//                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_viewfilled_cross, 0, 0, 0);
+//                    view.setSelection(view.getText().length());
+//                    return true;
+//                case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
+//                    view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+//                    view.setTypeface(new TypeFactory(context).regular);
+//                    view.setSelection(view.getText().length());
+//                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_view_filled, 0, 0, 0);
+//                    view.setTypeface(new TypeFactory(context).regular);
+//                    return true;
+//                default:
+//                    return false;
+//            }
+//        }
+//        return false;
 //    }
 }

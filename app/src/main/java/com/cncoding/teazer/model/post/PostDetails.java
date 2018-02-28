@@ -2,29 +2,33 @@ package com.cncoding.teazer.model.post;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.utilities.CommonUtilities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.Contract;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 @Entity
-public class PostDetails implements Parcelable {
+public class PostDetails extends BaseModel implements Parcelable {
 
     @PrimaryKey @SerializedName("post_id") @Expose private Integer postId;
     @SerializedName("posted_by") @Expose private Integer postedBy;
@@ -46,6 +50,42 @@ public class PostDetails implements Parcelable {
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
     @SerializedName("categories") @Expose private ArrayList<Category> categories;
+
+    public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
+                       Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete,
+                       Boolean isHided, Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn,
+                       ArrayList<Medias> medias, ArrayList<PostReaction> reactions, ArrayList<TaggedUser> taggedUsers,
+                       ArrayList<ReactedUser> reactedUsers, ArrayList<Category> categories) {
+        this.postId = postId;
+        this.postedBy = postedBy;
+        this.likes = likes;
+        this.totalReactions = totalReactions;
+        this.totalTags = totalTags;
+        this.hasCheckin = hasCheckin;
+        this.title = title;
+        this.canReact = canReact;
+        this.canLike = canLike;
+        this.canDelete = canDelete;
+        this.isHided = isHided;
+        this.isHidedAll = isHidedAll;
+        this.postOwner = postOwner;
+        this.createdAt = createdAt;
+        this.checkIn = checkIn;
+        this.medias = medias;
+        this.reactions = reactions;
+        this.taggedUsers = taggedUsers;
+        this.reactedUsers = reactedUsers;
+        this.categories = categories;
+    }
+
+    @Ignore public PostDetails(Throwable error) {
+        this.error = error;
+    }
+
+    public PostDetails setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     protected PostDetails(Parcel in) {
         postId = in.readByte() == 0 ? null : in.readInt();
@@ -74,33 +114,6 @@ public class PostDetails implements Parcelable {
         taggedUsers = in.createTypedArrayList(TaggedUser.CREATOR);
         reactedUsers = in.createTypedArrayList(ReactedUser.CREATOR);
         categories = in.createTypedArrayList(Category.CREATOR);
-    }
-
-    public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
-                       Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete, Boolean isHided,
-                       Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn, ArrayList<Medias> medias,
-                       ArrayList<PostReaction> reactions, ArrayList<TaggedUser> taggedUsers, ArrayList<ReactedUser> reactedUsers,
-                       ArrayList<Category> categories) {
-        this.postId = postId;
-        this.postedBy = postedBy;
-        this.likes = likes;
-        this.totalReactions = totalReactions;
-        this.totalTags = totalTags;
-        this.hasCheckin = hasCheckin;
-        this.title = title;
-        this.canReact = canReact;
-        this.canLike = canLike;
-        this.canDelete = canDelete;
-        this.isHided = isHided;
-        this.isHidedAll = isHidedAll;
-        this.postOwner = postOwner;
-        this.createdAt = createdAt;
-        this.checkIn = checkIn;
-        this.medias = medias;
-        this.reactions = reactions;
-        this.taggedUsers = taggedUsers;
-        this.reactedUsers = reactedUsers;
-        this.categories = categories;
     }
 
     @Override
@@ -158,14 +171,11 @@ public class PostDetails implements Parcelable {
     }
 
     public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
-        @NonNull
         @Override
         public PostDetails createFromParcel(Parcel in) {
             return new PostDetails(in);
         }
 
-        @NonNull
-        @Contract(pure = true)
         @Override
         public PostDetails[] newArray(int size) {
             return new PostDetails[size];
@@ -330,5 +340,62 @@ public class PostDetails implements Parcelable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 10;
+        result = 31 * result + postId;
+        result = 31 * result + postedBy;
+        result = 31 * result + likes;
+        result = 31 * result + totalReactions;
+        result = 31 * result + totalTags;
+        result = 31 * result + (hasCheckin ? 1 : 0);
+        result = 31 * result + title.hashCode();
+        result = 31 * result + (canReact ? 1 : 0);
+        result = 31 * result + (canLike ? 1 : 0);
+        result = 31 * result + (canDelete ? 1 : 0);
+        result = 31 * result + (isHided ? 1 : 0);
+        result = 31 * result + (isHidedAll ? 1 : 0);
+        result = 31 * result + createdAt.hashCode();
+        result = 31 * result + checkIn.hashCode();
+        result = 31 * result + CommonUtilities.hashCode(reactions);
+        result = 31 * result + CommonUtilities.hashCode(taggedUsers);
+        result = 31 * result + CommonUtilities.hashCode(reactedUsers);
+        result = 31 * result + CommonUtilities.hashCode(categories);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof PostDetails)) {
+            return false;
+        } else {
+            boolean result;
+            result = Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
+                    Objects.equals(likes, ((PostDetails) obj).getLikes()) &&
+                    Objects.equals(totalReactions, ((PostDetails) obj).getTotalReactions()) &&
+                    Objects.equals(hasCheckin, ((PostDetails) obj).hasCheckin()) &&
+                    Objects.equals(title, ((PostDetails) obj).getTitle()) &&
+                    Objects.equals(canReact, ((PostDetails) obj).canReact()) &&
+                    Objects.equals(canLike, ((PostDetails) obj).canLike()) &&
+                    Objects.equals(checkIn, ((PostDetails) obj).getCheckIn());
+            if (reactions != null && ((PostDetails) obj).getReactions() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (taggedUsers != null && ((PostDetails) obj).getTaggedUsers() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (reactedUsers != null && ((PostDetails) obj).getReactedUsers() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            if (categories != null && ((PostDetails) obj).getCategories() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+            return result;
+        }
     }
 }

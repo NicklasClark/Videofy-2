@@ -18,10 +18,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 
@@ -67,10 +67,9 @@ public class FragmentProfileMyCreations extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = new Bundle();
-        followerfollowingid = getArguments().getInt(ARG_ID);
-
-
+        if (getArguments() != null) {
+            followerfollowingid = getArguments().getInt(ARG_ID);
+        }
     }
 
     @Override
@@ -98,13 +97,11 @@ public class FragmentProfileMyCreations extends Fragment {
         list = new ArrayList<>();
 
         if(followerfollowingid==0) {
-
             getProfileVideos(1);
             profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
             recyclerView.setAdapter(profileMyCreationAdapter);
         }
-        else
-        {
+        else {
             getOtherUserProfileVideos(followerfollowingid,1);
             profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
             recyclerView.setAdapter(profileMyCreationAdapter);
@@ -155,8 +152,6 @@ public class FragmentProfileMyCreations extends Fragment {
                             progress_bar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                             loader.setVisibility(View.GONE);
-
-
                         }
                     }
                 } catch (Exception e) {

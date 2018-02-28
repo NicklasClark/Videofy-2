@@ -1,9 +1,5 @@
 package com.cncoding.teazer.home.post.detailspage;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,33 +9,33 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.home.BaseRecyclerView;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.cncoding.teazer.utilities.ViewUtils.getGenderSpecificDpSmall;
 
 /**
  *
  * Created by Prem $ on 11/17/2017.
  */
 
-public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedViewHolder> {
+public class TagListAdapter extends BaseRecyclerView.Adapter {
 
+    private List<TaggedUser> taggedUsers;
+    private PostDetailsFragment fragment;
 
-    private Context context;
-    private ArrayList<TaggedUser> taggedUserList;
-    private TaggedListInteractionListener mListener;
-    Fragment fragment;
-
-    TagListAdapter(Context context, ArrayList<TaggedUser> taggedUserList, Fragment fragment) {
-        this.context = context;
-        this.taggedUserList = taggedUserList;
-        this.fragment=fragment;
-
-        if (context instanceof TaggedListInteractionListener)
-            mListener = (TaggedListInteractionListener) context;
+    TagListAdapter(PostDetailsFragment fragment) {
+        this.fragment = fragment;
+        taggedUsers = new ArrayList<>();
     }
 
     @Override
@@ -49,70 +45,72 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
     }
 
     @Override
-    public void onBindViewHolder(final TaggedViewHolder holder, int i) {
+    public int getItemCount() {
+        return taggedUsers.size();
+    }
 
-        boolean imageURL = taggedUserList.get(i).hasProfileMedia();
+    @Override
+    public void release() {}
 
-        Log.d("TagListAdapter", "onBindViewHolder: imageurl"+imageURL);
-        Log.d("TagListAdapter", "onBindViewHolder: profile media"+taggedUserList.get(i).toString());
-        if(imageURL) {
-            Log.d("TagListAdapter", "onBindViewHolder: image url found");
-            String image = taggedUserList.get(i).getProfileMedia().getThumbUrl();
-            if(image != null) {
-                Log.d("TagListAdapter", "onBindViewHolder: image not null");
-                Glide.with(context)
-                        .load(image)
-                        .apply(new RequestOptions()
-                                .centerInside()
-                                .placeholder(R.drawable.ic_user_male_dp_small)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE))
-                        .into(holder.dp);
-            }  else {
-                Log.d("TagListAdapter", "onBindViewHolder: image null");
-                Glide.with(context)
-                        .load(R.drawable.ic_user_male_dp_small)
-                        .apply(new RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.NONE))
-                        .into(holder.dp);
-            }
-       }
-       else {
-           Log.d("TagListAdapter", "onBindViewHolder: image url not found");
-           Glide.with(context)
-                   .load(R.drawable.ic_user_male_dp_small)
-                   .apply(new RequestOptions()
-                           .diskCacheStrategy(DiskCacheStrategy.NONE))
-                   .into(holder.dp);
-       }
-
-        final int userId = taggedUserList.get(i).getUserId();
-        final boolean isSelf = taggedUserList.get(i).isMySelf();
-        holder.dp.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void notifyDataChanged() {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onClick(View view) {
-                ((FragmentPostDetails)fragment).callUserProfile(userId,isSelf);
-//                if (mListener != null)
-//                    mListener.onTaggedUserInteraction(userId, isSelf);
+            public void run() {
+                notifyDataSetChanged();
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return taggedUserList.size();
+    public void addPosts(final int page, final List<TaggedUser> taggedUserList) {
+        try {
+            if (page == 1) {
+                taggedUsers.clear();
+                taggedUsers.addAll(taggedUserList);
+                notifyDataChanged();
+            } else {
+                taggedUsers.addAll(taggedUserList);
+                fragment.getParentActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemRangeInserted((page - 1) * 10, taggedUserList.size());
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    class TaggedViewHolder extends RecyclerView.ViewHolder {
+    class TaggedViewHolder extends BaseRecyclerView.ViewHolder {
 
         @BindView(R.id.tagged_user_dp) CircularAppCompatImageView dp;
+        TaggedUser taggedUser;
 
         TaggedViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
 
-    public interface TaggedListInteractionListener {
-        void onTaggedUserInteraction(int userId, boolean isSelf);
+        @Override
+        public void bind() {
+            String image = null;
+            taggedUser = taggedUsers.get(getAdapterPosition());
+            if (taggedUser.getProfileMedia() != null)
+                image = taggedUser.getProfileMedia().getThumbUrl();
+            Glide.with(fragment)
+                    .load(image != null ? image : getGenderSpecificDpSmall(taggedUser.getGender()))
+                    .apply(new RequestOptions()
+                            .placeholder(getGenderSpecificDpSmall(taggedUser.getGender()))
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                    .into(dp);
+        }
+
+        @OnClick(R.id.tagged_user_dp) void openProfile() {
+            fragment.navigation.pushFragment(taggedUsers.get(getAdapterPosition()).isMySelf() ?
+                    ProfileFragment.newInstance() :
+                    OthersProfileFragment.newInstance(
+                            String.valueOf(taggedUsers.get(getAdapterPosition()).getUserId()), "", ""));
+        }
     }
 }

@@ -23,8 +23,10 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 
 import java.util.List;
 
@@ -41,11 +43,10 @@ import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.ViewHolder> {
 
-    private List<RecyclerView.LayoutManager> layoutManager;
+    private static final int UNBLOCK_STATUS = 2;
+    public static boolean isLikedUser = false;
     List<LikedUser> list;
     private Context context;
-    public static final int UNBLOCK_STATUS = 2;
-    public static boolean isLikedUser = false;
     PostDetails postDetails;
     Fragment fragment;
 
@@ -195,8 +196,8 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    ((FragmentLikedUser) fragment).callFragmentLikedUser(userId, ismyself);
+                    ((FragmentLikedUser) fragment).navigation.pushFragment(ismyself ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
                 }
             });
         } catch (Exception e) {

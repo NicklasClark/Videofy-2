@@ -51,8 +51,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.utilities.Annotations.PUBLIC_ACCOUNT;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -206,8 +206,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     if (response.code() == 200) {
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
-
-                                                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null);
+                                                            if (postReactDetail != null) {
+                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, true);
+                                                            } else {
+                                                                Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
+                                                            }
                                                         } else {
                                                             Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                                         }
@@ -221,8 +224,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 }
                                             });
                                 }
-                                else
-                                    {
+                                else {
                                         ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                                 .enqueue(new Callback<PostDetails>() {
                                                     @Override
@@ -396,7 +398,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     try {
                                                         if (response.code() == 200) {
                                                             if (response.body().getStatus()) {
-                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC){
+                                                                if (holder2.notification.getAccountType() == PUBLIC_ACCOUNT){
                                                                     setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                                                                     notificationsList.getNotifications().get(position).setFollowing(true);
 
@@ -616,7 +618,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
-                                if (holder.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC) {
+                                if (holder.notification.getAccountType() == PUBLIC_ACCOUNT) {
                                     setActionButton(holder.action, null, BUTTON_TYPE_FOLLOWING);
                                     holder.notification.setIs_actioned(true);
                                     holder.notification.setFollowing(true);
@@ -705,7 +707,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (response.code() == 200) {
                     try {
                         if (response.body().getStatus()) {
-                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                            if (holder2.notification.getAccountType() == PUBLIC_ACCOUNT)
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             else
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);

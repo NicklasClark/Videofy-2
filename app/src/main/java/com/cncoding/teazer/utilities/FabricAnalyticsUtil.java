@@ -27,8 +27,7 @@ public class FabricAnalyticsUtil {
         }
     }
 
-    public static void logLoginEvent(String medium, boolean isSuccess, String id)
-    {
+    public static void logLoginEvent(String medium, boolean isSuccess, String id) {
         if (id != null) {
             Answers.getInstance().logLogin(new LoginEvent()
                 .putMethod(medium)

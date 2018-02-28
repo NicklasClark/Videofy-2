@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
-    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+    tools:fragment="com.cncoding.teazer.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -183,7 +183,7 @@
                         android:layout_toStartOf="@+id/spacer1"/>
 
                     <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
-                        android:id="@+id/video_upload_check_btn"
+                        android:id="@+id/video_upload_btn"
                         style="@style/AppTheme.CancelUploadButtonsTheme"
                         app:drawableEndCompat="@drawable/ic_upload"
                         android:text="@string/upload"

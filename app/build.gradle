@@ -116,13 +116,13 @@ android.applicationVariants.all { variant ->
 }
 
 dependencies {
+    implementation 'org.apache.commons:commons-collections4:4.1'
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     implementation files('libs/javax.mail-1.6.0.jar')
     implementation "com.facebook.android:facebook-login:$fblibVersion"
     implementation "com.facebook.android:facebook-share:$fblibVersion"
@@ -195,11 +195,10 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:${archPersistenceVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archPersistenceVersion}"
     // Paging
-//    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
+    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
     // Dagger
     implementation "com.google.dagger:dagger:${daggerVersion}"
     implementation "com.google.dagger:dagger-android-support:${daggerVersion}"
-
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
 }
 

@@ -17,7 +17,8 @@ import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
+import com.cncoding.teazer.model.BaseModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +30,7 @@ import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSearchEvent;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.showKeyboard;
 
-public class DiscoverSearchFragment extends BaseFragment {
+public class DiscoverSearchFragment extends BaseDiscoverFragment {
 
     public static final String SEARCH_TERM = "searchTerm";
 
@@ -49,8 +50,7 @@ public class DiscoverSearchFragment extends BaseFragment {
         return new DiscoverSearchFragment();
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discover_search, container, false);
         ButterKnife.bind(this, rootView);
@@ -71,8 +71,7 @@ public class DiscoverSearchFragment extends BaseFragment {
         return rootView;
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         getParentActivity().updateToolbarTitle(getString(R.string.discover));
         searchBtn.requestFocus();
@@ -139,12 +138,15 @@ public class DiscoverSearchFragment extends BaseFragment {
         return false;
     }
 
-    @Override
-    public void onDetach() {
+    @Override public void onDetach() {
         getParentActivity().updateToolbarTitle(previousTitle);
         hideKeyboard(getActivity(), searchBtn);
         super.onDetach();
     }
+
+    @Override protected void handleResponse(BaseModel resultObject) {}
+
+    @Override protected void handleError(BaseModel baseModel) {}
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -159,8 +161,7 @@ public class DiscoverSearchFragment extends BaseFragment {
             this.searchTerm = searchTerm;
         }
 
-        @Override
-        public Fragment getItem(int position) {
+        @Override public Fragment getItem(int position) {
             switch (position) {
                 case 0:
                     return VideosTabFragment.newInstance(searchTerm);
@@ -171,14 +172,11 @@ public class DiscoverSearchFragment extends BaseFragment {
             }
         }
 
-        @Override
-        public int getItemPosition(@NonNull Object object) {
+        @Override public int getItemPosition(@NonNull Object object) {
             return POSITION_NONE;
         }
 
-        @Override
-        public int getCount() {
-            // Show 2 total pages.
+        @Override public int getCount() {
             return 2;
         }
 

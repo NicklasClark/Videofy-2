@@ -3,12 +3,15 @@ package com.cncoding.teazer.model.post;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
+import com.cncoding.teazer.utilities.Annotations.CallType;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class PostUploadResult implements Parcelable {
+public class PostUploadResult extends BaseModel implements Parcelable {
     private boolean status;
     private String message;
     private PostDetails post_details;
@@ -17,6 +20,15 @@ public class PostUploadResult implements Parcelable {
         this.status = status;
         this.message = message;
         this.post_details = post_details;
+    }
+
+    public PostUploadResult(Throwable error) {
+        this.error = error;
+    }
+
+    public PostUploadResult setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     protected PostUploadResult(Parcel in) {

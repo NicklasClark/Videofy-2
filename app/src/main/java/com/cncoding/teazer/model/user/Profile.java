@@ -3,14 +3,17 @@ package com.cncoding.teazer.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.utilities.Annotations.CallType;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Profile implements Parcelable {
+public class Profile extends BaseModel implements Parcelable {
+
     private int total_videos;
     private int account_type;
     private boolean can_join;
@@ -20,6 +23,15 @@ public class Profile implements Parcelable {
     private PublicProfile public_profile;
     private int followers;
     private int followings;
+
+    public Profile(Throwable error) {
+        this.error = error;
+    }
+
+    public Profile setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     protected Profile(Parcel in) {
         total_videos = in.readInt();

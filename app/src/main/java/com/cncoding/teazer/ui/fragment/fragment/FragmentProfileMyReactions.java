@@ -17,11 +17,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.ReactionsList;
-import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProfileMyReactionAdapter profileMyReactionAdapter;
     GridLayoutManager layoutManager;
     Context context;
-    List<Reactions>list;
+    List<PostReaction> myReactions;
     int page;
     ProximaNovaSemiBoldTextView alert1;
     ProximaNovaRegularTextView alert2;
@@ -52,7 +52,6 @@ public class FragmentProfileMyReactions extends Fragment {
     GifTextView loader;
     int followerfollowingid;
 
-    private EndlessRecyclerViewScrollListener scrollListener;
     boolean next;
 
     public static FragmentProfileMyReactions newInstance(int userId) {
@@ -84,11 +83,11 @@ public class FragmentProfileMyReactions extends Fragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        list=new ArrayList<>();
-        layoutManager=new GridLayoutManager(getActivity(),2);
+        myReactions = new ArrayList<>();
+        layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list, getParentFragment());
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, myReactions, getParentFragment());
         recyclerView.setAdapter(profileMyReactionAdapter);
 
         if(followerfollowingid==0) {
@@ -101,14 +100,12 @@ public class FragmentProfileMyReactions extends Fragment {
 
         }
 
-        scrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
-                if(next)
-                {
-                    if(page>2)
-                    {
+                if (next) {
+                    if (page > 2) {
                         loader.setVisibility(View.VISIBLE);
                     }
                     if(followerfollowingid==0) {
@@ -125,9 +122,6 @@ public class FragmentProfileMyReactions extends Fragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-
-
-
     }
 
     public void getReactions(final int page) {
@@ -137,7 +131,6 @@ public class FragmentProfileMyReactions extends Fragment {
                 if (response.code() == 200) {
                     try {
                         if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
-
                             alert1.setVisibility(View.VISIBLE);
                             alert2.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
@@ -146,9 +139,9 @@ public class FragmentProfileMyReactions extends Fragment {
                         else
                         {
                             next=response.body().isNextPage();
-                            list.addAll(response.body().getReactions());
+                            myReactions.addAll(response.body().getReactions());
                             recyclerView.getAdapter().notifyDataSetChanged();
-                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), list.size() - 1);
+                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
                             loader.setVisibility(View.GONE);
                         }
                     }
@@ -188,9 +181,9 @@ public class FragmentProfileMyReactions extends Fragment {
                         else
                         {
                             next=response.body().isNextPage();
-                            list.addAll(response.body().getReactions());
+                            myReactions.addAll(response.body().getReactions());
                             recyclerView.getAdapter().notifyDataSetChanged();
-                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), list.size() - 1);
+                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
                             loader.setVisibility(View.GONE);
                         }
                     }

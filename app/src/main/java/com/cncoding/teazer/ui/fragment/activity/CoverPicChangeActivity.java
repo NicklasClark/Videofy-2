@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ChangeCoverPhotoAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.model.profile.CoverImageResponse;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
-import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -45,7 +45,6 @@ public class CoverPicChangeActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progress_bar;
     ChangeCoverPhotoAdapter changeCoverPhotoAdapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
     ArrayList<Object> coverPicList;
     @BindView(R.id.backbutton)
@@ -85,16 +84,16 @@ public class CoverPicChangeActivity extends AppCompatActivity {
         changeCoverPhotoAdapter=new ChangeCoverPhotoAdapter(coverPicList,context,CoverPicChangeActivity.this);
         recyclerView.setAdapter(changeCoverPhotoAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(next) {
-                    if(page>2)
-                    {
+                if (next) {
+                    if (page > 2) {
 
                     }
-                }}
+                }
+            }
         };
 
         recyclerView.addOnScrollListener(scrollListener);

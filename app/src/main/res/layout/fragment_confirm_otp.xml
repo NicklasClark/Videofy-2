@@ -1,7 +1,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.cncoding.teazer.authentication.ConfirmOtpFragment"
+    tools:fragment="com.cncoding.teazer.authentication.ConfirmOtpFragment"
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
