@@ -174,6 +174,7 @@ public class BaseBottomBarActivity extends BaseActivity
         CallProfileListener,
 //    Reaction related listeners
         AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener , FragmentReactionplayer.LikedUserReactions,
+
         TagListAdapter.TaggedListInteractionListener {
 
     public static final int ACTION_VIEW_POST = 0;
@@ -823,9 +824,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //            getSupportActionBar().hide();
 //        }
      //   getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         toolbar.setVisibility(GONE);
 
     }
+
 
     public void showToolbar() {
 //        if (getSupportActionBar() != null) {

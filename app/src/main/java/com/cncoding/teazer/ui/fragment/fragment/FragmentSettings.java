@@ -91,12 +91,14 @@ public class FragmentSettings extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        simpleSwitch = view.findViewById(R.id.simpleSwitch);
+
         context = container.getContext();
         ButterKnife.bind(this, view);
+        simpleSwitch = view.findViewById(R.id.simpleSwitch);
+        simpleSwitchshowingreactions = view.findViewById(R.id.simpleSwitchshowingreactions);
 
         hidevideos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,21 +119,29 @@ public class FragmentSettings extends BaseFragment {
 
             }
         });
+
         simpleSwitchshowingreactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Toast.makeText(context,String.valueOf(simpleSwitchshowingreactions.isChecked()),Toast.LENGTH_SHORT).show();
+
+
                 if (simpleSwitchshowingreactions.isChecked()) {
-                    
-                    resetPrefrences(1,"show reactions to other",1);
+                    Toast.makeText(context,"on",Toast.LENGTH_SHORT).show();
+
+                    resetPrefrences(1, " show your reactions to other", 1);
+
+
+
 
 
                 } else {
-                    resetPrefrences(1,"hide reactions to other",0);
-
+                    Toast.makeText(context,"off",Toast.LENGTH_SHORT).show();
+                    resetPrefrences(1,"hide  your reactions to other",0);
 
 
                 }
-
             }
         });
 
@@ -165,7 +175,22 @@ public class FragmentSettings extends BaseFragment {
         } else {
             simpleSwitch.setChecked(false);
         }
+        int valueofPrefrencese=preferencesList.get(0).getValue();
+
+        Toast.makeText(context,String.valueOf(valueofPrefrencese),Toast.LENGTH_SHORT).show();
+
+
+        if(valueofPrefrencese==0){
+
         simpleSwitchshowingreactions.setChecked(false);
+        }
+        else
+        {
+            simpleSwitchshowingreactions.setChecked(true);
+
+        }
+        Toast.makeText(context,String.valueOf(simpleSwitchshowingreactions.isChecked()),Toast.LENGTH_SHORT).show();
+
     }
 
 
@@ -260,13 +285,13 @@ public class FragmentSettings extends BaseFragment {
     }
 
 
-    public void resetPrefrences(int prefrenceId, String prefrencesname, int prefrenceValue)
+    public void resetPrefrences(int prefrenceId, String prefrencesname,final int prefrenceValue)
     {
         ArrayList<Preference>list=new ArrayList<>();
 
         list.add(new Preference(prefrenceId,prefrencesname,prefrenceValue));
 
-        ApiCallingService.User.resetPrefrences(context,preferencesList).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.resetPrefrences(context,list).enqueue(new Callback<ResultObject>() {
 
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -275,20 +300,24 @@ public class FragmentSettings extends BaseFragment {
                     boolean b = response.body().getStatus();
                     if (b == true) {
 
-                        if (true) {
+                        if (prefrenceValue==0) {
 
                             Toast.makeText(context, "Your reacition  is visible", Toast.LENGTH_SHORT).show();
                         }
+
                         else {
+
                             Toast.makeText(context, "Your reaction is invisible", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+
                         Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
 
                     e.printStackTrace();
+
                     Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                 }
 
