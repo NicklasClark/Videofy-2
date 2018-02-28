@@ -1,4 +1,4 @@
-package com.cncoding.teazer.ui.customviews;
+package com.cncoding.teazer.ui.customviews.common;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,8 +35,6 @@ import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
 
-import static com.cncoding.teazer.ui.customviews.ViewAnimator.Listeners;
-import static com.cncoding.teazer.ui.customviews.ViewAnimator.putOn;
 import static com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment.SPACE;
 
 /**
@@ -411,8 +409,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             anchorView.addView(MediaControllerView.this, frameParams);
 
             if (animate)
-                putOn(playPauseButton)
-                    .waitForSize(new Listeners.Size() {
+                ViewAnimator.putOn(playPauseButton)
+                    .waitForSize(new ViewAnimator.Listeners.Size() {
                         @Override
                         public void onSize(ViewAnimator viewAnimator) {
                             viewAnimator.animate()
@@ -425,7 +423,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                                     .scale(0, 1)
                                     .alpha(0, 1)
                                     .duration(ANIMATE_TIME)
-                                    .start(new Listeners.Start() {
+                                    .start(new ViewAnimator.Listeners.Start() {
                                         @Override
                                         public void onStart() {
                                             isShowing = true;
@@ -460,7 +458,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return;
         }
         isShowing = false;
-        putOn(playPauseButton)
+        ViewAnimator.putOn(playPauseButton)
                 .animate()
 //                .translationY(-topLayout.getHeight())
 //                .duration(ANIMATE_TIME)
@@ -471,7 +469,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                 .scale(1, 0)
                 .alpha(1, 0)
                 .duration(ANIMATE_TIME)
-                .end(new Listeners.End() {
+                .end(new ViewAnimator.Listeners.End() {
                     @Override
                     public void onEnd() {
                         if (!isPlaying) {

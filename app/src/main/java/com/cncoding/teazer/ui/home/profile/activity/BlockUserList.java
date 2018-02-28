@@ -18,7 +18,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.user.BlockedUser;
 import com.cncoding.teazer.data.model.user.BlockedUsersList;
-import com.cncoding.teazer.ui.customviews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.home.profile.adapter.BlockUserListAdapter;
 
 import java.util.ArrayList;

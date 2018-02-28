@@ -84,7 +84,7 @@
                                             android:layout_marginTop="10dp"
                                             android:background="@drawable/bg_circle_white_outline">
 
-                                            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                                            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                                                 android:id="@+id/profile_id"
                                                 android:layout_width="72dp"
                                                 android:transitionName="profile"

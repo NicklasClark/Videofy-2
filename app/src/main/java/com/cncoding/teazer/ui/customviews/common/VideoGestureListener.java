@@ -1,4 +1,4 @@
-package com.cncoding.teazer.ui.customviews;
+package com.cncoding.teazer.ui.customviews.common;
 
 /**
  * Created by Brucetoo

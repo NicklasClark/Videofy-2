@@ -15,7 +15,7 @@ import android.widget.Filterable;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

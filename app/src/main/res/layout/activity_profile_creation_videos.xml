@@ -55,7 +55,7 @@
 
             android:layout_alignParentBottom="true">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/likes"
             android:layout_width="16dp"
             android:layout_height="16dp"
@@ -76,7 +76,7 @@
 
 
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/view"
                 android:layout_width="16dp"
                 android:layout_height="16dp"

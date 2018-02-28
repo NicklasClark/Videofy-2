@@ -107,7 +107,7 @@
                         android:layout_below="@+id/featured_posts_layout"
                         android:visibility="gone"/>
 
-                    <com.cncoding.teazer.ui.customviews.StatefulRecyclerView
+                    <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                         android:id="@+id/featured_posts_list"
                         android:nestedScrollingEnabled="false"
                         android:layout_below="@+id/featured_posts_layout"
@@ -167,7 +167,7 @@
                         android:text="@string/no_interests_selected_placeholder"
                         android:visibility="gone"/>
 
-                    <com.cncoding.teazer.ui.customviews.StatefulRecyclerView
+                    <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                         android:id="@+id/my_interests_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
                         android:layout_below="@+id/trending"
                         android:visibility="gone"/>
 
-                    <com.cncoding.teazer.ui.customviews.StatefulRecyclerView
+                    <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                         android:nestedScrollingEnabled="false"
                         android:id="@+id/trending_list"
                         android:layout_below="@+id/trending"
@@ -243,7 +243,7 @@
                     android:text="@string/no_posts_available"
                     android:visibility="gone"/>
 
-                <com.cncoding.teazer.ui.customviews.StatefulRecyclerView
+                <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                     android:id="@+id/most_popular_list"
                     android:background="@drawable/bg_card_no_margin_white"
                     android:layout_width="match_parent"

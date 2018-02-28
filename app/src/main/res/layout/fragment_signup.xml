@@ -31,7 +31,7 @@
                 android:layout_marginBottom="40dp"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/dp"
                     android:layout_width="84dp"
                     android:layout_height="84dp"
@@ -39,7 +39,7 @@
                     android:background="@drawable/ic_user_male_dp"
                     android:transitionName="profile" />
 
-                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/dp_edit_btn"
                     android:layout_width="28dp"
                     android:layout_height="28dp"

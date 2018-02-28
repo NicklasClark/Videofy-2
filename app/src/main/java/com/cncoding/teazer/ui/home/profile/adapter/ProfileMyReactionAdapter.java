@@ -26,7 +26,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.google.gson.Gson;
 
 import java.util.List;

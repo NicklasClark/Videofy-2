@@ -7,7 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 
 /**
  *

@@ -21,7 +21,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.friends.CircleList;
-import com.cncoding.teazer.ui.customviews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;

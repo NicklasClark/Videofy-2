@@ -7,7 +7,7 @@
     android:background="#b000"
     tools:fragment="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
 
-    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
         android:id="@+id/close"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/media_controller_dp"
             android:transitionName="profile"
             android:background="@drawable/bg_circle_white_outline"

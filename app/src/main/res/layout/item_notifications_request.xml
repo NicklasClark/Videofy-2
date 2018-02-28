@@ -14,7 +14,7 @@
         android:foreground="@drawable/ripple_semi_dark_no_rounded"
         android:orientation="horizontal">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="@dimen/padding_double"
             android:layout_height="@dimen/padding_double"

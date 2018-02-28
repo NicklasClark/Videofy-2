@@ -18,7 +18,7 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.user.Notification;
 import com.cncoding.teazer.data.model.user.NotificationsList;
 import com.cncoding.teazer.ui.base.BaseFragment;
-import com.cncoding.teazer.ui.customviews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 
 import java.util.ArrayList;

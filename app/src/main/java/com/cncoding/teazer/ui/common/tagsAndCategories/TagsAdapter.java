@@ -19,8 +19,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.MiniProfile;
-import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 
 import java.util.ArrayList;

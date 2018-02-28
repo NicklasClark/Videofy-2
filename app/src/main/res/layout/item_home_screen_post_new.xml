@@ -132,7 +132,7 @@
             android:paddingTop="40dp"
             app:repeat_mode_="restart">
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/dp"
                 android:layout_width="32dp"
                 android:layout_height="32dp"

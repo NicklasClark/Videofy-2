@@ -20,7 +20,7 @@ import com.cncoding.teazer.data.model.friends.MyUserInfo;
 import com.cncoding.teazer.data.model.friends.UserFollowerList;
 import com.cncoding.teazer.data.model.friends.UserInfo;
 import com.cncoding.teazer.ui.base.BaseFragment;
-import com.cncoding.teazer.ui.customviews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersAdapter;
 
 import java.util.ArrayList;

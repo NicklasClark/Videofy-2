@@ -77,7 +77,7 @@
                                         android:layout_margin="10dp"
                                         android:background="@drawable/bg_circle_white_outline">
 
-                                        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                                             android:id="@+id/profile_id"
                                             android:padding="2dp"
                                             android:layout_width="84dp"

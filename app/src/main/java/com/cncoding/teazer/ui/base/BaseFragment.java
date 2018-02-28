@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.cncoding.teazer.ui.customviews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.cncoding.teazer.utilities.common.NetworkStateReceiver;
 import com.cncoding.teazer.utilities.common.NetworkStateReceiver.NetworkStateListener;

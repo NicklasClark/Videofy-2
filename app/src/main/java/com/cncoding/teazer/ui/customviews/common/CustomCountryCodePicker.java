@@ -1,4 +1,4 @@
-package com.cncoding.teazer.ui.customviews;
+package com.cncoding.teazer.ui.customviews.common;
 
 import android.content.Context;
 import android.graphics.Typeface;

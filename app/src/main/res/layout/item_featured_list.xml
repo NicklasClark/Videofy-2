@@ -15,7 +15,7 @@
         android:paddingEnd="@dimen/padding_half"
         android:layout_gravity="bottom">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/shimmer_dp"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -104,7 +104,7 @@
         android:paddingStart="14dp"
         android:paddingEnd="14dp">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -171,7 +171,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true">
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_1"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -180,7 +180,7 @@
                 android:layout_marginEnd="@dimen/padding_thin"
                 android:visibility="gone"/>
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_2"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

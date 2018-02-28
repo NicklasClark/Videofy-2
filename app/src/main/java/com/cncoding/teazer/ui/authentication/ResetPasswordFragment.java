@@ -19,7 +19,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.auth.ResetPasswordByOtp;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
-import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.common.Annotations;

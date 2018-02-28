@@ -23,7 +23,7 @@
         android:gravity="center_vertical"
         android:layout_toEndOf="@+id/list_item_checked_thumbnail_image"/>
 
-    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
         android:id="@+id/list_item_checked_thumbnail_image"
         android:layout_width="28dp"
         android:layout_height="28dp"

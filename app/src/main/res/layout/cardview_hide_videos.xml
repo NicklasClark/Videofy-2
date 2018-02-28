@@ -63,7 +63,7 @@
                         android:textColor="@color/cardview_light_background"
                         android:layout_height="wrap_content"
                         />
-                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/menu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 
                 </RelativeLayout>
 
-                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/locationimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
             android:layout_alignParentBottom="true">
 
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/media_controller_dp"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
@@ -175,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/likes"/>
 
-                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -229,7 +229,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_toStartOf="@+id/reactiontext"
                     >
-                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/image1"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -249,7 +249,7 @@
                     android:layout_marginStart="@dimen/padding_half"
                     >
 
-                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/image2"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -268,7 +268,7 @@
                     android:layout_marginStart="@dimen/padding_half"
                     >
 
-                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/image3"
 
                         android:layout_width="25dp"

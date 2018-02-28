@@ -144,7 +144,7 @@
         android:src="@drawable/ic_edit"
         tools:ignore="VectorDrawableCompat"/>
 
-    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
         android:id="@+id/small_profile_picture"
         android:layout_width="45dp"
         android:layout_height="45dp"

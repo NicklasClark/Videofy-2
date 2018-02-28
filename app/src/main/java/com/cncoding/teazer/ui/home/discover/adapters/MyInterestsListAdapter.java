@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.ui.customviews.CustomLinearLayoutManager;
+import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;
 

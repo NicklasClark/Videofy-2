@@ -65,7 +65,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.ui.customviews.AutoFitTextureView;
+import com.cncoding.teazer.ui.customviews.common.AutoFitTextureView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.utilities.common.OnSwipeTouchListener;

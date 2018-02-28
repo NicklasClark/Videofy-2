@@ -27,7 +27,7 @@ import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.post.PostReactionsList;
-import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 

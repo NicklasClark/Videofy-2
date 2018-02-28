@@ -27,7 +27,7 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
-import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.exoplayer.Container;
 import com.cncoding.teazer.ui.customviews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.ui.customviews.exoplayer.SimpleExoPlayerView;

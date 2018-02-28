@@ -24,7 +24,7 @@ import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.data.model.auth.Login;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
-import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.common.Annotations;

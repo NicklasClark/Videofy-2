@@ -126,7 +126,7 @@
             android:layout_marginBottom="21dp"
             android:layout_marginStart="14dp">
 
-            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_post_dp"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
@@ -178,7 +178,7 @@
                 android:textSize="@dimen/text_size_12sp"
                 app:drawableStartCompat="@drawable/ic_view_outline_smaller" />
 
-            <com.cncoding.teazer.ui.customviews.CheckImageButton
+            <com.cncoding.teazer.ui.customviews.common.CheckImageButton
                 android:id="@+id/like"
                 android:layout_width="34dp"
                 android:layout_height="34dp"

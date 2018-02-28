@@ -17,7 +17,7 @@
         android:paddingEnd="@dimen/padding_half"
         android:layout_alignParentBottom="true">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/shimmer_dp"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -121,7 +121,7 @@
         android:paddingEnd="@dimen/padding_half"
         android:paddingBottom="@dimen/padding_10dp">
 
-        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="24dp"
             android:layout_height="24dp"

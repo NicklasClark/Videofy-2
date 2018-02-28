@@ -20,7 +20,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
-import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;

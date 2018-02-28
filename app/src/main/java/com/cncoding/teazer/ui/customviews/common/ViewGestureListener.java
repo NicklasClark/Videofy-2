@@ -1,4 +1,4 @@
-package com.cncoding.teazer.ui.customviews;
+package com.cncoding.teazer.ui.customviews.common;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;
