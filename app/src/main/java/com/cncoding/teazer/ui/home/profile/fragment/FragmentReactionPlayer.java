@@ -72,6 +72,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.SEND_DISLIKE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_LIKE;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIPHY;
+import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
@@ -189,7 +190,7 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
-                        reactionPostCaption.setText(postReaction.getReactTitle());
+                        reactionPostCaption.setText(decodeUnicodeString(postReaction.getReactTitle()));
                     }
                     likesView.setText(String.valueOf(postReaction.getLikes()));
                     reactionPostViews.setText(String.valueOf(postReaction.getViews()));
