@@ -63,8 +63,8 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularChe
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.post.BasePostFragment;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
@@ -596,8 +596,8 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     @OnClick(R.id.media_controller_dp) public void profilePicClicked() {
-        navigation.pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+        navigation.pushFragment(postDetails.canDelete() ? FragmentNewProfile2.newInstance() :
+                FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
     }
 
     @OnClick(R.id.up_btn) public void goBack() {

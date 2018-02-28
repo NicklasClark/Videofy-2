@@ -40,8 +40,8 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTe
 import com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
@@ -123,8 +123,8 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
 
     private void viewProfile() {
         adapter.fragment.navigation.pushFragment(postDetails.canDelete() ?
-                ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(
+                FragmentNewProfile2.newInstance() :
+                FragmentNewOtherProfile.newInstance(
                         String.valueOf(postDetails.getPostOwner().getUserId()), "", postDetails.getPostOwner().getUserName()));
     }
 
