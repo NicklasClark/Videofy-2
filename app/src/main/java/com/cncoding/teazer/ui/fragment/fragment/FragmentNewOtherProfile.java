@@ -322,7 +322,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
+        getParentActivity().hideToolbarOnly();
 
 
 
