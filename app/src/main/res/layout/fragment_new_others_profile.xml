@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <com.cncoding.teazer.utilities.CollapsingImageLayoutOthersProfile
+        <com.cncoding.teazer.utilities.common.CollapsingImageLayoutOthersProfile
             android:id="@+id/collapsing_imagelayout"
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -183,7 +183,7 @@
 
                 </LinearLayout>
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                     android:id="@+id/detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
 
             </RelativeLayout>
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                 android:id="@+id/profilepic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -212,7 +212,7 @@
                 android:padding="2dp"
                 android:background="@drawable/bg_circle_white_outline"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
                 android:text="arifrocks0786"
                 />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -252,7 +252,7 @@
                 android:textSize="10sp"/>
 
 
-        </com.cncoding.teazer.utilities.CollapsingImageLayoutOthersProfile>.
+        </com.cncoding.teazer.utilities.common.CollapsingImageLayoutOthersProfile>.
 
 
         <android.support.design.widget.TabLayout
@@ -271,7 +271,7 @@
             android:visibility="gone"
             android:layout_gravity="bottom|center_horizontal">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:id="@+id/alert1"
                 android:layout_marginTop="10dp"
@@ -282,7 +282,7 @@
                 android:textColor="#505050"
                 android:textSize="14sp"
                 />
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_below="@+id/alert1"

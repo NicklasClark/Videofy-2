@@ -20,12 +20,13 @@ import android.view.inputmethod.EditorInfo;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.data.model.auth.ProceedSignup;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.ProceedSignup;
-import com.cncoding.teazer.utilities.Annotations;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.common.Annotations;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import butterknife.BindView;
@@ -37,10 +38,10 @@ import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
 import static android.app.Activity.RESULT_OK;
-import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
-import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
+import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
 
 @SuppressLint("SwitchIntDef")
 public class SignupFragment extends BaseAuthFragment {
@@ -125,9 +126,9 @@ public class SignupFragment extends BaseAuthFragment {
 
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (isConnected) {
-            if (isFieldFilled(CHECK_USERNAME) && isFieldFilled(CHECK_PASSWORD)) {
-                if (isFieldValidated(CHECK_USERNAME)) {
-                    if (isFieldValidated(CHECK_PASSWORD)) {
+            if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
+                if (isFieldValidated(Annotations.CHECK_USERNAME)) {
+                    if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
                         mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION, proceedSignup, picturePath);
                     }
                     else Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
@@ -242,10 +243,10 @@ public class SignupFragment extends BaseAuthFragment {
     @Override
     protected boolean isFieldValidated(int whichType) {
         switch (whichType) {
-            case CHECK_USERNAME:
+            case Annotations.CHECK_USERNAME:
                 return proceedSignup.getUserName() != null &&
                         proceedSignup.getUserName().length() > 4 && proceedSignup.getUserName().length() <= 50;
-            case CHECK_PASSWORD:
+            case Annotations.CHECK_PASSWORD:
                 return proceedSignup.getPassword() != null &&
                         proceedSignup.getPassword().length() >= 8 && proceedSignup.getPassword().length() <= 32;
             default:
@@ -256,9 +257,9 @@ public class SignupFragment extends BaseAuthFragment {
     @Override
     protected boolean isFieldFilled(int whichType) {
         switch (whichType) {
-            case CHECK_USERNAME:
+            case Annotations.CHECK_USERNAME:
                 return proceedSignup.getUserName() != null && !proceedSignup.getUserName().isEmpty();
-            case CHECK_PASSWORD:
+            case Annotations.CHECK_PASSWORD:
                 return proceedSignup.getPassword() != null && !proceedSignup.getPassword().isEmpty();
             default:
                 return false;

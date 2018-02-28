@@ -8,7 +8,7 @@ import android.content.Context;
 
 import com.cncoding.teazer.data.local.ConvertersFactory;
 import com.cncoding.teazer.data.local.dao.PostDetailsDao;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostDetails;
 
 import javax.inject.Singleton;
 

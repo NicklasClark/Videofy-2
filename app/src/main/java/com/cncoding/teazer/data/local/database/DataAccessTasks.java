@@ -2,11 +2,11 @@ package com.cncoding.teazer.data.local.database;
 
 import android.os.AsyncTask;
 
+import com.cncoding.teazer.data.model.base.Medias;
+import com.cncoding.teazer.data.model.base.TaggedUser;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.viewmodel.PostViewModel;
-import com.cncoding.teazer.model.base.Medias;
-import com.cncoding.teazer.model.base.TaggedUser;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostReaction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                     android:id="@+id/login_username"
                     style="@style/AppTheme.RoundedEditText"
                     android:hint="@string/username_email_mobile"
@@ -47,7 +47,7 @@
                     android:layout_marginTop="@dimen/padding_double"
                     android:layout_marginBottom="@dimen/padding_default"/>
 
-                <com.cncoding.teazer.customViews.CustomCountryCodePicker
+                <com.cncoding.teazer.ui.customviews.CustomCountryCodePicker
                     android:id="@+id/country_code_picker"
                     style="@style/AppTheme.CountryCodeEditText"
                     app:ccp_autoDetectCountry="true"
@@ -70,7 +70,7 @@
 
             </RelativeLayout>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/login_password"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/password"
@@ -86,7 +86,7 @@
                 android:layout_marginBottom="14dp"
                 android:orientation="horizontal">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
                     android:id="@+id/login_through_otp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                     android:layout_height="0dp"
                     android:layout_centerInParent="true"/>
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
                     android:id="@+id/forgot_password_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
                     android:id="@+id/login_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
 
             android:animateLayoutChanges="true">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
                 android:id="@+id/already_have_otp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                 android:textColor="@color/colorIcons"
                 android:visibility="invisible" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
                 android:id="@+id/login_through_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

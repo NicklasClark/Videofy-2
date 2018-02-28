@@ -227,7 +227,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
         android:id="@+id/imagedp"
         android:background="@drawable/bg_circle_white_outline"
         style="@style/FabStyle"

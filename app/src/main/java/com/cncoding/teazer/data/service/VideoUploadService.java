@@ -8,13 +8,13 @@ import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
+import com.cncoding.teazer.data.apiCalls.ApiCallingService;
+import com.cncoding.teazer.data.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.data.apiCalls.ProgressRequestBody.UploadCallbacks;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.common.SharedPrefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +23,9 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
-import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
-import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.finishVideoUploadSession;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveVideoUploadSession;
+import static com.cncoding.teazer.utilities.common.ViewUtils.UPLOAD_PARAMS;
 
 /**
  *

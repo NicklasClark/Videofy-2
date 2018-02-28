@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout
+    <com.cncoding.teazer.ui.customviews.exoplayer.AspectRatioFrameLayout
         android:id="@id/exo_content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>-->
 
-    </com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout>
+    </com.cncoding.teazer.ui.customviews.exoplayer.AspectRatioFrameLayout>
 
     <!--Overlay layout to show ads and shit-->
     <!--<FrameLayout android:id="@id/exo_overlay"

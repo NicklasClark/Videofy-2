@@ -12,14 +12,14 @@
         android:foreground="@drawable/ripple_semi_dark_no_rounded"
         android:orientation="horizontal">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="@dimen/padding_double"
             android:layout_height="@dimen/padding_double"
             android:scaleType="centerCrop"
             android:layout_margin="14dp"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.UniversalTextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

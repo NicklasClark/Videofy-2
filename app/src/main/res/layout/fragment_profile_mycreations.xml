@@ -25,7 +25,7 @@
         android:layout_margin="5dp"
         android:id="@+id/recycler_view"/>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
        android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
@@ -39,7 +39,7 @@
         android:textSize="14sp" />
 
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
 
            android:id="@+id/alert2"
             android:layout_centerHorizontal="true"

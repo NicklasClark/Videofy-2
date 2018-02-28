@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cncoding.teazer.customViews.NestedCoordinatorLayout
+<com.cncoding.teazer.ui.customviews.NestedCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -60,7 +60,7 @@
                     android:contentDescription="@string/settings"
                     android:visibility="invisible"/>
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                     android:id="@+id/toolbar_plain_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_card_no_margin_white">
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                 android:id="@+id/uploading_thumb"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -113,7 +113,7 @@
                 app:civ_border_color="@color/colorAccent4"
                 app:civ_border_width="1dp"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/upload_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
 
     </eightbitlab.com.blurview.BlurView>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
         android:id="@+id/camera_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -225,4 +225,4 @@
         android:elevation="4dp"
         android:contentDescription="@string/record_video" />
 
-</com.cncoding.teazer.customViews.NestedCoordinatorLayout>
+</com.cncoding.teazer.ui.customviews.NestedCoordinatorLayout>

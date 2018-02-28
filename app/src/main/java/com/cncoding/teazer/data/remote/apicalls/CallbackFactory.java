@@ -3,20 +3,20 @@ package com.cncoding.teazer.data.remote.apicalls;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.data.model.user.NotificationsList;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
-import com.cncoding.teazer.model.discover.VideosList;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserList;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionsList;
-import com.cncoding.teazer.model.user.NotificationsList;
-import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 
 import org.jetbrains.annotations.Contract;
 

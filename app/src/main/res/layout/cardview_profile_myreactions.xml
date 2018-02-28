@@ -62,7 +62,7 @@
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     />
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                     android:id="@+id/menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/likes"/>
 
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                     android:id="@+id/view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -195,7 +195,7 @@
                     android:layout_toStartOf="@+id/reactiontext"
                     android:background="@drawable/bg_circle_white_outline"
                     >
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                         android:id="@+id/home_screen_post_dp"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
@@ -214,7 +214,7 @@
                     android:layout_marginStart="@dimen/padding_half"
                     android:background="@drawable/bg_circle_white_outline">
 
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_margin="1dp"
@@ -231,7 +231,7 @@
                     android:layout_marginStart="@dimen/padding_half"
                     android:background="@drawable/bg_circle_white_outline">
 
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_margin="1dp"

@@ -73,7 +73,7 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_video_gallery"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
             android:visibility="gone"
             android:id="@+id/giphy_search"
             android:layout_width="match_parent"

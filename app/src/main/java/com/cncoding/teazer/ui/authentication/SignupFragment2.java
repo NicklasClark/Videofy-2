@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.data.apiCalls.ApiCallingService;
+import com.cncoding.teazer.data.model.auth.InitiateSignup;
+import com.cncoding.teazer.data.model.auth.ProceedSignup;
+import com.cncoding.teazer.data.model.auth.VerifySignUp;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.InitiateSignup;
-import com.cncoding.teazer.model.auth.ProceedSignup;
-import com.cncoding.teazer.model.auth.VerifySignUp;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.common.Annotations;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -31,13 +33,13 @@ import static com.cncoding.teazer.data.remote.apicalls.authentication.Authentica
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
-import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
-import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
-import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
-import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
-import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isValidEmailAddress;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isValidPhoneNumber;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.TEAZER;
+import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
 public class SignupFragment2 extends BaseAuthFragment {
 
@@ -165,7 +167,7 @@ public class SignupFragment2 extends BaseAuthFragment {
     @OnClick(R.id.signup_btn) public void performSignup() {
         hideKeyboard(getParentActivity(), signupBtn);
         if (isConnected) {
-            if (isFieldFilled(CHECK_USERNAME)) {
+            if (isFieldFilled(Annotations.CHECK_USERNAME)) {
                 if (getFirstAndLastNames(nameView.getText().toString()).length < 2) {
                     if (isValidEmailAddress(emailView.getText().toString())) {
                         signupBtn.setEnabled(false);

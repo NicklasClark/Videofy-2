@@ -5,12 +5,12 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.remote.apicalls.discover.DiscoverRepository;
 import com.cncoding.teazer.data.remote.apicalls.discover.DiscoverRepositoryImpl;
-import com.cncoding.teazer.model.discover.LandingPostsV2;
-import com.cncoding.teazer.model.discover.VideosList;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.PostList;
 
 import javax.inject.Inject;
 

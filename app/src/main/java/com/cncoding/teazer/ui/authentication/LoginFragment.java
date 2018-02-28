@@ -18,17 +18,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.data.model.auth.BaseAuth;
+import com.cncoding.teazer.data.model.auth.ForgotPassword;
+import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.data.model.auth.Login;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.BaseAuth;
-import com.cncoding.teazer.model.auth.ForgotPassword;
-import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
-import com.cncoding.teazer.model.auth.Login;
-import com.cncoding.teazer.utilities.AuthUtils;
-import com.cncoding.teazer.utilities.SharedPrefs;
-import com.cncoding.teazer.utilities.ViewUtils;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.TypeFactory;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.common.Annotations;
+import com.cncoding.teazer.utilities.common.AuthUtils;
+import com.cncoding.teazer.utilities.common.SharedPrefs;
+import com.cncoding.teazer.utilities.common.ViewUtils;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -41,29 +43,29 @@ import butterknife.OnTouch;
 
 import static android.text.TextUtils.isDigitsOnly;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
-import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.ENTERED_TEXT;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.IS_EMAIL;
-import static com.cncoding.teazer.utilities.Annotations.CHECK_EMAIL_AVAILABILITY;
-import static com.cncoding.teazer.utilities.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
-import static com.cncoding.teazer.utilities.Annotations.CHECK_USERNAME_AVAILABILITY;
-import static com.cncoding.teazer.utilities.Annotations.LOGIN_WITH_OTP;
-import static com.cncoding.teazer.utilities.Annotations.LOGIN_WITH_PASSWORD;
-import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
-import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
-import static com.cncoding.teazer.utilities.AuthUtils.getEnteredUserFormat;
-import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
-import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
-import static com.cncoding.teazer.utilities.AuthUtils.removeView;
-import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
-import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
-import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.DEVICE_TYPE_ANDROID;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.FORGOT_PASSWORD_ACTION;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.LOGIN_WITH_OTP_ACTION;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_EMAIL_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_USERNAME_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.LOGIN_WITH_OTP;
+import static com.cncoding.teazer.utilities.common.Annotations.LOGIN_WITH_PASSWORD;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getDeviceId;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getEnteredUserFormat;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isValidPhoneNumber;
+import static com.cncoding.teazer.utilities.common.AuthUtils.removeView;
+import static com.cncoding.teazer.utilities.common.AuthUtils.setCountryCode;
+import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logLoginEvent;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.setCurrentPassword;
+import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
 
 @SuppressLint("SwitchIntDef")
 public class LoginFragment extends BaseAuthFragment {
@@ -227,13 +229,13 @@ public class LoginFragment extends BaseAuthFragment {
         if (isConnected) {
             switch (getLoginState()) {
                 case LOGIN_STATE_PASSWORD:
-                    if (isFieldFilled(CHECK_USERNAME) && isFieldFilled(CHECK_PASSWORD)) {
+                    if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
                         if (isDigitsOnly(login.getUserName()) && countryCode == -1) {
                             countryCodePicker.launchCountrySelectionDialog();
                             return;
                         }
-                        if (isFieldValidated(CHECK_USERNAME)) {
-                            if (isFieldValidated(CHECK_PASSWORD)) {
+                        if (isFieldValidated(Annotations.CHECK_USERNAME)) {
+                            if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
                                 loginBtn.setEnabled(false);
                                 startProgressBar();
                                 loginBtnClicked = true;
@@ -246,7 +248,7 @@ public class LoginFragment extends BaseAuthFragment {
                         Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                     break;
                 case LOGIN_STATE_OTP:
-                    if (isFieldFilled(CHECK_USERNAME) && isDigitsOnly(login.getUserName())) {
+                    if (isFieldFilled(Annotations.CHECK_USERNAME) && isDigitsOnly(login.getUserName())) {
                         loginBtn.setEnabled(false);
                         startProgressBar();
                         loginBtnClicked = true;
@@ -423,12 +425,12 @@ public class LoginFragment extends BaseAuthFragment {
         loginBtn.setEnabled(true);
     }
 
-    @Override protected boolean isFieldValidated(@ValidationType int whichType) {
+    @Override protected boolean isFieldValidated(@Annotations.ValidationType int whichType) {
         switch (whichType) {
-            case CHECK_USERNAME:
+            case Annotations.CHECK_USERNAME:
                 return login.getUserName() != null &&
                         login.getUserName().length() >= 4 && login.getUserName().length() <= 50;
-            case CHECK_PASSWORD:
+            case Annotations.CHECK_PASSWORD:
                 return login.getPassword() != null &&
                         login.getPassword().length() >= 8 && login.getPassword().length() <= 32;
             default:
@@ -439,9 +441,9 @@ public class LoginFragment extends BaseAuthFragment {
     @Override
     protected boolean isFieldFilled(int whichType) {
         switch (whichType) {
-            case CHECK_USERNAME:
+            case Annotations.CHECK_USERNAME:
                 return login.getUserName() != null && !login.getUserName().isEmpty();
-            case CHECK_PASSWORD:
+            case Annotations.CHECK_PASSWORD:
                 return login.getPassword() != null && !login.getPassword().isEmpty();
             default:
                 return false;

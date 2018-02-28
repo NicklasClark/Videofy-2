@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-import static com.cncoding.teazer.utilities.SharedPrefs.saveMedia;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveMedia;
 
 /**
  *

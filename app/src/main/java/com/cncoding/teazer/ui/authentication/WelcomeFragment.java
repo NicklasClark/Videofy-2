@@ -24,13 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.asynctasks.GenerateBitmapFromUrl;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.data.model.auth.SocialSignup;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.SocialSignup;
-import com.cncoding.teazer.utilities.NetworkStateReceiver;
-import com.cncoding.teazer.utilities.ViewUtils;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.asynctasks.GenerateBitmapFromUrl;
+import com.cncoding.teazer.utilities.common.NetworkStateReceiver;
+import com.cncoding.teazer.utilities.common.ViewUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -60,19 +61,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
-import static com.cncoding.teazer.MainActivity.SOCIAL_SIGNUP_ACTION;
-import static com.cncoding.teazer.MainActivity.getBitmapFromVectorDrawable;
-import static com.cncoding.teazer.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_FACEBOOK;
-import static com.cncoding.teazer.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_GOOGLE;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSignUpEvent;
-import static com.cncoding.teazer.utilities.SharedPrefs.saveAuthToken;
-import static com.cncoding.teazer.utilities.SharedPrefs.saveUserId;
-import static com.cncoding.teazer.utilities.ViewUtils.disableView;
-import static com.cncoding.teazer.utilities.ViewUtils.enableView;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static com.cncoding.teazer.data.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_FACEBOOK;
+import static com.cncoding.teazer.data.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_GOOGLE;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.SOCIAL_SIGNUP_ACTION;
+import static com.cncoding.teazer.ui.authentication.base.MainActivity.getBitmapFromVectorDrawable;
+import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logLoginEvent;
+import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logSignUpEvent;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveAuthToken;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveUserId;
+import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
 public class WelcomeFragment extends BaseAuthFragment implements NetworkStateReceiver.NetworkStateListener {
 

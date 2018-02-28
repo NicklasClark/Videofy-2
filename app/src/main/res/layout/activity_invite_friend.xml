@@ -45,7 +45,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp">
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Invite your Frinds on"
@@ -94,7 +94,7 @@
                                 android:layout_marginBottom="10dp"
                                />
 
-                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Facebook"
@@ -125,7 +125,7 @@
                                 android:layout_margin="2dp"
                                 android:layout_marginBottom="10dp" />
 
-                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Whatsapp"
@@ -171,7 +171,7 @@
                                 android:layout_margin="2dp"
                                 android:layout_marginBottom="10dp" />
 
-                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="SMS"
@@ -202,7 +202,7 @@
                                 android:layout_margin="2dp"
                                 android:layout_marginBottom="10dp" />
 
-                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Email"
@@ -234,7 +234,7 @@
                     android:foregroundGravity="center_horizontal"
                     android:layout_marginBottom="10dp"
                     android:gravity="center_horizontal">
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Download the app"
@@ -248,14 +248,14 @@
                     android:foregroundGravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal">
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="From our official site"
                         android:textColor="#FF000000"
                         android:textSize="14sp" />
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:id="@+id/teazersite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -19,7 +19,7 @@
         android:paddingBottom="@dimen/padding_default"
         android:paddingEnd="@dimen/padding_half">
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/media_controller_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_content_big" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/media_controller_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:textSize="13sp"
             android:layout_below="@id/media_controller_caption"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/media_controller_eta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
         android:background="@drawable/bg_vignette_bottom"
         android:paddingTop="@dimen/padding_default">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
             android:id="@+id/media_controller_dp"
             android:layout_width="34dp"
             android:layout_height="34dp"
@@ -95,7 +95,7 @@
             android:layout_marginEnd="13dp"
             android:layout_alignBottom="@+id/media_controller_likes"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/media_controller_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
             android:layout_toStartOf="@+id/media_controller_reaction_3"
             android:layout_toEndOf="@+id/media_controller_dp"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/media_controller_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
             android:layout_below="@+id/media_controller_name"
             android:layout_toEndOf="@+id/media_controller_dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/media_controller_views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/media_controller_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
             android:paddingStart="@dimen/padding_double"
             android:paddingEnd="@dimen/padding_double"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/media_controller_reaction_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"/>
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_1"
             android:layout_width="@dimen/height_24dp"
             android:layout_height="@dimen/height_24dp"
@@ -183,7 +183,7 @@
             android:layout_toStartOf="@+id/media_controller_reaction_count"
             android:visibility="gone"/>
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_2"
             android:layout_width="@dimen/height_24dp"
             android:layout_height="@dimen/height_24dp"
@@ -194,7 +194,7 @@
             android:layout_toStartOf="@+id/media_controller_reaction_1"
             android:visibility="gone"/>
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_3"
             android:layout_width="@dimen/height_24dp"
             android:layout_height="@dimen/height_24dp"

@@ -8,13 +8,13 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/interests_header"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:visibility="gone"/>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
         android:id="@+id/interests_header_1"
         android:visibility="gone"
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
 
         android:clipToPadding="false"/>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:id="@+id/save_interests_btn"
         android:visibility="gone"
         android:layout_width="60dp"

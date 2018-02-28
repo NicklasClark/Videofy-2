@@ -3,13 +3,13 @@ package com.cncoding.teazer.data.remote.apicalls.react;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.HiddenReactionsList;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.data.model.react.ReportReaction;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.post.LikedUserList;
-import com.cncoding.teazer.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.model.react.HiddenReactionsList;
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionsList;
-import com.cncoding.teazer.model.react.ReportReaction;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -23,21 +23,21 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.resultObj
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
-import static com.cncoding.teazer.utilities.Annotations.CALL_CREATE_REACTION_BY_GIPHY;
-import static com.cncoding.teazer.utilities.Annotations.CALL_DELETE_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_HIDDEN_REACTIONS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_LIKED_USERS_OF_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_REACTIONS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_OLD_LIKED_USERS_OF_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_OLD_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_REACTION_DETAIL;
-import static com.cncoding.teazer.utilities.Annotations.CALL_HIDE_OR_SHOW_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_INCREMENT_REACTION_VIEW_COUNT;
-import static com.cncoding.teazer.utilities.Annotations.CALL_LIKE_DISLIKE_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_REPORT_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.CALL_UPLOAD_REACTION;
-import static com.cncoding.teazer.utilities.Annotations.LikeDislike;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_CREATE_REACTION_BY_GIPHY;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_DELETE_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_HIDDEN_REACTIONS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_LIKED_USERS_OF_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_REACTIONS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_OLD_LIKED_USERS_OF_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_OLD_LIKED_USERS_OF_REACTION_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_REACTION_DETAIL;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_HIDE_OR_SHOW_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_INCREMENT_REACTION_VIEW_COUNT;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_LIKE_DISLIKE_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_REPORT_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPLOAD_REACTION;
+import static com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 /**
  *

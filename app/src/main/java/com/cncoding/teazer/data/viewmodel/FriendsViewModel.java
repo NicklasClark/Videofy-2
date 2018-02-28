@@ -5,16 +5,16 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepository;
 import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepositoryImpl;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserList;
-import com.cncoding.teazer.model.user.BlockedUsersList;
 
 import javax.inject.Inject;
 

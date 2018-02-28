@@ -2,17 +2,17 @@ package com.cncoding.teazer.data.remote.apicalls.post;
 
 import android.arch.lifecycle.LiveData;
 
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.post.ReportPost;
+import com.cncoding.teazer.data.model.post.TaggedUsersList;
+import com.cncoding.teazer.data.model.post.UpdatePostRequest;
+import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostReactionsList;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.model.post.ReportPost;
-import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.model.post.UpdatePostRequest;
-import com.cncoding.teazer.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.utilities.Annotations.LikeDislike;
+import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
 
