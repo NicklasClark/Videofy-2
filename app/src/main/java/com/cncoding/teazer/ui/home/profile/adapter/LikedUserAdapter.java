@@ -25,8 +25,8 @@ import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 
 import java.util.List;
 
@@ -196,8 +196,8 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FragmentLikedUser) fragment).navigation.pushFragment(ismyself ? ProfileFragment.newInstance() :
-                            OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+                    ((FragmentLikedUser) fragment).navigation.pushFragment(ismyself ? FragmentNewProfile2.newInstance() :
+                            FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
                 }
             });
         } catch (Exception e) {

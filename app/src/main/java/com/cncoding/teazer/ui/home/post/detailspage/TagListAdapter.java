@@ -11,8 +11,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.TaggedUser;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +108,8 @@ public class TagListAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.tagged_user_dp) void openProfile() {
             fragment.navigation.pushFragment(taggedUsers.get(getAdapterPosition()).isMySelf() ?
-                    ProfileFragment.newInstance() :
-                    OthersProfileFragment.newInstance(
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(
                             String.valueOf(taggedUsers.get(getAdapterPosition()).getUserId()), "", ""));
         }
     }

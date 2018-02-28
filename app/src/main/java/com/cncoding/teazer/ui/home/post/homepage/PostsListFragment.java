@@ -88,13 +88,10 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
 
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                    if (isConnected) {
-                        if (is_next_page) {
-                            currentPage = page;
-                            loadHomePagePosts(page);
-                        }
+                    if (is_next_page) {
+                        currentPage = page;
+                        loadHomePagePosts(page);
                     }
-                    else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
                 }
             };
         recyclerView.addOnScrollListener(scrollListener);

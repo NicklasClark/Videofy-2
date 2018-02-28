@@ -28,8 +28,8 @@ import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.diffutil.PostReactionDiffCallback;
 import com.google.gson.Gson;
@@ -265,8 +265,8 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick({R.id.reaction_post_dp, R.id.reaction_post_name}) void viewProfile() {
-            fragment.navigation.pushFragment(postReaction.getMySelf() ? ProfileFragment.newInstance() :
-                    OthersProfileFragment.newInstance(String.valueOf(postReaction.getPostOwnerId()), "", ""));
+            fragment.navigation.pushFragment(postReaction.getMySelf() ? FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(String.valueOf(postReaction.getPostOwnerId()), "", ""));
         }
 
         private void openReaction(PostReaction postReaction, boolean isGif) {
