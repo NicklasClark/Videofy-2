@@ -5,16 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -34,28 +37,39 @@ import retrofit2.Response;
 
 public class FragmentProfileMyCreations extends Fragment {
 
+    private static String ARG_ID;
+    CircularAppCompatImageView menuitem;
     Context context;
     ArrayList<PostDetails> list = new ArrayList<>();
     RecyclerView recyclerView;
     ProfileMyCreationAdapter profileMyCreationAdapter;
-    RecyclerView.LayoutManager layoutManager;
+    GridLayoutManager layoutManager;
     ProgressBar progress_bar;
-    ProximaNovaRegularTextView alert1;
+    ProximaNovaRegularTextView alert1,alert2;
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
     public static boolean checkIsLiked=false;
     GifTextView loader;
+    private int followerfollowingid;
 
 
-    public static FragmentProfileMyCreations newInstance(int page) {
-        return new FragmentProfileMyCreations();
+
+    public static FragmentProfileMyCreations newInstance(int userId) {
+        FragmentProfileMyCreations fragmentProfileMyCreations= new FragmentProfileMyCreations();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_ID, userId);
+        fragmentProfileMyCreations.setArguments(bundle);
+        return fragmentProfileMyCreations;
+
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        if (getArguments() != null) {
+            followerfollowingid = getArguments().getInt(ARG_ID);
+        }
     }
 
     @Override
@@ -72,29 +86,43 @@ public class FragmentProfileMyCreations extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         progress_bar = view.findViewById(R.id.progress_bar);
         alert1 = view.findViewById(R.id.alert1);
+        alert2 = view.findViewById(R.id.alert2);
         return view;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        getProfileVideos(1);
-        profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list,getParentFragment());
-        recyclerView.setAdapter(profileMyCreationAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        if(followerfollowingid==0) {
+            getProfileVideos(1);
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            recyclerView.setAdapter(profileMyCreationAdapter);
+        }
+        else {
+            getOtherUserProfileVideos(followerfollowingid,1);
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            recyclerView.setAdapter(profileMyCreationAdapter);
+        }
+
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
                 if(next) {
-
                     if(page>2)
                     {
                         loader.setVisibility(View.VISIBLE);
                     }
-                    getProfileVideos(page);
+
+                    if(followerfollowingid==0) {
+                        getProfileVideos(page);
+                    }
+                    else
+                        {
+                            getOtherUserProfileVideos(followerfollowingid,page);
+                        }
                 }
             }
         };
@@ -103,29 +131,27 @@ public class FragmentProfileMyCreations extends Fragment {
     }
 
     public void getProfileVideos(final int page) {
-
         ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<PostList>() {
-
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
                 try {
                     if (response.code() == 200) {
+
                         if ((response.body().getPosts().size() == 0) && page == 1) {
                             alert1.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                             progress_bar.setVisibility(View.GONE);
                             loader.setVisibility(View.GONE);
                         } else
-                        {
-                            next = response.body().isNextPage();
-                            list.addAll(response.body().getPosts());
-                            recyclerView.getAdapter().notifyDataSetChanged();
+                            {
+                                next = response.body().isNextPage();
+                                list.addAll(response.body().getPosts());
+                                recyclerView.getAdapter().notifyDataSetChanged();
 
                             profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
                             progress_bar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                             loader.setVisibility(View.GONE);
-
                         }
                     }
                 } catch (Exception e) {
@@ -142,9 +168,44 @@ public class FragmentProfileMyCreations extends Fragment {
         });
     }
 
-    public void loadNextDataFromApi(int offset) {
+    public void getOtherUserProfileVideos(final int followerId , final int page) {
 
+        ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<PostList>() {
+            @Override
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                Log.d("getProfileVideos", String.valueOf(response));
+                if (response.code() == 200) {
+                    try {
 
+                        if ((response.body().getPosts() == null || response.body().getPosts().size() == 0) && page == 1) {
+                            alert2.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            progress_bar.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
+
+                        } else {
+                            next = response.body().isNextPage();
+                            list.addAll(response.body().getPosts());
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
+                        }
+                      loader.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
+                     //   blur_bacground.setVisibility(View.GONE);
+                  loader.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostList> call, Throwable t) {
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+              //  blur_bacground.setVisibility(View.GONE);
+                   loader.setVisibility(View.GONE);
+            }
+        });
     }
 
 }

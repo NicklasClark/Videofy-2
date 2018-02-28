@@ -65,10 +65,10 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
-import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -189,9 +189,8 @@ public class BaseBottomBarActivity extends BaseActivity
     private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     public MaterialShowcaseView materialShowcaseView;
-    ProfileFragment profilefragment;
+    FragmentNewProfile2 fragmentNewProfile2;
     PostDetails postDetails;
-    private Call<ReactionResponse> postGiphyCall;
 
     @Contract(value = " -> !null", pure = true)
     private BaseBottomBarActivity getThis() {
@@ -326,7 +325,6 @@ public class BaseBottomBarActivity extends BaseActivity
                     }
                 });
             }
-
         };
 
         if (getIntent().getExtras() != null) {
@@ -478,9 +476,9 @@ public class BaseBottomBarActivity extends BaseActivity
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
                     if (isSelf) {
-                        pushFragment(ProfileFragment.newInstance());
+                        pushFragment(FragmentNewProfile2.newInstance());
                     } else {
-                        pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+                        pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
                     }
 //                    pushFragment(isSelf ? ProfileFragment.newInstance() :
 //                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
@@ -515,7 +513,6 @@ public class BaseBottomBarActivity extends BaseActivity
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-
     }
 
     @SuppressLint("InflateParams")
@@ -541,7 +538,7 @@ public class BaseBottomBarActivity extends BaseActivity
             Log.d("Notification", String.valueOf(notification_type));
         }
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
-            pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
+            pushFragment(FragmentNewOtherProfile.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         } else if (notification_type == 5 || notification_type == 7 || notification_type == 9) {
             ApiCallingService.Posts.getPostDetails(source_id, getThis())
                     .enqueue(new Callback<PostDetails>() {
@@ -655,9 +652,9 @@ public class BaseBottomBarActivity extends BaseActivity
                             } else if (referringParams.has("user_id")) {
                                 String userId = referringParams.getString("user_id");
                                 if (SharedPrefs.getUserId(getThis()) == Integer.parseInt(userId)) {
-                                    pushFragment(ProfileFragment.newInstance());
+                                    pushFragment(FragmentNewProfile2.newInstance());
                                 } else {
-                                    pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                    pushFragment(FragmentNewOtherProfile.newInstance(userId, "", ""));
                                 }
                             }
                         }
@@ -690,7 +687,7 @@ public class BaseBottomBarActivity extends BaseActivity
             switchTab(TAB2);
         else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
             switchTab(TAB4);
-        else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
+        else if (navigationController.getCurrentFragment() instanceof FragmentNewProfile2)
             switchTab(TAB5);
     }
 
@@ -819,6 +816,10 @@ public class BaseBottomBarActivity extends BaseActivity
         toolbar.setVisibility(GONE);
     }
 
+    public void hideToolbarOnly() {
+        toolbar.setVisibility(GONE);
+    }
+
     public void showToolbar() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         toolbar.setVisibility(VISIBLE);
@@ -920,7 +921,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 currentFragment = NotificationsFragment.newInstance();
                 break;
             case TAB5:
-                currentFragment = ProfileFragment.newInstance();
+                //currentFragment = ProfileFragment.newInstance();
+                currentFragment = FragmentNewProfile2.newInstance();
                 break;
             default:
                 currentFragment = PostsListFragment.newInstance();
@@ -1113,7 +1115,7 @@ public class BaseBottomBarActivity extends BaseActivity
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, null));
         } else {
-            pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
+            pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(profileId), userType, "name"));
         }
     }
 
@@ -1129,12 +1131,15 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewOthersProfile(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance(id, type, username));
+     //   pushFragment(OthersProfileFragment.newInstance(id, type, username));
+        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
     }
 
     @Override
     public void viewOthersProfileFollowing(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance2(id, type, username));
+       // pushFragment(OthersProfileFragment.newInstance2(id, type, username));
+        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
+
     }
 
     @Override
@@ -1195,15 +1200,17 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewUserProfile() {
-        profilefragment = ProfileFragment.newInstance();
-        pushFragment(profilefragment);
+        if (fragmentNewProfile2 == null) fragmentNewProfile2 = FragmentNewProfile2.newInstance();
+        pushFragment(fragmentNewProfile2);
     }
 
     @Override
     public void onNotificationFragmentInteraction() {
         try {
             TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
-            if (tab != null) tab.setCustomView(null);
+            if (tab != null) {
+                tab.setCustomView(null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

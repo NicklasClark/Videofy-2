@@ -33,6 +33,7 @@
     <application
         android:name=".TeazerApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -359,6 +360,9 @@
         <service android:name=".data.service.VideoCachingService" />
 
         <activity android:name=".ui.fragment.activity.OpenProfilePicActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.fragment.activity.CoverPicChangeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".BaseActivity" />
     </application>

@@ -18,9 +18,13 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
+import com.cncoding.teazer.utilities.SharedPrefs;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,25 +49,29 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FragmentSettings extends BaseFragment {
 
+    public static final String ACCOUNT_TYPE = "accountType";
+    public static final String PREFERENCES = "preferences";
+    private static final int PRIVATE_STATUS = 1;
+    private static final int PUBLIC_STATUS = 2;
+
     @BindView(R.id.save_videos_switch) Switch saveVideosSwitch;
     @BindView(R.id.private_account_switch) Switch privateAccountSwitch;
     @BindView(R.id.prefetch_videos_switch) Switch prefetchVideosSwitch;
     @BindView(R.id.text_hide_layout) ProximaNovaRegularTextView hideVideos;
     @BindView(R.id.prefetch_media_detail) ProximaNovaRegularTextView prefetchMediaDetail;
+    @BindView(R.id.simpleSwitchshowingreactions) Switch simpleSwitchShowingReactions;
 
-    private static final int PRIVATE_STATUS = 1;
-    private static final int PUBLIC_STATUS = 2;
-    public static final String ACCOUNT_TYPE = "accountType";
     int accountType;
+    ArrayList<Preference> preferencesList;
     ChangeCategoriesListener mListener;
 
-    public static FragmentSettings newInstance(String accountType) {
+    public static FragmentSettings newInstance(String accountType, ArrayList<Preference> list) {
         FragmentSettings fragment = new FragmentSettings();
         Bundle args = new Bundle();
         args.putString(ACCOUNT_TYPE, accountType);
+        args.putParcelableArrayList(PREFERENCES,list);
         fragment.setArguments(args);
         return fragment;
-
     }
 
     @Override
@@ -72,6 +80,7 @@ public class FragmentSettings extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             accountType = Integer.parseInt(bundle.getString(ACCOUNT_TYPE));
+            preferencesList=bundle.getParcelableArrayList(PREFERENCES);
         }
     }
 
@@ -80,6 +89,17 @@ public class FragmentSettings extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         privateAccountSwitch = view.findViewById(R.id.private_account_switch);
         ButterKnife.bind(this, view);
+
+        simpleSwitchShowingReactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simpleSwitchShowingReactions.isChecked()) {
+                    resetPrefrences(1,"show reactions to other",1);
+                } else {
+                    resetPrefrences(1,"hide reactions to other",0);
+                }
+            }
+        });
         return view;
     }
 
@@ -88,6 +108,8 @@ public class FragmentSettings extends BaseFragment {
         privateAccountSwitch.setChecked(accountType == 1);
         saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
         prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
+        simpleSwitchShowingReactions.setChecked(false);
+        saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
     }
 
     @OnClick(R.id.text_hide_layout) public void hideVideosClicked() {
@@ -202,8 +224,9 @@ public class FragmentSettings extends BaseFragment {
                         }
 
                     } catch (Exception e) {
+
                         e.printStackTrace();
-                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -215,6 +238,37 @@ public class FragmentSettings extends BaseFragment {
                 }
             });
         }
+    }
+
+    public void resetPrefrences(int prefrenceId, String prefrencesname, int prefrenceValue) {
+        ArrayList<Preference>list=new ArrayList<>();
+        list.add(new Preference(prefrenceId,prefrencesname,prefrenceValue));
+
+        ApiCallingService.User.resetPrefrences(context,preferencesList).enqueue(new Callback<ResultObject>() {
+
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+
+                try {
+                    boolean b = response.body().getStatus();
+                    if (b) {
+                        Toast.makeText(context, "Your reacition  is visible", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public interface ChangeCategoriesListener {

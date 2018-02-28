@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,25 +38,37 @@ import retrofit2.Response;
 
 public class FragmentProfileMyReactions extends Fragment {
 
+    private static String ARG_ID;
     CircularAppCompatImageView menuitem;
     RecyclerView recyclerView;
     ProfileMyReactionAdapter profileMyReactionAdapter;
-    RecyclerView.LayoutManager layoutManager;
+    GridLayoutManager layoutManager;
     Context context;
     List<PostReaction> myReactions;
     int page;
     ProximaNovaSemiBoldTextView alert1;
     ProximaNovaRegularTextView alert2;
+    ProximaNovaSemiBoldTextView alert3;
     GifTextView loader;
+    int followerfollowingid;
 
     boolean next;
 
-    public static FragmentProfileMyReactions newInstance(int page) {
-        return new FragmentProfileMyReactions();
+    public static FragmentProfileMyReactions newInstance(int userId) {
+        FragmentProfileMyReactions profileMyReactions= new FragmentProfileMyReactions();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_ID, userId);
+        profileMyReactions.setArguments(bundle);
+
+        return profileMyReactions;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        Bundle bundle = new Bundle();
+        followerfollowingid = getArguments().getInt(ARG_ID);
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,17 +77,28 @@ public class FragmentProfileMyReactions extends Fragment {
         recyclerView=view.findViewById(R.id.recycler_view);
         alert1=view.findViewById(R.id.alert1);
         alert2=view.findViewById(R.id.alert2);
+        alert3=view.findViewById(R.id.alert3);
         loader=view.findViewById(R.id.loader);
         return view;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        myReactions =new ArrayList<>();
-        layoutManager=new LinearLayoutManager(getActivity());
+        myReactions = new ArrayList<>();
+        layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, myReactions);
+
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, myReactions, getParentFragment());
         recyclerView.setAdapter(profileMyReactionAdapter);
-        getReactions(1);
+
+        if(followerfollowingid==0) {
+            getReactions(1);
+        }
+        else
+        {
+            //Toast.makeText(context,"No Reaction yet Under maintaince, please wait",Toast.LENGTH_SHORT).show();
+             getFriendsReactions(1,followerfollowingid);
+
+        }
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
@@ -84,8 +108,16 @@ public class FragmentProfileMyReactions extends Fragment {
                     if (page > 2) {
                         loader.setVisibility(View.VISIBLE);
                     }
-                    getReactions(page);
+                    if(followerfollowingid==0) {
+                        getReactions(page);
 
+                    }
+                    else
+                    {
+                       // Toast.makeText(context,"No Reaction yet Under maintaince, please wait",Toast.LENGTH_SHORT).show();
+                        getFriendsReactions(page,followerfollowingid);
+
+                    }
                 }
             }
         };
@@ -101,6 +133,48 @@ public class FragmentProfileMyReactions extends Fragment {
                         if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
                             alert1.setVisibility(View.VISIBLE);
                             alert2.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            next=response.body().isNextPage();
+                            myReactions.addAll(response.body().getReactions());
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
+                            loader.setVisibility(View.GONE);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Toast.makeText(context, "Oops Something went wrong", Toast.LENGTH_LONG).show();
+                        loader.setVisibility(View.GONE);
+                    }
+                }
+                else
+                {
+                    Toast.makeText(context, "Oops Something went wrong", Toast.LENGTH_LONG).show();
+
+                    loader.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onFailure(Call<ReactionsList> call, Throwable t)
+            {
+                Toast.makeText(context, "Oops Something went wrong, Please try again", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+    public void getFriendsReactions(final int page, final int userId) {
+        ApiCallingService.React.getFriendsReactions(page,userId,context).enqueue(new Callback<ReactionsList>() {
+            @Override
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
+                if (response.code() == 200) {
+                    try {
+                        if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
+
+                          //  alert3.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                             loader.setVisibility(View.GONE);
                         }

@@ -5,7 +5,12 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.BaseModel;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -13,11 +18,15 @@ import com.cncoding.teazer.utilities.Annotations.CallType;
  */
 
 public class UserProfile extends BaseModel implements Parcelable {
-    private PublicProfile user_profile;
-    private int followers;
-    private int followings;
-    private int total_videos;
-    private boolean can_change_password;
+
+    @SerializedName("user_profile") @Expose private PublicProfile user_profile;
+    @SerializedName("followers") @Expose private int followers;
+    @SerializedName("followings") @Expose private int followings;
+    @SerializedName("total_videos") @Expose private int total_videos;
+    @SerializedName("can_change_password") @Expose private boolean can_change_password;
+    @SerializedName("total_reactions") @Expose private Integer totalReactions;
+    @SerializedName("total_profile_likes") @Expose private Integer totalProfileLikes;
+    @SerializedName("preferences") @Expose private ArrayList<Preference> preferences = null;
 
     public UserProfile(Throwable error) {
         this.error = error;
@@ -34,6 +43,17 @@ public class UserProfile extends BaseModel implements Parcelable {
         followings = in.readInt();
         total_videos = in.readInt();
         can_change_password = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            totalReactions = null;
+        } else {
+            totalReactions = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            totalProfileLikes = null;
+        } else {
+            totalProfileLikes = in.readInt();
+        }
+        preferences = in.createTypedArrayList(Preference.CREATOR);
     }
 
     public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
@@ -51,6 +71,19 @@ public class UserProfile extends BaseModel implements Parcelable {
         dest.writeInt(followings);
         dest.writeInt(total_videos);
         dest.writeByte((byte) (can_change_password ? 1 : 0));
+        if (totalReactions == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalReactions);
+        }
+        if (totalProfileLikes == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalProfileLikes);
+        }
+        dest.writeTypedList(preferences);
     }
 
     @Override
@@ -90,7 +123,23 @@ public class UserProfile extends BaseModel implements Parcelable {
         return can_change_password;
     }
 
+    public Integer getTotalReactions() {
+        return totalReactions;
+    }
+
     public void setcanChangePassword(boolean can_change_password) {
         this.can_change_password = can_change_password;
+    }
+
+    public PublicProfile getUser_profile() {
+        return user_profile;
+    }
+
+    public Integer getTotalProfileLikes() {
+        return totalProfileLikes;
+    }
+
+    public ArrayList<Preference> getPreferences() {
+        return preferences;
     }
 }

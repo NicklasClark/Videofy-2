@@ -3,6 +3,7 @@ package com.cncoding.teazer.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -51,11 +52,15 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     private Context context;
     ReactionPlayerListener reactionPlayerListener;
     private boolean isPostClicked = false;
+    ProfileMyReactionAdapter.OnChildFragmentUpdateReaction fragment;
 
-    public ProfileMyReactionAdapter(Context context, List<PostReaction> list) {
+    public ProfileMyReactionAdapter(Context context, List<PostReaction> list, Fragment fragment) {
         this.context = context;
         this.list = list;
         reactionPlayerListener=( ReactionPlayerListener)context;
+        if (fragment instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {
+            this.fragment = (ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) fragment;
+        }
     }
     @Override
     public ProfileMyReactionAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -71,7 +76,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         final int views = reactions.getViews();
         final String reactDuration = reactions.getMediaDetail().getReactDuration();
         final String thumb_url = reactions.getMediaDetail().getReactThumbUrl();
-        final String postOwner = reactions.getReactOwner().getFirstName();
+        final String postOwner = reactions.getPostOwner().getFirstName();
         final int reaction = reactions.getReactedBy();
 
 
@@ -142,6 +147,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
                                     public void onClick(DialogInterface dialog,int which) {
                                         deleteVideos(reactId);
+                                        fragment.updateReaction(1);
                                         list.remove(i);
                                         notifyItemRemoved(i);
                                         notifyItemRangeChanged(i,list.size());
@@ -164,6 +170,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             }
         });
     }
+
     private void deleteVideos(int deleteId) {
         ApiCallingService.React.deleteReaction(deleteId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -227,5 +234,8 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
     public interface ReactionPlayerListener {
         void reactionPlayer(int selfReaction, PostReaction postReaction, boolean isGif);
+    }
+    public interface OnChildFragmentUpdateReaction {
+        void updateReaction(int count);
     }
 }

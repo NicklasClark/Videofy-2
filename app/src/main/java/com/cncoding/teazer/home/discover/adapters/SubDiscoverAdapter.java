@@ -24,10 +24,10 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.home.BaseRecyclerView;
 import com.cncoding.teazer.home.discover.BaseDiscoverFragment;
 import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
@@ -150,8 +150,8 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
 
         private void viewProfile() {
             fragment.navigation.pushFragment(postDetails.canDelete() ?
-                    ProfileFragment.newInstance() :
-                    OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
                             "", postDetails.getPostOwner().getUserName()));
         }
 

@@ -45,7 +45,6 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.MiniProfile;
@@ -349,8 +348,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
                 if (response.code() == 200) {
                     try {
+
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
-                        ProfileFragment.checkpostupdated=true;
+                        NewProfileFragment.checkpostupdated=true;
                         getActivity().onBackPressed();
                     } catch (Exception e) {
                         e.printStackTrace();

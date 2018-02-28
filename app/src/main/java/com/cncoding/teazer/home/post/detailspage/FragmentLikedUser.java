@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 public class FragmentLikedUser extends BaseFragment {
     int postId;
+    int reactId;
     PostDetails postDetails;
     Context context;
     @BindView(R.id.recycler_view)
@@ -53,12 +54,13 @@ public class FragmentLikedUser extends BaseFragment {
     public static FragmentLikedUser newInstance(PostDetails postDetails) {
         FragmentLikedUser fragment = new FragmentLikedUser();
         Bundle args = new Bundle();
-
         args.putString("PostId", String.valueOf(postDetails.getPostId()));
         args.putParcelable("PostDetails", postDetails);
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +68,12 @@ public class FragmentLikedUser extends BaseFragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            postId = Integer.parseInt(bundle.getString("PostId"));
-            postDetails = bundle.getParcelable("PostDetails");
+            if (bundle.getParcelable("PostDetails") != null) {
+                postId = Integer.parseInt(bundle.getString("PostId"));
+                postDetails = bundle.getParcelable("PostDetails");
+            }
+
+
         }
     }
 
@@ -89,7 +95,9 @@ public class FragmentLikedUser extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (next) {
-                    getLikedUser(postId, page);
+
+                        getLikedUser(postId, page);
+
                 }
             }
         };
@@ -100,7 +108,6 @@ public class FragmentLikedUser extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-//                ((AppCompatActivity) context).getSupportFragmentManager().popBackStackImmediate();
                 getParentActivity().onBackPressed();
             }
         });
@@ -109,7 +116,10 @@ public class FragmentLikedUser extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        getLikedUser(postId, 1);
+
+
+            getLikedUser(postId, 1);
+
     }
 
     @Override

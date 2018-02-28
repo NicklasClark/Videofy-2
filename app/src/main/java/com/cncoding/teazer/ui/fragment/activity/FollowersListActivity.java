@@ -19,6 +19,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.FollowersList;
+import com.cncoding.teazer.model.friends.MyUserInfo;
+import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UserInfo;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class FollowersListActivity extends BaseFragment {
     String followerid;
     Context context;
     List<UserInfo> list;
-    List<UserInfo> userfollowerlist;
+    List<MyUserInfo> userfollowerlist;
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -53,7 +55,7 @@ public class FollowersListActivity extends BaseFragment {
     int otherFollowerpage = 1;
     protected String previousTitle;
     boolean next;
-    public static final int USERS_FOLLOWER=100;
+    public static final int USERS_FOLLOWER = 100;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
     @BindView(R.id.loader)
     GifTextView loader;
@@ -123,6 +125,7 @@ public class FollowersListActivity extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
         userfollowerlist = new ArrayList<>();
+
         if (identifier.equals("Other")) {
             profileMyFollowerAdapter = new FollowersAdapter(context, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
@@ -143,15 +146,15 @@ public class FollowersListActivity extends BaseFragment {
         super.onResume();
 
     }
-    public void getUserfollowerList(final int page)
-    {
-        ApiCallingService.Friends.getMyFollowers(page, context).enqueue(new Callback<FollowersList>() {
+
+    public void getUserfollowerList(final int page) {
+        ApiCallingService.Friends.getMyFollowers(page, context).enqueue(new Callback<UserFollowerList>() {
             @Override
-            public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
+            public void onResponse(Call<UserFollowerList> call, Response<UserFollowerList> response) {
                 if (response.code() == 200) {
                     try {
 
-                        userfollowerlist.addAll(response.body().getUserInfos());
+                        userfollowerlist.addAll(response.body().getFollowers());
 
                         if ((userfollowerlist == null || userfollowerlist.size() == 0) && page == 1) {
                             layout.setVisibility(View.VISIBLE);
@@ -177,8 +180,9 @@ public class FollowersListActivity extends BaseFragment {
                     loader.setVisibility(View.GONE);
                 }
             }
+
             @Override
-            public void onFailure(Call<FollowersList> call, Throwable t) {
+            public void onFailure(Call<UserFollowerList> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 loader.setVisibility(View.GONE);
@@ -207,7 +211,7 @@ public class FollowersListActivity extends BaseFragment {
                         } else {
 
                             next = response.body().getNextPage();
-                           // Toast.makeText(context,requestPermissions();,Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(context,requestPermissions();,Toast.LENGTH_SHORT).show();
                             profileMyFollowerAdapter.notifyDataSetChanged();
                             profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                             layout.setVisibility(View.VISIBLE);

@@ -27,7 +27,6 @@ import java.util.Objects;
  *
  * Created by Prem $ on 12/14/2017.
  */
-
 @Entity
 public class PostDetails extends BaseModel implements Parcelable {
 

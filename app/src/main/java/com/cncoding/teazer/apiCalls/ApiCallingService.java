@@ -16,6 +16,7 @@ import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.LikedUserList;
@@ -26,6 +27,8 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.CoverImageResponse;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
@@ -94,9 +97,11 @@ public class ApiCallingService {
             return getApplicationService(context).getCategories();
 
         }
+
         public static Call<List<DeactivateTypes>> getDeactivationTypesList(Context context) {
             return getApplicationService(context).getDeactivationTypesList();
         }
+
         private static TeazerApiCall.ApplicationCalls getApplicationService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
@@ -188,28 +193,28 @@ public class ApiCallingService {
         /**
          * Call this service to get the discover page featured videos lists.
          */
-        public static Call<PostList> getFeaturedPosts(int page, Context context){
+        public static Call<PostList> getFeaturedPosts(int page, Context context) {
             return getDiscoverService(context).getFeaturedPosts(page);
         }
 
         /**
          * Call this service to get the discover page interested category videos when user clicks "View all".
          */
-        public static Call<PostList> getAllInterestedCategoriesVideos(int page, int categoryId, Context context){
+        public static Call<PostList> getAllInterestedCategoriesVideos(int page, int categoryId, Context context) {
             return getDiscoverService(context).getAllInterestedCategoriesVideos(page, categoryId);
         }
 
         /**
          * Call this service to get the most popular videos. Call this service when user taps "View All".
          */
-        public static Call<PostList> getAllMostPopularVideos(int page, Context context){
+        public static Call<PostList> getAllMostPopularVideos(int page, Context context) {
             return getDiscoverService(context).getAllMostPopularVideos(page);
         }
 
         /**
          * Call this service to get the discover page trending category videos of the respected category.
          */
-        public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
+        public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context) {
             return getDiscoverService(context).getTrendingVideos(page, categoryId);
         }
 
@@ -217,28 +222,28 @@ public class ApiCallingService {
         /**
          * Call this service to get discover page landing posts.
          */
-        public static Call<LandingPosts> getDiscoverPagePosts(Context context){
+        public static Call<LandingPosts> getDiscoverPagePosts(Context context) {
             return getDiscoverService(context).getDiscoverPagePosts();
         }
 
         /**
          * Call this service to get users list to send follow request.
          */
-        public static Call<UsersList> getUsersListToFollow(int page, Context context){
+        public static Call<UsersList> getUsersListToFollow(int page, Context context) {
             return getDiscoverService(context).getUsersListToFollow(page);
         }
 
         /**
          * Call this service to get users list to send follow request with search term.
          */
-        public static Call<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
+        public static Call<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context) {
             return getDiscoverService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
         }
 
         /**
          * Call this service to get users list to send follow request with search term.
          */
-        public static Call<VideosList> getVideosWithSearchTerm(int page, String searchTerm, Context context){
+        public static Call<VideosList> getVideosWithSearchTerm(int page, String searchTerm, Context context) {
             return getDiscoverService(context).getVideosWithSearchTerm(page, searchTerm);
         }
 
@@ -257,14 +262,14 @@ public class ApiCallingService {
     public static class Friends {
         /**
          * Get the "my circle" with search term
-         * */
+         */
         public static Call<ResultObject> getMyCircleWithSearchTerm(int page, String searchTerm, Context context) {
             return getFriendsService(context).getMyCircleWithSearchTerm(page, searchTerm);
         }
 
         /**
          * Call this service to get the my followings list
-         * */
+         */
         public static Call<CircleList> getMyFollowings(int page, Context context) {
             return getFriendsService(context).getMyFollowings(page);
         }
@@ -275,62 +280,63 @@ public class ApiCallingService {
 
         /**
          * Call this service to send a join request by user ID
-         * */
+         */
         public static Call<ResultObject> sendJoinRequestByUserId(int userId, Context context) {
             return getFriendsService(context).sendJoinRequestByUserId(userId);
         }
 
         /**
          * Call this service to send a join request by user name
-         * */
+         */
         public static Call<ResultObject> sendJoinRequestByUsername(String username, Context context) {
             return getFriendsService(context).sendJoinRequestByUsername(username);
         }
 
         /**
          * Call this service to accept the join request
-         * */
+         */
         public static Call<ResultObject> acceptJoinRequest(int notificationId, Context context) {
             return getFriendsService(context).acceptJoinRequest(notificationId);
         }
 
         /**
          * Call this service to delete the join request
-         * */
+         */
         public static Call<ResultObject> deleteJoinRequest(int notificationId, Context context) {
             return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
-         public static Call<ResultObject> cancelRequest(int userId, Context context) {
+        public static Call<ResultObject> cancelRequest(int userId, Context context) {
             return getFriendsService(context).cancelRequest(userId);
         }
 
         /**
          * Call this service to get the my circle list
+         *
          * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.
          * If “next_page” is false no more records present.
-         * */
+         */
         public static Call<CircleList> getMyCircle(int page, Context context) {
             return getFriendsService(context).getMyCircle(page);
         }
 
         /**
          * Call this service to get the my followings list with search term
-         * */
+         */
         public static Call<ResultObject> getMyFollowingsWithSearchTerm(int page, String searchTerm, Context context) {
             return getFriendsService(context).getMyFollowingsWithSearchTerm(page, searchTerm);
         }
 
         /**
          * Call this service to get the friends followings list
-         * */
+         */
         public static Call<FollowingsList> getFriendsFollowings(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowings(page, userId);
         }
 
         /**
          * Call this service to get the friends followings list with search term
-         * */
+         */
         public static Call<ResultObject> getFriendsFollowingsWithSearchTerm(
                 int userId,
                 int page,
@@ -338,30 +344,34 @@ public class ApiCallingService {
             return getFriendsService(context).getFriendsFollowingsWithSearchTerm(userId, page, searchTerm);
         }
 
+//        public static Call<FollowersList> getMyFollowers(int page, Context context) {
+//            return getFriendsService(context).getMyFollowers(page);
+//        }
+
         /**
          * Call this service to get the my followers list
-         * */
-        public static Call<FollowersList> getMyFollowers(int page, Context context) {
+         */
+        public static Call<UserFollowerList> getMyFollowers(int page, Context context) {
             return getFriendsService(context).getMyFollowers(page);
         }
 
         /**
          * Call this service to get the my followers list with search term
-         * */
+         */
         public static Call<ResultObject> getMyFollowersWithSearchTerm(int page, String searchTerm, Context context) {
             return getFriendsService(context).getMyFollowersWithSearchTerm(page, searchTerm);
         }
 
         /**
          * Call this service to get the friends followers list
-         * */
+         */
         public static Call<FollowersList> getFriendsFollowers(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowers(page, userId);
         }
 
         /**
          * Call this service to get the friends followers list with search term
-         * */
+         */
         public static Call<ResultObject> getFriendsFollowersWithSearchTerm(
                 int userId,
                 int page,
@@ -371,7 +381,7 @@ public class ApiCallingService {
 
         /**
          * Call this service to unfollow a user
-         * */
+         */
         public static Call<ResultObject> unfollowUser(int userId, Context context) {
             return getFriendsService(context).unfollowUser(userId);
         }
@@ -382,10 +392,11 @@ public class ApiCallingService {
 
         /**
          * Call this service to get other's profile information
+         *
          * @return “account_type” 1 is a Private account, 2 is a Public account.
-         *          “can_join” tell whether you peoples are already friends.
-         *          Based on “account_type” you can read either private or public profile.
-         * */
+         * “can_join” tell whether you peoples are already friends.
+         * Based on “account_type” you can read either private or public profile.
+         */
         public static Call<ProfileInfo> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
@@ -395,20 +406,22 @@ public class ApiCallingService {
 
         /**
          * Call this service to Block/Unblock a user
+         *
          * @param status should be 1 for block and 2 for unblock.
          */
-        public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context){
+        public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context) {
             return getFriendsService(context).blockUnblockUser(userId, status);
 
         }
-        public static Call<LikedUserList> getLikedUsers(int postId, int page, Context context){
+
+        public static Call<LikedUserList> getLikedUsers(int postId, int page, Context context) {
             return getFriendsService(context).getLikedUsers(postId, page);
         }
 
         /**
          * Call this service to get blocked users list by you.
          */
-        public static Call<BlockedUsersList> getBlockedUsers(int page, Context context){
+        public static Call<BlockedUsersList> getBlockedUsers(int page, Context context) {
             return getFriendsService(context).getBlockedUsers(page);
         }
 
@@ -514,7 +527,7 @@ public class ApiCallingService {
         }
 
         /**
-         * Call this service to get the reactions of 
+         * Call this service to get the reactions of
          *
          * @return 200 : If “nextPage” is true some more records present,
          * so you can call again after incrementing the page count by 1,
@@ -535,12 +548,12 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ResultObject> getFriendsReactions(int page, int friend_id, Context context) {
+        public static Call<ReactionsList> getFriendsReactions(int page, int friend_id, Context context) {
             return getReactService(context).getFriendsReactions(page, friend_id);
         }
 
         /**
-         * Call this service to get the reactions hidden by 
+         * Call this service to get the reactions hidden by
          *
          * @return 200 : If “nextPage” is true some more records present,
          * so you can call again after incrementing the page count by 1,
@@ -554,6 +567,10 @@ public class ApiCallingService {
 
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
+        }
+
+        public static Call<LikedUserList> getLikedUsersReaction(int reactId, int page, Context context) {
+            return getReactService(context).getLikedUsersReaction(reactId, page);
         }
 
         public static Call<ReactVideoDetailsResponse> getReactionDetail2(int reactId, Context context) {
@@ -645,17 +662,19 @@ public class ApiCallingService {
             return getPostalService(context).getReactionsOfPost(postId, page);
         }
 
-        public static Call<PostList>getPostedVideos(Context context, int page) {
+        public static Call<PostList> getPostedVideos(Context context, int page) {
             return getPostalService(context).getPostedVideos(page);
 
         }
-        public static Call<PostList> getHiddenVideosList(int page, Context context){
+
+        public static Call<PostList> getHiddenVideosList(int page, Context context) {
             return getPostalService(context).getHiddenVideosList(page);
         }
 
-        public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context){
+        public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context) {
             return getPostalService(context).getAllHiddenVideosList(userID);
         }
+
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
@@ -673,7 +692,11 @@ public class ApiCallingService {
             return getUserService(context).updateUserProfileMedia(file);
         }
 
-        public static  Call<ResultObject> resetFcmToken(String header, String token, Context context) {
+        public static Call<CoverImageResponse> updateUserProfileCoverMedia(MultipartBody.Part file, Context context) {
+            return getUserService(context).updateUserProfileCoverMedia(file);
+        }
+
+        public static Call<ResultObject> resetFcmToken(String header, String token, Context context) {
             return getUserService(context).resetFcmToken(header, token);
         }
 
@@ -691,7 +714,7 @@ public class ApiCallingService {
 
         }
 
-          public static Call<ResultObject> updateMobileNumber(Context context, UpdateMobileNumber updateMobileNumber) {
+        public static Call<ResultObject> updateMobileNumber(Context context, UpdateMobileNumber updateMobileNumber) {
             return getUserService(context).updateMobileNumber(updateMobileNumber);
 
         }
@@ -703,15 +726,16 @@ public class ApiCallingService {
         public static Call<ResultObject> updatePassword(UpdatePasswordRequest updatePasswordDetails, Context context) {
             return getUserService(context).updatePassword(updatePasswordDetails);
         }
+
         public static Call<ResultObject> setPassword(SetPasswordRequest setPasswordDetails, Context context) {
             return getUserService(context).setPassword(setPasswordDetails);
         }
 
-        public static Call<NotificationsList> getFollowingNotifications(int page, Context context){
+        public static Call<NotificationsList> getFollowingNotifications(int page, Context context) {
             return getUserService(context).getFollowingNotifications(page);
         }
 
-        public static Call<NotificationsList> getRequestNotifications(int page, Context context){
+        public static Call<NotificationsList> getRequestNotifications(int page, Context context) {
             return getUserService(context).getRequestNotifications(page);
         }
 
@@ -723,11 +747,11 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
-        public static Call<UserProfile>getUserProfileDetail(Context context) {
+        public static Call<UserProfile> getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
 
-        public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context){
+        public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context) {
             return getUserService(context).reportUser(reportuser);
         }
 
@@ -738,12 +762,16 @@ public class ApiCallingService {
         public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
             return getUserService(context).resetUnreadNotification(type);
         }
+
         public static Call<ResultObject> removeProfilePicture(Context context) {
             return getUserService(context).removeProfilePic();
         }
 
-        private static TeazerApiCall.UserCalls getUserService(Context context) {
+        public static Call<ResultObject> resetPrefrences(Context context, ArrayList<Preference> list) {
+            return getUserService(context).resetPrefrences(list);
+        }
 
+        private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -754,6 +782,7 @@ public class ApiCallingService {
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
     }
+
     public static class Giphy {
 
         public static Call<TrendingGiphy> getTrendingGiphys(Context context, String api_key, int limit, int offset, String rating) {

@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="?attr/actionBarSize"
+        android:layout_margin="5dp"
         android:id="@+id/recycler_view"/>
 
     <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
@@ -29,13 +30,30 @@
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
         android:layout_width="wrap_content"
-        android:visibility="gone"
         android:gravity="center"
         android:padding="20dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:text="@string/no_creations_message"
         android:textColor="#505050"
         android:textSize="14sp" />
+
+
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+
+           android:id="@+id/alert2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:text="@string/no_creations_message2"
+            android:textColor="#505050"
+            android:textSize="14sp" />
+
+
 
 
     <pl.droidsonroids.gif.GifTextView

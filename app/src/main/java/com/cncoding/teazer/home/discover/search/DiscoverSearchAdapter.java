@@ -33,7 +33,7 @@ import com.cncoding.teazer.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.discover.Videos;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -401,7 +401,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) void viewProfile() {
-            fragment.navigation.pushFragment(OthersProfileFragment.newInstance(String.valueOf(user.getUserId()), "", ""));
+            fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(user.getUserId()), "", ""));
         }
 
         @OnClick(R.id.action) void socialAction() {

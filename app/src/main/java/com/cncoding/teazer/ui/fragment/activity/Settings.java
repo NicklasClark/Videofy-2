@@ -4,20 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
-import android.widget.Toast;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentHideVideos;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -30,12 +29,14 @@ import static com.cncoding.teazer.R.anim.slide_out_right;
 public class Settings extends AppCompatActivity implements FragmentSettings.ChangeCategoriesListener{
 
     Context context;
+    ArrayList<Preference> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
         context=this;
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -62,11 +63,16 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#0000000'>Settings</font>"));
         Intent intent=getIntent();
         int accountType = Integer.parseInt(intent.getStringExtra("AccountType"));
-//        userProfile = intent.getExtras().getParcelable("UserProfile");
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accountType)))
+        list=intent.getExtras().getParcelableArrayList("UserPrefrences");
 
-                .commit();
+        // int i=list.get(0).getValue();
+        // int j=list.get(0).getPreferenceId();
+        //  Toast.makeText(context,String.valueOf(j),Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context,String.valueOf(list.get(0).getPreferenceId()),Toast.LENGTH_SHORT).show();
+
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.container, FragmentSettings.
+                        newInstance(String.valueOf(accountType),list)).commit();
     }
 
     @Override

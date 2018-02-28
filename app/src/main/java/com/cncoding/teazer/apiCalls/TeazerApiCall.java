@@ -12,6 +12,7 @@ import com.cncoding.teazer.model.friends.CircleList;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.UserFollowerList;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.LikedUserList;
@@ -22,6 +23,8 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.CoverImageResponse;
+import com.cncoding.teazer.model.profile.Preference;
 import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
@@ -342,8 +345,11 @@ import retrofit2.http.Query;
         /**
          * Call this service to get the my followers list
          * */
+//        @GET("/api/v1/friend/my/followers/{page}")
+//        Call<FollowersList> getMyFollowers(@Path("page") int page);
+
         @GET("/api/v1/friend/my/followers/{page}")
-        Call<FollowersList> getMyFollowers(@Path("page") int page);
+        Call<UserFollowerList> getMyFollowers(@Path("page") int page);
 
         /**
          * Call this service to get the my followers list with search term
@@ -420,8 +426,6 @@ import retrofit2.http.Query;
 
         @GET("/api/v1/post/liked/users/{post_id}/{page}")
         Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
-
-
     }
 
     /**
@@ -513,7 +517,7 @@ import retrofit2.http.Query;
          *         {@value RESPONSE_CODE_412} : Validation failed.
          * */
         @GET("/api/v1/react/friend/reactions/{friend_id}/{page}")
-        Call<ResultObject> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
+        Call<ReactionsList> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
 
         /**
          * Call this service to get the reactions hidden by 
@@ -529,6 +533,10 @@ import retrofit2.http.Query;
         //Call this service to get reaction data by reaction id
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactionResponse> getReactionDetail(@Path("react_id") int reactId);
+
+
+       @GET("/api/v1/react/liked/users/{react_id}/{page}")
+       Call<LikedUserList>getLikedUsersReaction(@Path("react_id") int postId, @Path("page") int page);
 
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactVideoDetailsResponse> getReactionDetail2(@Path("react_id") int reactId);
@@ -720,6 +728,12 @@ import retrofit2.http.Query;
         @POST("/api/v1/user/update/profile/media")
         Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part media);
 
+
+        @Multipart
+        @POST("/api/v1/user/update/profile/cover/media")
+        Call<CoverImageResponse> updateUserProfileCoverMedia(@Part MultipartBody.Part media);
+
+
         /**
          * Reset the FCM Token
          * Call this service for update the FCM Token.
@@ -810,6 +824,9 @@ import retrofit2.http.Query;
 
         @PUT("api/v1/user/reset/notification/count")
         Call<ResultObject> resetUnreadNotification(@Query("type") int notificatioType);
+
+        @PUT("/api/v1/user/update/profile/preference")
+        Call<ResultObject> resetPrefrences(@Body ArrayList<Preference> preference);
     }
 
     /**
