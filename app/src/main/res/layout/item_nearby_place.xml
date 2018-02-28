@@ -28,7 +28,7 @@
         android:background="@color/white"
         android:layout_alignParentTop="true"
         android:textColor="#666666"/>
-
+<!--
 <customviewsiews.proximanovaviews.ProximaNovaRegularTextViewView
         android:id="@+id/nearby_place_address"
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
         android:lines="1"
         android:layout_below="@+id/nearby_place_name"
         android:textSize="14sp"
-        android:textColor="@color/colorSecondary_text"/>-->
+        android:textColor="@color/colorSecondary_text"/>&ndash;&gt;-->
 
     <View
         android:layout_width="match_parent"
