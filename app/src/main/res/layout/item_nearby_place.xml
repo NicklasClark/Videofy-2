@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"/>-->
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:id="@+id/nearby_place_name"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -28,8 +28,8 @@
         android:background="@color/white"
         android:layout_alignParentTop="true"
         android:textColor="#666666"/>
-
-<!-- com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextViewView
+<!--
+<customviewsiews.proximanovaviews.ProximaNovaRegularTextViewView
         android:id="@+id/nearby_place_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         android:lines="1"
         android:layout_below="@+id/nearby_place_name"
         android:textSize="14sp"
-        android:textColor="@color/colorSecondary_text"/>-->
+        android:textColor="@color/colorSecondary_text"/>&ndash;&gt;-->
 
     <View
         android:layout_width="match_parent"

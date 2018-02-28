@@ -3,18 +3,18 @@ package com.cncoding.teazer.data.remote.apicalls.user;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
+import com.cncoding.teazer.data.model.updatemobilenumber.UpdateMobileNumber;
+import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.data.model.user.NotificationsList;
+import com.cncoding.teazer.data.model.user.Profile;
+import com.cncoding.teazer.data.model.user.ProfileUpdateRequest;
+import com.cncoding.teazer.data.model.user.ReportUser;
+import com.cncoding.teazer.data.model.user.SetPasswordRequest;
+import com.cncoding.teazer.data.model.user.UpdateCategories;
+import com.cncoding.teazer.data.model.user.UpdatePasswordRequest;
+import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
-import com.cncoding.teazer.model.updatemobilenumber.UpdateMobileNumber;
-import com.cncoding.teazer.model.user.DeactivateAccountRequest;
-import com.cncoding.teazer.model.user.NotificationsList;
-import com.cncoding.teazer.model.user.Profile;
-import com.cncoding.teazer.model.user.ProfileUpdateRequest;
-import com.cncoding.teazer.model.user.ReportUser;
-import com.cncoding.teazer.model.user.SetPasswordRequest;
-import com.cncoding.teazer.model.user.UpdateCategories;
-import com.cncoding.teazer.model.user.UpdatePasswordRequest;
-import com.cncoding.teazer.model.user.UserProfile;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -26,7 +26,25 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.resultObj
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
-import static com.cncoding.teazer.utilities.Annotations.*;
+import static com.cncoding.teazer.utilities.common.Annotations.AccountType;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_CHANGE_MOBILE_NUMBER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_DEACTIVATE_ACCOUNT;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FOLLOWING_NOTIFICATIONS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_REQUEST_NOTIFICATIONS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USER_PROFILE;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USER_PROFILE_DETAIL;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_LOGOUT;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_REMOVE_PROFILE_PIC;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_REPORT_USER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_RESET_FCM_TOKEN;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_RESET_UNREAD_NOTIFICATION;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_SET_ACCOUNT_VISIBILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_SET_PASSWORD;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_CATEGORIES;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_MOBILE_NUMBER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_PASSWORD;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_USER_PROFILE;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_USER_PROFILE_MEDIA;
 
 /**
  *

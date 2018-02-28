@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -78,7 +77,7 @@
                                         android:layout_margin="10dp"
                                         android:background="@drawable/bg_circle_white_outline">
 
-                                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                                             android:id="@+id/profile_id"
                                             android:padding="2dp"
                                             android:layout_width="84dp"
@@ -103,7 +102,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
 
-                                        <com.cncoding.teazer.customViews.proximanovaviews.SignPainterTextView
+                                        <com.cncoding.teazer.ui.customviews.proximanovaviews.SignPainterTextView
                                             android:id="@+id/username_title"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
@@ -129,7 +128,7 @@
                                                 android:textColor="#b1ffffff"
                                                 android:textSize="13dp" />
 
-                                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                                 android:id="@+id/username"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
@@ -142,7 +141,7 @@
                                                 android:textSize="12sp" />
                                         </LinearLayout>
 
-                                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
 
                                             android:id="@+id/hobby"
                                             android:layout_width="wrap_content"
@@ -393,7 +392,7 @@
             android:layout_height="match_parent">
 
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:id="@+id/alert1"
                 android:layout_width="wrap_content"
@@ -403,7 +402,7 @@
                 android:textColor="#505050"
                 android:textSize="14sp"
                 />
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_below="@+id/alert1"
@@ -422,7 +421,7 @@
                 android:visibility="gone"
                 android:layout_height="match_parent">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="60dp"
                     android:layout_width="wrap_content"
@@ -447,7 +446,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                     android:id="@+id/userCreationTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     tools:fragment=".home.camera.nearbyPlaces.NearbyPlacesList">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/nearby_places_search"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -60,7 +60,7 @@
             android:layout_marginBottom="@dimen/padding_double"
             app:srcCompat="@drawable/ic_navigation"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -69,7 +69,7 @@
             android:padding="@dimen/padding_thin"
             android:text="@string/see_nearby_places"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -77,7 +77,7 @@
             android:padding="@dimen/padding_thin"
             android:text="@string/in_order_to_see_nearby_places"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
             android:id="@+id/turn_on_location_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

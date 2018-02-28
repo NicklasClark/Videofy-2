@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
@@ -17,7 +17,7 @@
         android:textColor="#505050"
         android:textSize="14sp" />
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
 
         android:id="@+id/alert2"
         android:layout_below="@+id/alert1"
@@ -31,7 +31,7 @@
         android:textColor="#505050"
         android:textSize="14sp" />
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:id="@+id/alert3"

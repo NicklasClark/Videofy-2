@@ -2,11 +2,11 @@ package com.cncoding.teazer.data.local;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.cncoding.teazer.model.base.Category;
-import com.cncoding.teazer.model.base.Medias;
-import com.cncoding.teazer.model.base.TaggedUser;
-import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.post.ReactedUser;
+import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.data.model.base.Medias;
+import com.cncoding.teazer.data.model.base.TaggedUser;
+import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.data.model.post.ReactedUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

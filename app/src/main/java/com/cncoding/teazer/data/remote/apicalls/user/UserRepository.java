@@ -2,19 +2,19 @@ package com.cncoding.teazer.data.remote.apicalls.user;
 
 import android.arch.lifecycle.LiveData;
 
+import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
+import com.cncoding.teazer.data.model.updatemobilenumber.UpdateMobileNumber;
+import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.data.model.user.NotificationsList;
+import com.cncoding.teazer.data.model.user.Profile;
+import com.cncoding.teazer.data.model.user.ProfileUpdateRequest;
+import com.cncoding.teazer.data.model.user.ReportUser;
+import com.cncoding.teazer.data.model.user.SetPasswordRequest;
+import com.cncoding.teazer.data.model.user.UpdateCategories;
+import com.cncoding.teazer.data.model.user.UpdatePasswordRequest;
+import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.utilities.Annotations.AccountType;
-import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
-import com.cncoding.teazer.model.updatemobilenumber.UpdateMobileNumber;
-import com.cncoding.teazer.model.user.DeactivateAccountRequest;
-import com.cncoding.teazer.model.user.NotificationsList;
-import com.cncoding.teazer.model.user.Profile;
-import com.cncoding.teazer.model.user.ProfileUpdateRequest;
-import com.cncoding.teazer.model.user.ReportUser;
-import com.cncoding.teazer.model.user.SetPasswordRequest;
-import com.cncoding.teazer.model.user.UpdateCategories;
-import com.cncoding.teazer.model.user.UpdatePasswordRequest;
-import com.cncoding.teazer.model.user.UserProfile;
+import com.cncoding.teazer.utilities.common.Annotations.AccountType;
 
 import okhttp3.MultipartBody;
 

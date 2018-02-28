@@ -73,7 +73,7 @@
                                             android:layout_margin="10dp"
                                             android:background="@drawable/bg_circle_white_outline">
 
-                                            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                                            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                                                 android:id="@+id/profile_id"
                                                 android:layout_width="84dp"
                                                 android:transitionName="profile"
@@ -97,7 +97,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content">
 
-                                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+                                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                                                 android:id="@+id/username_title"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                                                     android:textColor="#b1ffffff"
                                                     android:textSize="13sp" />
 
-                                                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                                                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                                     android:id="@+id/username"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                                                     android:textSize="12sp" />
                                             </LinearLayout>
 
-                                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
 
                                                 android:id="@+id/hobby"
                                                 android:layout_width="wrap_content"

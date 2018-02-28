@@ -3,7 +3,7 @@ package com.cncoding.teazer.data.remote.apicalls;
 import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.base.TeazerApplication;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

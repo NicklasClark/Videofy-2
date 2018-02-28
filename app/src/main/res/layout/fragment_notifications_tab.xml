@@ -12,7 +12,7 @@
         android:visibility="gone"
         android:layout_centerInParent="true"/>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
         android:id="@+id/no_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

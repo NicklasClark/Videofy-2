@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/invite_friends"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -24,7 +24,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/personasettings"
@@ -33,7 +33,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/changeCategoriesLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -47,7 +47,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:gravity="center_vertical"
@@ -57,7 +57,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/changePassword"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -71,7 +71,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/recentlyDeleted"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -89,7 +89,7 @@
             android:visibility="gone"
             android:background="@color/colorSecondary_text_light" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -100,7 +100,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:gravity="center_vertical"
@@ -109,7 +109,7 @@
             android:textSize="16sp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/text_hide_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -121,7 +121,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/text_block_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -162,7 +162,7 @@
                     android:paddingEnd="14dp" />
 
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/private_account_detail"
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -208,7 +208,7 @@
                     android:paddingEnd="14dp" />
 
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/showing_reactions_detail"
@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -257,7 +257,7 @@
                     android:paddingEnd="14dp" />
 
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/video_saving_detail"
@@ -295,7 +295,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -306,7 +306,7 @@
                     android:paddingEnd="14dp" />
 
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/prefetch_media_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -329,7 +329,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -340,7 +340,7 @@
             android:paddingEnd="14dp" />
 
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/facebookLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -354,7 +354,7 @@
 
         <!--<include layout="@layout/separator"/>-->
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/instagramLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -368,7 +368,7 @@
 
         <!--<include layout="@layout/separator"/>-->
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/helpCenterLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -382,7 +382,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
             android:id="@+id/legalLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -394,7 +394,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/privacyPolicyLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -408,7 +408,7 @@
 
         <!--<include layout="@layout/separator"/>-->
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/tncLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -422,7 +422,7 @@
 
         <!--<include layout="@layout/separator"/>-->
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/licenceLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -436,7 +436,7 @@
 
         <include layout="@layout/separator"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/deactivateAccountLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -448,7 +448,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/logoutLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"

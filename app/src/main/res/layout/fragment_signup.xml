@@ -31,7 +31,7 @@
                 android:layout_marginBottom="40dp"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/dp"
                     android:layout_width="84dp"
                     android:layout_height="84dp"
@@ -39,7 +39,7 @@
                     android:background="@drawable/ic_user_male_dp"
                     android:transitionName="profile" />
 
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/dp_edit_btn"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -59,7 +59,7 @@
                 android:layout_marginBottom="@dimen/padding_default"
                 android:contentDescription="@string/add_user" />-->
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_username"
                 style="@style/AppTheme.RoundedEditText"
                 android:layout_marginBottom="24dp"
@@ -68,7 +68,7 @@
                 android:inputType="text"
                 android:imeOptions="actionNext" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_password"
                 style="@style/AppTheme.RoundedEditText"
                 android:layout_marginBottom="24dp"

@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <com.cncoding.teazer.utilities.CollapsingImageLayout
+        <com.cncoding.teazer.utilities.common.CollapsingImageLayout
             android:id="@+id/collapsing_imagelayout"
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -175,7 +175,7 @@
 
                 </LinearLayout>
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                     android:id="@+id/detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
             </RelativeLayout>
 
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/profilepic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -201,7 +201,7 @@
                 android:padding="2dp"
                 android:background="@drawable/bg_circle_white_outline"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                 android:text="arifrocks0786"
                 />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
 
 
 
-        </com.cncoding.teazer.utilities.CollapsingImageLayout>
+        </com.cncoding.teazer.utilities.common.CollapsingImageLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"

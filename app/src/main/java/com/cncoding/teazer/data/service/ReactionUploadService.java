@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.data.apiCalls.ApiCallingService;
+import com.cncoding.teazer.data.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.common.SharedPrefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +27,9 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
-import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
-import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.finishReactionUploadSession;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveReactionUploadSession;
+import static com.cncoding.teazer.utilities.common.ViewUtils.UPLOAD_PARAMS;
 
 /**
  *

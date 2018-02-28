@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByOtp;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.common.TypeFactory;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.utilities.common.Annotations;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,9 +31,9 @@ import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
-import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
 public class ResetPasswordFragment extends BaseAuthFragment {
     public static final String ENTERED_TEXT = "enteredText";
@@ -164,7 +166,7 @@ public class ResetPasswordFragment extends BaseAuthFragment {
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
         hideKeyboard(getParentActivity(), statusView);
         if (isConnected) {
-            if (isFieldFilled(CHECK_PASSWORD)) {
+            if (isFieldFilled(Annotations.CHECK_PASSWORD)) {
                 if (newPass.equals(confirmPass)) {
                     ResetPasswordByOtp resetPasswordDetails;
                     resetPasswordDetails = isEmail ? new ResetPasswordByOtp(confirmPass, enteredText, null, countryCode, otp) :

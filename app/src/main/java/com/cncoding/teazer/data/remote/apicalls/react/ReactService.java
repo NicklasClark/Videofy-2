@@ -1,13 +1,13 @@
 package com.cncoding.teazer.data.remote.apicalls.react;
 
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.HiddenReactionsList;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.data.model.react.ReportReaction;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.post.LikedUserList;
-import com.cncoding.teazer.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.model.react.HiddenReactionsList;
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.react.ReactionsList;
-import com.cncoding.teazer.model.react.ReportReaction;
-import com.cncoding.teazer.utilities.Annotations.LikeDislike;
+import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;

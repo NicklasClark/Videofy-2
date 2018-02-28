@@ -1,6 +1,6 @@
 package com.cncoding.teazer.data.service.firebase;
 
-import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.common.SharedPrefs;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 

@@ -48,7 +48,7 @@
                         <RelativeLayout
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content">
-                            <com.cncoding.teazer.customViews.proximanovaviews.SignPainterTextView
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.SignPainterTextView
                                 android:id="@+id/username_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

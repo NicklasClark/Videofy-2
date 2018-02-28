@@ -15,7 +15,7 @@
         android:paddingEnd="@dimen/padding_half"
         android:layout_gravity="bottom">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/shimmer_dp"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -26,7 +26,7 @@
             android:src="@color/colorShimmer"
             android:layout_alignParentStart="true"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/shimmer_username"
             android:layout_width="50dp"
             android:layout_height="10dp"
@@ -39,7 +39,7 @@
             android:layout_above="@+id/shimmer_likes"
             android:layout_toEndOf="@+id/shimmer_dp"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/shimmer_likes"
             android:layout_width="35dp"
             android:layout_height="10dp"
@@ -73,7 +73,7 @@
         android:paddingStart="14dp"
         android:paddingBottom="18dp">
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="16dp"
@@ -83,7 +83,7 @@
             android:textColor="@android:color/white"
             android:textSize="13sp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
         android:paddingStart="14dp"
         android:paddingEnd="14dp">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -116,7 +116,7 @@
             app:civ_border_overlay="false"
             android:layout_marginEnd="6dp"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="14dp"
@@ -129,7 +129,7 @@
             android:layout_toEndOf="@+id/dp"
             android:layout_alignTop="@+id/dp" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
             android:layout_toEndOf="@+id/dp"
             android:layout_below="@+id/name" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true">
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_1"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -180,7 +180,7 @@
                 android:layout_marginEnd="@dimen/padding_thin"
                 android:visibility="gone"/>
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_2"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -188,7 +188,7 @@
                 android:foreground="@drawable/bg_circle_white_outline_thin"
                 android:visibility="gone"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/reaction_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

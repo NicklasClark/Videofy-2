@@ -76,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true">
 
-                            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                                 android:id="@+id/editcoverphoto"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                                 android:textColor="#efefef"
                                 android:background="@drawable/ic_edit" />
 
-                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_toRightOf="@+id/editcoverphoto"
                                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
 
                     >
 
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/profile_id"
                         android:layout_width="84dp"
                         app:behavior_overlapTop="30dp"
@@ -135,7 +135,7 @@
                         android:padding="2dp"
                         android:transitionName="profile" />
 
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:id="@+id/empname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
                         <!--android:layout_height="100dp"-->
                        <!--/>-->
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -248,7 +248,7 @@
                             android:layout_centerVertical="true"
                             android:textSize="@dimen/text_size_12sp" />
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                             android:id="@+id/male"
                             android:layout_width="wrap_content"
                             android:background="@drawable/ic_male_white"
@@ -256,7 +256,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@+id/gender_text"/>
 
-                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/maletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -270,14 +270,14 @@
                             android:layout_alignStart="@+id/male"
                             android:textSize="@dimen/text_size_14sp" />
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                             android:id="@+id/female"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ic_female_white"
                             android:layout_toEndOf="@+id/male"/>
 
-                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/femaletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -339,7 +339,7 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -354,7 +354,7 @@
                         android:gravity="bottom"
                         android:layout_height="wrap_content">
 
-                    <com.cncoding.teazer.customViews.CustomCountryCodePicker
+                    <com.cncoding.teazer.ui.customviews.common.CustomCountryCodePicker
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/signup_country_code"

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
         android:id="@+id/no_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:layout_above="@+id/no_posts_2"
         android:visibility="gone"/>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
         android:id="@+id/no_posts_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

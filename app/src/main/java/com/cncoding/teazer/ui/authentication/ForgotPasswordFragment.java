@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByPhoneNumber;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
+import com.cncoding.teazer.ui.authentication.base.BaseAuthFragment;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.common.Annotations;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -22,11 +24,11 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 import static android.text.TextUtils.isDigitsOnly;
-import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
-import static com.cncoding.teazer.utilities.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
-import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
-import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
+import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
+import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.common.AuthUtils.setCountryCode;
+import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
 @SuppressLint("SwitchIntDef")
 public class ForgotPasswordFragment extends BaseAuthFragment {
@@ -86,7 +88,7 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (username != null) {
-            if (isFieldValidated(CHECK_EMAIL) || isFieldValidated(CHECK_PHONE_NUMBER)) {
+            if (isFieldValidated(Annotations.CHECK_EMAIL) || isFieldValidated(Annotations.CHECK_PHONE_NUMBER)) {
                 forgotPasswordEditText.setText(username);
             }
         }
@@ -135,13 +137,13 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
         try {
             if (isConnected) {
-                if (isFieldFilled(CHECK_USERNAME) || isFieldFilled(CHECK_EMAIL)) {
+                if (isFieldFilled(Annotations.CHECK_USERNAME) || isFieldFilled(Annotations.CHECK_EMAIL)) {
                     if (isDigitsOnly(username)) {
 //                        Phone number is entered
                         requestResetPasswordByPhone(new ResetPasswordByPhoneNumber(Long.parseLong(username), countryCode));
                     } else {
 //                        Email is entered
-                        if (isFieldValidated(CHECK_EMAIL)) {
+                        if (isFieldValidated(Annotations.CHECK_EMAIL)) {
                             requestResetPasswordByEmail(username);
                         }
                         else showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
@@ -195,13 +197,13 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
     @Override
     protected boolean isFieldValidated(int whichType) {
         switch (whichType) {
-            case BaseAuthFragment.CHECK_EMAIL:
+            case Annotations.CHECK_EMAIL:
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
                         "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                 java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                 java.util.regex.Matcher m = p.matcher(username);
                 return m.matches();
-            case BaseAuthFragment.CHECK_PHONE_NUMBER:
+            case Annotations.CHECK_PHONE_NUMBER:
                 String ePattern1 = "\\d+";
                 java.util.regex.Pattern p1 = java.util.regex.Pattern.compile(ePattern1);
                 java.util.regex.Matcher m1 = p1.matcher(username);
@@ -214,9 +216,9 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
     @Override
     protected boolean isFieldFilled(int whichType) {
         switch (whichType) {
-            case BaseAuthFragment.CHECK_EMAIL:
+            case Annotations.CHECK_EMAIL:
                 return !forgotPasswordEditText.getText().toString().isEmpty();
-            case BaseAuthFragment.CHECK_USERNAME:
+            case Annotations.CHECK_USERNAME:
                 return username != null && !username.isEmpty();
             default:
                 return false;
