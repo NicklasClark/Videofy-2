@@ -959,7 +959,7 @@ public class CameraFragment extends Fragment {
                             //starting video duration counter
                             videoDuration.setVisibility(View.VISIBLE);
                             startTime = SystemClock.uptimeMillis();
-                            customHandler.postDelayed(updateTimerThread, 0);
+                            customHandler.post(updateTimerThread);
                         }
                     });
                 }
@@ -1044,7 +1044,7 @@ public class CameraFragment extends Fragment {
             String duration = "" + String.format(Locale.getDefault(), "%02d", minutes) +
                     ":" + String.format(Locale.getDefault(), "%02d", secs);
             videoDuration.setText(duration);
-            customHandler.postDelayed(this, 0);
+            customHandler.post(this);
         }
 
     };

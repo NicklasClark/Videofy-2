@@ -219,9 +219,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
 
         if (!isGiphy) {
-            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
-            compressVideoAsyncTask.delegate = this;
-            compressVideoAsyncTask.execute(videoPath);
+//            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
+//            compressVideoAsyncTask.delegate = this;
+//            compressVideoAsyncTask.execute(videoPath);
             isCompressing = true;
             initialSize = new File(videoPath).length();
         }
@@ -378,10 +378,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (addingWatermark) {
 //            disableView(uploadBtn, true);
 //        }
-        if(isCompressing) {
-            disableView(uploadBtn, true);
-            uploadBtn.setText("Processing...");
-        }
+//        if(isCompressing) {
+//            disableView(uploadBtn, true);
+//            uploadBtn.setText("Processing...");
+//        }
 
 //        new Handler().postDelayed(new Runnable() {
 //            public void run() {
