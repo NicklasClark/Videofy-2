@@ -1,9 +1,9 @@
 package com.cncoding.teazer.data.remote;
 
-import com.cncoding.teazer.model.BaseModel;
-import com.cncoding.teazer.model.friends.FollowInfo;
-import com.cncoding.teazer.utilities.Annotations.AuthCallType;
-import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.data.model.friends.FollowInfo;
+import com.cncoding.teazer.utilities.common.Annotations.AuthCallType;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

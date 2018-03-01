@@ -2,15 +2,15 @@ package com.cncoding.teazer.data.remote.apicalls.authentication;
 
 import android.arch.lifecycle.LiveData;
 
+import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.data.model.auth.InitiateSignup;
+import com.cncoding.teazer.data.model.auth.Login;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByOtp;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByPhoneNumber;
+import com.cncoding.teazer.data.model.auth.SocialSignup;
+import com.cncoding.teazer.data.model.auth.VerifyLoginWithOtp;
+import com.cncoding.teazer.data.model.auth.VerifySignUp;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
-import com.cncoding.teazer.model.auth.InitiateSignup;
-import com.cncoding.teazer.model.auth.Login;
-import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
-import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
-import com.cncoding.teazer.model.auth.SocialSignup;
-import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
-import com.cncoding.teazer.model.auth.VerifySignUp;
 
 /**
  *

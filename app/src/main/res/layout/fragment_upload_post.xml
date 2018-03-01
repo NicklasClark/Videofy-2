@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+    tools:context=".ui.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                     android:theme="@style/ProgressBarTheme"
                     android:layout_centerInParent="true" />
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/video_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/erro_msg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                     android:visibility="gone"
                     android:textSize="@dimen/text_size_12sp" />
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
                     android:id="@+id/video_upload_title"
                     android:maxLength="100"
@@ -124,11 +124,12 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
                     android:letterSpacing="-0.03"
+                    android:drawablePadding="4dp"
                     android:hint="@string/enter_location"
                     app:drawableStartCompat="@drawable/ic_place"
                     android:backgroundTint="#dddddd"
@@ -137,7 +138,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/tag_friends_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,10 +160,11 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     android:id="@+id/video_upload_tag_friends"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
+                    android:drawablePadding="4dp"
                     android:hint="@string/tag_friends"
                     android:backgroundTint="#dddddd"
                     app:drawableStartCompat="@drawable/ic_person_left"
@@ -170,7 +172,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/categories_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -193,7 +195,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     android:id="@+id/video_upload_categories"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
@@ -204,7 +206,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/share"
@@ -214,7 +216,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="14dp" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/share_on_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -240,7 +242,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/share_on_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -263,7 +265,7 @@
 
     </ScrollView>
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton
         android:id="@+id/video_upload_btn"
         style="@style/AppTheme.CancelUploadButtonsTheme"
         android:text="@string/upload"

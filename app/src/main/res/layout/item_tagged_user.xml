@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cncoding.teazer.customViews.CircularAppCompatImageView
+<com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tagged_user_dp"
     android:layout_width="32dp"
     android:layout_height="32dp"
     android:padding="1dp"
+    android:scaleType="centerCrop"
     android:background="@drawable/bg_circle_dark_outlined"
     android:layout_marginEnd="@dimen/padding_half"
     android:layout_gravity="center_vertical"/>

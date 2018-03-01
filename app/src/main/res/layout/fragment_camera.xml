@@ -21,7 +21,7 @@
         android:animateLayoutChanges="true"
         android:background="@android:color/white">
 
-        <com.cncoding.teazer.customViews.AutoFitTextureView
+        <com.cncoding.teazer.ui.customviews.common.AutoFitTextureView
             android:id="@+id/camera_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             tools:ignore="RelativeOverlap" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraFilterTip"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -43,7 +43,7 @@
             android:textSize="36sp"
             tools:ignore="RelativeOverlap" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraTip"
             app:drawableTopCompat="@drawable/ic_filter_arrow"
             android:drawablePadding="@dimen/activity_horizontal_margin"
@@ -101,7 +101,7 @@
                 android:contentDescription="@string/record_video"
                 app:srcCompat="@drawable/ic_record" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/video_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/text_size_content" />
 
-<!--             com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularChronometereter
+<!--         customviewsiews.proximanovaviews.ProximaNovaRegularChronometereter
                     android:id="@+id/chronometer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
 
         </RelativeLayout>
 
-        <!--<com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <!--<customviewsiews.ProximaNovaSemiboldTextView
             android:id="@+id/swipeCameraTip"
             app:drawableTopCompat="@drawable/ic_filter_arrow"
             android:drawablePadding="@dimen/activity_horizontal_margin"

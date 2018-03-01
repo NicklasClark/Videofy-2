@@ -5,16 +5,16 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepository;
 import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepositoryImpl;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
-import com.cncoding.teazer.model.user.BlockedUsersList;
 
 import javax.inject.Inject;
 
@@ -32,14 +32,14 @@ public class FriendsViewModel extends ViewModel {
     private MediatorLiveData<ProfileInfo> profileInfoLiveData;
     private MediatorLiveData<BlockedUsersList> blockedUsersListLiveData;
     private MediatorLiveData<UsersList> usersListLiveData;
-    private MediatorLiveData<LikedUserPost> likedUserPostLiveData;
+    private MediatorLiveData<LikedUserList> likedUserPostLiveData;
     private FriendsRepository friendsRepository;
 
     @Inject public FriendsViewModel(MediatorLiveData<ResultObject> resultObjectLiveData,
-                            MediatorLiveData<CircleList> circleListLiveData, MediatorLiveData<FollowingsList> followingsListLiveData,
-                            MediatorLiveData<FollowersList> followersListLiveData, MediatorLiveData<ProfileInfo> profileInfoLiveData,
-                            MediatorLiveData<BlockedUsersList> blockedUsersListLiveData, MediatorLiveData<UsersList> usersListLiveData,
-                            MediatorLiveData<LikedUserPost> likedUserPostLiveData, FriendsRepository friendsRepository) {
+                                    MediatorLiveData<CircleList> circleListLiveData, MediatorLiveData<FollowingsList> followingsListLiveData,
+                                    MediatorLiveData<FollowersList> followersListLiveData, MediatorLiveData<ProfileInfo> profileInfoLiveData,
+                                    MediatorLiveData<BlockedUsersList> blockedUsersListLiveData, MediatorLiveData<UsersList> usersListLiveData,
+                                    MediatorLiveData<LikedUserList> likedUserPostLiveData, FriendsRepository friendsRepository) {
         this.resultObjectLiveData = resultObjectLiveData;
         this.circleListLiveData = circleListLiveData;
         this.followingsListLiveData = followingsListLiveData;
@@ -96,7 +96,7 @@ public class FriendsViewModel extends ViewModel {
         return usersListLiveData;
     }
 
-    public MediatorLiveData<LikedUserPost> getLikedUserPost() {
+    public MediatorLiveData<LikedUserList> getLikedUserPost() {
         return likedUserPostLiveData;
     }
     //endregion
@@ -470,10 +470,10 @@ public class FriendsViewModel extends ViewModel {
         if (likedUserPostLiveData != null) {
             likedUserPostLiveData.addSource(
                     friendsRepository.getLikedUsers(postId, page),
-                    new Observer<LikedUserPost>() {
+                    new Observer<LikedUserList>() {
                         @Override
-                        public void onChanged(@Nullable LikedUserPost likedUserPost) {
-                            likedUserPostLiveData.setValue(likedUserPost);
+                        public void onChanged(@Nullable LikedUserList likedUserList) {
+                            likedUserPostLiveData.setValue(likedUserList);
                         }
                     }
             );

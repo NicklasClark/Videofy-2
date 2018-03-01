@@ -14,8 +14,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
@@ -25,9 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
-import static com.cncoding.teazer.BaseBottomBarActivity.POST_ID;
-import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
+import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.NOTIFICATION_TYPE;
+import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.POST_ID;
+import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.SOURCE_ID;
 
 /**
  *

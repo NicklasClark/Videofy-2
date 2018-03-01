@@ -3,14 +3,14 @@ package com.cncoding.teazer.utilities.diffutil;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.areEqualCollections;
+import static com.cncoding.teazer.utilities.common.CommonUtilities.areEqualCollections;
 
 /**
  *

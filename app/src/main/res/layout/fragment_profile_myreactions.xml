@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
         android:layout_width="wrap_content"
- android:visibility="gone"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -16,7 +16,8 @@
         android:text="Reactions are a new way to communicate!"
         android:textColor="#505050"
         android:textSize="14sp" />
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
 
         android:id="@+id/alert2"
         android:layout_below="@+id/alert1"
@@ -29,6 +30,26 @@
         android:text="Lets start by reacting on post you like."
         android:textColor="#505050"
         android:textSize="14sp" />
+
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/alert3"
+        android:visibility="gone"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:text="@string/no_reactions_message2"
+        android:textColor="#505050"
+        android:textSize="14sp" />
+
+
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -36,6 +57,8 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+
         android:paddingBottom="?attr/actionBarSize"
         android:id="@+id/recycler_view"/>
     </RelativeLayout>

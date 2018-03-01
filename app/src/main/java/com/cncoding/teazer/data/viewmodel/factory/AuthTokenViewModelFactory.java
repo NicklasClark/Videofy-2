@@ -7,7 +7,8 @@ import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.data.viewmodel.DiscoverViewModel;
 import com.cncoding.teazer.data.viewmodel.FriendsViewModel;
-import com.cncoding.teazer.data.viewmodel.PostDetailsViewModel;
+import com.cncoding.teazer.data.viewmodel.PostViewModel;
+import com.cncoding.teazer.data.viewmodel.ReactViewModel;
 
 import javax.inject.Inject;
 
@@ -38,12 +39,14 @@ public class AuthTokenViewModelFactory implements ViewModelProvider.Factory {
 
     @SuppressWarnings("unchecked")
     @NonNull @Override public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(PostDetailsViewModel.class))
-            return (T) new PostDetailsViewModel(application, token);
+        if (modelClass.isAssignableFrom(PostViewModel.class))
+            return (T) new PostViewModel(application, token);
         else if (modelClass.isAssignableFrom(DiscoverViewModel.class))
             return (T) new DiscoverViewModel(token);
         else if (modelClass.isAssignableFrom(FriendsViewModel.class))
             return (T) new FriendsViewModel(token, isAdapter);
+        else if (modelClass.isAssignableFrom(ReactViewModel.class))
+            return (T) new ReactViewModel(token);
         else throw new IllegalArgumentException("ViewModel Not Found");
     }
 }

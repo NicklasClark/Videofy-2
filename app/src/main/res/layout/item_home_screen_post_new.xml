@@ -7,11 +7,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
-    android:layout_marginTop="6dp"
-    android:elevation="2dp"
-    android:background="@drawable/bg_card_no_margin_white">
+    android:layout_marginTop="10dp"
+    android:background="@color/white">
 
-    <com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout
+    <com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout
         android:id="@+id/shimmer_layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +29,7 @@
             android:orientation="vertical"
             android:gravity="center_vertical">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/title"
                 android:layout_width="222dp"
                 android:layout_height="wrap_content"
@@ -43,7 +42,7 @@
                 android:gravity="center_vertical"
                 android:background="@drawable/bg_shimmer_light"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,11 +62,11 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="5"
             android:orientation="vertical"
             android:gravity="center_vertical|end">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
@@ -84,7 +83,7 @@
                 android:ellipsize="end"
                 android:background="@drawable/bg_shimmer_light"/>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/category_extra"
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
@@ -98,7 +97,7 @@
 
         </LinearLayout>
 
-    </com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout>
+    </com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -106,7 +105,7 @@
         android:animateLayoutChanges="true"
         android:background="@color/colorDisabled">
 
-        <com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView
+        <com.cncoding.teazer.ui.customviews.exoplayer.SimpleExoPlayerView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -123,7 +122,7 @@
             android:padding="12dp"
             android:contentDescription="@string/volume_controls" />
 
-        <com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout
+        <com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout
             android:id="@+id/shimmer_layout_mid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,7 +132,7 @@
             android:paddingTop="40dp"
             app:repeat_mode_="restart">
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/dp"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -147,7 +146,7 @@
                 app:civ_border_overlay="false"
                 android:scaleType="centerCrop" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/username"
                 android:layout_width="87dp"
                 android:layout_height="15dp"
@@ -170,7 +169,7 @@
                 android:layout_toEndOf="@+id/dp"
                 android:orientation="horizontal">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/likes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -181,7 +180,7 @@
                     android:textSize="@dimen/text_size_10sp"
                     app:drawableStartCompat="@drawable/ic_like_smaller" />
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/views"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -192,7 +191,7 @@
                     android:textSize="@dimen/text_size_10sp"
                     app:drawableStartCompat="@drawable/ic_view_outline_smaller" />
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/reactions"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -204,7 +203,7 @@
 
             </LinearLayout>
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/popularity_layout_shimmer"
                 android:layout_width="122dp"
                 android:layout_height="15dp"
@@ -214,7 +213,7 @@
                 android:background="@drawable/bg_shimmer_dark"
                 android:textSize="@dimen/text_size_10sp" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldButton
                 android:id="@+id/react_btn"
                 android:layout_width="90dp"
                 android:layout_height="32dp"
@@ -232,7 +231,7 @@
                 android:background="@drawable/bg_button_react"
                 app:drawableStartCompat="@drawable/ic_react_home" />
 
-        </com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout>
+        </com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout>
 
     </RelativeLayout>
 

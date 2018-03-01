@@ -73,7 +73,7 @@
         android:background="@android:color/white">
 
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:visibility="visible"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="15dp"
@@ -85,7 +85,7 @@
             android:textColor="#444444"
             android:textSize="15sp" />
 
-        <com.cncoding.teazer.videoTrim.widget.VideoThumbHorizontalListView
+        <com.cncoding.teazer.utilities.videoTrim.widget.VideoThumbHorizontalListView
             android:id="@+id/video_thumb_listview"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -111,7 +111,7 @@
             android:progressDrawable="@android:color/transparent"
             android:secondaryProgress="0"/>
 
-        <com.cncoding.teazer.videoTrim.widget.RangeSeekBarView
+        <com.cncoding.teazer.utilities.videoTrim.widget.RangeSeekBarView
             android:id="@+id/timeLineBar"
             android:layout_width="match_parent"
             android:layout_height="120dp"

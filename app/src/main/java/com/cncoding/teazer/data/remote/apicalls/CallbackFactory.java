@@ -3,17 +3,20 @@ package com.cncoding.teazer.data.remote.apicalls;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.data.model.user.NotificationsList;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
-import com.cncoding.teazer.model.discover.VideosList;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.model.user.NotificationsList;
-import com.cncoding.teazer.utilities.Annotations.CallType;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 
 import org.jetbrains.annotations.Contract;
 
@@ -248,6 +251,66 @@ public class CallbackFactory {
             public void onFailure(Call<NotificationsList> call, Throwable t) {
                 t.printStackTrace();
                 liveData.setValue(new NotificationsList(new Throwable(FAILED)).setCallType(callType));
+            }
+        };
+    }
+
+    @NonNull
+    @Contract(pure = true)
+    public static Callback<ReactionResponse> reactionResponseCallback(final MutableLiveData<ReactionResponse> liveData,
+                                                                      @CallType final int callType) {
+        return new Callback<ReactionResponse>() {
+            @Override
+            public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(callType) :
+                        new ReactionResponse(new Throwable(NOT_SUCCESSFUL)).setCallType(callType));
+            }
+
+            @Override
+            public void onFailure(Call<ReactionResponse> call, Throwable t) {
+                t.printStackTrace();
+                liveData.setValue(new ReactionResponse(new Throwable(FAILED)).setCallType(callType));
+            }
+        };
+    }
+
+    @NonNull
+    @Contract(pure = true)
+    public static Callback<ReactionsList> reactionListCallback(final MutableLiveData<ReactionsList> liveData,
+                                                                      @CallType final int callType) {
+        return new Callback<ReactionsList>() {
+            @Override
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(callType) :
+                        new ReactionsList(new Throwable(NOT_SUCCESSFUL)).setCallType(callType));
+            }
+
+            @Override
+            public void onFailure(Call<ReactionsList> call, Throwable t) {
+                liveData.setValue(new ReactionsList(new Throwable(FAILED)).setCallType(callType));
+                t.printStackTrace();
+            }
+        };
+    }
+
+    @NonNull
+    @Contract(pure = true)
+    public static Callback<LikedUserList> likedUserListCallback(final MutableLiveData<LikedUserList> liveData,
+                                                               @CallType final int callType) {
+        return new Callback<LikedUserList>() {
+            @Override
+            public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(callType) :
+                        new LikedUserList(new Throwable(NOT_SUCCESSFUL)).setCallType(callType));
+            }
+
+            @Override
+            public void onFailure(Call<LikedUserList> call, Throwable t) {
+                liveData.setValue(new LikedUserList(new Throwable(FAILED)).setCallType(callType));
+                t.printStackTrace();
             }
         };
     }

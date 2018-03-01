@@ -4,15 +4,17 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.base.TeazerApplication;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.post.ReportPost;
+import com.cncoding.teazer.data.model.post.TaggedUsersList;
+import com.cncoding.teazer.data.model.post.UpdatePostRequest;
+import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostReactionsList;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.model.post.ReportPost;
-import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.model.post.UpdatePostRequest;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -21,11 +23,29 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.postListCallback;
 import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.postUploadResultCallback;
+import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.reactionResponseCallback;
 import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.resultObjectCallback;
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
-import static com.cncoding.teazer.utilities.Annotations.*;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_CREATE_REACTION_BY_GIPHY;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_DELETE_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_ALL_HIDDEN_VIDEOS_LIST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_HIDDEN_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_HIDDEN_VIDEOS_LIST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_HOME_PAGE_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_POSTED_VIDEOS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_POST_DETAILS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_REACTIONS_OF_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_TAGGED_USERS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_VIDEOS_POSTED_BY_FRIEND;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_HIDE_OR_SHOW_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_INCREMENT_VIEW_COUNT;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_LIKE_DISLIKE_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_REPORT_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_POST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPLOAD_VIDEO;
+import static com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 /**
  *
@@ -50,6 +70,14 @@ public class PostsRepositoryImpl implements PostsRepository {
     }
 
     @Override
+    public LiveData<ReactionResponse> createReactionByGiphy(GiphyReactionRequest giphyReactionRequest) {
+        final MutableLiveData<ReactionResponse> liveData = new MutableLiveData<>();
+        postService.createReactionByGiphy(giphyReactionRequest)
+                .enqueue(reactionResponseCallback(liveData, CALL_CREATE_REACTION_BY_GIPHY));
+        return liveData;
+    }
+
+    @Override
     public LiveData<PostUploadResult> updatePost(UpdatePostRequest updatePostRequest) {
         final MutableLiveData<PostUploadResult> liveData = new MutableLiveData<>();
         postService.updatePost(updatePostRequest).enqueue(postUploadResultCallback(liveData, CALL_UPDATE_POST));
@@ -57,7 +85,7 @@ public class PostsRepositoryImpl implements PostsRepository {
     }
 
     @Override
-    public LiveData<ResultObject> likeDislikePost(int postId, int status) {
+    public LiveData<ResultObject> likeDislikePost(int postId, @LikeDislike int status) {
         final MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         postService.likeDislikePost(postId, status).enqueue(resultObjectCallback(liveData, CALL_LIKE_DISLIKE_POST));
         return liveData;
@@ -118,14 +146,14 @@ public class PostsRepositoryImpl implements PostsRepository {
             @Override
             public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
                 liveData.setValue(response.isSuccessful() ?
-                        response.body().setCallType(CALL_GET_POST_DETAILS) :
-                        new TaggedUsersList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_POST_DETAILS));
+                        response.body().setCallType(CALL_GET_TAGGED_USERS) :
+                        new TaggedUsersList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_TAGGED_USERS));
             }
 
             @Override
             public void onFailure(Call<TaggedUsersList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new TaggedUsersList(new Throwable(FAILED)).setCallType(CALL_GET_POST_DETAILS));
+                liveData.setValue(new TaggedUsersList(new Throwable(FAILED)).setCallType(CALL_GET_TAGGED_USERS));
             }
         });
         return liveData;

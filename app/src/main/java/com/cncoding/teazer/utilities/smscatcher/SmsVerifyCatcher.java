@@ -19,19 +19,19 @@ public class SmsVerifyCatcher {
 
     private Activity activity;
     private Fragment fragment;
-    private OnSmsCatchListener<String> onSmsCatchListener;
+    private OnSmsCatchListener onSmsCatchListener;
     private SmsReceiver smsReceiver;
     private String phoneNumber;
     private String filter;
 
-    public SmsVerifyCatcher(Activity activity, OnSmsCatchListener<String> onSmsCatchListener) {
+    public SmsVerifyCatcher(Activity activity, OnSmsCatchListener onSmsCatchListener) {
         this.activity = activity;
         this.onSmsCatchListener = onSmsCatchListener;
         smsReceiver = new SmsReceiver();
         smsReceiver.setCallback(this.onSmsCatchListener);
     }
 
-    public SmsVerifyCatcher(Activity activity, Fragment fragment, OnSmsCatchListener<String> onSmsCatchListener) {
+    public SmsVerifyCatcher(Activity activity, Fragment fragment, OnSmsCatchListener onSmsCatchListener) {
         this(activity, onSmsCatchListener);
         this.fragment = fragment;
     }

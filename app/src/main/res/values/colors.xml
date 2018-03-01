@@ -30,6 +30,7 @@
     <color name="colorSecondary_text_light">#BDBDBD</color>
     <color name="colorDisabled">#E0E0E0</color>
     <color name="colorIcons">#FFFFFF</color>
+    <color name="colorIconsRed">#ED3E51</color>
     <color name="colorDivider">#e0e0e0</color>
     <color name="colorRippleLight">#bbffffff</color>
     <color name="colorCcp">#0076FF</color>
@@ -42,8 +43,12 @@
     <color name="colorlines">#D8D8D8</color>
     <color name="colorReactBtn">#26C6DA</color>
     <color name="statusbar">#0fcfe7</color>
-    <color name="blur">#861b1b1b</color>
-    <color name="blur2">#d21b1b1b</color>
+    <color name="blur">#d1212121</color>
+    <color name="blur3">#bd2b2b2b</color>
+    <color name="blur4">#8d353535</color>
+    <color name="blur2">#58545454</color>
+    <color name="blur1">#87545454</color>
+    <color name="blur0">#00ffffff</color>
     <color name="colorTranslucentWhite">#88000000</color>
 
     <!--    <color name="space_background_color">#757575</color>
@@ -74,5 +79,7 @@
     <color name="DialogBoxConfirm">#666666</color>
     <color name="DialogBoxCancel">#999999</color>
     <color name="colorShimmer">#C1C1C1</color>
-    <color name="seperater_color">#DDDDDD</color>
+    <color name="separator_color">#DDDDDD</color>
+    <color name="primary">#785447</color>
+    <color name="primaryDark">#5B3F36</color>
 </resources>

@@ -1,8 +1,8 @@
 package com.cncoding.teazer.data.remote.apicalls.application;
 
-import com.cncoding.teazer.model.application.DeactivateTypes;
-import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
-import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.data.model.application.DeactivateTypes;
+import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.base.Category;
 
 import java.util.List;
 

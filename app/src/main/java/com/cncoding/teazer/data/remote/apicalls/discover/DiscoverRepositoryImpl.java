@@ -3,11 +3,11 @@ package com.cncoding.teazer.data.remote.apicalls.discover;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
-import com.cncoding.teazer.model.discover.LandingPosts;
-import com.cncoding.teazer.model.discover.LandingPostsV2;
-import com.cncoding.teazer.model.discover.VideosList;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.PostList;
+import com.cncoding.teazer.data.model.discover.LandingPosts;
+import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.PostList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,15 +19,15 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.videosLis
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
-import static com.cncoding.teazer.utilities.Annotations.CALL_ALL_INTERESTED_CATEGORIES_POSTS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_FEATURED_POSTS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_LANDING_POSTS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_MOST_POPULAR_POSTS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_TRENDING_POSTS_BY_CATEGORY;
-import static com.cncoding.teazer.utilities.Annotations.CALL_TRENDING_VIDEOS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_USERS_LIST;
-import static com.cncoding.teazer.utilities.Annotations.CALL_USERS_LIST_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_VIDEOS_LIST_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_ALL_INTERESTED_CATEGORIES_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_FEATURED_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_LANDING_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_MOST_POPULAR_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_TRENDING_POSTS_BY_CATEGORY;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_TRENDING_VIDEOS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_USERS_LIST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_USERS_LIST_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_VIDEOS_LIST_WITH_SEARCH_TERM;
 
 /**
  *
@@ -87,7 +87,7 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
     @Override public LiveData<PostList> getAllInterestedCategoriesVideos(int page, int categoryId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
         discoverService.getAllInterestedCategoriesVideos(page, categoryId)
-                .enqueue(postListCallback(liveData, CALL_ALL_INTERESTED_CATEGORIES_POSTS));
+                .enqueue(postListCallback(liveData, CALL_ALL_INTERESTED_CATEGORIES_POSTS + categoryId));
         return liveData;
     }
     @Override

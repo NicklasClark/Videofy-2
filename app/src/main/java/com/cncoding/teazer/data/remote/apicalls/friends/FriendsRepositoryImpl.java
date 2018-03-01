@@ -3,15 +3,15 @@ package com.cncoding.teazer.data.remote.apicalls.friends;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
-import com.cncoding.teazer.model.user.BlockedUsersList;
-import com.cncoding.teazer.utilities.Annotations;
+import com.cncoding.teazer.utilities.common.Annotations;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,28 +25,28 @@ import static com.cncoding.teazer.data.remote.apicalls.CallbackFactory.usersList
 import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.FAILED;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
-import static com.cncoding.teazer.utilities.Annotations.CALL_ACCEPT_JOIN_REQUEST;
-import static com.cncoding.teazer.utilities.Annotations.CALL_BLOCK_UNBLOCK_USER;
-import static com.cncoding.teazer.utilities.Annotations.CALL_CANCEL_REQUEST;
-import static com.cncoding.teazer.utilities.Annotations.CALL_DELETE_JOIN_REQUEST;
-import static com.cncoding.teazer.utilities.Annotations.CALL_FOLLOW_USER;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_BLOCKED_USERS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_FRIENDS_FOLLOWERS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_FRIENDS_FOLLOWERS_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_FRIENDS_FOLLOWINGS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_FRIENDS_FOLLOWINGS_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_LIKED_USERS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_CIRCLE;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_CIRCLE_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_FOLLOWERS;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_FOLLOWERS_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_FOLLOWING;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_MY_FOLLOWINGS_WITH_SEARCH_TERM;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_OTHERS_PROFILE_INFO;
-import static com.cncoding.teazer.utilities.Annotations.CALL_GET_USERS_LIST_TO_FOLLOW;
-import static com.cncoding.teazer.utilities.Annotations.CALL_SEND_JOIN_REQUEST_BY_USERNAME;
-import static com.cncoding.teazer.utilities.Annotations.CALL_SEND_JOIN_REQUEST_BY_USER_ID;
-import static com.cncoding.teazer.utilities.Annotations.CALL_UNFOLLOW_USER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_ACCEPT_JOIN_REQUEST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_BLOCK_UNBLOCK_USER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_CANCEL_REQUEST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_DELETE_JOIN_REQUEST;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_FOLLOW_USER;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_BLOCKED_USERS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FRIENDS_FOLLOWERS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FRIENDS_FOLLOWERS_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FRIENDS_FOLLOWINGS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FRIENDS_FOLLOWINGS_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_LIKED_USERS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_CIRCLE;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_CIRCLE_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_FOLLOWERS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_FOLLOWERS_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_FOLLOWING;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_MY_FOLLOWINGS_WITH_SEARCH_TERM;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_OTHERS_PROFILE_INFO;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USERS_LIST_TO_FOLLOW;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_SEND_JOIN_REQUEST_BY_USERNAME;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_SEND_JOIN_REQUEST_BY_USER_ID;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_UNFOLLOW_USER;
 
 /**
  *
@@ -248,20 +248,20 @@ public class FriendsRepositoryImpl implements FriendsRepository {
     }
 
     @Override
-    public LiveData<LikedUserPost> getLikedUsers(int postId, int page) {
-        final MutableLiveData<LikedUserPost> liveData = new MutableLiveData<>();
-        friendsService.getLikedUsers(postId, page).enqueue(new Callback<LikedUserPost>() {
+    public LiveData<LikedUserList> getLikedUsers(int postId, int page) {
+        final MutableLiveData<LikedUserList> liveData = new MutableLiveData<>();
+        friendsService.getLikedUsers(postId, page).enqueue(new Callback<LikedUserList>() {
             @Override
-            public void onResponse(Call<LikedUserPost> call, Response<LikedUserPost> response) {
+            public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
                 liveData.setValue(response.isSuccessful() ?
                         response.body().setCallType(CALL_GET_LIKED_USERS) :
-                        new LikedUserPost(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_LIKED_USERS));
+                        new LikedUserList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_LIKED_USERS));
             }
 
             @Override
-            public void onFailure(Call<LikedUserPost> call, Throwable t) {
+            public void onFailure(Call<LikedUserList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new LikedUserPost(new Throwable(FAILED)).setCallType(CALL_GET_LIKED_USERS));
+                liveData.setValue(new LikedUserList(new Throwable(FAILED)).setCallType(CALL_GET_LIKED_USERS));
             }
         });
         return liveData;

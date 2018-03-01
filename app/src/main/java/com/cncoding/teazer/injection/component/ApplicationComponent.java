@@ -20,10 +20,10 @@ package com.cncoding.teazer.injection.component;
 
 import android.app.Application;
 
-import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.injection.module.ApplicationModule;
 import com.cncoding.teazer.injection.module.RoomModule;
+import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
+import com.cncoding.teazer.ui.home.post.homepage.PostsListFragment;
 
 import javax.inject.Singleton;
 
@@ -40,7 +40,7 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     void inject(PostsListFragment postsListFragment);
-    void inject(FragmentPostDetails fragmentPostDetails);
+    void inject(PostDetailsFragment postDetailsFragment);
 
 
 
