@@ -31,7 +31,7 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('D:/AndroidStudio/KeyStores/Teazer/Teazer.jks')
+            storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }
@@ -168,7 +168,8 @@ dependencies {
     implementation 'com.github.iknow4:android-utils-sdk:1.1.1'
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.android.support:multidex:1.0.2'
-//    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
+
+    //    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
     implementation 'com.github.yangjie10930:EpMedia:v0.9.1'
     implementation 'io.branch.sdk.android:library:2.14.2'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
@@ -190,11 +191,14 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:${archLifecycleVersion}"
     implementation "android.arch.lifecycle:runtime:${archLifecycleVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${archLifecycleVersion}"
+
     // Room
     implementation "android.arch.persistence.room:runtime:${archPersistenceVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archPersistenceVersion}"
+
     // Paging
-    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
+    implementation 'android.arch.paging:runtime:1.0.0-alpha4-1'
+
     // Dagger
     implementation "com.google.dagger:dagger:${daggerVersion}"
     implementation "com.google.dagger:dagger-android-support:${daggerVersion}"

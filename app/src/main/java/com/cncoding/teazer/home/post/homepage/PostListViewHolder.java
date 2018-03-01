@@ -109,8 +109,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @OnClick(R.id.content) void viewPost() {
         PostsListFragment.positionToUpdate = getAdapterPosition();
         PostsListFragment.postDetails = postDetails;
-        adapter.fragment.navigation.pushFragment(FragmentPostDetails.newInstance(postDetails, thumbnailDrawable.getBitmap(),
-                true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
+        try {
+            adapter.fragment.navigation.pushFragment(FragmentPostDetails.newInstance(postDetails, thumbnailDrawable.getBitmap(),
+                    true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
