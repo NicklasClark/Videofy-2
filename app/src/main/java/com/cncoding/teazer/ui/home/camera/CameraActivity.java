@@ -224,7 +224,9 @@ public class CameraActivity extends AppCompatActivity
                 .addApi(Places.GEO_DATA_API)
                 .build();
 
-        getTrendingGiphys(offset);
+        if (isReaction) {
+            getTrendingGiphys(offset);
+        }
     }
 
     private void getTrendingGiphys(final int offset) {
