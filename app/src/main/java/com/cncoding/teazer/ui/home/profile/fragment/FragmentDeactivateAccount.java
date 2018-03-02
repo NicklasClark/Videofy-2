@@ -135,7 +135,7 @@ public class FragmentDeactivateAccount extends Fragment {
     }
 
     public void getDeactivationResonList() {
-        ApiCallingService.Application.getDeactivationTypesList(getContext()).enqueue(new Callback<List<DeactivateTypes>>() {
+        ApiCallingService.Application.getDeactivationTypesList().enqueue(new Callback<List<DeactivateTypes>>() {
 
             @Override
             public void onResponse(Call<List<DeactivateTypes>> call, Response<List<DeactivateTypes>> response) {

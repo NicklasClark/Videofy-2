@@ -144,7 +144,7 @@ public class SignupFragment2 extends BaseAuthFragment {
         if (!isFocused) {
             String email = emailView.getText().toString();
             if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
-                ApiCallingService.Auth.checkEmail(getContext(), emailView, true);
+                ApiCallingService.Auth.checkEmail(emailView, true);
             } else {
                 setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
@@ -154,7 +154,7 @@ public class SignupFragment2 extends BaseAuthFragment {
     @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
         if (!isFocused) {
             if (isValidPhoneNumber(phoneNumberView.getText().toString()))
-                ApiCallingService.Auth.checkPhoneNumber(getContext(), countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+                ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
             else
                 setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
         }

@@ -25,7 +25,7 @@ import com.cncoding.teazer.data.model.friends.UserInfo;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
 
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         try {
 
             final int followerId;
-            if (userfollowingstatus == FollowersListActivity.USERS_FOLLOWER) {
+            if (userfollowingstatus == FollowersListFragment.USERS_FOLLOWER) {
                 final UserInfo cont = list.get(i);
                 final String followingname = cont.getUserName();
                 final int accounttype = cont.getAccountType();
@@ -717,7 +717,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     @Override
     public int getItemCount() {
-        if (userfollowingstatus == FollowersListActivity.USERS_FOLLOWER) {
+        if (userfollowingstatus == FollowersListFragment.USERS_FOLLOWER) {
             return list.size();
         } else {
             return otherlist.size();

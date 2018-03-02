@@ -45,6 +45,7 @@
             android:minWidth="90dp"
             android:foreground="@drawable/ripple_dark_rounded_2dp"
             android:gravity="center"
+            android:drawablePadding="5dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
             android:visibility="visible"

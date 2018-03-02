@@ -10,7 +10,7 @@
     android:layout_marginTop="10dp"
     android:background="@color/white">
 
-    <com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout
+    <com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout
         android:id="@+id/shimmer_layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,16 +23,21 @@
         android:background="@drawable/bg_card_no_margin_white">
 
         <LinearLayout
+            android:id="@+id/top_left_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:minWidth="160dp"
+            android:layout_toStartOf="@+id/top_right_layout"
             android:orientation="vertical"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical">
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/title"
                 android:layout_width="222dp"
                 android:layout_height="wrap_content"
+                android:minWidth="160dp"
                 android:minHeight="16dp"
                 android:textColor="@color/colorPrimary_text"
                 android:textSize="16sp"
@@ -60,10 +65,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/top_right_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:minWidth="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical|end">
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
@@ -75,7 +83,7 @@
                 android:paddingStart="11dp"
                 android:paddingEnd="11dp"
                 android:layout_marginStart="16dp"
-                android:textSize="@dimen/text_size_9sp"
+                android:textSize="@dimen/text_size_10sp"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:maxLines="1"
@@ -97,7 +105,7 @@
 
         </LinearLayout>
 
-    </com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout>
+    </com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

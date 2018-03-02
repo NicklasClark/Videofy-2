@@ -29,7 +29,7 @@ public class ClientProvider {
 
     public static Retrofit getRetrofitWithAuthToken(@NonNull final String token) {
         if (retrofitWithAuthToken == null) {
-            retrofitWithoutAuthToken = null;
+//            retrofitWithoutAuthToken = null;
             retrofitWithAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -42,7 +42,7 @@ public class ClientProvider {
 
     public static Retrofit getRetrofitWithoutAuthToken() {
         if (retrofitWithoutAuthToken == null) {
-            retrofitWithAuthToken = null;
+//            retrofitWithAuthToken = null;
             retrofitWithoutAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())

@@ -40,8 +40,8 @@ import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
@@ -54,12 +54,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 15/02/18.
  */
 
-public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction
+public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
 
-{
     private static final int RC_REQUEST_STORAGE = 1001;
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
@@ -143,17 +143,11 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         followerfollowingid = Integer.parseInt(getArguments().getString(ARG_ID));
         userType = getArguments().getString(ARG_IDENTIFIER);
         username = getArguments().getString(ARG_USERNAME);
         getNotificationType = getArguments().getString(ARG_NOTIFICATION_ID);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -166,7 +160,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
 
         placeholder = view.findViewById(R.id.background);
         _name = view.findViewById(R.id.name);
@@ -212,10 +206,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                 if (accountType == 1) {
 
                     if (isfollowing) {
-                        navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                        navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                     } else if (hassentrequest) {
                         if (requestRecieved) {
-                            navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                            navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
@@ -225,7 +219,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
                 }
                 else {
-                    navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
 
             }
@@ -239,11 +233,11 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                 if (accountType == 1) {
 
                     if (isfollowing == true) {
-                        navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                        navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
 
                     } else if (hassentrequest == true) {
                         if (requestRecieved == true) {
-                            navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                            navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
@@ -251,7 +245,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
             }
         });
@@ -311,8 +305,6 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                     _name.setTextColor(Color.parseColor("#c6c6c6"));
                     _username.setTextColor(Color.parseColor("#c6c6c6"));
                     toolbar.setBackgroundResource(R.color.blur2);
-
-
                 }
             }
         });
@@ -320,44 +312,9 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getParentActivity().hideToolbarOnly();
-
-
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getParentActivity().showToolbar();
-
-
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getProfileInformation(followerfollowingid);
-
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().showToolbar();
-        getParentActivity().updateToolbarTitle(previousTitle);
-
-
     }
 
     @Override
@@ -368,13 +325,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
             case R.id.action_profile_report:
                 openReportUser(followerfollowingid);
                 break;
-
             case R.id.action_profile_block:
                 if (youBlocked) {
                     blockUnblockUsers(followerfollowingid, UNBLOCK_STATUS);

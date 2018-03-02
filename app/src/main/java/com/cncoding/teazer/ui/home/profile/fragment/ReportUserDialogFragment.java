@@ -127,7 +127,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
 
     private void getPostReportTypes() {
         loader.setVisibility(View.VISIBLE);
-        ApiCallingService.Application.getProfileReportTypes(getContext()).enqueue(new Callback<List<ReportPostTitlesResponse>>() {
+        ApiCallingService.Application.getProfileReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
             @Override
             public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
                 try {

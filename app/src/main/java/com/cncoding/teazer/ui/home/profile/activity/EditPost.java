@@ -29,12 +29,11 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
-import java.util.ArrayList;
-
 import butterknife.ButterKnife;
 
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
+import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
         TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
@@ -139,47 +138,43 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
 
     @Override
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
+        hideKeyboard(this, findViewById(R.id.container));
         editPostFragment.onNearbyPlacesAdapterInteraction(selectedPlace);
         getSupportFragmentManager().popBackStack();
-
     }
 
     @Override
-    public void onPlaceClick(ArrayList<NearbyPlacesAdapter.PlaceAutocomplete> mResultList, int position) {
-        if(mResultList!=null){
-            try {
-                final String placeId = String.valueOf(mResultList.get(position).placeId);
-
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(googleApiClient, placeId);
-                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(@NonNull PlaceBuffer places) {
-                        if(places.getCount()==1){
-                            //Do the things here on Click.....
-                            editPostFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
-                                    places.get(0).getName().toString(),
-                                    places.get(0).getLatLng().latitude,
-                                    places.get(0).getLatLng().longitude
-                            ));
-                            getSupportFragmentManager().popBackStack();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_SHORT).show();
-                        }
+    public void onPlaceClick(CharSequence placeId) {
+        hideKeyboard(this, findViewById(R.id.container));
+        try {
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(googleApiClient, String.valueOf(placeId));
+            placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceBuffer places) {
+                    if(places.getCount()==1){
+                        //Do the things here on Click.....
+                        editPostFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
+                                places.get(0).getName().toString(),
+                                places.get(0).getLatLng().latitude,
+                                places.get(0).getLatLng().longitude
+                        ));
+                        getSupportFragmentManager().popBackStack();
                     }
-                });
-            }
-            catch (Exception e){
-                Log.e("onPlaceClick()", e.getMessage());
-            }
-
+                    else {
+                        Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
-
+        catch (Exception e){
+            Log.e("onPlaceClick()", e.getMessage());
+        }
     }
 
     @Override
     public void onCurrentLocationClick() {
+        hideKeyboard(this, findViewById(R.id.container));
     }
 
     @Override

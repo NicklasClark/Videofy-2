@@ -31,7 +31,7 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('/Users/farazhabib/Documents/Android Keystores/Teazer.jks')
+            storeFile file('D:/AndroidStudio/KeyStores/Teazer/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }
@@ -41,7 +41,7 @@ android {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
+        versionCode 18
         versionName "1.0"
         dataBinding.enabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

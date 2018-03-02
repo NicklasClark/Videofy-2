@@ -11,18 +11,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -45,10 +41,9 @@ import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
 import com.cncoding.teazer.ui.base.BaseActivity;
 import com.cncoding.teazer.ui.base.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.customviews.common.NestedCoordinatorLayout;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.camera.UploadFragment;
@@ -61,8 +56,8 @@ import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.ui.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.ui.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.home.profile.ProfileFragment.FollowerListListener;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowingAdapter.OtherProfileListenerFollowing;
@@ -108,9 +103,6 @@ import retrofit2.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.R.anim.fast_fade_in;
-import static com.cncoding.teazer.R.anim.fast_fade_out;
-import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
@@ -156,7 +148,6 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
-
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners
         ProfileMyReactionAdapter.ReactionPlayerListener,
@@ -169,12 +160,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int COACH_MARK_DELAY = 1000;
 
     @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) AppBarLayout appBar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
-    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.root_layout) RelativeLayout rootLayout;
     @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
@@ -236,21 +223,13 @@ public class BaseBottomBarActivity extends BaseActivity
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
 
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-//        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
-
         fragmentHistory = new FragmentHistory();
 
         navigationController = NavigationController
                 .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_fragment_container)
                 .activity(this)
                 .defaultTransactionOptions(new NavigationTransactionOptions.Builder()
-                        .customAnimations(float_up, fast_fade_out, fast_fade_in, fast_fade_out)
+                        .customAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
                         .build())
                 .transactionListener(this)
                 .rootFragmentListener(this, TABS.length)
@@ -351,7 +330,7 @@ public class BaseBottomBarActivity extends BaseActivity
         getBranchDynamicLinks();
 
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
-//        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
+
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
         if (tab != null) {
             tab.setCustomView(null);
@@ -444,7 +423,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        checkIfAnyVideoIsUploading();
+        checkIfAnyVideoOrReactionIsUploading();
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
     }
 
@@ -483,9 +462,6 @@ public class BaseBottomBarActivity extends BaseActivity
                     } else {
                         pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
                     }
-//                    pushFragment(isSelf ? ProfileFragment.newInstance() :
-//                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-//
                 } else {
                     Log.d("NOTIFY", "BUNDLE not present on new Intent");
                     switchTabDynamically();
@@ -697,10 +673,6 @@ public class BaseBottomBarActivity extends BaseActivity
     private void switchTab(final int position) {
         navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
-        if (position == 1 || position == 3)
-            setAppBarElevation(0);
-        else
-            setAppBarElevation(1);
 
         switch (position) {
             case TAB1:
@@ -780,25 +752,19 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void setAppBarElevation(float elevation) {
-        if (appBar.getElevation() != elevation)
-            appBar.setElevation((int) ((elevation * getResources().getDisplayMetrics().density) + 0.5));
-    }
-
     public void updateToolbar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            if (!navigationController.isRootFragment()) {
-                btnToolbarBack.setVisibility(VISIBLE);
-            } else
-                btnToolbarBack.setVisibility(GONE);
-//            actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
-//            actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        if (navigationController.isRootFragment()) {
+            btnToolbarBack.setVisibility(GONE);
+        } else {
+            btnToolbarBack.setVisibility(VISIBLE);
+            if (navigationController.getCurrentFragment() instanceof FragmentNewOtherProfile ||
+                    navigationController.getCurrentFragment() instanceof PostDetailsFragment ||
+                    navigationController.getCurrentFragment() instanceof FragmentReactionPlayer)
+                btnToolbarBack.setImageResource(R.drawable.ic_arrow_back_black_24dp);
+            else btnToolbarBack.setImageResource(R.drawable.ic_arrow_back);
         }
-        // toggleBottomBar(navigationController.isRootFragment());
+        toggleBottomBar(!(navigationController.getCurrentFragment() instanceof PostDetailsFragment));
     }
-
 
     @SuppressWarnings("unused")
     public void toggleBottomBar(boolean isVisible) {
@@ -815,65 +781,61 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void hideToolbar() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        toolbar.setVisibility(GONE);
-    }
+//    public void hideToolbar() {
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        toolbar.setVisibility(GONE);
+//    }
+//
+//    public void showToolbar() {
+//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        toolbar.setVisibility(VISIBLE);
+//    }
+//
+//    /**
+//     * Updates the toolbar title.
+//     *
+//     * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
+//     */
+//    public void updateToolbarTitle(String title) {
+//        if (title == null || title.equals("")) {
+//            if (toolbarPlainTitle.getVisibility() != GONE) {
+//                toolbarPlainTitle.setVisibility(GONE);
+//                btnToolbarBack.setVisibility(GONE);
+//            }
+//            if (toolbarCenterTitle.getVisibility() != VISIBLE) {
+//                toolbarCenterTitle.setVisibility(VISIBLE);
+//                btnToolbarBack.setVisibility(VISIBLE);
+//            }
+//        } else {
+//            toolbarPlainTitle.setText(title);
+//            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
+//                toolbarPlainTitle.setVisibility(VISIBLE);
+//                btnToolbarBack.setVisibility(VISIBLE);
+//            }
+//            if (toolbarCenterTitle.getVisibility() != GONE) {
+//                toolbarCenterTitle.setVisibility(GONE);
+//                btnToolbarBack.setVisibility(GONE);
+//            }
+//            uploadingStatusLayout.setVisibility(GONE);
+//        }
+//    }
 
-    public void hideToolbarOnly() {
-        toolbar.setVisibility(GONE);
-    }
-
-    public void showToolbar() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        toolbar.setVisibility(VISIBLE);
-    }
-
-    /**
-     * Updates the toolbar title.
-     *
-     * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
-     */
-    public void updateToolbarTitle(String title) {
-        if (title == null || title.equals("")) {
-            if (toolbarPlainTitle.getVisibility() != GONE) {
-                toolbarPlainTitle.setVisibility(GONE);
-                btnToolbarBack.setVisibility(GONE);
-            }
-            if (toolbarCenterTitle.getVisibility() != VISIBLE) {
-                toolbarCenterTitle.setVisibility(VISIBLE);
-                btnToolbarBack.setVisibility(VISIBLE);
-            }
-        } else {
-            toolbarPlainTitle.setText(title);
-            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
-                toolbarPlainTitle.setVisibility(VISIBLE);
-                btnToolbarBack.setVisibility(VISIBLE);
-            }
-            if (toolbarCenterTitle.getVisibility() != GONE) {
-                toolbarCenterTitle.setVisibility(GONE);
-                btnToolbarBack.setVisibility(GONE);
-            }
-            uploadingStatusLayout.setVisibility(GONE);
-        }
-    }
-
-    public String getToolbarTitle() {
-        try {
-            if (toolbarPlainTitle != null)
-                return toolbarPlainTitle.getText().toString();
-            else
-                return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
+//    public String getToolbarTitle() {
+//        try {
+//            if (toolbarPlainTitle != null)
+//                return toolbarPlainTitle.getText().toString();
+//            else
+//                return "";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+//    }
 
     @Override
     public void onTabTransaction(Fragment fragment, int index) {
         // If we have a backStack, show the back button
-        if (getSupportActionBar() != null && navigationController != null) {
+        if (navigationController != null) {
             updateToolbar();
         }
     }
@@ -882,7 +844,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onFragmentTransaction(Fragment fragment, NavigationController.TransactionType transactionType) {
         //Do fragment stuff. Maybe change title.
         // If we have a backStack, show the back button
-        if (getSupportActionBar() != null && navigationController != null) {
+        if (navigationController != null) {
             updateToolbar();
         }
     }
@@ -890,9 +852,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void pushFragment(final Fragment fragment) {
         if (navigationController != null) {
-            if (fragment instanceof PostDetailsFragment) {
-                hideToolbar();
-            }
             navigationController.pushFragment(fragment);
         }
     }
@@ -948,7 +907,7 @@ public class BaseBottomBarActivity extends BaseActivity
     //</editor-fold>
 
     //<editor-fold desc="Video upload handler">
-    private void checkIfAnyVideoIsUploading() {
+    private void checkIfAnyVideoOrReactionIsUploading() {
         UploadParams videoUploadParams = getVideoUploadSession(getApplicationContext());
         if (videoUploadParams != null) {
             setupVideoUploadServiceReceiver(videoUploadParams);
@@ -966,6 +925,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void setupVideoUploadServiceReceiver(UploadParams videoUploadParams) {
+        uploadingStatusLayout.setVisibility(VISIBLE);
         videoUploadProgress.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(Uri.fromFile(new File(videoUploadParams.getVideoPath())))
@@ -976,26 +936,33 @@ public class BaseBottomBarActivity extends BaseActivity
                 public void onReceiverResult(int resultCode, Bundle resultData) {
                     switch (resultCode) {
                         case UPLOAD_IN_PROGRESS_CODE:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                                uploadingStatusLayout.setVisibility(VISIBLE);
-                                uploadProgressText.setText(String.valueOf(getString(R.string.uploading_your_video) +
-                                        BLANK_SPACE + resultData.getInt(UPLOAD_PROGRESS) + "%"));
-                                videoUploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
-                            } else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                                    uploadProgressText.setText(String.valueOf(getString(R.string.uploading_your_video) +
+                                            BLANK_SPACE + resultData.getInt(UPLOAD_PROGRESS) + "%"));
+                                    videoUploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
+                                } else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             break;
                         case UPLOAD_COMPLETE_CODE:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                                uploadProgressText.setText(R.string.finished);
-                                videoUploadProgress.setVisibility(GONE);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        uploadingStatusLayout.setVisibility(GONE);
-                                    }
-                                }, 2000);
-
-                                refreshPosts();
-                            } else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                                    uploadProgressText.setText(R.string.finished);
+                                    videoUploadProgress.setVisibility(GONE);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                uploadingStatusLayout.setVisibility(GONE);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, 2000);
+                                    refreshPosts();
+                                }
+                                else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             finishVideoUploadSession(getApplicationContext());
 
                             //add watermark for local creations/reactions
@@ -1007,22 +974,30 @@ public class BaseBottomBarActivity extends BaseActivity
                                 deleteFilePermanently(resultData.getString(VIDEO_PATH));
                             break;
                         case UPLOAD_ERROR_CODE:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                                uploadProgressText.setText(R.string.failed);
-                                videoUploadProgress.setVisibility(GONE);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        uploadingStatusLayout.setVisibility(GONE);
-                                    }
-                                }, 2000);
-                            } else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                                    uploadProgressText.setText(R.string.failed);
+                                    videoUploadProgress.setVisibility(GONE);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                uploadingStatusLayout.setVisibility(GONE);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, 2000);
+                                } else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             finishVideoUploadSession(getApplicationContext());
                             break;
                         case REQUEST_CANCEL_UPLOAD:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment)
-                                Toast.makeText(getThis(), R.string.upload_cancelled, Toast.LENGTH_SHORT).show();
-                            else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment)
+                                    Toast.makeText(getThis(), R.string.upload_cancelled, Toast.LENGTH_SHORT).show();
+                                else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             break;
                         default:
                             break;
@@ -1033,6 +1008,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void setupReactionUploadServiceReceiver(UploadParams reactionUploadParams) {
+        uploadingStatusLayout.setVisibility(VISIBLE);
         reactionUploadProgress.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(Uri.fromFile(new File(reactionUploadParams.getVideoPath())))
@@ -1043,8 +1019,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 public void onReceiverResult(int resultCode, Bundle resultData) {
                     switch (resultCode) {
                         case UPLOAD_IN_PROGRESS_CODE:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                                uploadingStatusLayout.setVisibility(VISIBLE);
+                            if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
                                 uploadProgressText.setText(String.valueOf(getString(R.string.uploading_your_reaction) +
                                         BLANK_SPACE + resultData.getInt(UPLOAD_PROGRESS) + "%"));
                                 reactionUploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
@@ -1057,12 +1032,13 @@ public class BaseBottomBarActivity extends BaseActivity
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        uploadingStatusLayout.setVisibility(GONE);
+                                        try {
+                                            uploadingStatusLayout.setVisibility(GONE);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }, 2000);
-
-//                                if (PostsListFragment.postDetails != null)
-//                                    PostsListFragment.postDetails.canReact = false;
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishReactionUploadSession(getApplicationContext());
@@ -1071,27 +1047,34 @@ public class BaseBottomBarActivity extends BaseActivity
                                 AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
                                 addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
                                 addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
-                            } else
-                                deleteFilePermanently(resultData.getString(VIDEO_PATH));
-
+                            }
+                            else deleteFilePermanently(resultData.getString(VIDEO_PATH));
                             break;
                         case UPLOAD_ERROR_CODE:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                                uploadProgressText.setText(R.string.failed);
-                                reactionUploadProgress.setVisibility(GONE);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        uploadingStatusLayout.setVisibility(GONE);
-                                    }
-                                }, 2000);
-                            } else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                                    uploadProgressText.setText(R.string.failed);
+                                    reactionUploadProgress.setVisibility(GONE);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                uploadingStatusLayout.setVisibility(GONE);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, 2000);
+                                } else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             finishReactionUploadSession(getApplicationContext());
                             break;
                         case REQUEST_CANCEL_UPLOAD:
-                            if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment)
-                                Toast.makeText(getThis(), R.string.upload_cancelled, Toast.LENGTH_SHORT).show();
-                            else uploadingStatusLayout.setVisibility(GONE);
+                            if (isActivityActive(getThis())) {
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment)
+                                    Toast.makeText(getThis(), R.string.upload_cancelled, Toast.LENGTH_SHORT).show();
+                                else uploadingStatusLayout.setVisibility(GONE);
+                            }
                             break;
                         default:
                             break;
@@ -1125,12 +1108,12 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onFollowerListListener(String id, String identifier) {
-        pushFragment(FollowersListActivity.newInstance(id, identifier));
+        pushFragment(FollowersListFragment.newInstance(id, identifier));
     }
 
     @Override
     public void onFollowingListListener(String id, String identifier) {
-        pushFragment(FollowingListActivities.newInstance(id, identifier));
+        pushFragment(FollowingListFragment.newInstance(id, identifier));
     }
 
     @Override
@@ -1180,7 +1163,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void postGiphyReaction(UploadParams uploadParams) {
-        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostId(),
                 uploadParams.getTitle(),
                 uploadParams.getVideoPath());
         ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {

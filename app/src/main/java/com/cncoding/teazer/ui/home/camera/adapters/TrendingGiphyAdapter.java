@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.home.camera.adapters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.giphy.Datum;
 import com.cncoding.teazer.data.model.giphy.Images;
+import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
-import com.cncoding.teazer.utilities.common.PlaceHolderDrawableHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.cncoding.teazer.utilities.common.PlaceHolderDrawableHelper.getBackgroundDrawable;
 
 /**
  *
@@ -26,40 +29,20 @@ import butterknife.ButterKnife;
  */
 
 
-public class TrendingGiphyAdapter extends RecyclerView.Adapter<TrendingGiphyAdapter.ViewHolder> {
+public class TrendingGiphyAdapter extends BaseRecyclerView.Adapter {
 
     private CameraActivity cameraActivity;
     private List<Datum> giphys;
 
-    public TrendingGiphyAdapter(CameraActivity cameraActivity, List<Datum> videos) {
+    public TrendingGiphyAdapter(CameraActivity cameraActivity) {
         this.cameraActivity = cameraActivity;
-        this.giphys = videos;
+        this.giphys = new ArrayList<>();
     }
 
     @Override
-    public TrendingGiphyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TrendingGiphyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trending_giphy, parent, false);
-        return new TrendingGiphyAdapter.ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(final TrendingGiphyAdapter.ViewHolder holder, int position) {
-        try {
-            Images images = giphys.get(position).getImages();
-            Glide.with(cameraActivity).load(images.getDownsized().getUrl())
-                    .apply(new RequestOptions().placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .into(holder.thumbnailView);
-
-            holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cameraActivity.onTrendingGiphyAdapterInteraction(giphys.get(holder.getAdapterPosition()).getImages());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return new TrendingGiphyViewHolder(view);
     }
 
     @Override
@@ -67,14 +50,54 @@ public class TrendingGiphyAdapter extends RecyclerView.Adapter<TrendingGiphyAdap
         return giphys.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void release() {}
 
-        @BindView(R.id.giphy_thumbnail)
-        ImageView thumbnailView;
+    @Override
+    public void notifyDataChanged() {}
 
-        ViewHolder(View view) {
+    private void notifyItemChange(final int positionStart, final int itemCount) {
+        cameraActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemRangeChanged(positionStart, itemCount);
+            }
+        });
+    }
+
+    public void addPosts(int offset, List<Datum> giphys) {
+        this.giphys.addAll(giphys);
+        notifyItemChange(offset, giphys.size());
+    }
+
+    public void clearData() {
+        giphys.clear();
+    }
+
+    class TrendingGiphyViewHolder extends BaseRecyclerView.ViewHolder {
+
+        @BindView(R.id.giphy_thumbnail) ImageView thumbnailView;
+
+        TrendingGiphyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void bind() {
+            try {
+                Images images = giphys.get(getAdapterPosition()).getImages();
+                Glide.with(cameraActivity).load(images.getDownsized().getUrl())
+                        .apply(new RequestOptions().placeholder(getBackgroundDrawable(getAdapterPosition()))
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                        .into(thumbnailView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @OnClick(R.id.giphy_thumbnail) public void gifSelected() {
+            cameraActivity.onTrendingGiphyAdapterInteraction(giphys.get(getAdapterPosition()).getImages());
         }
     }
 }

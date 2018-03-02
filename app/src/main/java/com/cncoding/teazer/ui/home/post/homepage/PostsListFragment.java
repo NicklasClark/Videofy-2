@@ -58,8 +58,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
-        previousTitle = getParentActivity().getToolbarTitle();
-        getParentActivity().updateToolbarTitle(null);
         ButterKnife.bind(this, rootView);
 
         prepareRecyclerView();
@@ -218,12 +216,5 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 fragment.refreshPosts(false, false);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getParentActivity().updateToolbarTitle(previousTitle);
-//        positionToUpdate = -1;
     }
 }

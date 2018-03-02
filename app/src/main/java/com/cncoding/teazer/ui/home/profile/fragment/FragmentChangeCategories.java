@@ -126,7 +126,7 @@ public class FragmentChangeCategories extends Fragment{
     }
 
     public void getCategories(final ArrayList<Category> userCategoryList) {
-        ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
              try {

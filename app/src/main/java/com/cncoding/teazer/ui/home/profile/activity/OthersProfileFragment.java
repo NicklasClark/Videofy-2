@@ -203,16 +203,12 @@ public class OthersProfileFragment extends BaseFragment {
             getNotificationType = getArguments().getString(ARG_NOTIFICATION_ID);
             setHasOptionsMenu(true);
         }
-        previousTitle = getParentActivity().getToolbarTitle();
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
-
-
         ButterKnife.bind(this, view);
         context = container.getContext();
-        getParentActivity().updateToolbarTitle("Profile");
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
         layoutManager = new LinearLayoutManager(context);
@@ -401,12 +397,6 @@ public class OthersProfileFragment extends BaseFragment {
         getProfileInformation(followerfollowingid);
         followerCreationAdapter = new FollowersCreationAdapter(context, list, OthersProfileFragment.this);
         _recycler_view.setAdapter(followerCreationAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getParentActivity().updateToolbarTitle("Profile");
     }
 
     @Override
@@ -1117,12 +1107,6 @@ public class OthersProfileFragment extends BaseFragment {
                         loader.setVisibility(View.GONE);
                     }
                 });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     @Override

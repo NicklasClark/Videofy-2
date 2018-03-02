@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  *
@@ -71,7 +72,6 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     private void initializeListener(Context context) {
         if (mListener == null) {
-
             if (context instanceof NearbyPlacesInteractionListener) {
                 mListener = (NearbyPlacesInteractionListener) context;
             } else {
@@ -208,13 +208,6 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                 if (drawable != null) drawable.setTint(color);
                 holder.placeName.setTextColor(color);
                 holder.placeName.setText(R.string.current_location);
-                holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mListener != null)
-                            mListener.onCurrentLocationClick();
-                    }
-                });
                 break;
             case TYPE_NEARBY_PLACES:
                 holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
@@ -222,48 +215,20 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                 drawable = holder.placeName.getCompoundDrawables()[0];
                 if (drawable != null) drawable.setTint(Color.parseColor("#bdbdbd"));
                 holder.placeName.setTextColor(Color.parseColor("#666666"));
-
                 HashMap<String, String> googlePlace = places.get(position - 1);
                 final String placeName = googlePlace.get("place_name");
                 final double latitude = Double.parseDouble(googlePlace.get("lat"));
                 final double longitude = Double.parseDouble(googlePlace.get("lng"));
-
                 holder.placeName.setText(placeName);
-                //                holder.placeAddress.setText(googlePlace.get("vicinity"));
-
-                holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mListener != null)
-                            mListener.onNearbyPlacesAdapterInteraction(new SelectedPlace(placeName, latitude, longitude));
-//                            else
-//                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
-//
-//                                  Toast.LENGTH_SHORT).show();
-                    }
-                });
+                holder.selectedPlace = new SelectedPlace(placeName, latitude, longitude);
                 break;
-
             case TYPE_AUTOCOMPLETE:
                 holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
                         0, 0, 0);
                 drawable = holder.placeName.getCompoundDrawables()[0];
                 if (drawable != null) drawable.setTint(Color.parseColor("#bdbdbd"));
                 holder.placeName.setTextColor(Color.parseColor("#666666"));
-
                 holder.placeName.setText(resultList.get(position - 1).name);
-                //                holder.placeAddress.setText(resultList.get(position).description);
-
-                holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mListener != null)
-                            mListener.onPlaceClick(resultList, holder.getAdapterPosition() - 1);
-//                            else
-//                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
-//                                        Toast.LENGTH_SHORT).show();
-                    }
-                });
                 break;
             default:
                 break;
@@ -285,15 +250,33 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.nearby_place_item_layout) RelativeLayout rootLayout;
-//        @BindView(R.id.location_icon) AppCompatImageView locationIcon;
         @BindView(R.id.nearby_place_name) ProximaNovaSemiBoldTextView placeName;
-//        @BindView(R.id.nearby_place_address) ProximaNovaRegularTextView placeAddress;
+        SelectedPlace selectedPlace;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.nearby_place_item_layout) public void locationClicked() {
+            if (mListener != null) {
+                switch (getItemViewType()) {
+                    case TYPE_FIRST_ITEM:
+                        mListener.onCurrentLocationClick();
+                        break;
+                    case TYPE_NEARBY_PLACES:
+                        mListener.onNearbyPlacesAdapterInteraction(selectedPlace);
+                        break;
+                    case TYPE_AUTOCOMPLETE:
+                        mListener.onPlaceClick(resultList.get(getAdapterPosition() - 1).placeId);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -302,7 +285,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
      */
     public class PlaceAutocomplete {
 
-        public CharSequence placeId;
+        CharSequence placeId;
         CharSequence description;
         private CharSequence name;
 
@@ -320,7 +303,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     public interface NearbyPlacesInteractionListener {
         void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace);
-        void onPlaceClick(ArrayList<PlaceAutocomplete> mResultList, int position);
+        void onPlaceClick(CharSequence placeId);
         void onCurrentLocationClick();
     }
 }

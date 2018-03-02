@@ -137,11 +137,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -354,7 +349,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getParentActivity().updateToolbarTitle("My Profile");
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
@@ -524,8 +518,8 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        getParentActivity().updateToolbarTitle(previousTitle);
     }
+
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
@@ -539,8 +533,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
-        }
-        else {
         }
     }
 

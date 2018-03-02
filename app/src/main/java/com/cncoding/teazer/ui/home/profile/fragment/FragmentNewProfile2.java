@@ -31,8 +31,8 @@ import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
@@ -56,10 +56,12 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logProfileShareEvent;
 
 /**
+ *
  * Created by farazhabib on 19/02/18.
  */
 
 public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
+
     private static final int RC_REQUEST_STORAGE = 1001;
 
     PublicProfile userProfile;
@@ -117,13 +119,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -154,14 +150,14 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(0), "User"));
+                navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(0), "User"));
             }
         });
 
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(0), "User"));
+                navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(0), "User"));
 
             }
         });
@@ -192,7 +188,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     _name.setTextColor(Color.parseColor("#FFFFFF"));
                     _username.setTextColor(Color.parseColor("#FFFFFF"));
                     toolbar.setBackgroundResource(R.color.blur);
-
                 }
                 else if(verticalOffset<-650)
                 {
@@ -242,54 +237,22 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbarOnly();
-
         if (FragmentNewProfile2.checkprofileupdated) {
             updateProfile();
         }
-
-        if(FragmentNewProfile2.checkpostupdated)
-        {
-
+        if(FragmentNewProfile2.checkpostupdated) {
             viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(), FragmentNewProfile2.this,0));
             tabLayout.setupWithViewPager(viewPager);
             FragmentNewProfile2.checkpostupdated=false;
         }
-
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getParentActivity().showToolbar();
-
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),FragmentNewProfile2.this,0));
         tabLayout.setupWithViewPager(viewPager);
-
         getProfileDetail();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().showToolbar();
-        getParentActivity().updateToolbarTitle(previousTitle);
-
-
     }
 
     @Override
@@ -534,7 +497,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         });
 
     }
-
 
     public void updateProfile() {
 
