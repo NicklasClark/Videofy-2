@@ -18,13 +18,13 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.HideVideoListAdapter;
 
 import java.util.ArrayList;
 
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +46,7 @@ public class FragmentHideVideos extends Fragment {
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
     public static boolean checkIsLiked=false;
-    GifTextView loader;
+    DynamicProgress loader;
 
     public static FragmentHideVideos newInstance(int page) {
         return new FragmentHideVideos();

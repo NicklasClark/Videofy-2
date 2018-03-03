@@ -47,6 +47,7 @@ import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.model.user.PrivateProfile;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
@@ -63,7 +64,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.blurry.Blurry;
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,7 +111,7 @@ public class OthersProfileFragment extends BaseFragment {
     @BindView(R.id.hobby)
     ProximaNovaRegularCheckedTextView hobby;
     @BindView(R.id.loader)
-    GifTextView loader;
+    DynamicProgress loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
 //893

@@ -18,6 +18,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -26,7 +27,6 @@ import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,7 +50,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProximaNovaRegularTextView alert2;
     ProximaNovaSemiBoldTextView alert3;
     ProximaNovaSemiBoldTextView alert4;
-    GifTextView loader;
+    DynamicProgress loader;
     int followerfollowingid;
 
     boolean next;

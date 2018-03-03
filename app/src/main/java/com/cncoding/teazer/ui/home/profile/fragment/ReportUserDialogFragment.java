@@ -24,6 +24,7 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.data.model.user.ReportUser;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.ui.home.profile.adapter.ReportUserTitleAdapter;
 
@@ -32,7 +33,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +55,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
     @BindView(R.id.submitReport)
     ProximaNovaSemiboldButton submitReport;
     @BindView(R.id.loader)
-    GifTextView loader;
+    DynamicProgress loader;
     private Integer selectedReportId;
     private int userId;
     private boolean canReact;

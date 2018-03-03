@@ -39,12 +39,12 @@
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
-    <pl.droidsonroids.gif.GifTextView
+
+    <com.cncoding.teazer.ui.customviews.common.DynamicProgress
         android:id="@+id/loader"
-        android:layout_width="100dp"
-        android:visibility="gone"
-        android:layout_height="100dp"
-       android:layout_centerInParent="true"
-        android:background="@drawable/ic_loader" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="14dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>
