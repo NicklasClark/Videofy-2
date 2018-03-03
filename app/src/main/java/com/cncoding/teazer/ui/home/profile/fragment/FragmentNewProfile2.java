@@ -3,6 +3,7 @@ package com.cncoding.teazer.ui.home.profile.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.profile.Preference;
 import com.cncoding.teazer.data.model.user.UserProfile;
+import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
@@ -40,6 +42,7 @@ import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +80,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     int totalfollowing;
     int totalvideos;
     int reactions;
+    int totalProfilelikes;
     String firstname;
     String userId;
     String lastname;
@@ -92,8 +96,18 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     private String userProfileThumbnail;
     private String userCoverUrl;
     private String userProfileUrl;
+    List<TopReactedUser> topReactedUserList;
+
 
     ArrayList<Preference> userPrefrences;
+
+    @BindView(R.id.reaction1)
+    CircularAppCompatImageView reaction1;
+    @BindView(R.id.reaction2)
+    CircularAppCompatImageView reaction2;
+    @BindView(R.id.reaction3)
+    CircularAppCompatImageView reaction3;
+
 
     ImageView placeholder;
 
@@ -102,6 +116,9 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     ViewPager viewPager;
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
+    @BindView(R.id.totallikes)
+    ProximaNovaRegularCheckedTextView _totallikes;
+
     AppBarLayout app_bar;
 
     public static boolean checkpostupdated = false;
@@ -236,12 +253,43 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                 }
             }
         });
+
+        _totallikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navigation.pushFragment(FragmentLikedUserProfile.newInstance());
+            }
+        });
+        reaction1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(0).getUserId()),"",""));
+
+            }
+        });   reaction2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(1).getUserId()),"",""));
+
+
+            }
+        });   reaction3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(0).getUserId()),"",""));
+
+
+            }
+        });
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         getParentActivity().hideToolbarOnly();
 
         if (FragmentNewProfile2.checkprofileupdated) {
@@ -446,9 +494,75 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     detail = userProfile.getDescription();
                     gender = userProfile.getGender();
                     reactions=response.body().getTotalReactions();
+                    totalProfilelikes=response.body().getTotalProfileLikes();
                     userPrefrences=response.body().getPreferences();
-                  //  int i=userPrefrences.get(0).getPreferenceId();
-                 //   Toast.makeText(context,String.valueOf(i),Toast.LENGTH_SHORT).show();
+                    topReactedUserList=response.body().getTopReactedUsers();
+
+
+                    if (topReactedUserList!=null)
+                    {
+                        if(topReactedUserList.size()==1){
+                            TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                            reaction1.setVisibility(View.VISIBLE);
+                            if(topReactedUser1.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                        .into(reaction1);
+                            }
+                        }
+                        else if((topReactedUserList.size()==2))
+                        {
+                            TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                            TopReactedUser  topReactedUser2=topReactedUserList.get(1);
+                            reaction1.setVisibility(View.VISIBLE);
+                            reaction2.setVisibility(View.VISIBLE);
+                            if(topReactedUser1.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                        .into(reaction1);
+                            }
+
+                            if(topReactedUser2.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
+                                        .into(reaction2);
+                            }
+                        }
+
+                        else if((topReactedUserList.size()==3))
+                        {
+                            TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                            TopReactedUser  topReactedUser2=topReactedUserList.get(1);
+                            TopReactedUser  topReactedUser3=topReactedUserList.get(2);
+                            reaction1.setVisibility(View.VISIBLE);
+                            reaction2.setVisibility(View.VISIBLE);
+                            reaction3.setVisibility(View.VISIBLE);
+
+                            if(topReactedUser1.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                        .into(reaction1);
+                            }
+
+                            if(topReactedUser2.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
+                                        .into(reaction2);
+                            }
+                            if(topReactedUser3.getHasProfileMedia())
+                            {
+                                Glide.with(context)
+                                        .load(Uri.parse(topReactedUser3.getProfileMedia().getThumbUrl()))
+                                        .into(reaction3);
+                            }
+                        }
+
+                    }
 
 
 
@@ -514,6 +628,12 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));
                     _reactions.setText(String.valueOf(reactions));
+                    if(totalProfilelikes==0||totalProfilelikes==1){
+                        _totallikes.setText(String.valueOf(totalProfilelikes)+" Like");
+                    } else
+                    {
+                        _totallikes.setText(String.valueOf(totalProfilelikes)+" Likes");
+                    }
 
 //                    blur_bacground.setVisibility(View.VISIBLE);
 //                    loader.setVisibility(View.GONE);
@@ -559,6 +679,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     totalvideos = response.body().getTotalVideos();
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
+                    userPrefrences=response.body().getPreferences();
 
                     Long mobilno = userProfile.getPhoneNumber();
                     if (mobilno == null) {

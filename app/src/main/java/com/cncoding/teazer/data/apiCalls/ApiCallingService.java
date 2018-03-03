@@ -27,6 +27,7 @@ import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.profile.CoverImageResponse;
+import com.cncoding.teazer.data.model.profile.DefaultCoverImageResponse;
 import com.cncoding.teazer.data.model.profile.Preference;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactVideoDetailsResponse;
@@ -100,6 +101,10 @@ public class ApiCallingService {
 
         public static Call<List<DeactivateTypes>> getDeactivationTypesList(Context context) {
             return getApplicationService(context).getDeactivationTypesList();
+        }
+
+        public static Call<DefaultCoverImageResponse> getDefaultcoverImages(Context context,int page) {
+            return getApplicationService(context).getDefaultcoverImages(page);
         }
 
         private static TeazerApiCall.ApplicationCalls getApplicationService(Context context) {
@@ -425,6 +430,10 @@ public class ApiCallingService {
             return getFriendsService(context).getBlockedUsers(page);
         }
 
+        public static Call<LikedUserList> getLikedUserFriendProfile(int userId, int page, Context context) {
+            return getFriendsService(context).getLikedUserFriendProfile(userId, page);
+        }
+
         public static int isResponseOk(Response<CircleList> response) {
             switch (response.code()) {
                 case 200:
@@ -548,8 +557,8 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ReactionsList> getFriendsReactions(int page, int friend_id, Context context) {
-            return getReactService(context).getFriendsReactions(page, friend_id);
+        public static Call<ReactionsList> getFriendsReactions(int friend_id, int page, Context context) {
+            return getReactService(context).getFriendsReactions(friend_id, page);
         }
 
         /**
@@ -770,6 +779,16 @@ public class ApiCallingService {
         public static Call<ResultObject> resetPrefrences(Context context, ArrayList<Preference> list) {
             return getUserService(context).resetPrefrences(list);
         }
+
+        public static Call<ResultObject> profileLikeDislike(Context context, int userId, int status) {
+            return getUserService(context).profileLikeDislike(userId,status);
+        }
+
+        public static Call<LikedUserList> getLikedUserProfile(Context context, int page) {
+            return getUserService(context).getLikedUserProfile(page);
+        }
+
+
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()

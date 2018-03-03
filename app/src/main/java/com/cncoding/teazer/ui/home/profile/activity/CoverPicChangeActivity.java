@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.profile.CoverImageResponse;
+import com.cncoding.teazer.data.model.profile.DefaultCoverImageResponse;
+import com.cncoding.teazer.data.model.profile.DefaultCoverMedia;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.home.profile.adapter.ChangeCoverPhotoAdapter;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
@@ -26,7 +28,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +48,8 @@ public class CoverPicChangeActivity extends AppCompatActivity {
     ProgressBar progress_bar;
     ChangeCoverPhotoAdapter changeCoverPhotoAdapter;
     boolean next = false;
-    ArrayList<Object> coverPicList;
+    List<Object> coverPicList;
+    List<DefaultCoverMedia> defaultcoverpiclist;
     @BindView(R.id.backbutton)
     ImageView backbutton;
     public static String coverPicUrl;
@@ -67,31 +70,25 @@ public class CoverPicChangeActivity extends AppCompatActivity {
         });
 
 
-        coverPicList = new ArrayList<>();
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add("hello");
+
 
         layoutManager = new GridLayoutManager(CoverPicChangeActivity.this,2);
         recyclerView.setLayoutManager(layoutManager);
-        changeCoverPhotoAdapter=new ChangeCoverPhotoAdapter(coverPicList,context,CoverPicChangeActivity.this);
-        recyclerView.setAdapter(changeCoverPhotoAdapter);
+
+
+        getDefaultCoverPic(1);
+
+
+
+
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (next) {
-                    if (page > 2) {
+                    getDefaultCoverPic(page);
 
-                    }
                 }
             }
         };
@@ -124,10 +121,6 @@ public class CoverPicChangeActivity extends AppCompatActivity {
 
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(CoverPicChangeActivity.this.getContentResolver(), resultUri);
                     Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
-
-                   // super.onBackPressed();
-
-                    // profile_image.setImageBitmap(scaledBitmap);
                     byte[] bte = bitmaptoByte(scaledBitmap);
 
                     SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
@@ -165,7 +158,6 @@ public class CoverPicChangeActivity extends AppCompatActivity {
 
     public void saveDataToDatabase(MultipartBody.Part body) {
 
-
         ApiCallingService.User.updateUserProfileCoverMedia(body, context).enqueue(new Callback<CoverImageResponse>() {
             @Override
             public void onResponse(Call<CoverImageResponse> call, Response<CoverImageResponse> response) {
@@ -173,7 +165,6 @@ public class CoverPicChangeActivity extends AppCompatActivity {
                     Toast.makeText(context,"Your cover pic has been uploaded successfully",Toast.LENGTH_SHORT).show();
                     FragmentNewProfile2.checkprofileupdated=true;
                     coverPicUrl =response.body().getProfileCoverImage().getMediaUrl();
-                    FragmentNewProfile2.checkprofileupdated=true;
                     finish();
 
 
@@ -196,6 +187,51 @@ public class CoverPicChangeActivity extends AppCompatActivity {
 
     }
 
+
+    public void getDefaultCoverPic(final int page)
+    {
+
+        ApiCallingService.Application.getDefaultcoverImages(context,page).enqueue(new Callback<DefaultCoverImageResponse>() {
+            @Override
+            public void onResponse(Call<DefaultCoverImageResponse> call, Response<DefaultCoverImageResponse> response) {
+                try {
+                 //   FragmentNewProfile2.checkprofileupdated=true;
+
+                    next = response.body().getNextPage();
+                    defaultcoverpiclist =response.body().getDefaultCoverMedias();
+                    defaultcoverpiclist.add(new DefaultCoverMedia(-101,"","","",null));
+                    changeCoverPhotoAdapter=new ChangeCoverPhotoAdapter(defaultcoverpiclist,context,CoverPicChangeActivity.this);
+                    recyclerView.setAdapter(changeCoverPhotoAdapter);
+                    changeCoverPhotoAdapter.notifyDataSetChanged();
+                    changeCoverPhotoAdapter.notifyItemRangeInserted(changeCoverPhotoAdapter.getItemCount(), defaultcoverpiclist.size() - 1);
+
+                    //    FragmentNewProfile2.checkprofileupdated=true;
+                //    finish();
+
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultCoverImageResponse> call, Throwable t) {
+
+                Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void finishActivity()
+    {
+        finish();
+
+    }
 
 
 }

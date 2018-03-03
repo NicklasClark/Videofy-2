@@ -127,6 +127,7 @@ public class FollowersListActivity extends BaseFragment {
         userfollowerlist = new ArrayList<>();
 
         if (identifier.equals("Other")) {
+
             profileMyFollowerAdapter = new FollowersAdapter(context, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);

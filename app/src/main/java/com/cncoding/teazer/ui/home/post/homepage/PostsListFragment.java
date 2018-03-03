@@ -85,7 +85,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 public void loadFirstPage() {
                     new InitialRetrieveTask(PostsListFragment.this).execute();
                 }
-
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     if (is_next_page) {

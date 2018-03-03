@@ -24,6 +24,7 @@ import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.profile.CoverImageResponse;
+import com.cncoding.teazer.data.model.profile.DefaultCoverImageResponse;
 import com.cncoding.teazer.data.model.profile.Preference;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactVideoDetailsResponse;
@@ -103,6 +104,10 @@ import retrofit2.http.Query;
          * */
         @GET("/api/v1/application/categories")
         Call<ArrayList<Category>> getCategories();
+
+
+        @GET("/api/v1/application/default/cover/medias/{page}")
+        Call<DefaultCoverImageResponse> getDefaultcoverImages(@Path("page") int page);
 
 
 
@@ -426,6 +431,10 @@ import retrofit2.http.Query;
 
         @GET("/api/v1/post/liked/users/{post_id}/{page}")
         Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
+
+
+        @GET("/api/v1/friend/profile/liked/users/{user_id}/{page}")
+        Call<LikedUserList>getLikedUserFriendProfile(@Path("user_id") int userId, @Path("page") int page);
     }
 
     /**
@@ -517,7 +526,7 @@ import retrofit2.http.Query;
          *         {@value RESPONSE_CODE_412} : Validation failed.
          * */
         @GET("/api/v1/react/friend/reactions/{friend_id}/{page}")
-        Call<ReactionsList> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
+        Call<ReactionsList> getFriendsReactions(@Path("friend_id") int friendId, @Path("page") int pageId);
 
         /**
          * Call this service to get the reactions hidden by 
@@ -716,7 +725,6 @@ import retrofit2.http.Query;
      */
     interface UserCalls {
 
-
 //        @GET("/api/DepartmentCRUD/FindAllDepartment")
 //        Call<List<Test1>>  getUserDertail();
 
@@ -732,6 +740,8 @@ import retrofit2.http.Query;
         @Multipart
         @POST("/api/v1/user/update/profile/cover/media")
         Call<CoverImageResponse> updateUserProfileCoverMedia(@Part MultipartBody.Part media);
+
+
 
 
         /**
@@ -827,7 +837,16 @@ import retrofit2.http.Query;
 
         @PUT("/api/v1/user/update/profile/preference")
         Call<ResultObject> resetPrefrences(@Body ArrayList<Preference> preference);
+
+        @POST("/api/v1/friend/profile/like/{user_id}/{status}")
+        Call<ResultObject> profileLikeDislike(@Path("user_id") int userId,@Path("status") int status);
+
+        @GET("/api/v1/user/profile/liked/users/{page}")
+        Call<LikedUserList>getLikedUserProfile(@Path("page") int page);
+
+
     }
+
 
     /**
      * Giphy actions

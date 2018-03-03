@@ -821,7 +821,9 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void hideToolbarOnly() {
+
         toolbar.setVisibility(GONE);
+
     }
 
     public void showToolbar() {
