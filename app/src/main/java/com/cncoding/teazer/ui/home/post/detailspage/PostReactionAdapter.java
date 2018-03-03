@@ -28,8 +28,6 @@ import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.diffutil.PostReactionDiffCallback;
 import com.google.gson.Gson;
@@ -47,6 +45,7 @@ import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_VI
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.diffutil.PostReactionDiffCallback.DIFF_POST_REACTION;
 import static com.cncoding.teazer.utilities.diffutil.PostReactionDiffCallback.updatePostReactionAccordingToDiffBundle;
 
@@ -265,8 +264,7 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick({R.id.reaction_post_dp, R.id.reaction_post_name}) void viewProfile() {
-            fragment.navigation.pushFragment(postReaction.getMySelf() ? FragmentNewProfile2.newInstance() :
-                    FragmentNewOtherProfile.newInstance(String.valueOf(postReaction.getPostOwnerId()), "", ""));
+            openProfile(fragment.navigation, postReaction.getMySelf(), postReaction.getPostOwnerId());
         }
 
         private void openReaction(PostReaction postReaction, boolean isGif) {

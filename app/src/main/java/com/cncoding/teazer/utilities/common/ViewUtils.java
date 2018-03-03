@@ -42,6 +42,8 @@ import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ReactionPlayerActivity;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 
 import org.jetbrains.annotations.Contract;
@@ -474,6 +476,48 @@ public class ViewUtils {
         return gender == Annotations.MALE ?
                 R.drawable.ic_user_male_dp :
                 R.drawable.ic_user_female_dp;
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment using integer userId.
+     */
+    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, int userId) {
+        try {
+            navigation.pushFragment(isMySelf ?
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(String.valueOf(userId)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment using String userId.
+     */
+    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, String userId) {
+        try {
+            navigation.pushFragment(isMySelf ?
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment WHEN YOU ARE NOT SURE ABOUT "isMySelf" flag.
+     * @param selfUserId must be the userId stored in SharedPreferences while logging in.
+     */
+    public static void openProfile(int selfUserId, BaseFragment.FragmentNavigation navigation, int userId) {
+        if (selfUserId >= 0) {
+            try {
+                navigation.pushFragment(selfUserId == userId ?
+                        FragmentNewProfile2.newInstance() :
+                        FragmentNewOtherProfile.newInstance(String.valueOf(userId)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 //    public static void unbindDrawables(View view) {

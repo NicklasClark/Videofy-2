@@ -1,9 +1,7 @@
 package com.cncoding.teazer.ui.home.notifications;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,20 +22,11 @@ public class NotificationsFragment extends BaseFragment {
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
-    private OnNotificationsFragmentInteractionListener mListener;
+    public NotificationsFragment() {}
 
-    public NotificationsFragment() {
-        // Required empty public constructor
-    }
-
+    @NonNull
     public static NotificationsFragment newInstance() {
         return new NotificationsFragment();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mListener.onNotificationFragmentInteraction();
     }
 
     @Override
@@ -52,24 +41,6 @@ public class NotificationsFragment extends BaseFragment {
 //        getParentActivity().hidesettingsReport();
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnNotificationsFragmentInteractionListener) {
-            mListener = (OnNotificationsFragmentInteractionListener) context;
-        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnUploadFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -99,9 +70,5 @@ public class NotificationsFragment extends BaseFragment {
             // Show 2 total pages.
             return 2;
         }
-    }
-
-    public interface OnNotificationsFragmentInteractionListener {
-        void onNotificationFragmentInteraction();
     }
 }

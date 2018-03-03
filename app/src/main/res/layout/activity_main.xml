@@ -45,7 +45,7 @@
         android:id="@+id/up_btn"
         android:layout_width="@dimen/action_bar_height"
         android:layout_height="@dimen/action_bar_height"
-        app:srcCompat="@drawable/ic_arrow_back_white"
+        app:srcCompat="@drawable/ic_arrow_back_white_with_shadow"
         android:foreground="@drawable/ripple_dark"
         android:scaleType="center"
         android:contentDescription="@string/up"

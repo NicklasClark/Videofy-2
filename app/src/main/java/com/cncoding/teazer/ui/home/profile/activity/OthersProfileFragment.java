@@ -52,7 +52,6 @@ import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListen
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.SignPainterTextView;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportUserDialogFragment;
 
@@ -148,7 +147,6 @@ public class OthersProfileFragment extends BaseFragment {
     private String userProfileUrl;
     private int requestId;
     String details;
-    ProfileFragment.FollowerListListener followerListListener;
 
     String username;
     int followerfollowingid;
@@ -260,22 +258,18 @@ public class OthersProfileFragment extends BaseFragment {
             public void onClick(View view) {
                 if (accountType == 1) {
                     if (isfollowing == true) {
-
-                        followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
-
+                        navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                     } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
-
-                            followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                            navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                    navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
             }
 
@@ -287,12 +281,12 @@ public class OthersProfileFragment extends BaseFragment {
                 if (accountType == 1) {
 
                     if (isfollowing) {
-                        followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                        navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
 
                     } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
-                            followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                            navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
@@ -301,8 +295,7 @@ public class OthersProfileFragment extends BaseFragment {
                     }
 
                 } else {
-
-                    followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                    navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
 
             }
@@ -395,17 +388,10 @@ public class OthersProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
         getProfileInformation(followerfollowingid);
-        followerCreationAdapter = new FollowersCreationAdapter(context, list, OthersProfileFragment.this);
+        followerCreationAdapter = new FollowersCreationAdapter(context, list);
         _recycler_view.setAdapter(followerCreationAdapter);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ProfileFragment.FollowerListListener) {
-            followerListListener = (ProfileFragment.FollowerListListener) context;
-        }
-    }
     private void unHideAllVideos(final int userId) {
 
         ApiCallingService.Posts.getAllHiddenVideosList(userId, context).enqueue(new Callback<ResultObject>() {

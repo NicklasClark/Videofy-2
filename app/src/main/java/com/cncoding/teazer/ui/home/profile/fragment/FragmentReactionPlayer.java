@@ -73,9 +73,11 @@ import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPo
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.common.MediaUtils.releaseAudioLock;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 
 /**
  *
@@ -247,9 +249,7 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     }
 
     @OnClick(R.id.reaction_post_dp) public void viewProfile() {
-        navigation.pushFragment(postReaction.getMySelf() || postReaction.canDelete() ? FragmentNewProfile2.newInstance() :
-                FragmentNewOtherProfile.newInstance(
-                        String.valueOf(postReaction.getReactOwner().getUserId()), "", ""));
+        openProfile(getUserId(context), navigation, postReaction.getReactOwner().getUserId());
     }
 
     @OnClick(R.id.btnShare) public void onShareClicked() {

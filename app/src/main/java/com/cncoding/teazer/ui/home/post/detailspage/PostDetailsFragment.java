@@ -66,8 +66,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularChe
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.post.BasePostFragment;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
@@ -138,6 +136,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.common.ViewUtils.launchReactionCamera;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setTextViewDrawableStart;
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -292,6 +291,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onResume() {
         super.onResume();
+//        getParentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getContext(), this);
 
@@ -605,8 +605,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     @OnClick(R.id.media_controller_dp) public void profilePicClicked() {
-        navigation.pushFragment(postDetails.canDelete() ? FragmentNewProfile2.newInstance() :
-                FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+        openProfile(navigation, postDetails.canDelete(), postDetails.getPostOwner().getUserId());
     }
 
     @OnClick(R.id.media_controller_eta) public void toggleSound() {
@@ -823,6 +822,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onPause() {
         super.onPause();
+//        getParentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         playerCurrentPosition = player.getCurrentPosition();
         player.setPlayWhenReady(!player.getPlayWhenReady());
 

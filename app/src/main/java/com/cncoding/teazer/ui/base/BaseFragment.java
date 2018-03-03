@@ -28,7 +28,7 @@ public class BaseFragment extends Fragment implements NetworkStateListener {
     private BaseRecyclerView.Adapter adapter;
     public boolean isConnected;
     private NetworkStateReceiver networkStateReceiver;
-    protected Context context;
+    public Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

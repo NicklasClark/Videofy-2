@@ -18,6 +18,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.post.LikedUser;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 
@@ -27,6 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
 
 /**
@@ -39,9 +41,9 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
     public static boolean isLikedUser = false;
     List<LikedUser> list;
     private Context context;
-    android.support.v4.app.Fragment fragment;
+    BaseFragment fragment;
 
-    public ProfileLikedUserAdapter(Context context, List<LikedUser> list, android.support.v4.app.Fragment fragment) {
+    public ProfileLikedUserAdapter(Context context, List<LikedUser> list, BaseFragment fragment) {
         this.context = context;
         this.list = list;
         this.fragment = fragment;
@@ -163,6 +165,7 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
                     }
                 }
             }
+
             viewHolder.action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -184,11 +187,9 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
                 }
             });
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View view) {
-//                    ((FragmentLikedUser) fragment).navigation.pushFragment(ismyself ? FragmentNewProfile2.newInstance() :
-//                            FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
+                    openProfile(fragment.navigation, ismyself, userId);
                 }
             });
         } catch (Exception e) {

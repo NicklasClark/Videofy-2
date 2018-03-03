@@ -29,7 +29,7 @@ public class BaseActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(isBackEnabled);
             actionBar.setDisplayShowHomeEnabled(isBackEnabled);
             if(isBackEnabled)
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_dark);
         }
     }
 
@@ -40,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(isBackEnabled);
             actionBar.setDisplayShowHomeEnabled(isBackEnabled);
             if (isBackEnabled)
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_dark);
         }
         getSupportActionBar().setTitle(title);
     }

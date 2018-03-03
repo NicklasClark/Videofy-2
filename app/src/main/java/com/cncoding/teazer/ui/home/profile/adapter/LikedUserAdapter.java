@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,9 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.post.LikedUser;
 import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 
 import java.util.List;
 
@@ -34,6 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
 
 /**
@@ -48,9 +46,9 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
     List<LikedUser> list;
     private Context context;
     PostDetails postDetails;
-    Fragment fragment;
+    BaseFragment fragment;
 
-    public LikedUserAdapter(Context context, List<LikedUser> list, PostDetails postDetails, Fragment fragment) {
+    public LikedUserAdapter(Context context, List<LikedUser> list, PostDetails postDetails, BaseFragment fragment) {
         this.context = context;
         this.list = list;
         this.postDetails = postDetails;
@@ -196,8 +194,7 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FragmentLikedUser) fragment).navigation.pushFragment(ismyself ? FragmentNewProfile2.newInstance() :
-                            FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
+                    openProfile(fragment.navigation, ismyself, userId);
                 }
             });
         } catch (Exception e) {

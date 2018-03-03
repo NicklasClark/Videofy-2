@@ -67,7 +67,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         notificationsList = new NotificationsList(new ArrayList<Notification>(), 0, false);
 
-        adapter = new NotificationsAdapter(getContext(), false, notificationsList);
+        adapter = new NotificationsAdapter(this, false, notificationsList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

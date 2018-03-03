@@ -64,7 +64,7 @@ public class LocalStrageProvider extends DocumentsProvider {
         row.add(Root.COLUMN_DOCUMENT_ID, homeDir.getAbsolutePath());
         row.add(Root.COLUMN_TITLE, getContext().getString(R.string.user_detail));
         row.add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY | Root.FLAG_SUPPORTS_CREATE);
-        row.add(Root.COLUMN_ICON, R.drawable.ic_arrow_back);
+        row.add(Root.COLUMN_ICON, R.drawable.ic_arrow_back_dark);
         // These columns are optional
         row.add(Root.COLUMN_AVAILABLE_BYTES, homeDir.getFreeSpace());
         // Root.COLUMN_MIME_TYPE is another optional column and useful if you
