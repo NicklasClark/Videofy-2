@@ -175,7 +175,8 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     @Override @SuppressWarnings("ConstantConditions")
     protected void handleError(BaseModel baseModel) {
         try {
-            if (currentPage > 1 || viewModel.getPostList().getValue().getPosts().isEmpty()) {
+            if (currentPage > 1 ||
+                    (viewModel.getPostList().getValue().getPosts() != null && viewModel.getPostList().getValue().getPosts().isEmpty())) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 postLoadErrorLayout.setVisibility(View.VISIBLE);
                 postLoadErrorTextView.setText(baseModel.getError().getMessage());

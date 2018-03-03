@@ -82,7 +82,7 @@ public class FragmentLikedUserProfile extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_liked_user, container, false);
         context = getContext();
         ButterKnife.bind(this, view);
-        getParentActivity().hideToolbar();
+//        getParentActivity().hideToolbar();
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
