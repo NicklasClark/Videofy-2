@@ -409,7 +409,7 @@ public class ApiCallingService {
         }
 
         public static Call<LikedUserList> getLikedUserFriendProfile(int userId, int page, Context context) {
-            return getFriendsService().getLikedUserFriendProfile(userId, page);
+            return getFriendsService(context).getLikedUserFriendProfile(userId, page);
         }
 
         public static int isResponseOk(Response<CircleList> response) {
