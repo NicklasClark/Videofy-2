@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 01/03/18.
  */
 
@@ -40,8 +40,6 @@ public class FragmentLikedUserProfile extends BaseFragment {
     Context context;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.btnClose)
-    AppCompatImageView btnClose;
     RecyclerView.LayoutManager layoutManager;
     List<LikedUser> likedUsersList;
     ProfileLikedUserAdapter profilePikedUserAdapter;
@@ -106,13 +104,6 @@ public class FragmentLikedUserProfile extends BaseFragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentActivity().onBackPressed();
-            }
-        });
         return view;
     }
 

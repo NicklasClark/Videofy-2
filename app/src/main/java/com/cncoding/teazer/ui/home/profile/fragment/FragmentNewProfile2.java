@@ -248,7 +248,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         _totallikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 navigation.pushFragment(FragmentLikedUserProfile.newInstance());
             }
         });
