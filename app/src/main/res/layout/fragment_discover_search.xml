@@ -11,9 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/padding_thin"
         android:background="@color/colorPrimary"
         android:animateLayoutChanges="true">
+
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/toolbar_plain_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:layout_marginStart="@dimen/action_bar_height"
+            android:gravity="start|center_vertical"
+            android:textSize="20sp"
+            android:text="@string/discover"
+            android:padding="@dimen/padding_thin"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorPrimary_text"/>
 
         <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
             android:id="@+id/discover_search"
@@ -33,6 +44,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:imeOptions="actionGo"
+            android:layout_below="@+id/toolbar_plain_title"
             app:drawableStartCompat="@drawable/ic_search_padded"
             android:background="@drawable/bg_card_curved_corners"/>
 

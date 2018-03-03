@@ -33,6 +33,7 @@ import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
@@ -53,7 +54,6 @@ import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
 import io.branch.referral.util.ShareSheetStyle;
 import jp.wasabeef.blurry.Blurry;
-import pl.droidsonroids.gif.GifTextView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
@@ -106,7 +106,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     private FollowerListListener mListener;
     private String userProfileThumbnail;
     private String userProfileUrl;
-    @BindView(R.id.loader)GifTextView loader;
+    @BindView(R.id.loader) DynamicProgress loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
 
@@ -137,11 +137,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -354,7 +349,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getParentActivity().updateToolbarTitle("My Profile");
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
@@ -524,8 +518,8 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        getParentActivity().updateToolbarTitle(previousTitle);
     }
+
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
@@ -539,8 +533,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
-        }
-        else {
         }
     }
 

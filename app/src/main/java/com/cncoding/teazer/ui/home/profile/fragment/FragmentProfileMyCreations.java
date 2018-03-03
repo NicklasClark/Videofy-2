@@ -19,13 +19,13 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
 
 import java.util.ArrayList;
 
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,9 +49,10 @@ public class FragmentProfileMyCreations extends Fragment {
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
     public static boolean checkIsLiked=false;
-    GifTextView loader;
+    DynamicProgress loader;
     private int followerfollowingid;
-
+    public static final int USERCREATION=1;
+    public static final int OTHERUSERCREATION=2;
 
 
     public static FragmentProfileMyCreations newInstance(int userId) {
@@ -98,12 +99,12 @@ public class FragmentProfileMyCreations extends Fragment {
 
         if(followerfollowingid==0) {
             getProfileVideos(1);
-            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment(),USERCREATION,FragmentProfileMyCreations.this);
             recyclerView.setAdapter(profileMyCreationAdapter);
         }
         else {
             getOtherUserProfileVideos(followerfollowingid,1);
-            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment(),OTHERUSERCREATION,FragmentProfileMyCreations.this);
             recyclerView.setAdapter(profileMyCreationAdapter);
         }
 
@@ -208,4 +209,8 @@ public class FragmentProfileMyCreations extends Fragment {
         });
     }
 
+    public void resetRecyclerData() {
+        Toast.makeText(context,"resetadapter",Toast.LENGTH_SHORT).show();
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
 }

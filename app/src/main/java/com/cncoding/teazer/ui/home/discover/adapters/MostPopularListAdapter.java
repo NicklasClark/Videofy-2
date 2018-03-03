@@ -29,6 +29,8 @@ import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,6 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.initializeShimmer;
 import static com.cncoding.teazer.utilities.common.ViewUtils.prepareLayout;
 
 /**
- *
  * Created by Prem $ on 11/19/2017.
  */
 
@@ -61,15 +62,19 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
         if (this.mostPopularList == null) this.mostPopularList = new ArrayList<>();
     }
 
-    @Override public MostPopularViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public MostPopularViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MostPopularViewHolder(from(parent.getContext()).inflate(R.layout.item_most_popular_list, parent, false));
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return mostPopularList.size();
     }
 
-    @Override public void release() {}
+    @Override
+    public void release() {
+    }
 
     @Override
     public void notifyDataChanged() {
@@ -93,20 +98,23 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
     public void updatePosts(int page, List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
-                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDetailsDiffCallback(
-                        postDetailsList.size() >= 10 ?
-                                new ArrayList<>(mostPopularList.subList(0, 10)) :
-                                new ArrayList<PostDetails>(),
-                        postDetailsList));
-                mostPopularList.clear();
-                mostPopularList.addAll(postDetailsList);
-                fragment.getParentActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        result.dispatchUpdatesTo(MostPopularListAdapter.this);
-                    }
-                });
-            } else addPosts(page, postDetailsList);
+                if (mostPopularList.isEmpty()) {
+                    addPosts(page, postDetailsList);
+                } else {
+                    final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                            new PostsDetailsDiffCallback(mostPopularList.subList(0, 10), postDetailsList));
+                    mostPopularList.clear();
+                    mostPopularList.addAll(postDetailsList);
+                    fragment.getParentActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.dispatchUpdatesTo(MostPopularListAdapter.this);
+                        }
+                    });
+                }
+            } else {
+                addPosts(page, (List<PostDetails>) CollectionUtils.removeAll(postDetailsList, mostPopularList));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -135,18 +143,30 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
 
     class MostPopularViewHolder extends BaseRecyclerView.ViewHolder {
 
-        @BindView(R.id.root_layout) RelativeLayout layout;
-        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
-        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
-        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
-        @BindView(R.id.top_layout) RelativeLayout topLayout;
-        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
-        @BindView(R.id.likes) ProximaNovaRegularTextView likes;
-        @BindView(R.id.views) ProximaNovaRegularTextView views;
-        @BindView(R.id.thumbnail) ImageView thumbnail;
-        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.root_layout)
+        RelativeLayout layout;
+        @BindView(R.id.title)
+        ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.shimmer_layout)
+        RelativeLayout shimmerLayout;
+        @BindView(R.id.vignette_layout)
+        FrameLayout vignetteLayout;
+        @BindView(R.id.top_layout)
+        RelativeLayout topLayout;
+        @BindView(R.id.bottom_layout)
+        RelativeLayout bottomLayout;
+        @BindView(R.id.category)
+        ProximaNovaRegularTextView category;
+        @BindView(R.id.name)
+        ProximaNovaSemiBoldTextView name;
+        @BindView(R.id.likes)
+        ProximaNovaRegularTextView likes;
+        @BindView(R.id.views)
+        ProximaNovaRegularTextView views;
+        @BindView(R.id.thumbnail)
+        ImageView thumbnail;
+        @BindView(R.id.dp)
+        CircularAppCompatImageView dp;
         PostDetails postDetails;
 
         MostPopularViewHolder(View itemView) {
@@ -154,7 +174,8 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
         }
 
-        @Override public void bind() {
+        @Override
+        public void bind() {
             initializeShimmer(shimmerLayout, topLayout, bottomLayout, vignetteLayout);
 
             postDetails = mostPopularList.get(getAdapterPosition());
@@ -179,10 +200,8 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
                     category.setText(postDetails.getCategories() != null ?
                             postDetails.getCategories().get(0).getCategoryName() : "");
                     category.setBackground(getClassicCategoryBackground(category, postDetails.getCategories().get(0).getColor()));
-                }
-                else category.setVisibility(View.GONE);
-            }
-            else category.setVisibility(View.GONE);
+                } else category.setVisibility(View.GONE);
+            } else category.setVisibility(View.GONE);
 
             /*Setting name*/
             String nameText = postDetails.getPostOwner().getUserName();
@@ -222,20 +241,24 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
                     .into(thumbnail);
         }
 
-        @Override public void bind(List<Object> payloads) {
+        @Override
+        public void bind(List<Object> payloads) {
             super.bind(payloads);
         }
 
-        @OnClick(R.id.root_layout) public void viewPost() {
+        @OnClick(R.id.root_layout)
+        public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
                     null, false, null));
         }
 
-        @OnClick(R.id.dp) void dpClicked() {
+        @OnClick(R.id.dp)
+        void dpClicked() {
             viewProfile();
         }
 
-        @OnClick(R.id.name) void nameClicked() {
+        @OnClick(R.id.name)
+        void nameClicked() {
             viewProfile();
         }
 

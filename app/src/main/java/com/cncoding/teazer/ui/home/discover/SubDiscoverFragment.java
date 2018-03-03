@@ -36,6 +36,7 @@ import com.cncoding.teazer.ui.customviews.common.CustomStaggeredGridLayoutManage
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.discover.adapters.SubDiscoverAdapter;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     private static final String ARG_CATEGORIES = "categories";
     private static final String ACTION = "action";
 
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarTitle;
     @BindView(R.id.my_interests_tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
     @BindView(R.id.list_layout) LinearLayout listLayout;
@@ -84,7 +86,6 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
             if (action == ACTION_VIEW_MY_INTERESTS) setHasOptionsMenu(true);
             categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
         }
-        previousTitle = getParentActivity().getToolbarTitle();
         currentPage = 1;
     }
 
@@ -94,16 +95,15 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
 
         switch (action) {
             case ACTION_VIEW_FEATURED:
-                getParentActivity().updateToolbarTitle(getString(R.string.featured_videos));
+                toolbarTitle.setText(R.string.featured_videos);
                 prepareFeaturedLayout();
                 break;
             case ACTION_VIEW_MY_INTERESTS:
-                getParentActivity().updateToolbarTitle(getString(R.string.my_interests));
+                toolbarTitle.setText(R.string.my_interests);
                 prepareMyInterestsLayout();
                 break;
             case ACTION_VIEW_TRENDING:
-                getParentActivity().updateToolbarTitle((categories != null && !categories.isEmpty()) ?
-                        (categories.get(0).getCategoryName()):"Trending");
+                toolbarTitle.setText((categories != null && !categories.isEmpty()) ? (categories.get(0).getCategoryName()) : "Trending");
                 prepareTrendingLayout();
                 break;
             default:
@@ -284,11 +284,6 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
             return true;
         }
         return false;
-    }
-
-    @Override public void onDetach() {
-        super.onDetach();
-        getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     /**

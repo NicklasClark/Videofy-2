@@ -8,9 +8,12 @@ import android.support.annotation.Nullable;
 import com.cncoding.teazer.data.model.discover.LandingPostsV2;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.remote.apicalls.discover.DiscoverRepository;
 import com.cncoding.teazer.data.remote.apicalls.discover.DiscoverRepositoryImpl;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -79,7 +82,6 @@ public class DiscoverViewModel extends ViewModel {
                         @Override
                         public void onChanged(@Nullable LandingPostsV2 landingPostsV2) {
                             landingPostsLiveData.setValue(landingPostsV2);
-                            loadMostPopularPosts(1);
                         }
                     }
             );
@@ -88,13 +90,18 @@ public class DiscoverViewModel extends ViewModel {
         }
     }
 
-    public void loadMostPopularPosts(int page) {
+    public void loadMostPopularPosts(final int page) {
         try {
             mostPopularLiveData.addSource(
                     discoverRepository.getAllMostPopularVideos(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
+                            if (page > 1 && postList != null && mostPopularLiveData.getValue() != null) {
+                                List<PostDetails> postDetailsList = mostPopularLiveData.getValue().getPosts();
+                                postDetailsList.addAll(postList.getPosts());
+                                postList.setPosts(postDetailsList);
+                            }
                             mostPopularLiveData.setValue(postList);
                         }
                     }

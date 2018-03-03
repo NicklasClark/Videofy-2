@@ -77,7 +77,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                 part = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
 
                 if (reactionUploadCall == null) {
-                    reactionUploadCall = ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
+                    reactionUploadCall = ApiCallingService.React.uploadReaction(part, uploadParams.getPostId(),
                             getApplicationContext(), uploadParams.getTitle());
                 }
 

@@ -257,7 +257,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                               // Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
 //
 //
-////                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
+////                                ApiCallingService.Posts.getPostId(holder1.notification.getMetaData().getSourceId(), context)
 ////                                        .enqueue(new Callback<PostDetails>() {
 ////
 ////                                            @Override

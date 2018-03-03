@@ -105,6 +105,7 @@ import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.T
 import static com.cncoding.teazer.utilities.common.CommonUtilities.encodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_REACTION;
+import static com.cncoding.teazer.utilities.common.ViewUtils.POST_ID;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
@@ -132,8 +133,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final int TAGGED_CATEGORIES = 2;
     private static final int TAGGED_FRIENDS = 1;
 
-    public static final int VIDEO_UPLOAD = 25;
-    public static final int REACTION_UPLOAD = 26;
     private static final String VIDEO_DURATION = "video_duration";
     private static final String IS_GIPHY = "is_giphy";
 
@@ -175,10 +174,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private Context context;
     private Activity activity;
 
-    private static boolean isCompressing = false;
-    private static boolean addingWatermark = true;
-    static final int TaggedCategories = 2;
-    static final int TaggedFriends = 1;
+//    private static boolean isCompressing = false;
+//    private static boolean addingWatermark = true;
     private long initialSize;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private OnUploadFragmentInteractionListener mListener;
@@ -188,14 +185,17 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private int videoDuration;
     private String oldVideoPath;
     private boolean isGiphy;
+    private int postId;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery, int videoDuration, boolean isGiphy) {
+    public static UploadFragment newInstance(int postId, String videoPath, boolean isReaction,
+                                             boolean isGallery, int videoDuration, boolean isGiphy) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
+        args.putInt(POST_ID, postId);
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
@@ -211,6 +211,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         Bundle bundle = getArguments();
         context = getContext();
         if (bundle != null) {
+            postId = bundle.getInt(POST_ID);
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
             isGallery = bundle.getBoolean(IS_GALLERY);
@@ -222,7 +223,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
 //            compressVideoAsyncTask.delegate = this;
 //            compressVideoAsyncTask.execute(videoPath);
-            isCompressing = true;
+//            isCompressing = true;
             initialSize = new File(videoPath).length();
         }
 
@@ -246,15 +247,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         videoPath = output;
         try {
             enableView(uploadBtn);
-            uploadBtn.setText("Upload");
+            uploadBtn.setText(R.string.upload);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isCompressing = false;
+//        isCompressing = false;
         long compressedSize = new File(videoPath).length();
         Log.d("SIZE", "Before: "+initialSize/1024+" After:"+compressedSize/1024);
     }
-
 
     @Override
     public void gifConvertProcessFinish(String output) {
@@ -581,12 +581,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location=").append(location.getLatitude()).append(",").append(location.getLongitude());
         googlePlacesUrl.append("&radius=" + 2000);
-        googlePlacesUrl.append("&type=")
-                .append("airport|amusement_park|aquarium|art_gallery|bakery|bar|beauty_salon" +
-                        "|book_store|bowling_alley|cafe|casino|clothing_store|gym" +
-                        "|hair_care|jewelry_store|library|night_club|park|shopping_mall|stadium" +
-                        "|spa|subway_station|university|zoo");
-
+//        googlePlacesUrl.append("&type=");
+//        googlePlacesUrl.append("airport|amusement_park|aquarium|art_gallery|bakery|bar|beauty_salon" +
+//                "|book_store|bowling_alley|cafe|casino|clothing_store|gym" +
+//                "|hair_care|jewelry_store|library|night_club|park|shopping_mall|stadium" +
+//                "|spa|subway_station|university|zoo");
         googlePlacesUrl.append("&sensor=true");
         googlePlacesUrl.append("&key=").append(getString(R.string.google_places_api_key));
         Log.d("getNearbySearchUrl", googlePlacesUrl.toString());
@@ -691,17 +690,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 longitude = selectedPlace.getLongitude();
             }
             DecimalFormat df = new DecimalFormat("#.#####");
+            latitude = Double.parseDouble(df.format(latitude));
+            longitude = Double.parseDouble(df.format(longitude));
 
             if (getActivity() instanceof CameraActivity) {
                 if (!isReaction) {
-                    performVideoUpload(activity,
-                            new UploadParams(isGallery, videoPath, title, location,
-                                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                                    selectedTagsToSend, selectedCategoriesToSend, ((CameraActivity) getActivity()).postDetails, isGiphy));
+                    performVideoUpload(activity, new UploadParams(postId, isGallery, videoPath, title, location,
+                            latitude, longitude, selectedTagsToSend, selectedCategoriesToSend, isGiphy));
                 } else {
-                    performReactionUpload(activity,
-                            new UploadParams(isGallery, videoPath, title, location, latitude, longitude,
-                                    ((CameraActivity) getActivity()).postDetails, isGiphy));
+                    performReactionUpload(activity, new UploadParams(postId, isGallery,
+                            videoPath, title, location, latitude, longitude, isGiphy));
                 }
             }
         }

@@ -3,6 +3,8 @@ package com.cncoding.teazer.data.model.react;
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.utilities.common.Annotations.CallType;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -15,13 +17,17 @@ public class ReactionsList extends BaseModel {
 
     private boolean next_page;
     private ArrayList<PostReaction> reactions;
+    @SerializedName("can_show_reactions")
+    @Expose
+    private Boolean canShowReactions;
 
-    public ReactionsList(boolean next_page, ArrayList<PostReaction> reactions) {
-        this.next_page = next_page;
-        this.reactions = reactions;
+
+    public Boolean getCanShowReactions() {
+        return canShowReactions;
     }
 
-    public ReactionsList(Throwable error) {
+    public ReactionsList(Throwable error)
+    {
         this.error = error;
     }
 

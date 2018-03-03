@@ -387,13 +387,13 @@ public class PostDetails extends BaseModel implements Parcelable {
                 result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
             }
             if (taggedUsers != null && ((PostDetails) obj).getTaggedUsers() != null) {
-                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+                result = CollectionUtils.isEqualCollection(taggedUsers, ((PostDetails) obj).getTaggedUsers());
             }
             if (reactedUsers != null && ((PostDetails) obj).getReactedUsers() != null) {
-                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+                result = CollectionUtils.isEqualCollection(reactedUsers, ((PostDetails) obj).getReactedUsers());
             }
             if (categories != null && ((PostDetails) obj).getCategories() != null) {
-                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+                result = CollectionUtils.isEqualCollection(categories, ((PostDetails) obj).getCategories());
             }
             return result;
         }

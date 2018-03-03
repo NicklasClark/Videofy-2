@@ -58,8 +58,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
-        previousTitle = getParentActivity().getToolbarTitle();
-        getParentActivity().updateToolbarTitle(null);
         ButterKnife.bind(this, rootView);
 
         prepareRecyclerView();
@@ -85,7 +83,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 public void loadFirstPage() {
                     new InitialRetrieveTask(PostsListFragment.this).execute();
                 }
-
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     if (is_next_page) {
@@ -178,7 +175,8 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     @Override @SuppressWarnings("ConstantConditions")
     protected void handleError(BaseModel baseModel) {
         try {
-            if (currentPage > 1 || viewModel.getPostList().getValue().getPosts().isEmpty()) {
+            if (currentPage > 1 ||
+                    (viewModel.getPostList().getValue().getPosts() != null && viewModel.getPostList().getValue().getPosts().isEmpty())) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 postLoadErrorLayout.setVisibility(View.VISIBLE);
                 postLoadErrorTextView.setText(baseModel.getError().getMessage());
@@ -218,12 +216,5 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 fragment.refreshPosts(false, false);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getParentActivity().updateToolbarTitle(previousTitle);
-//        positionToUpdate = -1;
     }
 }

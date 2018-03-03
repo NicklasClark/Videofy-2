@@ -22,6 +22,7 @@ import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.UpdateCategories;
 import com.cncoding.teazer.data.model.user.UserProfile;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.ChangeCategoriesAdapter;
 
@@ -30,7 +31,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +58,7 @@ public class FragmentChangeCategories extends Fragment{
     @BindView(R.id.headerTextView)
     ProximaNovaRegularTextView headerTextView;
     @BindView(R.id.loader)
-    GifTextView loader;
+    DynamicProgress loader;
     @BindView(R.id.layout)
     RelativeLayout layout;
 
@@ -126,7 +126,7 @@ public class FragmentChangeCategories extends Fragment{
     }
 
     public void getCategories(final ArrayList<Category> userCategoryList) {
-        ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
              try {

@@ -2,7 +2,6 @@ package com.cncoding.teazer.ui.home.profile.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -11,11 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,17 +32,19 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.friends.ProfileInfo;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.PrivateProfile;
+import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,12 +53,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 15/02/18.
  */
 
-public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction
+public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
 
-{
     private static final int RC_REQUEST_STORAGE = 1001;
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
@@ -79,6 +78,14 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     ProximaNovaSemiBoldTextView _username;
     ProximaNovaRegularCheckedTextView _detail;
     CircularAppCompatImageView profile_id;
+
+    @BindView(R.id.reaction1)
+    CircularAppCompatImageView reaction1;
+    @BindView(R.id.reaction2)
+    CircularAppCompatImageView reaction2;
+    @BindView(R.id.reaction3)
+
+    CircularAppCompatImageView reaction3;
     ImageView placeholder;
 
     Context context;
@@ -87,14 +94,18 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
 
- @BindView(R.id.message1)
- RelativeLayout message1;
+    @BindView(R.id.message1)
+    RelativeLayout message1;
+
+    @BindView(R.id.totallikes)
+    ProximaNovaRegularCheckedTextView _totalprofilelikes;
 
     @BindView(R.id.follow)
     Button _btnfollow;
+    @BindView(R.id.profilelikebutton)
+    ImageView profilelikebutton;
+
     AppBarLayout app_bar;
-
-
     int accountType;
     boolean requestRecieved;
     boolean hassentrequest;
@@ -112,12 +123,14 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     int followerfollowingid;
     String userType;
     String getNotificationType;
+    int totalProfileLikes;
+    Boolean canLike;
+
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
-    boolean next;
+    List<TopReactedUser> topReactedUserList;
 
     public static FragmentNewOtherProfile newInstance(String id, String identifier, String username) {
         FragmentNewOtherProfile othersProfileFragment = new FragmentNewOtherProfile();
-
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_IDENTIFIER, identifier);
@@ -127,33 +140,23 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
     }
 
-
     public static FragmentNewOtherProfile newInstance3(String id, String notificationId) {
-
-
         FragmentNewOtherProfile othersProfileFragment = new FragmentNewOtherProfile();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_NOTIFICATION_ID, notificationId);
         othersProfileFragment.setArguments(bundle);
         return othersProfileFragment;
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         followerfollowingid = Integer.parseInt(getArguments().getString(ARG_ID));
         userType = getArguments().getString(ARG_IDENTIFIER);
         username = getArguments().getString(ARG_USERNAME);
         getNotificationType = getArguments().getString(ARG_NOTIFICATION_ID);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -166,7 +169,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
 
         placeholder = view.findViewById(R.id.background);
         _name = view.findViewById(R.id.name);
@@ -212,10 +215,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                 if (accountType == 1) {
 
                     if (isfollowing) {
-                        navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                        navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                     } else if (hassentrequest) {
                         if (requestRecieved) {
-                            navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                            navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
@@ -225,7 +228,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
                 }
                 else {
-                    navigation.pushFragment(FollowersListActivity.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
 
             }
@@ -238,12 +241,12 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
                 if (accountType == 1) {
 
-                    if (isfollowing == true) {
-                        navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    if (isfollowing) {
+                        navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
 
-                    } else if (hassentrequest == true) {
-                        if (requestRecieved == true) {
-                            navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    } else if (hassentrequest) {
+                        if (requestRecieved) {
+                            navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                         } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
@@ -251,27 +254,26 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    navigation.pushFragment(FollowingListActivities.newInstance(String.valueOf(followerfollowingid), "Other"));
+                    navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
                 }
             }
         });
 
-
-        profile_id.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(context, OpenProfilePicActivity.class);
-                intent.putExtra("Image", userProfileUrl);
-                intent.putExtra("candelete", false);
-
-                Pair<View, String> p1 = Pair.create((View) profile_id, "profile");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
-                startActivity(intent, options.toBundle());
-            }
-
-        });
+//        profile_id.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//
+////                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+////                intent.putExtra("Image", userProfileUrl);
+////                intent.putExtra("candelete", false);
+////
+////                Pair<View, String> p1 = Pair.create((View) profile_id, "profile");
+////                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+////                startActivity(intent, options.toBundle());
+//            }
+//
+//        });
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -311,54 +313,114 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                     _name.setTextColor(Color.parseColor("#c6c6c6"));
                     _username.setTextColor(Color.parseColor("#c6c6c6"));
                     toolbar.setBackgroundResource(R.color.blur2);
+                }
+            }
+        });
 
+        profilelikebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(canLike)
+                {
+                    Glide.with(context)
+                            .load(R.drawable.ic_like_filled)
+                            .into(profilelikebutton);
+                    canLike=false;
+                    profileLikedUser(followerfollowingid,1);
+
+                    totalProfileLikes=totalProfileLikes+1;
+
+
+                    if(totalProfileLikes==0||totalProfileLikes==1){
+                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Like");
+                    } else
+                    {
+                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Likes");
+                    }
+
+
+
+                }
+                else{
+                    Glide.with(context)
+                            .load(R.drawable.ic_likebig)
+                            .into(profilelikebutton);
+                    totalProfileLikes=totalProfileLikes-1;
+                    canLike=true;
+                    profileLikedUser(followerfollowingid,2);
+
+                    if(totalProfileLikes==0||totalProfileLikes==1){
+                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Like");
+                    } else
+                    {
+                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Likes");
+                    }
 
                 }
             }
         });
+
+        _totalprofilelikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navigation.pushFragment(FragmentLikedUserProfile.newInstance2(followerfollowingid));
+            }
+        });
+        reaction1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(0).getUserId()),"",""));
+
+            }
+        });   reaction2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(1).getUserId()),"",""));
+
+
+            }
+        });   reaction3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(2).getUserId()),"",""));
+
+
+            }
+        });
+
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getParentActivity().hideToolbarOnly();
-
-
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getParentActivity().showToolbar();
-
-
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        getParentActivity().hideToolbarOnly();
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        getParentActivity().showToolbar();
+//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getProfileInformation(followerfollowingid);
-
-
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().showToolbar();
-        getParentActivity().updateToolbarTitle(previousTitle);
-
-
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        getParentActivity().updateToolbarTitle(previousTitle);
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -368,13 +430,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
             case R.id.action_profile_report:
                 openReportUser(followerfollowingid);
                 break;
-
             case R.id.action_profile_block:
                 if (youBlocked) {
                     blockUnblockUsers(followerfollowingid, UNBLOCK_STATUS);
@@ -462,9 +521,43 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
         return gradientDrawable;
     }
 
+    public void profileLikedUser(final int userId, final int status)
+    {
 
+        ApiCallingService.User.profileLikeDislike(context,userId,status).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+
+                try {
+                    if(response.body().getStatus())
+                    {
+                        if(status==2)
+                        {
+                            Toast.makeText(context,"You have disliked this profile",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"You have liked this profile",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                } catch(Exception e)
+                {
+                    Toast.makeText(context,"Oops something went wrong",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context,"Oops something went wrong",Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+    }
     public void getProfileInformation(final int followersid) {
-
 
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
 
@@ -484,6 +577,84 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         isfollowing = profileInfo.getFollowInfo().getFollowing();
                         youBlocked = profileInfo.getFollowInfo().getYouBlocked();
                         isHideAllPost = profileInfo.getIsHidedAllPosts();
+                        topReactedUserList=profileInfo.getTopReactedUsers();
+                        totalProfileLikes=profileInfo.getTotalProfileLikes();
+                        totalProfileLikes=profileInfo.getTotalProfileLikes();
+                        canLike=profileInfo.getCanLike();
+                        if(canLike)
+                        {   Glide.with(context)
+                                .load(R.drawable.ic_likebig)
+                                .into(profilelikebutton);
+                        }
+                        else{ Glide.with(context)
+                                .load(R.drawable.ic_like_filled)
+                                .into(profilelikebutton);
+                        }
+                        if (topReactedUserList!=null)
+                        {
+                            if(topReactedUserList.size()==1){
+                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                                reaction1.setVisibility(View.VISIBLE);
+                                if(topReactedUser1.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                            .into(reaction1);
+                                }
+                            }
+                            else if((topReactedUserList.size()==2))
+                            {
+                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                                TopReactedUser  topReactedUser2=topReactedUserList.get(1);
+                                reaction1.setVisibility(View.VISIBLE);
+                                reaction2.setVisibility(View.VISIBLE);
+                                if(topReactedUser1.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                            .into(reaction1);
+                                }
+
+                                if(topReactedUser2.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
+                                            .into(reaction2);
+                                }
+                            }
+
+                            else if((topReactedUserList.size()==3))
+                            {
+                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                                TopReactedUser  topReactedUser2=topReactedUserList.get(1);
+                                TopReactedUser  topReactedUser3=topReactedUserList.get(2);
+                                reaction1.setVisibility(View.VISIBLE);
+                                reaction2.setVisibility(View.VISIBLE);
+                                reaction3.setVisibility(View.VISIBLE);
+
+                                if(topReactedUser1.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
+                                            .into(reaction1);
+                                }
+
+                                if(topReactedUser2.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
+                                            .into(reaction2);
+                                }
+                                if(topReactedUser3.getHasProfileMedia())
+                                {
+                                    Glide.with(context)
+                                            .load(Uri.parse(topReactedUser3.getProfileMedia().getThumbUrl()))
+                                            .into(reaction3);
+                                }
+                            }
+
+                        }
+
                         if (requestRecieved) {
                             requestId = profileInfo.getFollowInfo().getRequestId();
                         }
@@ -496,6 +667,13 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         _following.setText(String.valueOf(following));
                         _creations.setText(String.valueOf(totalvideos));
                         _reactions.setText(String.valueOf(totalreactions));
+
+                        if(totalProfileLikes==0||totalProfileLikes==1){
+                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Like");
+                        } else
+                        {
+                            _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Likes");
+                        }
 
                         if (response.body().getPrivateProfile() == null) {
                             PublicProfile publicProfile = response.body().getPublicProfile();
@@ -1063,6 +1241,4 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
         void onFollowingListListener(String id, String identifier);
     }
-
-
 }

@@ -18,6 +18,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -26,7 +27,6 @@ import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +49,8 @@ public class FragmentProfileMyReactions extends Fragment {
     ProximaNovaSemiBoldTextView alert1;
     ProximaNovaRegularTextView alert2;
     ProximaNovaSemiBoldTextView alert3;
-    GifTextView loader;
+    ProximaNovaSemiBoldTextView alert4;
+    DynamicProgress loader;
     int followerfollowingid;
 
     boolean next;
@@ -78,6 +79,7 @@ public class FragmentProfileMyReactions extends Fragment {
         alert1=view.findViewById(R.id.alert1);
         alert2=view.findViewById(R.id.alert2);
         alert3=view.findViewById(R.id.alert3);
+        alert4=view.findViewById(R.id.alert4);
         loader=view.findViewById(R.id.loader);
         return view;
     }
@@ -95,8 +97,7 @@ public class FragmentProfileMyReactions extends Fragment {
         }
         else
         {
-            //Toast.makeText(context,"No Reaction yet Under maintaince, please wait",Toast.LENGTH_SHORT).show();
-             getFriendsReactions(1,followerfollowingid);
+             getFriendsReactions(followerfollowingid,1);
 
         }
 
@@ -114,8 +115,7 @@ public class FragmentProfileMyReactions extends Fragment {
                     }
                     else
                     {
-                       // Toast.makeText(context,"No Reaction yet Under maintaince, please wait",Toast.LENGTH_SHORT).show();
-                        getFriendsReactions(page,followerfollowingid);
+                        getFriendsReactions(followerfollowingid,page);
 
                     }
                 }
@@ -138,12 +138,15 @@ public class FragmentProfileMyReactions extends Fragment {
                         }
                         else
                         {
-                            next=response.body().isNextPage();
-                            myReactions.addAll(response.body().getReactions());
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
-                            loader.setVisibility(View.GONE);
-                        }
+
+                                next = response.body().isNextPage();
+                                myReactions.addAll(response.body().getReactions());
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
+                                loader.setVisibility(View.GONE);
+
+                            }
+
                     }
                     catch(Exception e)
                     {
@@ -166,25 +169,29 @@ public class FragmentProfileMyReactions extends Fragment {
         });
 
     }
-    public void getFriendsReactions(final int page, final int userId) {
-        ApiCallingService.React.getFriendsReactions(page,userId,context).enqueue(new Callback<ReactionsList>() {
+    public void getFriendsReactions(final int userId, final int page) {
+        ApiCallingService.React.getFriendsReactions(userId,page,context).enqueue(new Callback<ReactionsList>() {
             @Override
             public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
                 if (response.code() == 200) {
                     try {
-                        if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
 
-                          //  alert3.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                            loader.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            next=response.body().isNextPage();
-                            myReactions.addAll(response.body().getReactions());
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
-                            loader.setVisibility(View.GONE);
+                        if (response.body().getCanShowReactions()) {
+
+                            if ((response.body().getReactions() == null || response.body().getReactions().size() == 0) && page == 1) {
+
+                                alert3.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                                loader.setVisibility(View.GONE);
+                            } else {
+                                next = response.body().isNextPage();
+                                myReactions.addAll(response.body().getReactions());
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
+                                loader.setVisibility(View.GONE);
+                            }
+                        } else {
+                            alert4.setVisibility(View.VISIBLE);
                         }
                     }
                     catch(Exception e)

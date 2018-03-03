@@ -3,8 +3,6 @@ package com.cncoding.teazer.data.model.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
-
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -14,18 +12,20 @@ public class UploadParams implements Parcelable {
 
     private boolean isGiphy;
     private String videoPath;
-    public boolean isReaction;
+    private boolean isReaction;
     private String title;
     private String location;
     private double latitude;
     private double longitude;
+    private String selectedTagsToSend;
+    private String selectedCategoriesToSend;
     private String tags;
     private String categories;
-    private PostDetails postDetails;
+    private int postId;
     private boolean isGallery;
 
     public UploadParams(boolean isGallery, String videoPath, String title, String location,
-                        double latitude, double longitude, String tags, String categories, PostDetails postDetails, boolean isGiphy) {
+                        double latitude, double longitude, String tags, String categories, int postId, boolean isGiphy) {
         this.isGallery = isGallery;
         this.videoPath = videoPath;
         this.title = title;
@@ -34,31 +34,57 @@ public class UploadParams implements Parcelable {
         this.longitude = longitude;
         this.tags = tags;
         this.categories = categories;
-        this.postDetails = postDetails;
+        this.postId = postId;
         this.isGiphy = isGiphy;
     }
 
     public UploadParams(boolean isGallery, String videoPath, String title, String location,
-                        double latitude, double longitude, PostDetails postDetails, boolean isGiphy) {
+                        double latitude, double longitude, int postId, boolean isGiphy) {
         this.isGallery = isGallery;
         this.videoPath = videoPath;
         this.title = title;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.postDetails = postDetails;
+        this.postId = postId;
         this.isGiphy = isGiphy;
     }
 
-    public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {
+    public UploadParams(String videoPath, boolean isReaction, String title, int postId) {
         this.videoPath = videoPath;
         this.isReaction = isReaction;
         this.title = title;
-        this.postDetails = postDetails;
+        this.postId = postId;
     }
 
     public UploadParams(String videoPath) {
         this.videoPath = videoPath;
+    }
+
+    public UploadParams(int postId, boolean isGallery, String videoPath, String title, String location,
+                        double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend, boolean isGiphy) {
+        this.postId = postId;
+        this.isGallery = isGallery;
+        this.videoPath = videoPath;
+        this.title = title;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.selectedTagsToSend = selectedTagsToSend;
+        this.selectedCategoriesToSend = selectedCategoriesToSend;
+        this.isGiphy = isGiphy;
+    }
+
+    public UploadParams(int postId, boolean isGallery, String videoPath, String title, String location,
+                        double latitude, double longitude, boolean isGiphy) {
+        this.postId = postId;
+        this.isGallery = isGallery;
+        this.videoPath = videoPath;
+        this.title = title;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.isGiphy = isGiphy;
     }
 
     protected UploadParams(Parcel in) {
@@ -69,9 +95,11 @@ public class UploadParams implements Parcelable {
         location = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        selectedTagsToSend = in.readString();
+        selectedCategoriesToSend = in.readString();
         tags = in.readString();
         categories = in.readString();
-        postDetails = in.readParcelable(PostDetails.class.getClassLoader());
+        postId = in.readInt();
         isGallery = in.readByte() != 0;
     }
 
@@ -84,9 +112,11 @@ public class UploadParams implements Parcelable {
         dest.writeString(location);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeString(selectedTagsToSend);
+        dest.writeString(selectedCategoriesToSend);
         dest.writeString(tags);
         dest.writeString(categories);
-        dest.writeParcelable(postDetails, flags);
+        dest.writeInt(postId);
         dest.writeByte((byte) (isGallery ? 1 : 0));
     }
 
@@ -139,8 +169,8 @@ public class UploadParams implements Parcelable {
         return categories;
     }
 
-    public PostDetails getPostDetails() {
-        return postDetails;
+    public int getPostId() {
+        return postId;
     }
 
     public boolean isGallery() {
@@ -149,6 +179,58 @@ public class UploadParams implements Parcelable {
 
     public void setGallery(boolean gallery) {
         isGallery = gallery;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
+    }
+
+    public void setReaction(boolean reaction) {
+        isReaction = reaction;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getSelectedTagsToSend() {
+        return selectedTagsToSend;
+    }
+
+    public void setSelectedTagsToSend(String selectedTagsToSend) {
+        this.selectedTagsToSend = selectedTagsToSend;
+    }
+
+    public String getSelectedCategoriesToSend() {
+        return selectedCategoriesToSend;
+    }
+
+    public void setSelectedCategoriesToSend(String selectedCategoriesToSend) {
+        this.selectedCategoriesToSend = selectedCategoriesToSend;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public boolean isGiphy() {

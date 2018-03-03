@@ -88,6 +88,22 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
         @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
         PostReaction postReaction;
 
+        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                        Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                           DataSource dataSource, boolean isFirstResource) {
+                setTitle();
+                thumb.setImageDrawable(resource);
+                return false;
+            }
+        };
+
         ReactionViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -99,79 +115,13 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                 layout.startShimmerAnimation();
                 if (getAdapterPosition() < reactions.size()) {
                     postReaction = reactions.get(getAdapterPosition());
-
-                    if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO) {
-                        title.setBackgroundResource(R.drawable.bg_shimmer_light);
-                        Glide.with(fragment)
-                                .load(postReaction.getMediaDetail().getReactThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                                Target<Drawable> target, boolean isFirstResource) {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                                   DataSource dataSource, boolean isFirstResource) {
-                                        setTitle();
-                                        thumb.setImageDrawable(resource);
-                                        return false;
-                                    }
-                                })
-                                .into(thumb);
-                    }
-                    else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-                        title.setBackgroundResource(R.drawable.bg_shimmer_light);
-                        Glide.with(fragment)
-                                .load(postReaction.getMediaDetail().getReactThumbUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
-                                .apply(RequestOptions.bitmapTransform(new FitCenter()))
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                                Target<Drawable> target, boolean isFirstResource) {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                                   DataSource dataSource, boolean isFirstResource) {
-                                        setTitle();
-                                        thumb.setImageDrawable(resource);
-                                        return false;
-                                    }
-                                })
-                                .into(thumb);
-                    }
-                    else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY) {
-                        title.setBackgroundResource(R.drawable.bg_shimmer_light);
-
-                        Gson gson = new Gson();
-                        Images images = gson.fromJson(postReaction.getMediaDetail().getExternalMeta(), Images.class);
-
-                        Glide.with(fragment)
-                                .load(images.getFixedHeightSmallStill().getUrl())
-                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
-                                .apply(RequestOptions.bitmapTransform(new FitCenter()))
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                                Target<Drawable> target, boolean isFirstResource) {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                                   DataSource dataSource, boolean isFirstResource) {
-                                        setTitle();
-                                        thumb.setImageDrawable(resource);
-                                        return false;
-                                    }
-                                })
-                                .into(thumb);
-                    }
+                    title.setBackgroundResource(R.drawable.bg_shimmer_light);
+                    Glide.with(fragment)
+                            .load(getRealUrl(postReaction.getMediaDetail().getMediaType()))
+                            .apply(RequestOptions.bitmapTransform(new FitCenter())
+                                    .placeholder(R.drawable.bg_shimmer_light).diskCacheStrategy(RESOURCE))
+                            .listener(requestListener)
+                            .into(thumb);
                 } else {
                     thumb.setImageResource(R.drawable.bg_shimmer_extra_light);
                     title.setBackgroundResource(R.drawable.bg_shimmer_extra_light);
@@ -180,6 +130,23 @@ public class ReactionAdapter extends BaseRecyclerView.Adapter {
                 layout.stopShimmerAnimation();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+
+        private String getRealUrl(int mediaType) {
+            switch (mediaType) {
+                case MEDIA_TYPE_VIDEO:
+                    return postReaction.getMediaDetail().getReactThumbUrl();
+                case MEDIA_TYPE_GIF:
+                    return postReaction.getMediaDetail().getReactThumbUrl();
+                case MEDIA_TYPE_GIPHY:
+                    Images images = new Gson().fromJson(postReaction.getMediaDetail().getExternalMeta(), Images.class);
+                    return images.getFixedHeightSmallStill().getUrl();
+//                    return images.getFixedHeightSmallStill().getUrl() != null && !images.getFixedHeightSmallStill().getUrl().equals("") ?
+//                            images.getFixedHeightSmallStill().getUrl() :
+//                            images.getDownsized().getUrl();
+                default:
+                    return "";
             }
         }
 

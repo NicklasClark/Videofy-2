@@ -37,7 +37,6 @@ import com.cncoding.teazer.ui.customviews.exoplayer.ToroUtil;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
@@ -88,7 +87,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @BindView(R.id.reactions) ProximaNovaRegularTextView reactions;
     @BindView(R.id.popularity_layout_shimmer) ProximaNovaRegularTextView popularityLayoutShimmer;
     @BindView(R.id.list) RecyclerView reactionListView;
-    @BindView(R.id.shimmer_layout_top) ShimmerLinearLayout shimmerLayoutTop;
+    @BindView(R.id.shimmer_layout_top) ShimmerRelativeLayout shimmerLayoutTop;
     @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
 
     private AudioVolumeObserver audioVolumeObserver;
@@ -138,7 +137,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     @OnClick(R.id.react_btn) public void react() {
-        launchReactionCamera(adapter.fragment.getParentActivity(), postDetails);
+        launchReactionCamera(adapter.fragment.getParentActivity(), postDetails.getPostId());
     }
 
     @Override public String toString() {
@@ -449,7 +448,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
 //    private void fetchPostDetails(int postId, final Bitmap thumbnail) {
-//        ApiCallingService.Posts.getPostDetails(postId, adapter.context)
+//        ApiCallingService.Posts.getPostId(postId, adapter.context)
 //                .enqueue(new Callback<PostDetails>() {
 //                    @Override
 //                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {

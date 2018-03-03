@@ -124,7 +124,7 @@ public class FragmentEditPostUpdateCtaegories extends Fragment {
         super.onResume();
     }
     public void getCategories() {
-        ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {

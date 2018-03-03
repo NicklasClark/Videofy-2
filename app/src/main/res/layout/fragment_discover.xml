@@ -14,12 +14,23 @@
         android:background="@drawable/bg_card_no_margin_white"
         android:animateLayoutChanges="true">
 
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/toolbar_plain_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:gravity="start|center_vertical"
+            android:textSize="20sp"
+            android:text="@string/discover"
+            android:padding="@dimen/padding_thin"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorPrimary_text"
+            android:layout_marginStart="14dp"/>
+
         <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/discover_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_for_videos_or_people"
-            android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"

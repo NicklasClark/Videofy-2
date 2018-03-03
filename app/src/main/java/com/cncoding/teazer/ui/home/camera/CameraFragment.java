@@ -1063,60 +1063,69 @@ public class CameraFragment extends Fragment {
     private void stopRecordingVideo() {
         // UI
         mIsRecordingVideo = false;
+        new StopVideoRecordTask(this).execute();
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mPreviewSession.stopRepeating();
-                    mPreviewSession.abortCaptures();
+    private static class StopVideoRecordTask extends AsyncTask<Void, Void, Void> {
 
-                    if (isAdded()) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //stopping recording timer
-                                timeSwapBuff += timeInMilliseconds;
+        private WeakReference<CameraFragment> ref;
 
-                                startTime = 0L;
-                                timeInMilliseconds = 0L;
-                                timeSwapBuff = 0L;
-                                updatedTime = 0L;
-                                videoDuration.setVisibility(View.INVISIBLE);
-                                customHandler.removeCallbacks(updateTimerThread);
-                            }
-                        });
-                    }
+        private StopVideoRecordTask(CameraFragment ref) {
+            this.ref = new WeakReference<>(ref);
+        }
 
-                    //checking flash status before stopping camera recording
-                    if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
-                        if (isFlashSupported) {
-                            if (isTorchOn) {
-                                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-                                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                                isTorchOn = false;
-                            }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                ref.get().mPreviewSession.stopRepeating();
+                ref.get().mPreviewSession.abortCaptures();
+
+                if (ref.get().isAdded()) {
+                    ref.get().activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //stopping recording timer
+                            ref.get().timeSwapBuff += ref.get().timeInMilliseconds;
+                            ref.get().startTime = 0L;
+                            ref.get().timeInMilliseconds = 0L;
+                            ref.get().timeSwapBuff = 0L;
+                            ref.get().updatedTime = 0L;
+                            ref.get().videoDuration.setVisibility(View.INVISIBLE);
+                            ref.get().customHandler.removeCallbacks(ref.get().updateTimerThread);
+                        }
+                    });
+                }
+
+                //checking flash status before stopping camera recording
+                if (ref.get().cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                    if (ref.get().isFlashSupported) {
+                        if (ref.get().isTorchOn) {
+                            ref.get().mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                            ref.get().mPreviewSession.setRepeatingRequest(ref.get().mPreviewBuilder.build(), null, null);
+                            ref.get().isTorchOn = false;
                         }
                     }
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
                 }
-                // Stop recording
-                try {
-                    mMediaRecorder.stop();
-                } catch (RuntimeException e) {
-                    if(e != null)
-                        e.printStackTrace();
-                }
-                mMediaRecorder.reset();
-
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
             }
-        }).start();
+            // Stop recording
+            try {
+                ref.get().mMediaRecorder.stop();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            ref.get().mMediaRecorder.reset();
+//            SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
+            updateMediaStoreDatabase(ref.get().context, ref.get().mNextVideoAbsolutePath);
+            return null;
+        }
 
-//        SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
-        updateMediaStoreDatabase(context, mNextVideoAbsolutePath);
-        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
-        mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath));
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            ref.get().cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+            ref.get().mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(ref.get().mNextVideoAbsolutePath));
+        }
     }
 
     /**

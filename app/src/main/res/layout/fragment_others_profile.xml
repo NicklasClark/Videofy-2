@@ -469,13 +469,13 @@
         </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
-    <pl.droidsonroids.gif.GifTextView
-        android:layout_width="100dp"
+
+    <com.cncoding.teazer.ui.customviews.common.DynamicProgress
         android:id="@+id/loader"
-        android:visibility="gone"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="14dp"
         android:layout_gravity="center"
-        android:layout_height="100dp"
-        android:background="@drawable/ic_loader"
-        />
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

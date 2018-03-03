@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
@@ -68,7 +67,7 @@ public class ViewUtils {
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";
-    public static final String POST_DETAILS = "postId";
+    public static final String POST_ID = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
     public static final int POST_REACTION = 0;
     public static final int SELF_REACTION = 1;
@@ -197,10 +196,10 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void launchReactionCamera(Context packageContext, PostDetails postDetails) {
+    public static void launchReactionCamera(Context packageContext, int postId) {
         Intent intent = new Intent(packageContext, CameraActivity.class);
         intent.putExtra(IS_REACTION, true);
-        intent.putExtra(POST_DETAILS, postDetails);
+        intent.putExtra(POST_ID, postId);
         packageContext.startActivity(intent);
     }
 

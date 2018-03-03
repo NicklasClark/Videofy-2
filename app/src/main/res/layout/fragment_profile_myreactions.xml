@@ -36,13 +36,26 @@
         android:layout_marginTop="20dp"
         android:id="@+id/alert3"
         android:visibility="gone"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingBottom="5dp"
         android:text="@string/no_reactions_message2"
+        android:textColor="#505050"
+        android:textSize="14sp" />
+
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/alert4"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:text="@string/no_reactions_message3"
         android:textColor="#505050"
         android:textSize="14sp" />
 
@@ -63,11 +76,12 @@
         android:id="@+id/recycler_view"/>
     </RelativeLayout>
 
-    <pl.droidsonroids.gif.GifTextView
+    <com.cncoding.teazer.ui.customviews.common.DynamicProgress
         android:id="@+id/loader"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="gone"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="14dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/ic_loader" />
+        android:visibility="gone"/>
+
 </RelativeLayout>

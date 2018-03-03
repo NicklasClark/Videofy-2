@@ -6,11 +6,13 @@ import android.os.Parcelable;
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.profile.Preference;
+import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
 import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -27,14 +29,10 @@ public class UserProfile extends BaseModel implements Parcelable {
     @SerializedName("total_reactions") @Expose private Integer totalReactions;
     @SerializedName("total_profile_likes") @Expose private Integer totalProfileLikes;
     @SerializedName("preferences") @Expose private ArrayList<Preference> preferences = null;
+    @SerializedName("top_reacted_users") @Expose private List<TopReactedUser> topReactedUsers = null;
 
     public UserProfile(Throwable error) {
         this.error = error;
-    }
-
-    public UserProfile setCallType(@CallType int callType) {
-        setCall(callType);
-        return this;
     }
 
     protected UserProfile(Parcel in) {
@@ -54,14 +52,6 @@ public class UserProfile extends BaseModel implements Parcelable {
             totalProfileLikes = in.readInt();
         }
         preferences = in.createTypedArrayList(Preference.CREATOR);
-    }
-
-    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
-        this.user_profile = user_profile;
-        this.followers = followers;
-        this.followings = followings;
-        this.total_videos = total_videos;
-        this.can_change_password = can_change_password;
     }
 
     @Override
@@ -103,6 +93,21 @@ public class UserProfile extends BaseModel implements Parcelable {
         }
     };
 
+    public UserProfile setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
+
+
+    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
+        this.user_profile = user_profile;
+        this.followers = followers;
+        this.followings = followings;
+        this.total_videos = total_videos;
+        this.can_change_password = can_change_password;
+    }
+
+
     public PublicProfile getUserProfile() {
         return user_profile;
     }
@@ -141,5 +146,9 @@ public class UserProfile extends BaseModel implements Parcelable {
 
     public ArrayList<Preference> getPreferences() {
         return preferences;
+    }
+
+    public List<TopReactedUser> getTopReactedUsers() {
+        return topReactedUsers;
     }
 }

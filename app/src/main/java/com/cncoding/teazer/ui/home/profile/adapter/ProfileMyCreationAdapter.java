@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -28,6 +31,8 @@ import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditPost;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentProfileMyCreations;
+import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;
 
@@ -50,13 +55,17 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     Fragment fragment;
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
     private boolean isPostClicked = false;
+    int userIdentifier;
+    FragmentProfileMyCreations fragmentProfileMyCreations;
 
 
 
-    public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
+    public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment, int userIdentifier,FragmentProfileMyCreations fragmentProfileMyCreations) {
         this.context = context;
         this.list = list;
         this.fragment=fragment;
+        this.userIdentifier=userIdentifier;
+        this.fragmentProfileMyCreations=fragmentProfileMyCreations;
 
         listener = (myCreationListener) context;
         if (fragment instanceof OnChildFragmentUpdateVideos) {
@@ -87,6 +96,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final int reactions;
         final int postId;
         try {
+
             cont = list.get(i);
             videoTitle = cont.getTitle();
             postId = cont.getPostId();
@@ -98,6 +108,23 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             likes = String.valueOf(cont.getLikes());
             reactions = cont.getTotalReactions();
             boolean hascheckin = cont.hasCheckin();
+            final boolean is_hidden=cont.isHided();
+
+            if(is_hidden)
+            {
+
+                viewHolder.hidden_layout.setVisibility(View.VISIBLE);
+                viewHolder.unhide_video.setVisibility(View.VISIBLE);
+                viewHolder.playvideo.setVisibility(View.GONE);
+                viewHolder.cardView.setEnabled(false);
+                viewHolder.menu.setEnabled(false);
+            } else {
+                viewHolder.hidden_layout.setVisibility(View.GONE);
+                viewHolder.unhide_video.setVisibility(View.GONE);
+                viewHolder.playvideo.setVisibility(View.VISIBLE);
+                viewHolder.menu.setEnabled(true);
+                viewHolder.cardView.setEnabled(true);
+            }
 
             if (hascheckin) {
                 String location2 = cont.getCheckIn().getLocation();
@@ -158,50 +185,176 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-                    popup.inflate(R.menu.menu_profile_creation);
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.action_delete:
+                    if(userIdentifier== FragmentProfileMyCreations.USERCREATION) {
+                        PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+                        popup.inflate(R.menu.menu_profile_creation);
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.action_delete:
 
-                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                                    alertDialog.setTitle("Confirm Deletion...");
-                                    alertDialog.setMessage("Are you sure you want to delete this video.");
-                                    alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
-                                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                                        alertDialog.setTitle("Confirm Deletion...");
+                                        alertDialog.setMessage("Are you sure you want to delete this video.");
+                                        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+                                        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            onChildFragmentUpdateVideosllistrener.updateVideosCreation(1);
-                                            deleteVideos(videoPostId);
-                                            list.remove(i);
-                                            notifyItemRemoved(i);
-                                            notifyItemRangeChanged(i, list.size());
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                onChildFragmentUpdateVideosllistrener.updateVideosCreation(1);
+                                                deleteVideos(videoPostId);
+                                                list.remove(i);
+                                                notifyItemRemoved(i);
+                                                notifyItemRangeChanged(i, list.size());
 
 
-                                        }
-                                    });
-                                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        });
+                                        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    alertDialog.show();
-                                    break;
-                                case R.id.edit_post:
-                                    Intent intent = new Intent(context, EditPost.class);
-                                    intent.putExtra("PostDetail", cont);
-                                    context.startActivity(intent);
-                                    break;
+                                                dialog.cancel();
+                                            }
+                                        });
+                                        alertDialog.show();
+                                        break;
+                                    case R.id.edit_post:
+                                        Intent intent = new Intent(context, EditPost.class);
+                                        intent.putExtra("PostDetail", cont);
+                                        context.startActivity(intent);
+                                        break;
+                                }
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                    popup.show();
+                        });
+                        popup.show();
+                    }
+                    else
+                    {
+                        PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+                        popup.inflate(R.menu.menu_other_profile_post);
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.action_delete:
+
+                                        FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
+                                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(cont.getPostId(), cont.canReact(), cont.getPostOwner().getUserName());
+                                        if (fm != null) {
+                                            reportPostDialogFragment.show(fm, "fragment_report_post");
+                                        }
+                                        break;
+                                    case R.id.action_hide:
+
+
+                                        new android.support.v7.app.AlertDialog.Builder(context)
+                                                .setTitle(R.string.hiding_post)
+                                                .setMessage(R.string.hide_post_confirm)
+                                                .setPositiveButton(context.getString(R.string.yes_hide), new DialogInterface.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int item) {
+                                                        ApiCallingService.Posts.hideOrShowPost(cont.getPostId(), 1, context)
+                                                                .enqueue(new Callback<ResultObject>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                                        if (response.body().getStatus()) {
+                                                                            Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
+                                                                            viewHolder.hidden_layout.setVisibility(View.VISIBLE);
+                                                                            viewHolder.unhide_video.setVisibility(View.VISIBLE);
+                                                                            viewHolder.playvideo.setVisibility(View.GONE);
+                                                                            viewHolder.cardView.setEnabled(false);
+                                                                            viewHolder.menu.setEnabled(false);
+                                                                            cont.setHided(true);
+                                                                            fragmentProfileMyCreations.resetRecyclerData();
+
+
+                                                                        } else {
+                                                                            Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                    @Override
+                                                                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                                        t.printStackTrace();
+                                                                        Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.dismiss();
+                                                    }
+                                                })
+                                                .show();
+
+
+                                        break;
+                                }
+                                return false;
+                            }
+                        });
+                        popup.show();
+                    }
                 }
             });
+            viewHolder.unhide_video.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    new android.support.v7.app.AlertDialog.Builder(context)
+                            .setTitle(R.string.unhiding_post)
+                            .setMessage(R.string.unhide_post_confirm)
+                            .setPositiveButton(context.getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int j) {
+                                    ApiCallingService.Posts.hideOrShowPost(postId, 2, context)
+                                            .enqueue(new Callback<ResultObject>() {
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    if (response.body().getStatus()) {
+                                                        Toast.makeText(context,
+                                                                R.string.video_shown_successful,
+                                                                Toast.LENGTH_SHORT).show();
+
+                                                        viewHolder.hidden_layout.setVisibility(View.GONE);
+                                                        viewHolder.unhide_video.setVisibility(View.GONE);
+                                                        viewHolder.playvideo.setVisibility(View.VISIBLE);
+                                                        viewHolder.menu.setEnabled(true);
+                                                        viewHolder.cardView.setEnabled(true);
+                                                        cont.setHided(false);
+
+
+                                                    } else {
+                                                        Toast.makeText(context,
+                                                                R.string.something_went_wrong,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    t.printStackTrace();
+                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .show();
+                }
+            });
+
+
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,6 +374,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         private ProximaNovaRegularCheckedTextView txtreation;
         VideoView videoviewContainer;
         ImageView thumbimage;
+        ImageView hidden_layout;
         RelativeLayout imagelayout1;
         RelativeLayout imagelayout2;
         RelativeLayout imagelayout3;
@@ -228,6 +382,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         CardView cardView;
         View line;
         ImageView playvideo;
+        Button unhide_video;
         CircularAppCompatImageView menu;
         public ViewHolder(View view) {
             super(view);
@@ -248,6 +403,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             imagelayout3 = view.findViewById(R.id.image3_layout);
             locationimage = view.findViewById(R.id.locationimage);
             txtreation = view.findViewById(R.id.txtreation);
+            hidden_layout = view.findViewById(R.id.hidden_layput);
+            unhide_video = view.findViewById(R.id.unhide_video);
             menu = view.findViewById(R.id.menu);
         }
     }
