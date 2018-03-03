@@ -9,9 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +33,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTe
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
 import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
@@ -189,14 +186,14 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, OpenProfilePicActivity.class);
-                intent.putExtra("Image", userProfileUrl);
-                intent.putExtra("candelete",true);
-                intent.putExtra("gender",gender);
-                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
-                Pair<View, String> p2 = Pair.create((View)_username, "text");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
-                startActivity(intent, options.toBundle());
+//                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+//                intent.putExtra("Image", userProfileUrl);
+//                intent.putExtra("candelete",true);
+//                intent.putExtra("gender",gender);
+//                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
+//                Pair<View, String> p2 = Pair.create((View)_username, "text");
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+//                startActivity(intent, options.toBundle());
             }
 
         });

@@ -2,7 +2,6 @@ package com.cncoding.teazer.ui.home.profile.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -11,11 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +40,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularChe
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.home.profile.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
@@ -278,13 +274,13 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, OpenProfilePicActivity.class);
-                intent.putExtra("Image", userProfileUrl);
-                intent.putExtra("candelete", false);
-
-                Pair<View, String> p1 = Pair.create((View) profile_id, "profile");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
-                startActivity(intent, options.toBundle());
+//                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+//                intent.putExtra("Image", userProfileUrl);
+//                intent.putExtra("candelete", false);
+//
+//                Pair<View, String> p1 = Pair.create((View) profile_id, "profile");
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+//                startActivity(intent, options.toBundle());
             }
 
         });
