@@ -51,7 +51,8 @@ public class FragmentProfileMyCreations extends Fragment {
     public static boolean checkIsLiked=false;
     GifTextView loader;
     private int followerfollowingid;
-
+    public static final int USERCREATION=1;
+    public static final int OTHERUSERCREATION=2;
 
 
     public static FragmentProfileMyCreations newInstance(int userId) {
@@ -98,12 +99,12 @@ public class FragmentProfileMyCreations extends Fragment {
 
         if(followerfollowingid==0) {
             getProfileVideos(1);
-            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment(),USERCREATION,FragmentProfileMyCreations.this);
             recyclerView.setAdapter(profileMyCreationAdapter);
         }
         else {
             getOtherUserProfileVideos(followerfollowingid,1);
-            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment());
+            profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list, getParentFragment(),OTHERUSERCREATION,FragmentProfileMyCreations.this);
             recyclerView.setAdapter(profileMyCreationAdapter);
         }
 
@@ -208,4 +209,8 @@ public class FragmentProfileMyCreations extends Fragment {
         });
     }
 
+    public void resetRecyclerData() {
+        Toast.makeText(context,"resetadapter",Toast.LENGTH_SHORT).show();
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
 }

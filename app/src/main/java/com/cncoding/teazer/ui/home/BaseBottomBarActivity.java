@@ -820,6 +820,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //        }
 //    }
 
+    //
+
 //    public String getToolbarTitle() {
 //        try {
 //            if (toolbarPlainTitle != null)

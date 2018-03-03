@@ -2,6 +2,7 @@ package com.cncoding.teazer.data.remote.apicalls.user;
 
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.data.model.updatemobilenumber.UpdateMobileNumber;
 import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
@@ -131,4 +132,14 @@ public interface UserService {
 
     @PUT("api/v1/user/reset/notification/count")
     Call<ResultObject> resetUnreadNotification(@Query("type") int notificationType);
+
+    // newly added for profile like
+
+    @POST("/api/v1/friend/profile/like/{user_id}/{status}")
+    Call<com.cncoding.teazer.data.apiCalls.ResultObject> setProfileLike(@Path("user_id") int userId, @Path("status") int status);
+
+    // newly added for getLikedUser
+
+    @GET("/api/v1/user/profile/liked/users/{page}")
+    Call<LikedUserList>getLikedUserProfile(@Path("user_id") int userId);
 }

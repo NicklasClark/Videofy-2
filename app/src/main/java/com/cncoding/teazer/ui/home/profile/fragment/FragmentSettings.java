@@ -18,7 +18,6 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.profile.Preference;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.home.profile.activity.BlockUserList;
 import com.cncoding.teazer.ui.home.profile.activity.InviteFriend;
 import com.cncoding.teazer.ui.home.profile.activity.PasswordChange;
@@ -96,6 +95,7 @@ public class FragmentSettings extends BaseFragment {
 
 
         //save video to gallery switch button
+
         saveVideosSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,23 +109,28 @@ public class FragmentSettings extends BaseFragment {
         simpleSwitchShowingReactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (simpleSwitchShowingReactions.isChecked()) {
+
+
                     resetPrefrences(1,"show reactions to other",1);
-                } else {
+
+
+
+                } else{
+
                     resetPrefrences(1,"hide reactions to other",0);
+
+
                 }
             }
         });
         return view;
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         int valueofPrefrencese=preferencesList.get(0).getValue();
-
-        Toast.makeText(context,String.valueOf(valueofPrefrencese),Toast.LENGTH_SHORT).show();
-
 
         if(valueofPrefrencese==0){
 
@@ -136,9 +141,6 @@ public class FragmentSettings extends BaseFragment {
             simpleSwitchShowingReactions.setChecked(true);
 
         }
-        Toast.makeText(context,String.valueOf(simpleSwitchShowingReactions.isChecked()),Toast.LENGTH_SHORT).show();
-
-
         privateAccountSwitch.setChecked(accountType == 1);
         saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
         prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
@@ -243,12 +245,12 @@ public class FragmentSettings extends BaseFragment {
                         boolean b = response.body().getStatus();
                         if (b) {
                             if (status == 1) {
-                                ProfileFragment.checkprofileupdated = true;
+                                FragmentNewProfile2.checkprofileupdated = true;
 
                                 Toast.makeText(context, "Your account has become private", Toast.LENGTH_SHORT).show();
                             } else {
 
-                                ProfileFragment.checkprofileupdated = true;
+                                FragmentNewProfile2.checkprofileupdated = true;
                                 Toast.makeText(context, "Your account has become public", Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -276,27 +278,22 @@ public class FragmentSettings extends BaseFragment {
     public void resetPrefrences(int prefrenceId, String prefrencesname,final int prefrenceValue) {
         ArrayList<Preference>list=new ArrayList<>();
         list.add(new Preference(prefrenceId,prefrencesname,prefrenceValue));
-
         ApiCallingService.User.resetPrefrences(context,list).enqueue(new Callback<ResultObject>() {
-
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-
                 try {
                     boolean b = response.body().getStatus();
                     if (b == true) {
+                       FragmentNewProfile2.checkprofileupdated = true;
 
                         if (prefrenceValue==0) {
 
+                            Toast.makeText(context, "Your reaction is hidden", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             Toast.makeText(context, "Your reacition  is visible", Toast.LENGTH_SHORT).show();
                         }
-
-                        else {
-
-                            Toast.makeText(context, "Your reaction is invisible", Toast.LENGTH_SHORT).show();
-                        }
                     } else {
-
                         Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
                     }
 
@@ -306,7 +303,6 @@ public class FragmentSettings extends BaseFragment {
                 }
 
             }
-
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();

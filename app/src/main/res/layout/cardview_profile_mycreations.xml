@@ -265,6 +265,32 @@
 
 
     </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/hidden_layput"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:visibility="gone"
+        android:background="@color/blur2"/>
+
+
+    <Button
+        android:id="@+id/unhide_video"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_below="@+id/hobby"
+        android:background="@drawable/border_layout"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        android:text="Unhide"
+        android:layout_gravity="center"
+        android:drawablePadding="-3dp"
+        android:textAllCaps="false"
+        android:textColor="@color/colorIcons"
+        android:textSize="12sp" />
+
 </android.support.v7.widget.CardView>
 
 </RelativeLayout>

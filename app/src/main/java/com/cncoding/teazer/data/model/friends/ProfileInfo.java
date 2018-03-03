@@ -2,9 +2,12 @@ package com.cncoding.teazer.data.model.friends;
 
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.user.PrivateProfile;
+import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
 import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  *
@@ -21,6 +24,32 @@ public class ProfileInfo extends BaseModel {
     @SerializedName("followings") @Expose private Integer followings;
     @SerializedName("follow_info") @Expose private FollowInfo followInfo;
     @SerializedName("is_hided_all_posts") @Expose private Boolean isHidedAllPosts;
+
+    public Boolean getCanLike() {
+        return canLike;
+    }
+
+    @SerializedName("can_like")
+    @Expose
+    private Boolean canLike;
+    @SerializedName("top_reacted_users")
+    @Expose
+    private List<TopReactedUser> topReactedUsers = null;
+
+    @SerializedName("total_profile_likes")
+    @Expose
+    private Integer totalProfileLikes;
+
+    public Boolean getHidedAllPosts() {
+        return isHidedAllPosts;
+    }
+    public List<TopReactedUser> getTopReactedUsers() {
+        return topReactedUsers;
+    }
+
+    public Integer getTotalProfileLikes() {
+        return totalProfileLikes;
+    }
 
     public ProfileInfo(Throwable error) {
         this.error = error;

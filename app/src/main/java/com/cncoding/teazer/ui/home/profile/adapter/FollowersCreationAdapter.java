@@ -150,6 +150,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             });
 
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View view) {
                     PopupMenu popup = new PopupMenu(context, viewHolder.menu);
