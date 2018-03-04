@@ -13,11 +13,12 @@ import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.home.BaseRecyclerViewHolder;
+import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.model.post.AdFeedItem;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.ui.base.BaseRecyclerView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.post.homepage.PostsListAdapter;
 import com.inmobi.ads.InMobiNative;
 
 import org.json.JSONException;
@@ -29,10 +30,10 @@ import butterknife.ButterKnife;
  * Created by amit on 14/2/18.
  */
 
-public class AdViewHolder extends BaseRecyclerViewHolder {
+public class AdViewHolder extends BaseRecyclerView.ViewHolder {
 
     @LayoutRes
-    static final int LAYOUT_RES = R.layout.recycler_card_layout;
+    public static final int LAYOUT_RES = R.layout.recycler_card_layout;
     private PostsListAdapter postsListAdapter;
     private PostDetails postDetails;
     CardView cardView;
@@ -46,13 +47,13 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
     RatingBar adRating;
 
 
-    AdViewHolder(PostsListAdapter postsListAdapter, View adCardView) {
+    public AdViewHolder(PostsListAdapter postsListAdapter, View adCardView) {
         super(adCardView);
 
         ButterKnife.bind(this, adCardView);
         this.postsListAdapter = postsListAdapter;
         cardView = (CardView) adCardView;
-        adView = LayoutInflater.from(postsListAdapter.context).inflate(R.layout.layout_ad, null);
+        adView = LayoutInflater.from(postsListAdapter.fragment.context).inflate(R.layout.layout_ad, null);
 
         adIcon = adView.findViewById(R.id.adIcon);
         adTitle = adView.findViewById(R.id.adTitle);
@@ -64,8 +65,8 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
     }
 
     @Override
-    public void bind(int position) {
-        postDetails = postsListAdapter.posts.get(position);
+    public void bind() {
+        postDetails = postsListAdapter.posts.get(getAdapterPosition());
         if (postDetails instanceof AdFeedItem) {
             final InMobiNative inMobiNative = ((AdFeedItem) postDetails).mNativeStrand;
 
@@ -80,7 +81,7 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
                 isBackFillBanner = false;
             }
 
-            Glide.with(postsListAdapter.context)
+            Glide.with(postsListAdapter.fragment.context)
                     .load(inMobiNative.getAdIconUrl())
                     .into(adIcon);
             adTitle.setText(inMobiNative.getAdTitle());
@@ -89,14 +90,14 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
 
             if(isBackFillBanner)
             {
-                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context, adView, cardView, Math.round(postsListAdapter.context.getResources().getDisplayMetrics().density*250)));
+                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.fragment.context, adView, cardView, Math.round(postsListAdapter.fragment.context.getResources().getDisplayMetrics().density*250)));
                 adAction.setVisibility(View.GONE);
             }
             else
             {
                 DisplayMetrics displayMetrics = new DisplayMetrics();
-                ((Activity) postsListAdapter.context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context , adView,
+                ((Activity) postsListAdapter.fragment.context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.fragment.context , adView,
                         cardView, cardView.getWidth()));
             }
 

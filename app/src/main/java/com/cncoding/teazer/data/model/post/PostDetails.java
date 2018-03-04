@@ -82,6 +82,10 @@ public class PostDetails extends BaseModel implements Parcelable {
         this.error = error;
     }
 
+    public PostDetails(String s) {
+
+    }
+
     public PostDetails setCallType(@CallType int callType) {
         setCall(callType);
         return this;

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.cncoding.teazer.BuildConfig;
+import com.cncoding.teazer.R;
 import com.cncoding.teazer.ui.authentication.base.MainActivity;
 import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.crashlytics.android.Crashlytics;
