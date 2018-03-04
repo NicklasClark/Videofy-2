@@ -199,8 +199,7 @@
                         android:id="@+id/home_screen_post_dp"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_margin="1dp"
-                        app:srcCompat="@drawable/arif_image" />
+                        android:layout_margin="1dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -217,8 +216,7 @@
                     <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_margin="1dp"
-                        app:srcCompat="@drawable/arif_image" />
+                        android:layout_margin="1dp" />
 
                 </RelativeLayout>
                 <RelativeLayout
@@ -234,8 +232,7 @@
                     <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_margin="1dp"
-                        app:srcCompat="@drawable/arif_image" />
+                        android:layout_margin="1dp" />
 
                 </RelativeLayout>
 

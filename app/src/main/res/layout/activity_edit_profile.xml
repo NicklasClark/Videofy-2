@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#8b181818"
-                        android:src="@drawable/profiledp"
+                        android:src="@drawable/backgroundprofile"
                         android:scaleType="centerCrop"
                         android:contentDescription="@string/profile_pic" />
                     <RelativeLayout

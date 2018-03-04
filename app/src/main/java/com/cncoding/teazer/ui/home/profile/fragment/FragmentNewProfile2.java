@@ -584,12 +584,10 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                 .load(userCoverUrl)
                                 .into(placeholder);
                     }
-                    else
-                    {
+                    else {
                         Glide.with(context)
                                 .load(R.drawable.backgroundprofile)
                                 .into(placeholder);
-
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);

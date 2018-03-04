@@ -572,7 +572,6 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                         .load(Uri.parse(userCoverPicUrl))
                                         .into(placeholder);
                             } else {
-
                                 Glide.with(context)
                                         .load(R.drawable.backgroundprofile)
                                         .into(placeholder);
@@ -692,12 +691,10 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                         .load(Uri.parse(userCoverPicUrl))
                                         .into(placeholder);
                             } else {
-
                                 Glide.with(context)
                                         .load(R.drawable.backgroundprofile)
                                         .into(placeholder);
                             }
-
 
                             if (userProfileUrl != null) {
 

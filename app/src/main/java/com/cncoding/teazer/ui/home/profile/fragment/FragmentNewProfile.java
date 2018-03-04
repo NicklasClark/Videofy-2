@@ -1,7 +1,6 @@
 package com.cncoding.teazer.ui.home.profile.fragment;
 
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -57,7 +56,7 @@ import butterknife.ButterKnife;
         private void dynamicToolbarColor() {
 
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.profiledp);
+                    R.drawable.backgroundprofile);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
 
                 @Override
