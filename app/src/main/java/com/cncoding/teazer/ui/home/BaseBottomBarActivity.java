@@ -11,12 +11,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -44,29 +44,18 @@ import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.camera.UploadFragment;
 import com.cncoding.teazer.ui.home.discover.DiscoverFragment;
 import com.cncoding.teazer.ui.home.discover.SubDiscoverFragment;
-import com.cncoding.teazer.ui.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.ui.home.notifications.NotificationsFragment;
-import com.cncoding.teazer.ui.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.ui.home.post.homepage.PostsListFragment;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment;
-import com.cncoding.teazer.ui.home.profile.ProfileFragment.FollowerListListener;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
-import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
-import com.cncoding.teazer.ui.home.profile.adapter.FollowersAdapter.OtherProfileListener;
-import com.cncoding.teazer.ui.home.profile.adapter.FollowersCreationAdapter.FollowerCreationListener;
-import com.cncoding.teazer.ui.home.profile.adapter.FollowingAdapter.OtherProfileListenerFollowing;
-import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter.myCreationListener;
-import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
+import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
 import com.cncoding.teazer.utilities.common.FragmentHistory;
 import com.cncoding.teazer.utilities.common.NavigationController;
 import com.cncoding.teazer.utilities.common.NavigationController.RootFragmentListener;
@@ -117,7 +106,6 @@ import static com.cncoding.teazer.ui.home.discover.DiscoverFragment.ACTION_VIEW_
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.deleteFilePermanently;
-import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.common.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.common.NavigationController.TAB2;
 import static com.cncoding.teazer.utilities.common.NavigationController.TAB3;
@@ -138,20 +126,16 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getTabChild;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.common.ViewUtils.launchVideoUploadCamera;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.showCoachMark;
 
 public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
-//    Post related listeners
+//    Category/Interests listener
         OnInterestsInteractionListener,
-//    Notification listeners
-        OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
-        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
-//    Profile listeners
-        ProfileMyReactionAdapter.ReactionPlayerListener,
-        AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+        WatermarkAsyncResponse {
 
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
@@ -164,7 +148,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.root_layout) RelativeLayout rootLayout;
     @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.camera_btn) FloatingActionButton cameraButton;
     @BindView(R.id.upload_progress_text) ProximaNovaSemiBoldTextView uploadProgressText;
     @BindView(R.id.uploading_thumb) CircularAppCompatImageView uploadThumb;
     @BindView(R.id.video_upload_progress) ProgressBar videoUploadProgress;
@@ -179,7 +163,6 @@ public class BaseBottomBarActivity extends BaseActivity
     private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     public MaterialShowcaseView materialShowcaseView;
-    FragmentNewProfile2 fragmentNewProfile2;
     PostDetails postDetails;
 
     @Contract(value = " -> !null", pure = true)
@@ -195,6 +178,7 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
+    //region LifeCycle methods
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -339,97 +323,36 @@ public class BaseBottomBarActivity extends BaseActivity
         switchTab(TAB1);
     }
 
-    private void maybeRefreshTab(TabLayout.Tab tab) {
-        final View tabButton = getTabChild(bottomTabLayout, tab.getPosition());
-        if (tabButton != null) {
-            tabButton.setEnabled(false);
-            switch (tab.getPosition()) {
-                case TAB1:
-                    if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                        PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
-                        if (!fragment.isListAtTop()) {
-                            fragment.manualRefreshTriggered = true;
-                            fragment.refreshPosts(true, true);
-                        }
-                    }
-                    break;
-                case TAB2:
-                    if (navigationController.getCurrentFragment() instanceof DiscoverFragment) {
-                        navigationController.replaceFragment(getRootFragment(TAB2));
-                    }
-                    break;
-                case TAB4:
-                    if (navigationController.getCurrentFragment() instanceof NotificationsFragment) {
-                        navigationController.replaceFragment(getRootFragment(TAB4));
-                    }
-                    break;
-                case TAB5:
-                    if (navigationController.getCurrentFragment() instanceof ProfileFragment) {
-                        navigationController.replaceFragment(getRootFragment(TAB5));
-                    }
-                    break;
-            }
-        }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (tabButton != null) {
-                    tabButton.setEnabled(true);
-                }
-            }
-        }, 1000);
-    }
-
-    private void shareTwitter(String message) {
-        Intent tweetIntent = new Intent(Intent.ACTION_SEND);
-        tweetIntent.putExtra(Intent.EXTRA_TEXT, message);
-        tweetIntent.setType("text/plain");
-
-        PackageManager packManager = getPackageManager();
-        List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        boolean resolved = false;
-        for (ResolveInfo resolveInfo : resolvedInfoList) {
-            if (resolveInfo.activityInfo.packageName.startsWith("com.twitter.android")) {
-                tweetIntent.setClassName(
-                        resolveInfo.activityInfo.packageName,
-                        resolveInfo.activityInfo.name);
-                resolved = true;
-                break;
-            }
-        }
-
-        if (resolved) {
-            startActivity(tweetIntent);
-        } else {
-            Intent i = new Intent();
-            i.putExtra(Intent.EXTRA_TEXT, message);
-            i.setAction(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(message)));
-            startActivity(i);
-            Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private String urlEncode(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.wtf("TAG", "UTF-8 should always be supported", e);
-            return "";
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+        onActivityActive(this);
         checkIfAnyVideoOrReactionIsUploading();
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
     }
 
     protected void onPause() {
         super.onPause();
+        onActivityInactive(this);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(BReceiver);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            Bundle notificationBundle = getIntent().getExtras();
+            if (notificationBundle != null) {
+                Log.d("NOTIFY", "BUNDLE Exists in onStart");
+                String notification_type = notificationBundle.getString("notification_type");
+                String source_id = notificationBundle.getString("source_id");
+                String post_id = notificationBundle.getString("post_id");
+                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id), Integer.valueOf(post_id));
+            } else
+                Log.d("NOTIFY", "BUNDLE not present in onStart");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -457,11 +380,7 @@ public class BaseBottomBarActivity extends BaseActivity
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
-                    if (isSelf) {
-                        pushFragment(FragmentNewProfile2.newInstance());
-                    } else {
-                        pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userId), "", ""));
-                    }
+                    openProfile(this, isSelf, userId);
                 } else {
                     Log.d("NOTIFY", "BUNDLE not present on new Intent");
                     switchTabDynamically();
@@ -471,44 +390,45 @@ public class BaseBottomBarActivity extends BaseActivity
             e.printStackTrace();
         }
     }
+    //endregion
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        onActivityActive(this);
+    private void shareTwitter(String message) {
+        Intent tweetIntent = new Intent(Intent.ACTION_SEND);
+        tweetIntent.putExtra(Intent.EXTRA_TEXT, message);
+        tweetIntent.setType("text/plain");
 
-        Log.d("NOTIFY", "onStart called");
+        PackageManager packManager = getPackageManager();
+        List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-        try {
-            Bundle notificationBundle = getIntent().getExtras();
-            if (notificationBundle != null) {
-                Log.d("NOTIFY", "BUNDLE Exists in onStart");
-                String notification_type = notificationBundle.getString("notification_type");
-                String source_id = notificationBundle.getString("source_id");
-                String post_id = notificationBundle.getString("post_id");
-                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id), Integer.valueOf(post_id));
-            } else
-                Log.d("NOTIFY", "BUNDLE not present in onStart");
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        boolean resolved = false;
+        for (ResolveInfo resolveInfo : resolvedInfoList) {
+            if (resolveInfo.activityInfo.packageName.startsWith("com.twitter.android")) {
+                tweetIntent.setClassName(
+                        resolveInfo.activityInfo.packageName,
+                        resolveInfo.activityInfo.name);
+                resolved = true;
+                break;
+            }
+        }
+        if (resolved) {
+            startActivity(tweetIntent);
+        } else {
+            Intent i = new Intent();
+            i.putExtra(Intent.EXTRA_TEXT, message);
+            i.setAction(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(message)));
+            startActivity(i);
+            Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
         }
     }
 
-    @SuppressLint("InflateParams")
-    public View getTabView(int value) {
-        View v = null;
+    private String urlEncode(String s) {
         try {
-            v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
-            TextView tv = v.findViewById(R.id.notification_badge);
-            if (value != 0) {
-                tv.setText(String.valueOf(value));
-            } else {
-                tv.setVisibility(GONE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.wtf("TAG", "UTF-8 should always be supported", e);
+            return "";
         }
-        return v;
     }
 
     private void notificationAction(int notification_type, int source_id, int post_id) {
@@ -630,11 +550,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                         });
                             } else if (referringParams.has("user_id")) {
                                 String userId = referringParams.getString("user_id");
-                                if (SharedPrefs.getUserId(getThis()) == Integer.parseInt(userId)) {
-                                    pushFragment(FragmentNewProfile2.newInstance());
-                                } else {
-                                    pushFragment(FragmentNewOtherProfile.newInstance(userId, "", ""));
-                                }
+                                openProfile(getThis(), SharedPrefs.getUserId(getThis()) == Integer.parseInt(userId), userId);
                             }
                         }
                     } catch (JSONException e) {
@@ -647,18 +563,65 @@ public class BaseBottomBarActivity extends BaseActivity
         }, this.getIntent().getData(), this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                hideKeyboard(this, bottomTabLayout);
-                onBackPressed();
-                return true;
+    //region Fragment navigation methods
+    private void maybeRefreshTab(TabLayout.Tab tab) {
+        final View tabButton = getTabChild(bottomTabLayout, tab.getPosition());
+        if (tabButton != null) {
+            tabButton.setEnabled(false);
+            switch (tab.getPosition()) {
+                case TAB1:
+                    if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                        PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
+                        if (!fragment.isListAtTop()) {
+                            fragment.manualRefreshTriggered = true;
+                            fragment.refreshPosts(true, true);
+                        }
+                    }
+                    break;
+                case TAB2:
+                    if (navigationController.getCurrentFragment() instanceof DiscoverFragment) {
+                        navigationController.replaceFragment(getRootFragment(TAB2));
+                    }
+                    break;
+                case TAB4:
+                    if (navigationController.getCurrentFragment() instanceof NotificationsFragment) {
+                        navigationController.replaceFragment(getRootFragment(TAB4));
+                    }
+                    break;
+                case TAB5:
+                    if (navigationController.getCurrentFragment() instanceof FragmentNewProfile2) {
+                        navigationController.replaceFragment(getRootFragment(TAB5));
+                    }
+                    break;
+            }
         }
-        return super.onOptionsItemSelected(item);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (tabButton != null) {
+                    tabButton.setEnabled(true);
+                }
+            }
+        }, 1000);
     }
 
-    //<editor-fold desc="Fragment navigation methods">
+    @SuppressLint("InflateParams")
+    public View getTabView(int value) {
+        View v = null;
+        try {
+            v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
+            TextView tv = v.findViewById(R.id.notification_badge);
+            if (value != 0) {
+                tv.setText(String.valueOf(value));
+            } else {
+                tv.setVisibility(GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
+
     private void switchTabDynamically() {
         if (navigationController.getCurrentFragment() instanceof PostsListFragment)
             switchTab(TAB1);
@@ -673,6 +636,9 @@ public class BaseBottomBarActivity extends BaseActivity
     private void switchTab(final int position) {
         navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
+
+//        clear the notification count badge if notifications t
+        if (navigationController.getCurrentFragment() instanceof NotificationsFragment) clearNotificationBadge();
 
         switch (position) {
             case TAB1:
@@ -725,7 +691,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (currentFragment instanceof ProfileFragment && currentFragment.isAdded())
+                        if (currentFragment instanceof FragmentNewProfile2 && currentFragment.isAdded())
                             getCoachMark(getThis(), currentFragment,
                                     getTabChild(bottomTabLayout, TAB5), "profilePage", R.string.my_profile,
                                     R.string.coach_mark_profile_body, R.string.okay_got_it, TYPE_NORMAL);
@@ -756,12 +722,15 @@ public class BaseBottomBarActivity extends BaseActivity
         if (navigationController.isRootFragment()) {
             btnToolbarBack.setVisibility(GONE);
         } else {
-            btnToolbarBack.setVisibility(VISIBLE);
-            if (navigationController.getCurrentFragment() instanceof FragmentNewOtherProfile ||
-                    navigationController.getCurrentFragment() instanceof PostDetailsFragment ||
-                    navigationController.getCurrentFragment() instanceof FragmentReactionPlayer)
-                btnToolbarBack.setImageResource(R.drawable.ic_arrow_back_black_24dp);
-            else btnToolbarBack.setImageResource(R.drawable.ic_arrow_back);
+            if (!(navigationController.getCurrentFragment() instanceof FragmentNewProfile2)) {
+                btnToolbarBack.setVisibility(VISIBLE);
+                if (navigationController.getCurrentFragment() instanceof FragmentNewOtherProfile ||
+                        navigationController.getCurrentFragment() instanceof PostDetailsFragment ||
+                        navigationController.getCurrentFragment() instanceof FragmentReactionPlayer)
+                    btnToolbarBack.setImageResource(R.drawable.ic_arrow_back_white_with_shadow);
+                else btnToolbarBack.setImageResource(R.drawable.ic_arrow_back_dark);
+            }
+            else btnToolbarBack.setVisibility(GONE);
         }
         toggleBottomBar(!(navigationController.getCurrentFragment() instanceof PostDetailsFragment));
     }
@@ -780,59 +749,6 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }
     }
-
-//    public void hideToolbar() {
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        toolbar.setVisibility(GONE);
-//    }
-//
-//    public void showToolbar() {
-//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        toolbar.setVisibility(VISIBLE);
-//    }
-//
-//    /**
-//     * Updates the toolbar title.
-//     *
-//     * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
-//     */
-//    public void updateToolbarTitle(String title) {
-//        if (title == null || title.equals("")) {
-//            if (toolbarPlainTitle.getVisibility() != GONE) {
-//                toolbarPlainTitle.setVisibility(GONE);
-//                btnToolbarBack.setVisibility(GONE);
-//            }
-//            if (toolbarCenterTitle.getVisibility() != VISIBLE) {
-//                toolbarCenterTitle.setVisibility(VISIBLE);
-//                btnToolbarBack.setVisibility(VISIBLE);
-//            }
-//        } else {
-//            toolbarPlainTitle.setText(title);
-//            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
-//                toolbarPlainTitle.setVisibility(VISIBLE);
-//                btnToolbarBack.setVisibility(VISIBLE);
-//            }
-//            if (toolbarCenterTitle.getVisibility() != GONE) {
-//                toolbarCenterTitle.setVisibility(GONE);
-//                btnToolbarBack.setVisibility(GONE);
-//            }
-//            uploadingStatusLayout.setVisibility(GONE);
-//        }
-//    }
-
-    //
-
-//    public String getToolbarTitle() {
-//        try {
-//            if (toolbarPlainTitle != null)
-//                return toolbarPlainTitle.getText().toString();
-//            else
-//                return "";
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "";
-//        }
-//    }
 
     @Override
     public void onTabTransaction(Fragment fragment, int index) {
@@ -895,20 +811,49 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         return currentFragment;
     }
-    //</editor-fold>
 
-    //<editor-fold desc="On click methods">
+    public void clearNotificationBadge() {
+        try {
+            TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
+            if (tab != null) tab.setCustomView(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateTabSelection(int currentTab) {
+        for (int i = 0; i < TABS.length; i++) {
+            TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+            if (selectedTab != null) {
+                if (currentTab != i) {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(false);
+                    }
+                } else {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(true);
+                    }
+                }
+            }
+        }
+    }
+    //endregion
+
+    //region On click methods
     @OnClick(R.id.camera_btn) public void startCamera() {
         launchVideoUploadCamera(this);
         finish();
     }
 
     @OnClick(R.id.btnToolbarBack) public void onViewClicked() {
+        hideKeyboard(this, btnToolbarBack);
         onBackPressed();
     }
-    //</editor-fold>
+    //endregion
 
-    //<editor-fold desc="Video upload handler">
+    //region Video upload handler
     private void checkIfAnyVideoOrReactionIsUploading() {
         UploadParams videoUploadParams = getVideoUploadSession(getApplicationContext());
         if (videoUploadParams != null) {
@@ -1086,84 +1031,6 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    private void refreshPosts() {
-        if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
-            PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
-            if (fragment != null) {
-                fragment.manualRefreshTriggered = true;
-                fragment.refreshPosts(false, true);
-            }
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Fragment listener implementations">
-    @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
-                                           int profileId, String userType) {
-        if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false, null));
-        } else {
-            pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(profileId), userType, "name"));
-        }
-    }
-
-    @Override
-    public void onFollowerListListener(String id, String identifier) {
-        pushFragment(FollowersListFragment.newInstance(id, identifier));
-    }
-
-    @Override
-    public void onFollowingListListener(String id, String identifier) {
-        pushFragment(FollowingListFragment.newInstance(id, identifier));
-    }
-
-    @Override
-    public void viewOthersProfile(String id, String username, String type) {
-     //   pushFragment(OthersProfileFragment.newInstance(id, type, username));
-        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
-    }
-
-    @Override
-    public void viewOthersProfileFollowing(String id, String username, String type) {
-       // pushFragment(OthersProfileFragment.newInstance2(id, type, username));
-        pushFragment(FragmentNewOtherProfile.newInstance(id,type,username));
-
-    }
-
-    @Override
-    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
-        DiscoverFragment.updateMyInterests = true;
-        navigationController.popFragments(2);
-        if (!isFromDiscover)
-            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories));
-        else {
-            if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
-                ((DiscoverFragment) currentFragment).loadPosts();
-            }
-        }
-    }
-
-    @Override
-    public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
-    }
-
-    @Override
-    public void myCreationVideos(int i, PostDetails postDetails) {
-        fetchPostDetails(this, postDetails.getPostId());
-    }
-
-    @Override
-    public void ReactionPost(int postId) {
-        fetchPostDetails(this, postId);
-    }
-    //</editor-fold>
-
-    @Override
-    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
-        deleteFilePermanently(sourcePath);
-    }
-
     private void postGiphyReaction(UploadParams uploadParams) {
         GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostId(),
                 uploadParams.getTitle(),
@@ -1182,54 +1049,39 @@ public class BaseBottomBarActivity extends BaseActivity
         });
     }
 
-    @Override
-    public void reactionPlayer(int selfReaction, PostReaction postReaction, boolean isGif) {
-        pushFragment(FragmentReactionPlayer.newInstance(postReaction, isGif));
-    }
-
-    @Override
-    public void viewUserProfile() {
-        if (fragmentNewProfile2 == null) fragmentNewProfile2 = FragmentNewProfile2.newInstance();
-        pushFragment(fragmentNewProfile2);
-    }
-
-    @Override
-    public void onNotificationFragmentInteraction() {
-        try {
-            TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
-            if (tab != null) {
-                tab.setCustomView(null);
+    private void refreshPosts() {
+        if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+            PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
+            if (fragment != null) {
+                fragment.manualRefreshTriggered = true;
+                fragment.refreshPosts(false, true);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
-    //</editor-fold>
+    //endregion
 
-    public void updateTabSelection(int currentTab) {
-        for (int i = 0; i < TABS.length; i++) {
-            TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
-            if (selectedTab != null) {
-                if (currentTab != i) {
-                    View view = selectedTab.getCustomView();
-                    if (view != null) {
-                        view.setSelected(false);
-                    }
-                } else {
-                    View view = selectedTab.getCustomView();
-                    if (view != null) {
-                        view.setSelected(true);
-                    }
-                }
+    //region Fragment listeners
+    @Override
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
+        DiscoverFragment.updateMyInterests = true;
+        navigationController.popFragments(2);
+        if (!isFromDiscover)
+            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories));
+        else {
+            if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
+                ((DiscoverFragment) currentFragment).loadPosts();
             }
         }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        onActivityInactive(this);
+    public void onInterestsSelected(String resultToShow, String resultToSend, int count) {}
+
+    @Override
+    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
+        deleteFilePermanently(sourcePath);
     }
+    //endregion
 
     @Override
     public void onBackPressed() {

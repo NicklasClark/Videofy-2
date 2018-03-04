@@ -404,7 +404,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.root_layout) void viewProfile() {
             hideKeyboard(fragment.getParentActivity(), layout);
-            fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(user.getUserId()), "", ""));
+            fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(user.getUserId())));
         }
 
         @OnClick(R.id.action) void socialAction() {

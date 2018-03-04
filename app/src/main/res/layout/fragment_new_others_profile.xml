@@ -236,7 +236,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
                     android:layout_marginRight="100dp"
-                    android:text="I am not speeding"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
@@ -267,10 +266,13 @@
                 android:layout_marginBottom="140dp"
                 android:layout_marginLeft="125dp"
                 android:layout_marginRight="25dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:maxLength="15"
                 android:textColor="#000000"
                 android:textSize="14dp"
                 android:gravity="left"
-                android:text="arifrocks0786"
                 />
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
@@ -281,10 +283,13 @@
                 android:layout_marginBottom="120dp"
                 android:layout_marginLeft="125dp"
                 android:layout_marginRight="25dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="#000000"
                 android:textSize="14dp"
-                android:gravity="start"
-                android:text="Mohd Arif"/>
+                android:gravity="start"/>
+
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/totallikes"
                 android:layout_width="wrap_content"

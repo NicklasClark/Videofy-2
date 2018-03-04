@@ -20,7 +20,6 @@ import com.cncoding.teazer.data.model.friends.UserInfo;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersAdapter;
 
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class FollowersListFragment extends BaseFragment {
     @BindView(R.id.layout) NestedScrollView layout;
     @BindView(R.id.nousertext) TextView nousertext;
     @BindView(R.id.loader) DynamicProgress loader;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarTitle;
 
     String identifier;
     String followerid;
@@ -77,7 +75,6 @@ public class FollowersListFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_followers, container, false);
         ButterKnife.bind(this, view);
-        toolbarTitle.setText(R.string.following);
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -115,13 +112,13 @@ public class FollowersListFragment extends BaseFragment {
 
         if (identifier.equals("Other")) {
 
-            profileMyFollowerAdapter = new FollowersAdapter(context, list);
+            profileMyFollowerAdapter = new FollowersAdapter(this, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(Integer.parseInt(followerid), 1);
         }
         else if (identifier.equals("User")) {
-            profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, USERS_FOLLOWER);
+            profileMyFollowerAdapter = new FollowersAdapter(this, userfollowerlist, USERS_FOLLOWER);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);
             getUserfollowerList(1);

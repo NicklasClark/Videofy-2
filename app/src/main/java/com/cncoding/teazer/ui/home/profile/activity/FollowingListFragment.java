@@ -18,6 +18,7 @@ import com.cncoding.teazer.data.model.friends.UserInfo;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowingAdapter;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class FollowingListFragment extends BaseFragment {
     @BindView(R.id.layout) NestedScrollView layout;
     @BindView(R.id.nousertext) TextView nousertext;
     @BindView(R.id.loader) DynamicProgress loader;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarTitle;
 
     String identifier;
     String followerid;
@@ -74,6 +76,7 @@ public class FollowingListFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_followers, container, false);
         ButterKnife.bind(this,view);
+        toolbarTitle.setText(R.string.following);
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -112,14 +115,14 @@ public class FollowingListFragment extends BaseFragment {
         otherlist=new ArrayList<>();
         if (identifier.equals("User")) {
             layout.setVisibility(View.GONE);
-            profileMyFollowingAdapter = new FollowingAdapter(context, list, USER_FOLLOWEING);
+            profileMyFollowingAdapter = new FollowingAdapter(this, list, USER_FOLLOWEING);
             recyclerView.setAdapter(profileMyFollowingAdapter);
             loader.setVisibility(View.VISIBLE);
             getUserfollowinglist(1);
         }
         else if (identifier.equals("Other")) {
             layout.setVisibility(View.GONE);
-            profileMyFollowingAdapter = new FollowingAdapter(context, otherlist);
+            profileMyFollowingAdapter = new FollowingAdapter(this, otherlist);
             recyclerView.setAdapter(profileMyFollowingAdapter);
             loader.setVisibility(View.VISIBLE);
             getOthersFollowingList(Integer.parseInt(followerid),1);

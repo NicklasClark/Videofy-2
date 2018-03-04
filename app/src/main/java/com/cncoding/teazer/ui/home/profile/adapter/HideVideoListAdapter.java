@@ -45,7 +45,6 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
     private ArrayList<PostDetails> list;
     private ArrayList<PostReaction> reactiolist;
     private Context context;
-    ProfileMyCreationAdapter.myCreationListener listener;
     Fragment fragment;
     ProfileMyCreationAdapter.OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
 

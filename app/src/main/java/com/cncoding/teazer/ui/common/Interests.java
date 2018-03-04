@@ -152,7 +152,7 @@ public class Interests extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
-            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back);
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_dark);
         }
     }
 

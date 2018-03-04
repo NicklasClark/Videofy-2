@@ -49,7 +49,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ForgotP
             //noinspection ConstantConditions
             this.getSupportActionBar().setDisplayShowTitleEnabled(false);
             this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_dark);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
             toolbar.setTitle(getString(R.string.change_password));
         }

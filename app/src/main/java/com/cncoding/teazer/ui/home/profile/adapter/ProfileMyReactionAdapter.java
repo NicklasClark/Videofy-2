@@ -1,7 +1,6 @@
 package com.cncoding.teazer.ui.home.profile.adapter;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -26,7 +25,9 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -35,7 +36,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer.OPENED_FROM_PROFILE;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_VIDEO;
@@ -49,17 +49,15 @@ import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicode
 public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReactionAdapter.ViewHolder> {
 
     private List<PostReaction> list;
-    private Context context;
-    ReactionPlayerListener reactionPlayerListener;
+    private BaseFragment fragment;
     private boolean isPostClicked = false;
-    ProfileMyReactionAdapter.OnChildFragmentUpdateReaction fragment;
+    private ProfileMyReactionAdapter.OnChildFragmentUpdateReaction updateReaction;
 
-    public ProfileMyReactionAdapter(Context context, List<PostReaction> list, Fragment fragment) {
-        this.context = context;
+    public ProfileMyReactionAdapter(BaseFragment fragment, List<PostReaction> list, Fragment updateReaction) {
+        this.fragment = fragment;
         this.list = list;
-        reactionPlayerListener=( ReactionPlayerListener)context;
-        if (fragment instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {
-            this.fragment = (ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) fragment;
+        if (updateReaction instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {
+            this.updateReaction = (ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) updateReaction;
         }
     }
     @Override
@@ -92,14 +90,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-            Glide.with(context)
+            Glide.with(fragment)
                     .load(reactions.getMediaDetail().getReactMediaUrl())
                     .apply(new RequestOptions().placeholder(R.drawable.material_flat).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .into(viewHolder.thumbimage);
             viewHolder.duration.setVisibility(View.GONE);
         }
         else if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
-            Glide.with(context).load(thumb_url)
+            Glide.with(fragment).load(thumb_url)
                     .apply(new RequestOptions().placeholder(R.drawable.material_flat))
                     .into(viewHolder.thumbimage);
             viewHolder.duration.setVisibility(View.VISIBLE);
@@ -107,7 +105,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
             Gson gson = new Gson();
             Images images = gson.fromJson(reactions.getMediaDetail().getExternalMeta(), Images.class);
-            Glide.with(context)
+            Glide.with(fragment)
                     .load(images.getDownsized().getUrl())
                     .apply(new RequestOptions().placeholder(R.drawable.material_flat).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .apply(RequestOptions.bitmapTransform(new FitCenter()))
@@ -119,11 +117,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 if (!isPostClicked) {
                     isPostClicked = true;
                     if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, true);
+                        fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(reactions, true));
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, false);
+                        fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(reactions, false));
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY){
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE, reactions, true);
+                        fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(reactions, true));
                     }
                     isPostClicked = false;
                 }
@@ -132,14 +130,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+                PopupMenu popup = new PopupMenu(fragment.context, viewHolder.menu);
                 popup.inflate(R.menu.menu_profile_reaction);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_delete:
-                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(fragment.context);
                                 alertDialog.setTitle("Confirm Deletion...");
                                 alertDialog.setMessage("Are you sure you want to delete this video.");
                                 alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
@@ -147,7 +145,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
                                     public void onClick(DialogInterface dialog,int which) {
                                         deleteVideos(reactId);
-                                        fragment.updateReaction(1);
+                                        updateReaction.updateReaction(1);
                                         list.remove(i);
                                         notifyItemRemoved(i);
                                         notifyItemRangeChanged(i,list.size());
@@ -172,15 +170,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
 
     private void deleteVideos(int deleteId) {
-        ApiCallingService.React.deleteReaction(deleteId, context).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.React.deleteReaction(deleteId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     if (response.code() == 200) {
-                        boolean status = response.body().getStatus();
-                        Toast.makeText(context, "Reaction has been deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getContext(), "Reaction has been deleted", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "Reaction has not been deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getContext(), "Reaction has not been deleted", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -189,12 +186,13 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
-                Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getContext(), "Something went wrong please try again", Toast.LENGTH_SHORT).show();
             }
 
         });
 
     }
+
     @Override
     public int getItemCount() {
         return list.size() ;

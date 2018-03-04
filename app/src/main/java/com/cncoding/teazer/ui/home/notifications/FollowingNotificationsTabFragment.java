@@ -63,7 +63,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         notificationsList = new NotificationsList(new ArrayList<Notification>(), 0, false);
 
-        adapter = new NotificationsAdapter(getContext(), true, notificationsList);
+        adapter = new NotificationsAdapter(this, true, notificationsList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

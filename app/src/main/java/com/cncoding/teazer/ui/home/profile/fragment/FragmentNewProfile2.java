@@ -43,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -54,6 +55,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logProfileShareEvent;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 
 /**
  *
@@ -251,28 +254,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                 navigation.pushFragment(FragmentLikedUserProfile.newInstance());
             }
         });
-        reaction1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(0).getUserId()),"",""));
-
-            }
-        });   reaction2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(1).getUserId()),"",""));
-
-
-            }
-        });   reaction3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(topReactedUserList.get(0).getUserId()),"",""));
-
-
-            }
-        });
         return view;
     }
 
@@ -289,6 +270,18 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             tabLayout.setupWithViewPager(viewPager);
             FragmentNewProfile2.checkpostupdated=false;
         }
+    }
+
+    @OnClick(R.id.reaction1) public void openTopReactor1Profile() {
+        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+    }
+
+    @OnClick(R.id.reaction2) public void openTopReactor2Profile() {
+        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+    }
+
+    @OnClick(R.id.reaction3) public void openTopReactor3Profile() {
+        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
     }
 
 //    @Override
@@ -715,10 +708,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                 .load(userCoverUrl)
                                 .into(placeholder);
                     }
-                    else
-                    {
-
-                    }
                     _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
@@ -743,9 +732,4 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
             }
         });
     }
-//    public interface FollowerListListener {
-//
-//        void onFollowerListListener(String id, String identifier);
-//        void onFollowingListListener(String id, String identifier);
-//    }
 }

@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    app:srcCompat="@drawable/ic_settings_dark"
+                    app:srcCompat="@drawable/ic_settings_white_with_shadow"
                     android:foreground="@drawable/ripple_dark_circle"
                     android:padding="@dimen/padding_default"
                     android:layout_gravity="end"
@@ -141,7 +141,7 @@
         android:layout_marginEnd="@dimen/rounded_edge_radius_40dp"
         app:layout_anchor="@id/collapsing_toolbar"
         app:layout_anchorGravity="bottom|end"
-        android:src="@drawable/ic_edit"
+        android:src="@drawable/ic_edit_white_with_shadow"
         tools:ignore="VectorDrawableCompat"/>
 
     <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView

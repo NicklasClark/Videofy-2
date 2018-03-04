@@ -201,22 +201,17 @@
 
     </eightbitlab.com.blurview.BlurView>
 
-    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/camera_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:text="@string/plus"
-        android:textSize="39sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:src="@drawable/ic_plus"
+        android:scaleType="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:foreground="@drawable/ripple_light_circle"
-        android:layout_marginBottom="@dimen/padding_10dp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/bg_circle_light_filled_outlined"
-        android:elevation="4dp"
-        android:contentDescription="@string/record_video" />
+        android:layout_marginBottom="@dimen/padding_10dp" />
 
     <ImageView
         android:id="@+id/btnToolbarBack"
@@ -224,7 +219,7 @@
         android:layout_height="wrap_content"
         android:padding="13dp"
         android:layout_gravity="top|start"
-        android:src="@drawable/ic_arrow_back"
+        android:src="@drawable/ic_arrow_back_dark"
         android:visibility="gone"
         android:contentDescription="@string/back" />
 

@@ -37,6 +37,8 @@ import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
@@ -103,7 +105,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     CircularAppCompatImageView profile_id;
     PublicProfile userProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    private FollowerListListener mListener;
     private String userProfileThumbnail;
     private String userProfileUrl;
     @BindView(R.id.loader) DynamicProgress loader;
@@ -192,13 +193,13 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowerListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(String.valueOf(0)), "User"));
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowingListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(0), "User"));
             }
         });
 
@@ -506,19 +507,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             }.execute();
         }
     }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof FollowerListListener) {
-            mListener = (FollowerListListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
@@ -641,10 +629,4 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         totalvideos=counter;
         _creations.setText(String.valueOf(totalvideos) + " Creations");
     }
-    public interface FollowerListListener {
-
-        void onFollowerListListener(String id, String identifier);
-        void onFollowingListListener(String id, String identifier);
-    }
-
 }

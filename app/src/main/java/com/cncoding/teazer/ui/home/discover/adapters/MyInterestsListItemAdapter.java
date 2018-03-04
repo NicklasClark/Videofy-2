@@ -18,8 +18,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTex
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
@@ -35,6 +33,7 @@ import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
@@ -235,19 +234,16 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
                     null, false, null));
         }
 
-        @OnClick(R.id.dp) public void dpClicked() {
+        @OnClick(R.id.dp) void dpClicked() {
             viewProfile();
         }
 
-        @OnClick(R.id.name) public void nameClicked() {
+        @OnClick(R.id.name) void nameClicked() {
             viewProfile();
         }
 
         private void viewProfile() {
-            fragment.navigation.pushFragment(postDetails.canDelete() ?
-                    FragmentNewProfile2.newInstance() :
-                    FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
-                            "", postDetails.getPostOwner().getUserName()));
+            openProfile(fragment.navigation, postDetails.canDelete(), postDetails.getPostOwner().getUserId());
         }
     }
 }
