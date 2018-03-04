@@ -45,7 +45,7 @@
                         android:id="@+id/background_profile"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
-                        android:background="@drawable/profiledp"
+                        android:src="@drawable/backgroundprofile"
                         android:scaleType="centerCrop" />
 
                 </RelativeLayout>

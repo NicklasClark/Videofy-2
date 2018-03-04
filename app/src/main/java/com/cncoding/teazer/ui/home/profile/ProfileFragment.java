@@ -511,7 +511,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.arif_image);
+                    R.drawable.backgroundprofile);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
                 @Override

@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profiledp"
+                android:src="@drawable/backgroundprofile"
                 android:tint="#11000000"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.9"
