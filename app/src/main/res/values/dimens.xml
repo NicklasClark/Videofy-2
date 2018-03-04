@@ -68,4 +68,22 @@
     <dimen name="text_size_11_sp">11sp</dimen>
     <dimen name="adContentPadding">8dp</dimen>
 
+    <dimen name="image_left_margin_collapsed">16dp</dimen>
+    <dimen name="image_left_margin_collapsed2">50dp</dimen>
+    <dimen name="image_top_margin_collapsed">7dp</dimen>
+    <dimen name="title_left_margin_collapsed">65dp</dimen>
+    <dimen name="title_left_margin_collapsed2">90dp</dimen>
+    <dimen name="title_top_margin_collapsed">7dp</dimen>
+    <dimen name="subtitle_left_margin_collapsed">65dp</dimen>
+    <dimen name="subtitle_left_margin_collapsed2">90dp</dimen>
+    <dimen name="follow_left_margin_collapsed">230dp</dimen>
+    <dimen name="follow_top_margin_collapsed">14dp</dimen>
+    <dimen name="subtitle_top_margin_collapsed">27dp</dimen>
+    <dimen name="layout_left_margin_collapsed">150dp</dimen>
+    <dimen name="layout_top_margin_collapsed">60dp</dimen>
+    <dimen name="details_left_margin_collapsed">150dp</dimen>
+    <dimen name="detasils_top_margin_collapsed">70dp</dimen>
+
+
+
 </resources>

@@ -2,25 +2,22 @@ package com.cncoding.teazer.data.remote.apicalls.authentication;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.base.TeazerApplication;
+import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.data.model.auth.InitiateSignup;
+import com.cncoding.teazer.data.model.auth.Login;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByOtp;
+import com.cncoding.teazer.data.model.auth.ResetPasswordByPhoneNumber;
+import com.cncoding.teazer.data.model.auth.SocialSignup;
+import com.cncoding.teazer.data.model.auth.VerifyLoginWithOtp;
+import com.cncoding.teazer.data.model.auth.VerifySignUp;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
-import com.cncoding.teazer.model.auth.InitiateSignup;
-import com.cncoding.teazer.model.auth.Login;
-import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
-import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
-import com.cncoding.teazer.model.auth.SocialSignup;
-import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
-import com.cncoding.teazer.model.auth.VerifySignUp;
+import com.cncoding.teazer.utilities.common.Annotations.AuthCallType;
 
 import org.jetbrains.annotations.Contract;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -31,32 +28,26 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_EMAIL_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_USERNAME_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.LOGIN_WITH_OTP;
+import static com.cncoding.teazer.utilities.common.Annotations.LOGIN_WITH_PASSWORD;
+import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
+import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
+import static com.cncoding.teazer.utilities.common.Annotations.RESET_PASSWORD_BY_OTP;
+import static com.cncoding.teazer.utilities.common.Annotations.SIGNUP;
+import static com.cncoding.teazer.utilities.common.Annotations.SOCIAL_SIGNUP;
+import static com.cncoding.teazer.utilities.common.Annotations.VERIFY_FORGOT_PASSWORD_OTP;
+import static com.cncoding.teazer.utilities.common.Annotations.VERIFY_LOGIN_WITH_OTP;
+import static com.cncoding.teazer.utilities.common.Annotations.VERIFY_SIGNUP;
+
 /**
  *
  * Created by Prem$ on 2/5/2018.
  */
 
 public class AuthenticationRepositoryImpl implements AuthenticationRepository {
-
-    public static final int SIGNUP = 10;
-    public static final int VERIFY_SIGNUP = 11;
-    public static final int SOCIAL_SIGNUP = 12;
-    public static final int LOGIN_WITH_PASSWORD = 13;
-    public static final int LOGIN_WITH_OTP = 14;
-    public static final int VERIFY_LOGIN_WITH_OTP = 15;
-    public static final int CHECK_USERNAME_AVAILABILITY = 16;
-    public static final int CHECK_EMAIL_AVAILABILITY = 17;
-    public static final int CHECK_PHONE_NUMBER_AVAILABILITY = 18;
-    public static final int VERIFY_FORGOT_PASSWORD_OTP = 19;
-    public static final int REQUEST_RESET_PASSWORD_BY_EMAIL = 20;
-    public static final int REQUEST_RESET_PASSWORD_BY_PHONE = 21;
-    public static final int RESET_PASSWORD_BY_OTP = 22;
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({SIGNUP, VERIFY_SIGNUP, SOCIAL_SIGNUP, LOGIN_WITH_PASSWORD, LOGIN_WITH_OTP, VERIFY_LOGIN_WITH_OTP,
-            CHECK_USERNAME_AVAILABILITY, CHECK_EMAIL_AVAILABILITY, CHECK_PHONE_NUMBER_AVAILABILITY, VERIFY_FORGOT_PASSWORD_OTP,
-            REQUEST_RESET_PASSWORD_BY_EMAIL, REQUEST_RESET_PASSWORD_BY_PHONE, RESET_PASSWORD_BY_OTP})
-    public @interface CallType {}
 
     public static final String STATUS_FALSE = "status false";
     public static final String NOT_SUCCESSFUL = "not successful";
@@ -170,7 +161,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     @NonNull
     @Contract(pure = true)
-    private Callback<ResultObject> getCallback(final MutableLiveData<ResultObject> liveData, @CallType final int callType) {
+    private Callback<ResultObject> getCallback(final MutableLiveData<ResultObject> liveData, @AuthCallType final int callType) {
         return new Callback<ResultObject>() {
             @SuppressWarnings("ConstantConditions")
             @Override
@@ -178,12 +169,12 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                 try {
                     if (response.isSuccessful()) {
                         ResultObject tempResultObject = response.body();
-                        tempResultObject.setCallType(callType);
-                        tempResultObject.setCode(response.code());
+                        tempResultObject.setCodeOnly(response.code());
+                        tempResultObject.setAuthCallType(callType);
                         if (tempResultObject.getStatus()) {
                             liveData.setValue(tempResultObject);
                         } else {
-                            liveData.setValue(tempResultObject.setError(new Throwable(STATUS_FALSE)));
+                            liveData.setValue(tempResultObject.setErrorOnly(new Throwable(STATUS_FALSE)));
                         }
                     } else
                         liveData.setValue(new ResultObject(new Throwable(NOT_SUCCESSFUL), callType));

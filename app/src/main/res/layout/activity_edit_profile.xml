@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.activity.EditProfile">
+    tools:fragment=".ui.fragment.activity.EditProfile">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -22,6 +22,11 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+    <FrameLayout
+        android:layout_below="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -42,8 +47,9 @@
                 <RelativeLayout
                     android:id="@+id/profile_image_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="147dp"
+                    android:layout_height="200dp"
                     android:orientation="vertical">
+
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -55,9 +61,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#8b181818"
+                        android:src="@drawable/backgroundprofile"
                         android:scaleType="centerCrop"
                         android:contentDescription="@string/profile_pic" />
-
                     <RelativeLayout
                         android:id="@+id/profile_layout"
                         android:layout_width="match_parent"
@@ -65,53 +71,35 @@
                         android:orientation="vertical">
 
                         <RelativeLayout
-                            android:id="@+id/profile_layout1"
+                            android:id="@+id/coverpicilayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_image_whiter_outline_solid"
-                            android:layout_centerInParent="true"
-                           >
+                            android:layout_centerInParent="true">
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
-                            android:id="@+id/profile_id"
-                            android:layout_width="84dp"
-                            android:layout_height="84dp"
-                            android:scaleType="centerCrop"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/bg_circle_white_outline"
-                            android:src="@drawable/ic_user_male_dp"
-                            android:padding="2dp"
-                            android:transitionName="profile" />
+                            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
+                                android:id="@+id/editcoverphoto"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5sp"
+                                android:layout_centerVertical="true"
+                                android:textColor="#efefef"
+                                android:background="@drawable/ic_edit_white_with_shadow" />
 
+                            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                                android:layout_width="wrap_content"
+                                android:layout_toRightOf="@+id/editcoverphoto"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginBottom="10dp"
+                                android:text="Change Cover"
+                                android:textAllCaps="true"
+                                android:textColor="#ffffff"
+                                android:textSize="12sp" />
 
-
-                            <!--<com.theartofdev.edmodo.cropper.CropImageView-->
-                                <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
-                                <!--android:id="@+id/cropImageView"-->
-                                <!--android:layout_width="84dp"-->
-                                <!--android:layout_height="84dp"-->
-                                <!--android:scaleType="centerCrop"-->
-                              <!---->
-                                <!--android:visibility="gone"-->
-                                <!--android:layout_centerInParent="true"-->
-                                <!--android:background="@drawable/bg_circle_white_outline"-->
-                                <!--android:src="@drawable/ic_user_male_dp"-->
-                                <!--android:layout_margin="2dp"-->
-                                <!--android:transitionName="profile"-->
-                                <!--/>-->
                         </RelativeLayout>
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
-                            android:id="@+id/empname"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="5sp"
-                            android:textColor="#efefef"
-                            android:background="@drawable/bg_image_whiter_outline_solid"
-                            android:transitionName="empname"
-                            android:layout_alignBottom="@+id/profile_layout1"
-                            android:layout_alignEnd="@+id/profile_layout1"
-                            app:srcCompat="@drawable/ic_create_back_black" />
+
 
                     </RelativeLayout>
                     <ProgressBar
@@ -123,6 +111,58 @@
                         android:layout_centerHorizontal="true"/>
 
 
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/profile_layout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-42dp"
+                    android:background="@drawable/bg_image_whiter_outline_solid"
+
+
+                    >
+
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
+                        android:id="@+id/profile_id"
+                        android:layout_width="84dp"
+                        app:behavior_overlapTop="30dp"
+                        android:layout_height="84dp"
+                        android:scaleType="centerCrop"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/bg_circle_white_outline"
+                        android:src="@drawable/ic_user_male_dp"
+                        android:padding="2dp"
+                        android:transitionName="profile" />
+
+                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
+                        android:id="@+id/empname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5sp"
+                        android:textColor="#efefef"
+                        android:background="@drawable/bg_image_whiter_outline_solid"
+                        android:transitionName="empname"
+                        android:layout_alignBottom="@+id/profile_id"
+                        android:layout_alignEnd="@+id/profile_id"
+                        app:srcCompat="@drawable/ic_create_back_black" />
+
+
+
+                    <!--<com.theartofdev.edmodo.cropper.CropImageView-->
+                    <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+                    <!--android:id="@+id/cropImageView"-->
+                    <!--android:layout_width="84dp"-->
+                    <!--android:layout_height="84dp"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!---->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:background="@drawable/bg_circle_white_outline"-->
+                    <!--android:src="@drawable/ic_user_male_dp"-->
+                    <!--android:layout_margin="2dp"-->
+                    <!--android:transitionName="profile"-->
+                    <!--/>-->
                 </RelativeLayout>
 
                 <LinearLayout
@@ -138,7 +178,7 @@
                         <!--android:layout_height="100dp"-->
                        <!--/>-->
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -159,7 +199,7 @@
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/username"
-                            android:maxLength="20"
+                            android:maxLength="15"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_size_16sp"
@@ -208,7 +248,7 @@
                             android:layout_centerVertical="true"
                             android:textSize="@dimen/text_size_12sp" />
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                             android:id="@+id/male"
                             android:layout_width="wrap_content"
                             android:background="@drawable/ic_male_white"
@@ -216,7 +256,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@+id/gender_text"/>
 
-                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/maletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -230,14 +270,14 @@
                             android:layout_alignStart="@+id/male"
                             android:textSize="@dimen/text_size_14sp" />
 
-                        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                             android:id="@+id/female"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ic_female_white"
                             android:layout_toEndOf="@+id/male"/>
 
-                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/femaletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -299,7 +339,7 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -314,7 +354,7 @@
                         android:gravity="bottom"
                         android:layout_height="wrap_content">
 
-                    <com.cncoding.teazer.customViews.CustomCountryCodePicker
+                    <com.cncoding.teazer.ui.customviews.common.CustomCountryCodePicker
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/signup_country_code"

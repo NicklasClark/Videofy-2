@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout
+    <com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout
         android:id="@+id/root_layout"
         android:layout_width="74dp"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:src="@drawable/bg_shimmer"
             android:contentDescription="@string/background_image" />
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/title"
             android:layout_width="60dp"
             android:layout_height="12dp"
@@ -44,6 +44,6 @@
             android:textSize="@dimen/text_size_10sp"
             android:background="@drawable/bg_shimmer"/>
 
-    </com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout>
+    </com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout>
 
 </FrameLayout>

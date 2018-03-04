@@ -16,26 +16,26 @@
 <android.support.v7.widget.CardView
     android:id="@+id/cardview"
     android:layout_width="match_parent"
-    android:layout_marginTop="5dp"
     app:cardElevation="2dp"
-    android:layout_height="280dp">
+    android:layout_margin="10dp"
+    android:layout_height="180dp">
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="280dp">
+        android:layout_height="180dp">
         <ImageView
             android:id="@+id/demoimage"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
-            android:layout_height="280dp" />
+            android:layout_height="180dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp">
+        android:layout_height="180dp">
         <ImageView
             android:layout_width="match_parent"
             android:background="@drawable/bg_vignette"
-            android:layout_height="280dp" />
+            android:layout_height="180dp" />
 
     </RelativeLayout>
 
@@ -50,20 +50,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/video_details"
                 android:layout_width="wrap_content"
                 android:layout_marginStart="10dp"
                 android:padding="5dp"
                 android:layout_toLeftOf="@+id/duration"
                 android:layout_alignParentLeft="true"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textColor="@color/cardview_light_background"
                 android:layout_height="wrap_content"
                 />
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,8 +74,9 @@
                 android:padding="5dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginEnd="@dimen/padding_default" />
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/duration"
+                android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -85,18 +86,21 @@
                 android:layout_toStartOf="@+id/menu"/>
 
         </RelativeLayout>
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/locationimage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_place_black_24dp"
             android:layout_marginStart="10dp"
+            android:visibility="gone"
             android:layout_below="@+id/descriptionlayout"
             />
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_marginStart="5dp"
+            android:visibility="gone"
+
             android:textColor="@color/cardview_light_background"
             android:layout_height="wrap_content"
             android:layout_below="@+id/descriptionlayout"
@@ -124,51 +128,73 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_like_outline_small"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="3dp"
                 />
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:layout_width="wrap_content"
                 android:id="@+id/txtlikes"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 android:textColor="@color/cardview_light_background"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/likes"/>
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_view_outline"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="3dp"
                 android:layout_toEndOf="@+id/txtlikes"
                 />
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:layout_width="wrap_content"
                 android:id="@+id/txtview"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 android:textColor="@color/cardview_light_background"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/view"/>
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
+                android:id="@+id/react"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_reaction_home"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="3dp"
+                android:layout_toEndOf="@+id/view"/>
+
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                android:layout_width="wrap_content"
+                android:id="@+id/txtreation"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textSize="10dp"
+                android:textColor="@color/cardview_light_background"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/react"/>
+
             <RelativeLayout
                 android:id="@+id/reactiontext"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
+                android:visibility="gone"
                 android:layout_marginEnd="16dp"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentEnd="true">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                     android:id="@+id/reactions"
                     android:layout_width="wrap_content"
                     android:textSize="12sp"
@@ -185,9 +211,9 @@
                 android:visibility="gone"
                 android:gravity="center_vertical"
                 android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@+id/reactiontext"
-              >
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                android:layout_toStartOf="@+id/reactiontext">
+
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/image1"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
@@ -207,7 +233,7 @@
                 android:layout_marginStart="@dimen/padding_half"
           >
 
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/image2"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
@@ -226,7 +252,7 @@
                 android:layout_marginStart="@dimen/padding_half"
                 >
 
-                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                     android:id="@+id/image3"
 
                     android:layout_width="25dp"
@@ -239,6 +265,32 @@
 
 
     </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/hidden_layput"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:visibility="gone"
+        android:background="@color/blur2"/>
+
+
+    <Button
+        android:id="@+id/unhide_video"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_below="@+id/hobby"
+        android:background="@drawable/border_layout"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        android:text="Unhide"
+        android:layout_gravity="center"
+        android:drawablePadding="-3dp"
+        android:textAllCaps="false"
+        android:textColor="@color/colorIcons"
+        android:textSize="12sp" />
+
 </android.support.v7.widget.CardView>
 
 </RelativeLayout>

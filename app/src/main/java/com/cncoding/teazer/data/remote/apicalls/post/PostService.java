@@ -1,13 +1,16 @@
 package com.cncoding.teazer.data.remote.apicalls.post;
 
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.post.ReportPost;
+import com.cncoding.teazer.data.model.post.TaggedUsersList;
+import com.cncoding.teazer.data.model.post.UpdatePostRequest;
+import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostReactionsList;
-import com.cncoding.teazer.model.post.PostUploadResult;
-import com.cncoding.teazer.model.post.ReportPost;
-import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -52,7 +55,7 @@ public interface PostService {
      *      or 412 : Validation Failed
      */
     @POST("/api/v1/post/like/{post_id}/{status}")
-    Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @Path("status") int status);
+    Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @LikeDislike @Path("status") int status);
 
     /**
      * Call this service to increase the video view count
@@ -73,10 +76,6 @@ public interface PostService {
      * */
     @DELETE("/api/v1/post/delete/{post_id}")
     Call<ResultObject> deletePost(@Path("post_id") int postId);
-
-
-    @DELETE("/api/v1/post/delete/{post_id}")
-    Call<ResultObject> deletePostVideo(@Path("post_id") int postId);
 
     /**
      * Call this service to report a post
@@ -151,11 +150,7 @@ public interface PostService {
      *      or 412 : Validation Failed
      * */
     @GET("/api/v1/post/my/videos/{page}")
-    Call<PostList> getPostedVideos(@Path("page") int page);
-
-
-    @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
-    Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
+    Call<PostList> getMyPostedVideos(@Path("page") int page);
 
     @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
     Call<PostList> getVideosPostedByFriend(@Path("page") int page, @Path("friend_id") int friendId);
@@ -177,4 +172,10 @@ public interface PostService {
 
     @POST("/api/v1/post/unhide/all/posts/{user_id}")
     Call<ResultObject> getAllHiddenVideosList(@Path("user_id") int postId);
+
+    /**
+     * Call this service to post reaction using Giphy.
+     */
+    @POST("/api/v1/react/by/gif")
+    Call<ReactionResponse> createReactionByGiphy(@Body GiphyReactionRequest giphyReactionRequest);
 }

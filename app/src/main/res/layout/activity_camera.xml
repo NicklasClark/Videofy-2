@@ -11,7 +11,7 @@
     app:umanoAnchorPoint="0.4"
     sothree:umanoPanelHeight="0dp"
     sothree:umanoShadowHeight="0dp"
-    tools:context=".home.camera.CameraActivity">
+    tools:fragment=".home.camera.CameraActivity">
 
     <!--CAMERA FRAGMENT CONTAINER-->
     <RelativeLayout
@@ -73,7 +73,7 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_video_gallery"/>
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
             android:visibility="gone"
             android:id="@+id/giphy_search"
             android:layout_width="match_parent"

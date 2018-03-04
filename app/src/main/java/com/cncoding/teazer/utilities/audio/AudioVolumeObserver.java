@@ -64,7 +64,7 @@ public class AudioVolumeObserver {
     }
 
     private int getMaxVolume() {
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2;
     }
 
     public void unregister() {

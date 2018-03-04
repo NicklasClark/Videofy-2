@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/interests_header"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
 
     <!--</ScrollView>-->
 
-    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:id="@+id/save_interests_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"

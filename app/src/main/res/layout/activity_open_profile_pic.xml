@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#b000"
-    tools:context="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
+    tools:fragment="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
 
-    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
         android:id="@+id/close"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/media_controller_dp"
             android:transitionName="profile"
             android:background="@drawable/bg_circle_white_outline"
@@ -38,7 +38,7 @@
         android:layout_height="50dp">
 
 
-        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/remove_image_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/action_bar_height"

@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:background="#000000"
-    tools:context=".ui.fragment.activity.ProfileCreationVideos">
+    tools:fragment=".ui.fragment.activity.ProfileCreationVideos">
 
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="center"
-        android:src="@drawable/ic_arrow_back_white"/>
+        android:src="@drawable/ic_arrow_back_white_with_shadow"/>
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
 
             android:layout_alignParentBottom="true">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/likes"
             android:layout_width="16dp"
             android:layout_height="16dp"
@@ -76,7 +76,7 @@
 
 
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/view"
                 android:layout_width="16dp"
                 android:layout_height="16dp"

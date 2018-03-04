@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                     android:id="@+id/toolbar_name"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    app:srcCompat="@drawable/ic_settings_dark"
+                    app:srcCompat="@drawable/ic_settings_white_with_shadow"
                     android:foreground="@drawable/ripple_dark_circle"
                     android:padding="@dimen/padding_default"
                     android:layout_gravity="end"
@@ -74,7 +74,7 @@
                     android:background="@color/colorDivider"
                     android:layout_below="@+id/toolbar_name"/>
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                     android:id="@+id/toolbar_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                     android:text="@string/usermane_goes_here" />
 
-                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/toolbar_bio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,10 +141,10 @@
         android:layout_marginEnd="@dimen/rounded_edge_radius_40dp"
         app:layout_anchor="@id/collapsing_toolbar"
         app:layout_anchorGravity="bottom|end"
-        android:src="@drawable/ic_edit"
+        android:src="@drawable/ic_edit_white_with_shadow"
         tools:ignore="VectorDrawableCompat"/>
 
-    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
         android:id="@+id/small_profile_picture"
         android:layout_width="45dp"
         android:layout_height="45dp"

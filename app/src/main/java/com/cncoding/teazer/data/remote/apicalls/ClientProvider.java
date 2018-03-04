@@ -3,7 +3,7 @@ package com.cncoding.teazer.data.remote.apicalls;
 import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.base.TeazerApplication;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +29,7 @@ public class ClientProvider {
 
     public static Retrofit getRetrofitWithAuthToken(@NonNull final String token) {
         if (retrofitWithAuthToken == null) {
+//            retrofitWithoutAuthToken = null;
             retrofitWithAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -41,6 +42,7 @@ public class ClientProvider {
 
     public static Retrofit getRetrofitWithoutAuthToken() {
         if (retrofitWithoutAuthToken == null) {
+//            retrofitWithAuthToken = null;
             retrofitWithoutAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -77,7 +79,7 @@ public class ClientProvider {
 
     @NonNull private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
-//                .addInterceptor(logging)
+                .addInterceptor(logging)
                 .build();
     }
 

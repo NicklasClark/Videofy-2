@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
+    tools:fragment="com.cncoding.teazer.home.post.PostDetailsActivity">
 
 <!--    <item android:id="@+id/action_share"
         andrreact_titleitle="@string/share"

@@ -8,13 +8,13 @@ import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.post.PostUploadResult;
+import com.cncoding.teazer.data.apiCalls.ApiCallingService;
+import com.cncoding.teazer.data.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.data.apiCalls.ProgressRequestBody.UploadCallbacks;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
-import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.common.SharedPrefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +23,9 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
-import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
-import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.finishVideoUploadSession;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.saveVideoUploadSession;
+import static com.cncoding.teazer.utilities.common.ViewUtils.UPLOAD_PARAMS;
 
 /**
  *
@@ -40,19 +40,15 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     public static final String UPLOAD_COMPLETE = "uploadComplete";
     public static final String ADD_WATERMARK = "addWatermark";
     public static final String VIDEO_PATH = "videoPath";
-//    public static final String RESPONSE_CODE = "responseCode";
     public static final int UPLOAD_IN_PROGRESS_CODE = 10;
     public static final int UPLOAD_ERROR_CODE = 11;
     public static final int UPLOAD_COMPLETE_CODE = 12;
 
     private ResultReceiver receiver;
     private Bundle bundle;
-//    private int resultCode;
     private Call<PostUploadResult> videoUploadCall;
-    private static Context activityContext;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
-
         Intent intent = new Intent(context, VideoUploadService.class);
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.putExtra(VIDEO_UPLOAD_RECEIVER, videoUploadReceiver);
@@ -85,10 +81,8 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                     videoUploadCall = ApiCallingService.Posts.uploadVideo(
                             part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
-
                 try {
                     Response<PostUploadResult> response = videoUploadCall.execute();
-
                     if (response.isSuccessful()) {
                         PostUploadResult postUploadResult = response.body();
                         int postId = postUploadResult.getPostDetails().getPostId();
@@ -97,7 +91,6 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                         String postOwner = postUploadResult.getPostDetails().getPostOwner().getUserName();
                         onUploadFinish(uploadParams.getVideoPath(), uploadParams.isGallery());
                         finishVideoUploadSession(getApplicationContext());
-
                         sendBroadcast(postId, postTitle, postThumbUrl, postOwner);
                     }
                     else {
@@ -138,12 +131,10 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     @Override
     public void onUploadFinish(String videoPath, boolean gallery) {
         bundle.clear();
-
         if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
             bundle.putBoolean(ADD_WATERMARK, false);
         }
-        else if(!gallery)
-        {
+        else if(!gallery) {
             bundle.putBoolean(ADD_WATERMARK, true);
         }
         bundle.putString(VIDEO_PATH, videoPath);

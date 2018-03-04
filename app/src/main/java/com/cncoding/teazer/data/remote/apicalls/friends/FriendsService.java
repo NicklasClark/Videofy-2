@@ -1,13 +1,13 @@
 package com.cncoding.teazer.data.remote.apicalls.friends;
 
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.model.friends.CircleList;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LikedUserPost;
-import com.cncoding.teazer.model.user.BlockedUsersList;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -167,5 +167,5 @@ public interface FriendsService {
     Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
 
     @GET("/api/v1/post/liked/users/{post_id}/{page}")
-    Call<LikedUserPost>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
+    Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
 }

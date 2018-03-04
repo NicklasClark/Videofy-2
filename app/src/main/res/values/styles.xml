@@ -69,7 +69,7 @@
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryStatus</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent4</item>
         <item name="actionMenuTextColor">@color/colorPrimary_text</item>
         <item name="android:actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
         <item name="android:actionMenuTextAppearance">@style/AppTheme.Widget.ActionButton</item>
@@ -428,7 +428,7 @@
     </style>
 
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent4</item>
     </style>
 
     <style name="WhiteProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
@@ -485,7 +485,7 @@
     </style>
 
     <style name="ToolBarWithNavigationBack">
-        <item name="navigationIcon">@drawable/ic_arrow_back_white</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back_white_with_shadow</item>
     </style>
 
     <!--    <style name="AppTheme.ChipLayout" parent="Widget.AppCompat.CompoundButton.CheckBox">
@@ -646,6 +646,16 @@
         <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:maxHeight">20dip</item>
+    </style>
+
+    <style name="FabStyle">
+        <item name="android:layout_width">84dp</item>
+        <item name="android:layout_height">84dp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">6dp</item>
+        <item name="pressedTranslationZ">12dp</item>
+        <item name="rippleColor">@android:color/white</item>
     </style>
 
     <dimen name="text_size_15sp">15sp</dimen>

@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.cncoding.teazer.videoTrim.view.VideoTrimmerView
+        <com.cncoding.teazer.utilities.videoTrim.view.VideoTrimmerView
             android:id="@+id/trimmer_view"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"

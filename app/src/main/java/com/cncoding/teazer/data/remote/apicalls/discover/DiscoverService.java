@@ -1,10 +1,10 @@
 package com.cncoding.teazer.data.remote.apicalls.discover;
 
-import com.cncoding.teazer.model.discover.VideosList;
-import com.cncoding.teazer.model.friends.UsersList;
-import com.cncoding.teazer.model.post.LandingPosts;
-import com.cncoding.teazer.model.post.LandingPostsV2;
-import com.cncoding.teazer.model.post.PostList;
+import com.cncoding.teazer.data.model.discover.LandingPosts;
+import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.PostList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -48,7 +48,13 @@ public interface DiscoverService {
      * Call this service to get the discover page trending category videos of the respected category.
      */
     @GET("/api/v1/discover/trending/category/videos/{category_id}/{page}")
-    Call<PostList> getTrendingVideos(@Path("page") int page, @Path("category_id") int categoryId);
+    Call<PostList> getTrendingVideosByCategory(@Path("page") int page, @Path("category_id") int categoryId);
+
+    /**
+     * Call this service to get the discover search page trending videos in the "Videos" tab.
+     */
+    @GET("/api/v1/discover/trending/videos/{page}")
+    Call<VideosList> getTrendingVideos(@Path("page") int page);
 
     /**
      * Call this service to get users list to send follow request.

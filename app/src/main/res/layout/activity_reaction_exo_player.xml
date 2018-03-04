@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@android:color/black"
-    android:paddingBottom="?attr/actionBarSize"
+    android:paddingBottom="@dimen/action_bar_height"
     android:visibility="visible">
 
     <!--<include layout="@layout/toolbar" />-->
@@ -21,68 +21,57 @@
         android:visibility="gone"
         android:id="@+id/gif_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/gif_view" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_vignette">
 
-        <LinearLayout
-            android:id="@id/root_layout"
+        <TextView
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="@dimen/action_bar_height"
+            android:layout_marginStart="@dimen/action_bar_height"
+            android:minWidth="220dp"
+            android:gravity="center_vertical|start"
+            android:text="@string/reaction"
+            android:textSize="18sp"
+            android:textColor="#FFFFFFFF"
+            android:layout_toStartOf="@+id/btnShare" />
 
-            <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="14dp"
-                android:contentDescription="@string/close_button"
-                android:src="@drawable/ic_clear_white_24dp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:text="@string/reaction"
-                android:textColor="#FFFFFFFF"
-                android:layout_weight="1"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/btnShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_share_white_24dp"
-                android:contentDescription="@string/share" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="13dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_share_white_with_shadow"
+            android:contentDescription="@string/share" />
 
         <RelativeLayout
             android:id="@+id/layoutpostdetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/root_layout">
+            android:layout_below="@+id/header">
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/reaction_post_caption"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="14dp"
-                android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:layout_marginTop="18dp"
+                android:ellipsize="end"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="65dp"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/postTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -107,7 +96,7 @@
                 android:layout_marginEnd="14dp"
                 android:contentDescription="@string/post_thumbnail" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/postDuration"
                 android:layout_width="47dp"
                 android:layout_height="17dp"
@@ -125,7 +114,7 @@
             android:layout_marginBottom="21dp"
             android:layout_marginStart="14dp">
 
-            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction_post_dp"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
@@ -134,7 +123,7 @@
                 android:src="@drawable/ic_user_male_dp_small"
                 app:srcCompat="@drawable/ic_user_male_dp_small" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/reaction_post_name"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -148,7 +137,7 @@
                 android:textSize="16sp" />
 
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/reaction_post_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,7 +149,7 @@
                 android:textSize="@dimen/text_size_12sp"
                 app:drawableStartCompat="@drawable/ic_like_smaller" />
 
-            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/reaction_post_views"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -177,14 +166,15 @@
                 android:textSize="@dimen/text_size_12sp"
                 app:drawableStartCompat="@drawable/ic_view_outline_smaller" />
 
-            <ImageView
-                android:id="@+id/btnLike"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+            <com.cncoding.teazer.ui.customviews.common.CheckImageButton
+                android:id="@+id/like"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:src="@drawable/ic_like_outline"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="14dp"
-                android:contentDescription="@string/like"
-                android:src="@drawable/ic_like_outline" />
+                android:layout_marginEnd="14dp" />
 
         </RelativeLayout>
 

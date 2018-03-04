@@ -20,7 +20,7 @@ package com.cncoding.teazer.injection.module;
 
 import android.app.Application;
 
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.base.TeazerApplication;
 
 import dagger.Module;
 import dagger.Provides;
