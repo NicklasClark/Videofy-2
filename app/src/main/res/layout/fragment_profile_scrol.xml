@@ -326,20 +326,20 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profilepic"
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_width"
-        android:transitionName="profile"
-        app:civ_border_color="@android:color/white"
-        app:civ_border_width="2dp"
-        app:finalHeight="@dimen/image_final_width"
-        app:finalYPosition="2dp"
-        app:layout_behavior="com.cncoding.teazer.utilities.ScrollingImageBehaivior"
-        app:startHeight="2dp"
+    <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/profilepic"-->
+        <!--android:layout_width="@dimen/image_width"-->
+        <!--android:layout_height="@dimen/image_width"-->
+        <!--android:transitionName="profile"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--app:civ_border_width="2dp"-->
+        <!--app:finalHeight="@dimen/image_final_width"-->
+        <!--app:finalYPosition="2dp"-->
+        <!--app:layout_behavior="com.cncoding.teazer.utilities.ScrollingImageBehaivior"-->
+        <!--app:startHeight="2dp"-->
 
-        app:startToolbarPosition="2dp"
-        app:startXPosition="2dp" />
+        <!--app:startToolbarPosition="2dp"-->
+        <!--app:startXPosition="2dp" />-->
 
 </android.support.design.widget.CoordinatorLayout>
 

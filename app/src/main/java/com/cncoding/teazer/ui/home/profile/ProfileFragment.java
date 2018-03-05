@@ -55,7 +55,6 @@ import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
 import io.branch.referral.util.ShareSheetStyle;
-import jp.wasabeef.blurry.Blurry;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
@@ -498,7 +497,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                         Bitmap userImage = scaleDown(result, 200, true);
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
-                        Blurry.with(getContext()).from(photobitmap).into(bgImage);
+                    //    Blurry.with(getContext()).from(photobitmap).into(bgImage);
                     }
                     catch (Exception e) {
                         e.printStackTrace();

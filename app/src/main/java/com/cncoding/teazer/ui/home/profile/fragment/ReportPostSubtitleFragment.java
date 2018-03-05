@@ -18,13 +18,13 @@ import android.view.Window;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.ui.home.profile.adapter.ReportPostSubtitleAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.droidsonroids.gif.GifTextView;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment.postReportOptionSelected;
@@ -43,7 +43,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     @BindView(R.id.submitReport)
     ProximaNovaSemiboldButton submitReport;
     @BindView(R.id.loader)
-    GifTextView loader;
+    DynamicProgress loader;
     @BindView(R.id.report_remark)
     TextInputEditText reportRemark;
     private ReportPostTitlesResponse reportPostTitlesResponse;

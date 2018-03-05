@@ -55,7 +55,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.blurry.Blurry;
+//import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -705,8 +705,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
-                        Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
-                    } catch (Exception e) {
+                       // Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
+                    }
+                    catch (Exception e) {
                         e.printStackTrace();
                     }
                     simpleProgressBar.setVisibility(View.GONE);

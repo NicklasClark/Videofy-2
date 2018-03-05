@@ -277,11 +277,11 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     }
 
     @OnClick(R.id.reaction2) public void openTopReactor2Profile() {
-        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+        openProfile(getUserId(context), navigation, topReactedUserList.get(1).getUserId());
     }
 
     @OnClick(R.id.reaction3) public void openTopReactor3Profile() {
-        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+        openProfile(getUserId(context), navigation, topReactedUserList.get(2).getUserId());
     }
 
 //    @Override
