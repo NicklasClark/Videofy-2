@@ -350,7 +350,7 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
+    protected void handleError(ResultObject resultObject) {
         otpResendBtn.setEnabled(true);
         otpResendBtn.setAlpha(1);
         showSnackBar(otpResendBtn, getString(R.string.something_went_wrong));

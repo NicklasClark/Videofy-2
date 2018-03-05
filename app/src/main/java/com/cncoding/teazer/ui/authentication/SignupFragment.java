@@ -232,7 +232,7 @@ public class SignupFragment extends BaseAuthFragment {
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
+    protected void handleError(ResultObject resultObject) {
     }
 
     @Override

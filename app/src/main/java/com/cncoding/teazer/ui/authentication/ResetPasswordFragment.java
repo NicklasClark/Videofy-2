@@ -202,8 +202,8 @@ public class ResetPasswordFragment extends BaseAuthFragment {
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
-        throwable.printStackTrace();
+    protected void handleError(ResultObject resultObject) {
+        resultObject.getError().printStackTrace();
         statusView.setText(R.string.something_went_wrong);
         statusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
         dismissMessage();

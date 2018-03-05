@@ -355,8 +355,8 @@ public class WelcomeFragment extends BaseAuthFragment implements NetworkStateRec
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
-        throwable.printStackTrace();
+    protected void handleError(ResultObject resultObject) {
+        resultObject.getError().printStackTrace();
         revertButtonAnimation();
         showSnackBar(loginBtn, getString(R.string.something_is_not_right));
         logLoginEvent(isFacebook() ? "Facebook" : "Google", false, null);
