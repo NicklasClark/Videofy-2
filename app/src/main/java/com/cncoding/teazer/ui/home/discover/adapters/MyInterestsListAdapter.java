@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.home.discover.adapters;
 
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -49,29 +47,31 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
                 holder.header.setText(categoryName);
 
                 holder.recyclerView.setLayoutManager(new CustomLinearLayoutManager(fragment.getContext(), HORIZONTAL, false));
-                holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(myInterests.get(categoryName), fragment));
+                MyInterestsListItemAdapter adapter = new MyInterestsListItemAdapter(myInterests.get(categoryName), fragment);
+                holder.recyclerView.setAdapter(adapter);
+//                new AddListItemPostsTask((MyInterestsListItemAdapter) holder.recyclerView.getAdapter(), postDetailsList).execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override public void onBindViewHolder(MyInterestsViewHolder holder, int position, List<Object> payloads) {
-        if (payloads == null || payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
-            return;
-        }
-        if (payloads.get(0) instanceof List) {
-            try {
-                //noinspection unchecked
-                List<PostDetails> postDetailsList = (List<PostDetails>) payloads.get(0);
-                if (postDetailsList != null)
-                    new AddListItemPostsTask((MyInterestsListItemAdapter) holder.recyclerView.getAdapter(), postDetailsList).execute();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @Override public void onBindViewHolder(MyInterestsViewHolder holder, int position, List<Object> payloads) {
+//        if (payloads == null || payloads.isEmpty()) {
+//            onBindViewHolder(holder, position);
+//            return;
+//        }
+//        if (payloads.get(0) instanceof List) {
+//            try {
+//                //noinspection unchecked
+//                List<PostDetails> postDetailsList = (List<PostDetails>) payloads.get(0);
+//                if (postDetailsList != null)
+//                    new AddListItemPostsTask((MyInterestsListItemAdapter) holder.recyclerView.getAdapter(), postDetailsList).execute();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     private void notifyDataChanged() {
         fragment.getParentActivity().runOnUiThread(new Runnable() {
@@ -126,20 +126,20 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         }
     }
 
-    private static class AddListItemPostsTask extends AsyncTask<Void, Void, Void> {
-
-        private MyInterestsListItemAdapter adapter;
-        private List<PostDetails> postDetailsList;
-
-        private AddListItemPostsTask(MyInterestsListItemAdapter adapter, List<PostDetails> postDetailsList) {
-            this.adapter = adapter;
-            this.postDetailsList = postDetailsList;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            adapter.updatePosts(postDetailsList);
-            return null;
-        }
-    }
+//    private static class AddListItemPostsTask extends AsyncTask<Void, Void, Void> {
+//
+//        private MyInterestsListItemAdapter adapter;
+//        private List<PostDetails> postDetailsList;
+//
+//        private AddListItemPostsTask(MyInterestsListItemAdapter adapter, List<PostDetails> postDetailsList) {
+//            this.adapter = adapter;
+//            this.postDetailsList = postDetailsList;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            adapter.updatePosts(postDetailsList);
+//            return null;
+//        }
+//    }
 }

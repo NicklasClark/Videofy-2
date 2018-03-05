@@ -157,6 +157,7 @@ public class DataAccessTasks {
 
         @Override
         protected Void doInBackground(List<PostDetails>[] lists) {
+            database.dao().clearTable();
             database.dao().insertAll(lists[0]);
             return null;
         }

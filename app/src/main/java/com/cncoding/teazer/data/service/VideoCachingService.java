@@ -30,20 +30,21 @@ public class VideoCachingService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
         String path = intent.getStringExtra("path");
+        boolean isVideo = intent.getBooleanExtra("isVideo", true);
 
         if (!TextUtils.isEmpty(url)) {
-            downloadData(url,path);
+            downloadData(url,path, isVideo);
         }
         this.stopSelf();
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void downloadData(String requestUrl, String path) {
+    private void downloadData(String requestUrl, String path, boolean isVideo) {
         try {
             File rootDir = new File(path);
             if (!rootDir.exists()) rootDir.mkdir();
-            String fileExtension = "." +StringUtils.substringAfterLast(requestUrl, ".");
-            File rootFile = new File(rootDir, new Date().getTime() + fileExtension);
+            String fileExtension = "." + StringUtils.substringAfterLast(requestUrl, ".");
+            File rootFile = File.createTempFile(String.valueOf(new Date().getTime()), fileExtension, rootDir);
             if (rootFile.exists()) {
                 stopSelf();
                 return;
@@ -61,7 +62,7 @@ public class VideoCachingService extends IntentService {
                 f.write(buffer, 0, len1);
             }
             f.close();
-            saveMedia(getApplicationContext(), requestUrl, rootFile.getAbsolutePath());
+            saveMedia(getApplicationContext(), requestUrl, rootFile.getAbsolutePath(), isVideo);
         } catch (Exception e) {
             e.printStackTrace();
         }

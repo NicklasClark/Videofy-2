@@ -1,8 +1,6 @@
 package com.cncoding.teazer.ui.home.discover.adapters;
 
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.support.v7.util.DiffUtil;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,24 +16,19 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTex
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.support.v7.util.DiffUtil.calculateDiff;
 import static android.view.LayoutInflater.from;
 import static com.cncoding.teazer.R.layout.item_my_interests_list_item;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
-import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
-import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
 /**
  *
@@ -77,34 +70,34 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
         });
     }
 
-    void updatePosts(List<PostDetails> postDetailsList) {
-        try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(
-                    new ArrayList<>(postDetailsArrayList), postDetailsList));
-            postDetailsArrayList.clear();
-            postDetailsArrayList.addAll(postDetailsList);
-            fragment.getParentActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    result.dispatchUpdatesTo(MyInterestsListItemAdapter.this);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                addPosts(postDetailsList);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
+//    void updatePosts(List<PostDetails> postDetailsList) {
+//        try {
+//            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(
+//                    new ArrayList<>(postDetailsArrayList), postDetailsList));
+//            postDetailsArrayList.clear();
+//            postDetailsArrayList.addAll(postDetailsList);
+//            fragment.getParentActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    result.dispatchUpdatesTo(MyInterestsListItemAdapter.this);
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            try {
+//                addPosts(postDetailsList);
+//            } catch (Exception e1) {
+//                e1.printStackTrace();
+//            }
+//        }
+//    }
 
-    private void addPosts(List<PostDetails> postDetailsList) {
-        if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
-        else postDetailsArrayList.clear();
-        postDetailsArrayList.addAll(postDetailsList);
-        notifyDataChanged();
-    }
+//    void addPosts(List<PostDetails> postDetailsList) {
+//        if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
+//        else postDetailsArrayList.clear();
+//        postDetailsArrayList.addAll(postDetailsList);
+//        notifyDataChanged();
+//    }
 
     class MyInterestsListItemViewHolder extends BaseRecyclerView.ViewHolder {
 
@@ -212,22 +205,22 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
             }
         }
 
-        @Override public void bind(List<Object> payloads) {
-            if (payloads == null || payloads.isEmpty()) return;
-
-            if (payloads.get(0) instanceof PostDetails) {
-                bind();
-                return;
-            }
-
-            Bundle bundle = (Bundle) payloads.get(0);
-            if (bundle.containsKey(DIFF_POST_DETAILS)) {
-                postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
-                return;
-            }
-
-            updatePostDetailsAccordingToDiffBundle(postDetails, bundle);
-        }
+//        @Override public void bind(List<Object> payloads) {
+//            if (payloads == null || payloads.isEmpty()) return;
+//
+//            if (payloads.get(0) instanceof PostDetails) {
+//                bind();
+//                return;
+//            }
+//
+//            Bundle bundle = (Bundle) payloads.get(0);
+//            if (bundle.containsKey(DIFF_POST_DETAILS)) {
+//                postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
+//                return;
+//            }
+//
+//            updatePostDetailsAccordingToDiffBundle(postDetails, bundle);
+//        }
 
         @OnClick(R.id.root_layout) public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,

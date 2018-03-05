@@ -239,11 +239,6 @@ public final class SimpleExoPlayerView extends FrameLayout {
     private boolean controllerHideOnTouch;
     private int mediaWidth;
     private int mediaHeight;
-    private OnThumbReadyListener listener;
-
-    public void setOnThumbReadyListener(OnThumbReadyListener listener) {
-        this.listener = listener;
-    }
 
     public SimpleExoPlayerView(Context context) {
         this(context, null);
@@ -582,11 +577,6 @@ public final class SimpleExoPlayerView extends FrameLayout {
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                        DataSource dataSource, boolean isFirstResource) {
-                            try {
-                                listener.onThumbReady((BitmapDrawable) resource);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             shutterView.setImageDrawable(resource);
                             return false;
                         }

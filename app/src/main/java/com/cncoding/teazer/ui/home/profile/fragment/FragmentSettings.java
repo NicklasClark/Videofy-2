@@ -84,18 +84,11 @@ public class FragmentSettings extends BaseFragment {
     }
 
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         privateAccountSwitch = view.findViewById(R.id.private_account_switch);
-
         ButterKnife.bind(this, view);
-
-
-
-
         //save video to gallery switch button
-
         saveVideosSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

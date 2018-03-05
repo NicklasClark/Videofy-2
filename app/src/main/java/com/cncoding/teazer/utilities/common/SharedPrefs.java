@@ -11,6 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +29,7 @@ public class SharedPrefs {
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
-//    private static final String BLURRED_PROFILE_PIC = "homePageCache";
+    //    private static final String BLURRED_PROFILE_PIC = "homePageCache";
     private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
     private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
@@ -201,7 +204,8 @@ public class SharedPrefs {
         return getSharedPreferences(context).getBoolean(CAN_SAVE_MEDIA_ONLY_ON_WIFI, false);
     }
 
-    public static void saveMedia(Context context, String keyUrl, String valueFilePath) {
+    public static void saveMedia(Context context, String keyUrl, String valueFilePath, boolean isVideo) {
+        clearExcessMedia(context, isVideo);
         getSharedPreferences(context).edit().putString("media_" + keyUrl, valueFilePath).apply();
     }
 
@@ -211,9 +215,12 @@ public class SharedPrefs {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void deleteMedia(Context context, String keyUrl) {
-        File file = new File(getMedia(context, keyUrl));
-        if (file.exists()) file.delete();
+        deleteFileIfExists(getMedia(context, keyUrl));
         getSharedPreferences(context).edit().remove("media_" + keyUrl).apply();
+    }
+
+    private static void clearExcessMedia(Context context, boolean isVideo) {
+        new ClearExcessMediaTask(getSharedPreferences(context), isVideo).execute();
     }
 
     static void clearMedia(Context context) {
@@ -228,13 +235,71 @@ public class SharedPrefs {
             this.preferences = preferences;
         }
 
+        @SuppressWarnings("ResultOfMethodCallIgnored")
         @Override
         protected Void doInBackground(Void... voids) {
-            Map<String,?> keys = preferences.getAll();
-            for(Map.Entry<String,?> entry : keys.entrySet())
-                if (entry.getKey().contains("media_"))
-                    preferences.edit().remove(entry.getKey()).apply();
+            try {
+                Map<String,?> keys = preferences.getAll();
+                for(Map.Entry<String,?> entry : keys.entrySet())
+                    if (entry.getKey().contains("media_")) {
+                        deleteFileIfExists(String.valueOf(entry.getValue()));
+                        preferences.edit().remove(entry.getKey()).apply();
+                    }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
+        }
+    }
+
+    private static class ClearExcessMediaTask extends AsyncTask<Void, Void, Void> {
+
+        private SharedPreferences preferences;
+        private boolean isVideo;
+
+        private ClearExcessMediaTask(SharedPreferences preferences, boolean isVideo) {
+            this.preferences = preferences;
+            this.isVideo = isVideo;
+        }
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Map<String, ?> allEntries = preferences.getAll();
+                List<String> mediaEntriesList = new ArrayList<>();
+
+//                getting all cached video/thumb media related entries' keys in a list.
+                for(Map.Entry<String,?> entry : allEntries.entrySet()) {
+                    if (isVideo)
+                        if (entry.getKey().contains("media_") && (!entry.getKey().contains("png") || !entry.getKey().contains("jpg")))
+                            mediaEntriesList.add(entry.getKey());
+                        else
+                        if (entry.getKey().contains("media_") && (entry.getKey().contains("png") || entry.getKey().contains("jpg")))
+                            mediaEntriesList.add(entry.getKey());
+                }
+
+//                if there are more than 60 cached media, delete old medias
+                if (mediaEntriesList.size() > 60) {
+                    Collections.sort(mediaEntriesList);
+                    while (mediaEntriesList.size() > 60) {
+                        deleteFileIfExists(String.valueOf(allEntries.get(mediaEntriesList.get(0))));
+                        preferences.edit().remove(mediaEntriesList.get(0)).apply();
+                        mediaEntriesList.remove(0);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void deleteFileIfExists(String path) {
+        if (path != null && !path.equals("null")) {
+            File file = new File(path);
+            if (file.exists()) file.delete();
         }
     }
 }
