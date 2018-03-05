@@ -156,7 +156,7 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/reaction_gif"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_toStartOf="@+id/camera_flash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

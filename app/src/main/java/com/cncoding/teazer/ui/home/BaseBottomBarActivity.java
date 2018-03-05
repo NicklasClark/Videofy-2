@@ -62,6 +62,8 @@ import com.cncoding.teazer.utilities.common.NavigationController.RootFragmentLis
 import com.cncoding.teazer.utilities.common.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.common.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.common.SharedPrefs;
+import com.expletus.mobiruck.MobiruckEvent;
+import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -192,11 +194,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .into(loader);
 
         //logging mobiruck event
-//        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-//
-//        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-//
-//        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
+        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+
+        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+
+        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 

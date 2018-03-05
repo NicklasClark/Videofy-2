@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,20 @@ import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.viewmodel.PostViewModel;
+import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.exoplayer.Container;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.post.BasePostFragment;
+import com.inmobi.ads.InMobiAdRequestStatus;
+import com.inmobi.ads.InMobiNative;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +47,8 @@ import static com.cncoding.teazer.utilities.common.SharedPrefs.getCanSaveMediaOn
 
 public class PostsListFragment extends BasePostFragment implements View.OnKeyListener {
 
+    private static final String TAG = "PostListFragment";
+
     @BindView(R.id.post_list) Container recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
@@ -48,8 +57,17 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     public boolean manualRefreshTriggered;
     private PostsListAdapter postListAdapter;
 
+    private final List<InMobiNative> mNativeAds = new ArrayList<>();
+    private InMobiNative.NativeAdListener nativeAdListener;
+    private int[] mAdPositions = new int[]{2, 8, 15, 23};
+
+    //All the InMobiNativeStrand instances created for this list feed will be held here
+    private List<InMobiNative> mStrands = new ArrayList<>();
+    private Map<Integer, PostDetails> mFeedMap = new HashMap<>();
+
+
     public PostsListFragment() {}
-    
+
     @NonNull
     public static PostsListFragment newInstance() {
         return new PostsListFragment();
@@ -66,6 +84,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
             public void onRefresh() {
                 manualRefreshTriggered = true;
                 refreshPosts(true, true);
+                refreshAds();
             }
         });
         return rootView;
@@ -88,10 +107,57 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                     if (is_next_page) {
                         currentPage = page;
                         loadHomePagePosts(page);
+
+                        //for inmobi ads
+                        createStrands();
+                        loadAds();
                     }
                 }
             };
         recyclerView.addOnScrollListener(scrollListener);
+    }
+
+    private void createStrands() {
+        Long placement_id = 1519192553502L;
+        for (int position : mAdPositions) {
+            final InMobiNative nativeStrand = new InMobiNative(getActivity(),
+                    placement_id, new StrandAdListener((currentPage-1)*30+position));
+            mStrands.add(nativeStrand);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        clearAds();
+        super.onDestroyView();
+    }
+
+    private void loadAds() {
+        for (InMobiNative strand : mStrands) {
+            strand.load();
+        }
+    }
+
+    private void refreshAds() {
+        clearAds();
+        createStrands();
+        loadAds();
+    }
+
+    private void clearAds() {
+        Iterator<PostDetails> feedItemIterator = postListAdapter.posts.iterator();
+        while (feedItemIterator.hasNext()) {
+            final PostDetails feedItem = feedItemIterator.next();
+            if (feedItem instanceof AdFeedItem) {
+                feedItemIterator.remove();
+            }
+        }
+        postListAdapter.notifyDataSetChanged();
+        for (InMobiNative strand : mStrands) {
+            strand.destroy();
+        }
+        mStrands.clear();
+        mFeedMap.clear();
     }
 
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
@@ -99,11 +165,22 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
         if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
         toggleRecyclerViewScrolling(false);
         if (scrollListener != null && scrollToTop) scrollListener.resetState();
-        if (isConnected) loadHomePagePosts(1);
+        if (isConnected) {
+            loadHomePagePosts(1);
+
+            //to refresh inmobi ads
+            refreshAds();
+        }
         else {
             Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_LONG).show();
             toggleRecyclerViewScrolling(true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        refreshAds();
     }
 
     @Override
@@ -122,7 +199,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                             refreshPosts(true, true);
                         else
                             recyclerView.smoothScrollBy(0, -((int) recyclerView.getChildAt(recyclerView.getChildCount() - 1).getY()),
-                                new DecelerateInterpolator());
+                                    new DecelerateInterpolator());
                         return true;
                 }
             }
@@ -216,5 +293,72 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 fragment.refreshPosts(false, false);
             }
         }
+    }
+
+    private final class StrandAdListener implements InMobiNative.NativeAdListener {
+
+        private int mPosition;
+
+        public StrandAdListener(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onAdLoadSucceeded(@NonNull InMobiNative inMobiNativeStrand) {
+            Log.d(TAG, "Strand loaded at position " + mPosition);
+            if (!postListAdapter.posts.isEmpty()) {
+                PostDetails oldFeedItem = mFeedMap.get(mPosition);
+                if (oldFeedItem != null) {
+                    mFeedMap.remove(mPosition);
+                    postListAdapter.posts.remove(oldFeedItem);
+                }
+                AdFeedItem adFeedItem = new AdFeedItem(inMobiNativeStrand);
+                mFeedMap.put(mPosition, adFeedItem);
+                postListAdapter.posts.add(mPosition, adFeedItem);
+                postListAdapter.notifyItemChanged(mPosition);
+            }
+        }
+
+        @Override
+        public void onAdLoadFailed(@NonNull InMobiNative inMobiNativeStrand, @NonNull final InMobiAdRequestStatus inMobiAdRequestStatus) {
+            Log.d(TAG, "Ad Load failed  for" + mPosition + "(" + inMobiAdRequestStatus.getMessage() + ")");
+            if (!postListAdapter.posts.isEmpty()) {
+                PostDetails oldFeedItem = mFeedMap.get(mPosition);
+                if (oldFeedItem != null) {
+                    mFeedMap.remove(mPosition);
+                    postListAdapter.posts.remove(oldFeedItem);
+                    postListAdapter.notifyItemRemoved(mPosition);
+                    Log.d(TAG, "Ad removed for" + mPosition);
+                }
+            }
+        }
+
+        @Override
+        public void onAdFullScreenDismissed(InMobiNative inMobiNative) {}
+
+        @Override
+        public void onAdFullScreenWillDisplay(InMobiNative inMobiNative) {}
+
+        @Override
+        public void onAdFullScreenDisplayed(InMobiNative inMobiNative) {}
+
+        @Override
+        public void onUserWillLeaveApplication(InMobiNative inMobiNative) {}
+
+        @Override
+        public void onAdImpressed(@NonNull InMobiNative inMobiNativeStrand) {
+            Log.d(TAG, "Impression recorded for strand at position:" + mPosition);
+        }
+
+        @Override
+        public void onAdClicked(@NonNull InMobiNative inMobiNativeStrand) {
+            Log.d(TAG, "Click recorded for ad at position:" + mPosition);
+        }
+
+        @Override
+        public void onMediaPlaybackComplete(@NonNull InMobiNative inMobiNative) {}
+
+        @Override
+        public void onAdStatusChanged(@NonNull InMobiNative inMobiNative) {}
     }
 }

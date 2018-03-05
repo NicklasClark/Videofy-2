@@ -80,7 +80,6 @@
             android:paddingTop="-6dp"
             android:paddingBottom="@dimen/padding_with_navigation_bar_height"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_home_screen_post_new"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>

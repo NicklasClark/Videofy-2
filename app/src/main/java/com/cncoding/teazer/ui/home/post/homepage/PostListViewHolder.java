@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
@@ -94,6 +95,9 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     private ExoPlayerViewHelper helper;
     private PostDetails postDetails;
     private BitmapDrawable thumbnailDrawable;
+    private boolean doubleClicked;
+    private boolean viewed;
+    private AdFeedItem adFeedItem;
 
     PostListViewHolder(PostsListAdapter adapter, View view) {
         super(view);
@@ -107,8 +111,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     @OnClick(R.id.content) void viewPost() {
-        adapter.fragment.navigation.pushFragment(
-                PostDetailsFragment.newInstance(postDetails, thumbnailDrawable.getBitmap(), true, null));
+        try {
+            adapter.fragment.navigation.pushFragment(
+                    PostDetailsFragment.newInstance(postDetails, null, true, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
@@ -194,12 +202,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         try {
             postDetails = adapter.posts.get(getAdapterPosition());
 
-            if (!postDetails.canReact()) disableView(reactBtn, true);
-            else enableView(reactBtn);
+                if (!postDetails.canReact()) disableView(reactBtn, true);
+                else enableView(reactBtn);
 
             playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
 
-            shimmerize(new View[]{title, location, category}, new View[]{username});
+                shimmerize(new View[]{title, location, category}, new View[]{username});
 
             @DrawableRes int placeholder = getGenderSpecificDpSmall(postDetails.getPostOwner().getGender());
 

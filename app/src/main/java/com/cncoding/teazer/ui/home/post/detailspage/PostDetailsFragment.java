@@ -254,6 +254,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         ButterKnife.bind(this, view);
 
         if (image != null) playerView.setShutterBackground(image);
+        else playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
