@@ -62,14 +62,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:animateLayoutChanges="true"
-                android:visibility="gone">
+                android:animateLayoutChanges="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="247dp"
                     android:paddingTop="@dimen/padding_thin"
-                    android:background="@drawable/bg_card_no_margin_white"
+                    android:background="@color/white"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
@@ -111,7 +110,7 @@
                         android:id="@+id/no_featured_posts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="200dp"
+                        android:minHeight="175dp"
                         android:gravity="center"
                         android:textSize="@dimen/text_size_content_big"
                         android:text="@string/no_posts_available"
@@ -120,10 +119,11 @@
 
                     <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                         android:id="@+id/featured_posts_list"
+                        style="@style/BottomTabLayout.RecyclerView"
+                        android:layout_height="175dp"
                         android:nestedScrollingEnabled="false"
                         android:layout_below="@+id/featured_posts_layout"
-                        android:layout_marginBottom="20dp"
-                        style="@style/BottomTabLayout.RecyclerView" />
+                        android:layout_marginBottom="20dp" />
 
                 </RelativeLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_card_no_margin_white">
+                    android:background="@color/white">
 
                     <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                         android:id="@+id/no_my_interests"
@@ -182,7 +182,7 @@
                         android:id="@+id/my_interests_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="60dp"
+                        android:minHeight="618dp"
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"/>
 
@@ -229,8 +229,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
-                android:layout_below="@+id/landing_posts_container"
-                android:visibility="gone">
+                android:layout_below="@+id/landing_posts_container">
 
                 <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                     android:layout_width="match_parent"
@@ -256,7 +255,7 @@
 
                 <com.cncoding.teazer.ui.customviews.common.StatefulRecyclerView
                     android:id="@+id/most_popular_list"
-                    android:background="@drawable/bg_card_no_margin_white"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="14dp"
@@ -279,40 +278,42 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/post_load_error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:paddingTop="150dp"
-                android:paddingBottom="@dimen/padding_including_action_bar"
-                android:foreground="@drawable/ripple_dark_no_rounded"
-                android:visibility="gone">
-
-                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
-                    android:id="@+id/post_load_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/colorPrimary_text"
-                    android:textSize="@dimen/text_size_h6"
-                    android:text="@string/could_not_load_posts"/>
-
-                <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
-                    android:id="@+id/tap_to_retry"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_content3"
-                    android:text="@string/tap_to_retry"/>
-
-            </LinearLayout>
-
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+
+
+    <LinearLayout
+        android:id="@+id/post_load_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:paddingTop="150dp"
+        android:paddingBottom="@dimen/padding_including_action_bar"
+        android:foreground="@drawable/ripple_dark_no_rounded"
+        android:visibility="gone">
+
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
+            android:id="@+id/post_load_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary_text"
+            android:textSize="@dimen/text_size_h6"
+            android:text="@string/could_not_load_posts"/>
+
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/tap_to_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_content3"
+            android:text="@string/tap_to_retry"/>
+
+    </LinearLayout>
 
 </LinearLayout>

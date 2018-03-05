@@ -53,7 +53,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     public static final int ACTION_VIEW_FEATURED = 2;
     public static final int ACTION_VIEW_TRENDING = 3;
 
-    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
+    @BindView(R.id.root_layout) public NestedScrollView nestedScrollView;
     @BindView(R.id.landing_posts_container) LinearLayout landingPostsContainer;
     @BindView(R.id.featured_posts_list) StatefulRecyclerView featuredPostsList;
     @BindView(R.id.no_featured_posts) ProximaNovaBoldTextView noFeaturedPosts;
@@ -70,7 +70,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
-    private static int scrollPosition;
+    public static int scrollPosition;
     public static boolean updateMyInterests = false;
     private FeaturedPostsListAdapter featuredPostsListAdapter;
     private MyInterestsListAdapter myInterestsListAdapter;
@@ -130,9 +130,8 @@ public class DiscoverFragment extends BaseDiscoverFragment {
 
     public void loadPosts() {
         postLoadErrorLayout.setVisibility(GONE);
-        if (viewModel != null && viewModel.getLandingPosts().getValue() == null) {
-            loadLandingPosts();
-        }
+//        if (viewModel != null && viewModel.getLandingPosts().getValue() == null)
+        loadLandingPosts();
     }
 
     @OnClick(R.id.featured_posts_view_all) public void viewAllMostPopular() {
@@ -213,6 +212,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                 fragment.featuredPostsListAdapter.updatePosts(landingPosts.getFeaturedVideos());
                 fragment.trendingListAdapter.updateCategories(landingPosts.getTrendingCategories());
 
+//                Removing any empty category under user interests.
                 Map<String, ArrayList<PostDetails>> tempMap = new HashMap<>();
                 tempMap.putAll(landingPosts.getMyInterests());
                 for (int i = 0; i < landingPosts.getMyInterests().size(); i++) {
@@ -244,9 +244,8 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                     fragment.setOnScrollChangedListener();
                 }
             }, 500);
-            if (viewModel != null && viewModel.getMostPopularPosts().getValue() == null) {
-                fragment.loadMostPopularPosts(1);
-            }
+//            if (viewModel != null && viewModel.getMostPopularPosts().getValue() == null)
+            fragment.loadMostPopularPosts(1);
         }
     }
 

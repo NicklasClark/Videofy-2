@@ -46,6 +46,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.prepareLayout;
 
 /**
+ *
  * Created by Prem $ on 11/19/2017.
  */
 
@@ -142,30 +143,18 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
 
     class MostPopularViewHolder extends BaseRecyclerView.ViewHolder {
 
-        @BindView(R.id.root_layout)
-        RelativeLayout layout;
-        @BindView(R.id.title)
-        ProximaNovaSemiBoldTextView title;
-        @BindView(R.id.shimmer_layout)
-        RelativeLayout shimmerLayout;
-        @BindView(R.id.vignette_layout)
-        FrameLayout vignetteLayout;
-        @BindView(R.id.top_layout)
-        RelativeLayout topLayout;
-        @BindView(R.id.bottom_layout)
-        RelativeLayout bottomLayout;
-        @BindView(R.id.category)
-        ProximaNovaRegularTextView category;
-        @BindView(R.id.name)
-        ProximaNovaSemiBoldTextView name;
-        @BindView(R.id.likes)
-        ProximaNovaRegularTextView likes;
-        @BindView(R.id.views)
-        ProximaNovaRegularTextView views;
-        @BindView(R.id.thumbnail)
-        ImageView thumbnail;
-        @BindView(R.id.dp)
-        CircularAppCompatImageView dp;
+        @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
+        @BindView(R.id.top_layout) RelativeLayout topLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
+        @BindView(R.id.category) ProximaNovaRegularTextView category;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
+        @BindView(R.id.likes) ProximaNovaRegularTextView likes;
+        @BindView(R.id.views) ProximaNovaRegularTextView views;
+        @BindView(R.id.thumbnail) ImageView thumbnail;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
         PostDetails postDetails;
 
         MostPopularViewHolder(View itemView) {

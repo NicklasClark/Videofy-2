@@ -144,17 +144,6 @@ public class TagsAndCategoryFragment extends Fragment {
             default:
                 break;
         }
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 5) {
-//                    changeDoneBtnVisibility(INVISIBLE);
-//                }
-//                else if (dy < -5) {
-//                    changeDoneBtnVisibility(VISIBLE);
-//                }
-//            }
-//        });
     }
 
     private void getCategories() {
