@@ -38,8 +38,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/ic_user_male_dp"
-                android:padding="2dp"
-                android:background="@drawable/bg_circle_white_outline"/>
+                android:padding="2dp" />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction2"
                 android:layout_width="30dp"
@@ -50,8 +49,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="51dp"
                 android:src="@drawable/ic_user_male_dp"
-                android:padding="2dp"
-                android:background="@drawable/bg_circle_white_outline"/>
+                android:padding="2dp" />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction3"
                 android:layout_width="30dp"
@@ -63,8 +61,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="92dp"
                 android:src="@drawable/ic_user_male_dp"
-                android:padding="2dp"
-                android:background="@drawable/bg_circle_white_outline"/>
+                android:padding="2dp" />
 
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
@@ -317,8 +314,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="112dp"
-                android:layout_marginLeft="295dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="35dp"
                 android:src="@drawable/ic_likebig"
                 />
             <Button
@@ -343,6 +339,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="fixed"
+            style="@style/MyCustomTabLayout"
             app:tabSelectedTextColor="@color/colorTabindicator"
             app:tabTextColor="#3e3e3e"
             app:layout_scrollFlags="scroll|enterAlways"/>

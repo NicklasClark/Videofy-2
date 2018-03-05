@@ -350,7 +350,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     try {
 
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
-                        NewProfileFragment.checkpostupdated=true;
+                        FragmentNewProfile2.checkpostupdated=true;
                         getActivity().onBackPressed();
                     } catch (Exception e) {
                         e.printStackTrace();

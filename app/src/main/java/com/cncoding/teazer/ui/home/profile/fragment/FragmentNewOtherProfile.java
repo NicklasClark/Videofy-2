@@ -89,6 +89,8 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     @BindView(R.id.totallikes) ProximaNovaRegularCheckedTextView _totalprofilelikes;
     @BindView(R.id.follow) Button _btnfollow;
     @BindView(R.id.profilelikebutton) ImageView profilelikebutton;
+    @BindView(R.id.topReactions)
+    ProximaNovaRegularCheckedTextView topReactions;
 
     int accountType;
     boolean requestRecieved;
@@ -451,6 +453,21 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                             .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                             .into(reaction1);
                                 }
+                                else
+                                {
+                                    if(topReactedUser1.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction1);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction1);
+                                    }
+
+                                }
                             }
                             else if((topReactedUserList.size()==2))
                             {
@@ -465,11 +482,42 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                             .into(reaction1);
                                 }
 
+                                else
+                                {
+                                    if(topReactedUser2.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction2);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction2);
+                                    }
+
+                                }
                                 if(topReactedUser2.getHasProfileMedia())
                                 {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                             .into(reaction2);
+
+                                }
+                                else
+                                {
+                                    if(topReactedUser2.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction2);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction2);
+                                    }
+
                                 }
                             }
 
@@ -488,6 +536,22 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                             .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                             .into(reaction1);
                                 }
+                                else
+                                {
+                                    if(topReactedUser1.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction1);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction1);
+                                    }
+
+                                }
+
 
                                 if(topReactedUser2.getHasProfileMedia())
                                 {
@@ -495,15 +559,51 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                                             .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                             .into(reaction2);
                                 }
+                                else
+                                {
+                                    if(topReactedUser2.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction2);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction2);
+                                    }
+
+                                }
                                 if(topReactedUser3.getHasProfileMedia())
                                 {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser3.getProfileMedia().getThumbUrl()))
                                             .into(reaction3);
                                 }
+                                else
+                                {
+                                    if(topReactedUser2.getGender()==1) {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_male_dp)
+                                                .into(reaction2);
+                                    }
+                                    else
+                                    {
+                                        Glide.with(context)
+                                                .load(R.drawable.ic_user_female_dp)
+                                                .into(reaction2);
+                                    }
+
+                                }
+                            }
+                            else if(topReactedUserList.size()==0)
+                            {
+                                topReactions.setVisibility(View.GONE);
+
                             }
 
                         }
+
 
                         if (requestRecieved) {
                             requestId = profileInfo.getFollowInfo().getRequestId();

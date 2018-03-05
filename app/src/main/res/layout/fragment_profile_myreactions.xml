@@ -71,7 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-
+        android:smoothScrollbar="true"
+        android:scrollingCache="false"
+        android:animationCache="false"
         android:paddingBottom="?attr/actionBarSize"
         android:id="@+id/recycler_view"/>
     </RelativeLayout>
