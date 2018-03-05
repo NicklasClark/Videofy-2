@@ -28,7 +28,6 @@ import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.home.profile.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;
@@ -39,6 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPostDetails;
 
 /**
  * 
@@ -50,17 +50,10 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
     private List<PostDetails> _list;
     Context context;
     private ArrayList<PostReaction> reactionList;
-    FollowerCreationListener listener;
-    OthersProfileFragment othersProfileFragment;
-    ArrayList<PostReaction>updatelist;
 
-    public FollowersCreationAdapter(Context context, List<PostDetails> _list, OthersProfileFragment othersProfileFragment) {
+    public FollowersCreationAdapter(Context context, List<PostDetails> _list) {
         this.context = context;
         this._list = _list;
-        listener = (FollowerCreationListener) context;
-        this.othersProfileFragment = othersProfileFragment;
-
-
     }
 
     @Override
@@ -142,10 +135,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.myCreationVideos(2, postDetails);
-                    viewHolder.txtview.setText(String.valueOf(txtview+1));
-
-
+                    fetchPostDetails(context, postDetails.getPostId());
+                    viewHolder.txtview.setText(String.valueOf(txtview + 1));
                 }
             });
 
@@ -214,9 +205,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                 }
                                             })
                                             .show();
-                                    othersProfileFragment.resetRecyclerData();
-
-
+                                    notifyDataSetChanged();
                                     break;
                             }
                             return false;
@@ -433,13 +422,5 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             public void onFailure (Call < PostReactionsList > call, Throwable t){
             }
         });
-    }
-
-    public interface FollowerCreationListener
-
-    {
-        public void myCreationVideos(int i, PostDetails postDetails);
-
-
     }
 }

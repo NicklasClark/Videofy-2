@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
@@ -37,11 +38,8 @@ import com.cncoding.teazer.ui.customviews.exoplayer.ToroUtil;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.customviews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
@@ -63,6 +61,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getPixels;
 import static com.cncoding.teazer.utilities.common.ViewUtils.launchReactionCamera;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.DIFF_POST_DETAILS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.updatePostDetailsAccordingToDiffBundle;
 
@@ -88,7 +87,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @BindView(R.id.reactions) ProximaNovaRegularTextView reactions;
     @BindView(R.id.popularity_layout_shimmer) ProximaNovaRegularTextView popularityLayoutShimmer;
     @BindView(R.id.list) RecyclerView reactionListView;
-    @BindView(R.id.shimmer_layout_top) ShimmerLinearLayout shimmerLayoutTop;
+    @BindView(R.id.shimmer_layout_top) ShimmerRelativeLayout shimmerLayoutTop;
     @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
 
     private AudioVolumeObserver audioVolumeObserver;
@@ -96,6 +95,9 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     private ExoPlayerViewHelper helper;
     private PostDetails postDetails;
     private BitmapDrawable thumbnailDrawable;
+    private boolean doubleClicked;
+    private boolean viewed;
+    private AdFeedItem adFeedItem;
 
     PostListViewHolder(PostsListAdapter adapter, View view) {
         super(view);
@@ -109,8 +111,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     @OnClick(R.id.content) void viewPost() {
-        adapter.fragment.navigation.pushFragment(
-                PostDetailsFragment.newInstance(postDetails, thumbnailDrawable.getBitmap(), true, null));
+        try {
+            adapter.fragment.navigation.pushFragment(
+                    PostDetailsFragment.newInstance(postDetails, null, true, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
@@ -122,10 +128,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     private void viewProfile() {
-        adapter.fragment.navigation.pushFragment(postDetails.canDelete() ?
-                FragmentNewProfile2.newInstance() :
-                FragmentNewOtherProfile.newInstance(
-                        String.valueOf(postDetails.getPostOwner().getUserId()), "", postDetails.getPostOwner().getUserName()));
+        openProfile(adapter.fragment.navigation, postDetails.canDelete(), postDetails.getPostOwner().getUserId());
     }
 
     @OnClick(R.id.volume_control) void controlVolume() {
@@ -134,7 +137,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
     @OnClick(R.id.react_btn) public void react() {
-        launchReactionCamera(adapter.fragment.getParentActivity(), postDetails);
+        launchReactionCamera(adapter.fragment.getParentActivity(), postDetails.getPostId());
     }
 
     @Override public String toString() {
@@ -199,12 +202,12 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         try {
             postDetails = adapter.posts.get(getAdapterPosition());
 
-            if (!postDetails.canReact()) disableView(reactBtn, true);
-            else enableView(reactBtn);
+                if (!postDetails.canReact()) disableView(reactBtn, true);
+                else enableView(reactBtn);
 
             playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
 
-            shimmerize(new View[]{title, location, category}, new View[]{username});
+                shimmerize(new View[]{title, location, category}, new View[]{username});
 
             @DrawableRes int placeholder = getGenderSpecificDpSmall(postDetails.getPostOwner().getGender());
 
@@ -445,7 +448,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     }
 
 //    private void fetchPostDetails(int postId, final Bitmap thumbnail) {
-//        ApiCallingService.Posts.getPostDetails(postId, adapter.context)
+//        ApiCallingService.Posts.getPostId(postId, adapter.context)
 //                .enqueue(new Callback<PostDetails>() {
 //                    @Override
 //                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {

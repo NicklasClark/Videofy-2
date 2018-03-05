@@ -34,7 +34,7 @@ public class PostReaction extends BaseModel implements Parcelable {
     @SerializedName("post_owner") @Expose private MiniProfile postOwner;
     @SerializedName("reacted_at") @Expose private String reactedAt;
     @SerializedName("can_delete") @Expose private boolean canDelete;
-    @SerializedName("my_self") @Expose private Boolean mySelf;
+    @SerializedName("my_self") @Expose private boolean mySelf;
     @SerializedName("post_owner_id") @Expose private int postOwnerId;
 
     public PostReaction(int react_id, String reactTitle, int postOwnerId, int likes, int views, boolean canLike,
@@ -73,8 +73,7 @@ public class PostReaction extends BaseModel implements Parcelable {
         postOwner = in.readParcelable(MiniProfile.class.getClassLoader());
         reactedAt = in.readString();
         canDelete = in.readByte() != 0;
-        byte tmpMySelf = in.readByte();
-        mySelf = tmpMySelf == 0 ? null : tmpMySelf == 1;
+        mySelf = in.readByte() != 0;
         postOwnerId = in.readInt();
     }
 
@@ -93,7 +92,7 @@ public class PostReaction extends BaseModel implements Parcelable {
         dest.writeParcelable(postOwner, flags);
         dest.writeString(reactedAt);
         dest.writeByte((byte) (canDelete ? 1 : 0));
-        dest.writeByte((byte) (mySelf == null ? 0 : mySelf ? 1 : 2));
+        dest.writeByte((byte) (mySelf ? 1 : 0));
         dest.writeInt(postOwnerId);
     }
 
@@ -159,11 +158,15 @@ public class PostReaction extends BaseModel implements Parcelable {
         return reactOwner;
     }
 
+    public MiniProfile getOwner() {
+        return reactOwner != null ? reactOwner : postOwner;
+    }
+
     public String getReactedAt() {
         return reactedAt;
     }
 
-    public Boolean getMySelf() {
+    public boolean getMySelf() {
         return mySelf;
     }
 
@@ -239,7 +242,7 @@ public class PostReaction extends BaseModel implements Parcelable {
         this.canDelete = canDelete;
     }
 
-    public void setMySelf(Boolean mySelf) {
+    public void setMySelf(boolean mySelf) {
         this.mySelf = mySelf;
     }
 
@@ -268,7 +271,7 @@ public class PostReaction extends BaseModel implements Parcelable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(10, 31)
+        return new HashCodeBuilder(11, 31)
                 .append(reactId)
                 .append(postId)
                 .append(reactTitle)

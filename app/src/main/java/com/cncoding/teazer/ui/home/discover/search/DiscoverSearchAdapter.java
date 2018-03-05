@@ -60,6 +60,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.PUBLIC_ACCOUNT;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.common.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
 
 /**
@@ -187,6 +188,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) public void viewPost() {
+            hideKeyboard(fragment.getParentActivity(), layout);
             ApiCallingService.Posts.getPostDetails(video.getPostId(), fragment.getContext())
                     .enqueue(new Callback<PostDetails>() {
                         @Override
@@ -401,10 +403,12 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
         }
 
         @OnClick(R.id.root_layout) void viewProfile() {
-            fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(user.getUserId()), "", ""));
+            hideKeyboard(fragment.getParentActivity(), layout);
+            fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(user.getUserId())));
         }
 
         @OnClick(R.id.action) void socialAction() {
+            hideKeyboard(fragment.getParentActivity(), action);
             if (action.getText().equals(fragment.getString(R.string.follow))) {
                 if(user.getRequestRecieved() && user.isFollower()) acceptJoinRequest(user.getRequestId(), getAdapterPosition());
                 else sendJoinRequestByUserId(user.getUserId(), getAdapterPosition());

@@ -51,10 +51,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.data.model.giphy.Datum;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
-import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.common.Interests;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
@@ -64,7 +62,6 @@ import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.cncoding.teazer.ui.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.camera.adapters.TrendingGiphyAdapter;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
@@ -92,6 +89,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -116,7 +114,7 @@ import static com.cncoding.teazer.ui.home.camera.UploadFragment.TAG_NULL_NEARBY_
 import static com.cncoding.teazer.ui.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logSearchEvent;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.common.ViewUtils.POST_DETAILS;
+import static com.cncoding.teazer.utilities.common.ViewUtils.POST_ID;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
@@ -146,15 +144,15 @@ public class CameraActivity extends AppCompatActivity
     private ArrayList<Videos> videosList;
 
     private boolean isReaction = false;
-    PostDetails postDetails;
+    int postId;
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
+    private TrendingGiphyAdapter trendingGiphyAdapter;
     private String videoPath;
     boolean checkFromGallery = true;
     private Call<TrendingGiphy> trendingGiphyCall;
     private Call<TrendingGiphy> searchGiphyCall;
     private int offset = 0;
-    private List<Datum> trendingGiphyList = new ArrayList<>();
     private EndlessRecyclerViewScrollListener scrollListener;
     private int totalGiphyCount = 0;
     private String giphySearchTerm = "";
@@ -174,7 +172,6 @@ public class CameraActivity extends AppCompatActivity
 ////                .penaltyLog()
 //                .build());
 
-
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         //checkFromGallery=true;
@@ -187,7 +184,8 @@ public class CameraActivity extends AppCompatActivity
         //giphy recycler view
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         gifRecyclerView.setLayoutManager(manager);
-        gifRecyclerView.setAdapter(new TrendingGiphyAdapter(CameraActivity.this, trendingGiphyList));
+        trendingGiphyAdapter = new TrendingGiphyAdapter(this);
+        gifRecyclerView.setAdapter(trendingGiphyAdapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
@@ -207,7 +205,7 @@ public class CameraActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isReaction = bundle.getBoolean(IS_REACTION);
-            postDetails = bundle.getParcelable(POST_DETAILS);
+            postId = bundle.getInt(POST_ID);
         }
         slidingUpPanelLayout.setOverlayed(true);
         slidingUpPanelLayout.setScrollableView(videoGalleryRecyclerView);
@@ -224,11 +222,13 @@ public class CameraActivity extends AppCompatActivity
                 .addApi(Places.GEO_DATA_API)
                 .build();
 
-        getTrendingGiphys(offset);
+        if (isReaction) {
+            getTrendingGiphys(offset);
+        }
     }
 
     private void getTrendingGiphys(final int offset) {
-        trendingGiphyCall = ApiCallingService.Giphy.getTrendingGiphys(this, getString(R.string.giphy_api_key), 30, offset, "g");
+        trendingGiphyCall = ApiCallingService.Giphy.getTrendingGiphys(getString(R.string.giphy_api_key), 30, offset, "g");
         if (!trendingGiphyCall.isExecuted())
             trendingGiphyCall.enqueue(new Callback<TrendingGiphy>() {
                 @Override
@@ -237,9 +237,7 @@ public class CameraActivity extends AppCompatActivity
                         TrendingGiphy trendingGiphy = response.body();
                         if (trendingGiphy.getMeta().getStatus() == 200) {
                             totalGiphyCount = trendingGiphy.getPagination().getTotalCount();
-                            trendingGiphyList.addAll(trendingGiphy.getData());
-
-                            gifRecyclerView.getAdapter().notifyItemRangeChanged(offset, 30);
+                            trendingGiphyAdapter.addPosts(offset, trendingGiphy.getData());
                         } else {
                             Toast.makeText(CameraActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
@@ -256,7 +254,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @OnTextChanged(R.id.giphy_search) public void performSearch(final CharSequence charSequence) {
-        trendingGiphyList.clear();
+        trendingGiphyAdapter.clearData();
         scrollListener.resetState();
         if (charSequence.length() > 0) {
             if (giphySearch.getCompoundDrawables()[2] == null)
@@ -275,15 +273,13 @@ public class CameraActivity extends AppCompatActivity
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (!giphySearchTerm.isEmpty() && giphySearchTerm != null) {
-                    if (giphySearchTerm.length() > 0) {
-                        logSearchEvent(giphySearchTerm);
-                        trendingGiphyList.clear();
-                        gifRecyclerView.getAdapter().notifyDataSetChanged();
-                        searchGiphys(0, giphySearchTerm);
-                    }
-            } else
-                    getTrendingGiphys(0);
+                if (giphySearchTerm != null && !giphySearchTerm.isEmpty()) {
+                    logSearchEvent(giphySearchTerm);
+                    trendingGiphyAdapter.clearData();
+                    trendingGiphyAdapter.notifyDataSetChanged();
+                    searchGiphys(0, giphySearchTerm);
+            }
+            else getTrendingGiphys(0);
             }
         };
 
@@ -293,7 +289,6 @@ public class CameraActivity extends AppCompatActivity
             handler = new Handler();
         }
         handler.postDelayed(runnable, 200);
-
     }
 
     @OnEditorAction(R.id.giphy_search) public boolean searchByKeyboard(int actionId) {
@@ -303,6 +298,11 @@ public class CameraActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    @OnFocusChange(R.id.giphy_search) public void ontGiphySearchFocused(boolean isFocused) {
+        if (isFocused && slidingUpPanelLayout.getPanelState() != EXPANDED)
+            slidingUpPanelLayout.setPanelState(EXPANDED);
     }
 
     @OnTouch(R.id.giphy_search) public boolean clearText(MotionEvent event) {
@@ -315,9 +315,8 @@ public class CameraActivity extends AppCompatActivity
         return false;
     }
 
-
     private void searchGiphys(final int offset, String query) {
-        searchGiphyCall = ApiCallingService.Giphy.searchGiphy(this, getString(R.string.giphy_api_key), 30, offset, "g", "en",query);
+        searchGiphyCall = ApiCallingService.Giphy.searchGiphy(getString(R.string.giphy_api_key), 30, offset, "g", "en",query);
         if (!searchGiphyCall.isExecuted())
             searchGiphyCall.enqueue(new Callback<TrendingGiphy>() {
                 @Override
@@ -326,9 +325,7 @@ public class CameraActivity extends AppCompatActivity
                         TrendingGiphy trendingGiphy = response.body();
                         if (trendingGiphy.getMeta().getStatus() == 200) {
                             totalGiphyCount = trendingGiphy.getPagination().getTotalCount();
-                            trendingGiphyList.addAll(trendingGiphy.getData());
-
-                            gifRecyclerView.getAdapter().notifyItemRangeChanged(offset, 30);
+                            trendingGiphyAdapter.addPosts(offset, trendingGiphy.getData());
                         } else {
                             Toast.makeText(CameraActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
@@ -368,7 +365,6 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         try {
             if (checkFromGallery) {
                 checkFromGallery = false;
@@ -412,7 +408,6 @@ public class CameraActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -523,9 +518,8 @@ public class CameraActivity extends AppCompatActivity
     public void onTrendingGiphyAdapterInteraction(Images images) {
         Gson gson = new Gson();
         String imageString = gson.toJson(images);
-        uploadFragment = UploadFragment.newInstance(imageString, isReaction, true, 0, true);
+        uploadFragment = UploadFragment.newInstance(postId, imageString, isReaction, true, 0, true);
         startVideoUploadFragment();
-
     }
 
     @Override
@@ -534,9 +528,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
+    public void onPermissionsDenied(int requestCode, List<String> perms) {}
 
     private void uploadOrTrimAction(String videoPath) {
         try {
@@ -622,7 +614,7 @@ public class CameraActivity extends AppCompatActivity
 
     private void startUploadFragment(long duration, String videoFile, boolean isReaction, boolean isGallery) {
         long timeInSec = duration / 1000;
-        uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec, false);
+        uploadFragment = UploadFragment.newInstance(postId, videoFile, isReaction, isGallery, (int) timeInSec, false);
         final Handler handler = new Handler(getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
@@ -645,46 +637,44 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onNearbyPlacesListInteraction(int action) {
+        hideKeyboard(this, upBtn);
         uploadFragment.toggleInteraction(true);
         uploadFragment.onNearbyPlacesListInteraction(action);
     }
 
     @Override
-    public void onPlaceClick(ArrayList<NearbyPlacesAdapter.PlaceAutocomplete> mResultList, int position) {
-        if (mResultList != null) {
-            try {
-                final String placeId = String.valueOf(mResultList.get(position).placeId);
-
-                /*
-                  Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
-                */
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(googleApiClient, placeId);
-                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(@NonNull PlaceBuffer places) {
-                        if (places.getCount() == 1) {
-                            //Do the things here on Click.....
-                            uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
-                                    places.get(0).getName().toString(),
-                                    places.get(0).getLatLng().latitude,
-                                    places.get(0).getLatLng().longitude
-                            ));
-                            fragmentManager.popBackStack();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_SHORT).show();
-                        }
+    public void onPlaceClick(CharSequence placeId) {
+        hideKeyboard(this, upBtn);
+        try {
+            /*
+             * Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
+             */
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(googleApiClient, String.valueOf(placeId));
+            placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceBuffer places) {
+                    if (places.getCount() == 1) {
+                        //Do the things here on Click.....
+                        uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
+                                places.get(0).getName().toString(),
+                                places.get(0).getLatLng().latitude,
+                                places.get(0).getLatLng().longitude
+                        ));
+                        fragmentManager.popBackStack();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_SHORT).show();
                     }
-                });
-            } catch (Exception e) {
-                Log.e("onPlaceClick()", e.getMessage());
-            }
-
+                }
+            });
+        } catch (Exception e) {
+            Log.e("onPlaceClick()", e.getMessage());
         }
     }
 
     @Override
     public void onCurrentLocationClick() {
+        hideKeyboard(this, upBtn);
         uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
                 getAddress(uploadFragment.currentLocation.getLatitude(), uploadFragment.currentLocation.getLongitude()),
                 uploadFragment.currentLocation.getLatitude(),
@@ -900,6 +890,10 @@ public class CameraActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (trendingGiphyCall != null && !trendingGiphyCall.isExecuted())
+            trendingGiphyCall.cancel();
+        if (searchGiphyCall != null && !searchGiphyCall.isExecuted())
+            searchGiphyCall.cancel();
     }
 
     @Override

@@ -278,44 +278,21 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
-
-
         if (NewProfileFragment.checkprofileupdated) {
             updateProfile();
             NewProfileFragment.checkprofileupdated = false;
         }
-
-
-        if(NewProfileFragment.checkpostupdated)
-        {
-
+//        if(NewProfileFragment.checkpostupdated) {
 //            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),NewProfileFragment.this));
 //            tabLayout.setupWithViewPager(viewPager);
 //            NewProfileFragment.checkpostupdated=false;
-        }
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getParentActivity().showToolbar();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
+//        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
-
-
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
 //                R.drawable.backgroundprofile);
 //        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
@@ -339,13 +316,6 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
             mListener = (NewProfileFragment.FollowerListListener) context;
 
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().showToolbar();
-
     }
 
     @Override

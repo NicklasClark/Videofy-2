@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
@@ -43,6 +42,8 @@ import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ReactionPlayerActivity;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 
 import org.jetbrains.annotations.Contract;
@@ -68,7 +69,7 @@ public class ViewUtils {
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";
-    public static final String POST_DETAILS = "postId";
+    public static final String POST_ID = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
     public static final int POST_REACTION = 0;
     public static final int SELF_REACTION = 1;
@@ -197,10 +198,10 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void launchReactionCamera(Context packageContext, PostDetails postDetails) {
+    public static void launchReactionCamera(Context packageContext, int postId) {
         Intent intent = new Intent(packageContext, CameraActivity.class);
         intent.putExtra(IS_REACTION, true);
-        intent.putExtra(POST_DETAILS, postDetails);
+        intent.putExtra(POST_ID, postId);
         packageContext.startActivity(intent);
     }
 
@@ -475,6 +476,48 @@ public class ViewUtils {
         return gender == Annotations.MALE ?
                 R.drawable.ic_user_male_dp :
                 R.drawable.ic_user_female_dp;
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment using integer userId.
+     */
+    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, int userId) {
+        try {
+            navigation.pushFragment(isMySelf ?
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(String.valueOf(userId)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment using String userId.
+     */
+    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, String userId) {
+        try {
+            navigation.pushFragment(isMySelf ?
+                    FragmentNewProfile2.newInstance() :
+                    FragmentNewOtherProfile.newInstance(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Call this method to push the suitable profile fragment WHEN YOU ARE NOT SURE ABOUT "isMySelf" flag.
+     * @param selfUserId must be the userId stored in SharedPreferences while logging in.
+     */
+    public static void openProfile(int selfUserId, BaseFragment.FragmentNavigation navigation, int userId) {
+        if (selfUserId >= 0) {
+            try {
+                navigation.pushFragment(selfUserId == userId ?
+                        FragmentNewProfile2.newInstance() :
+                        FragmentNewOtherProfile.newInstance(String.valueOf(userId)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 //    public static void unbindDrawables(View view) {

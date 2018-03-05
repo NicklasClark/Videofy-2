@@ -82,7 +82,7 @@ public class Category extends BaseModel implements Parcelable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(10, 31)
+        return new HashCodeBuilder(11, 31)
                 .append(category_id)
                 .append(category_name)
                 .append(color)

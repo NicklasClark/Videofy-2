@@ -3,6 +3,7 @@ package com.cncoding.teazer.ui.home.discover;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,8 +86,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        previousTitle = getParentActivity().getToolbarTitle();
-        getParentActivity().updateToolbarTitle(getString(R.string.discover));
+        currentPage = 1;
         View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         ButterKnife.bind(this, rootView);
         initStuff();
@@ -106,18 +106,6 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     private void initStuff() {
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY >= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() && is_next_page) {
-//                    SCROLLED TO BOTTOM
-                    is_next_page = false;
-                    mostPopularLoadingProgressBar.setVisibility(VISIBLE);
-                    loadMostPopularPosts(++currentPage);
-                }
-            }
-        });
-
         featuredPostsListAdapter = new FeaturedPostsListAdapter(this);
         myInterestsListAdapter = new MyInterestsListAdapter(this);
         trendingListAdapter = new TrendingListAdapter(this);
@@ -142,7 +130,9 @@ public class DiscoverFragment extends BaseDiscoverFragment {
 
     public void loadPosts() {
         postLoadErrorLayout.setVisibility(GONE);
-        loadLandingPosts();
+        if (viewModel != null && viewModel.getLandingPosts().getValue() == null) {
+            loadLandingPosts();
+        }
     }
 
     @OnClick(R.id.featured_posts_view_all) public void viewAllMostPopular() {
@@ -183,8 +173,8 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                 if (resultObject instanceof PostList) {
                     PostList postList = (PostList) resultObject;
                     if (!postList.getPosts().isEmpty()) {
-                        mostPopularListAdapter.updatePosts(currentPage, postList.getPosts());
                         is_next_page = postList.isNextPage();
+                        mostPopularListAdapter.updatePosts(currentPage, postList.getPosts());
                         mostPopularLayout.setVisibility(VISIBLE);
                         mostPopularList.setVisibility(VISIBLE);
                         noMostPopularVideos.setVisibility(GONE);
@@ -248,7 +238,30 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                 fragment.myInterestsList.setVisibility(GONE);
                 fragment.noMyInterests.setVisibility(VISIBLE);
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragment.setOnScrollChangedListener();
+                }
+            }, 500);
+            if (viewModel != null && viewModel.getMostPopularPosts().getValue() == null) {
+                fragment.loadMostPopularPosts(1);
+            }
         }
+    }
+
+    private void setOnScrollChangedListener() {
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY >= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() && is_next_page) {
+//                              SCROLLED TO BOTTOM
+                    is_next_page = false;
+                    mostPopularLoadingProgressBar.setVisibility(VISIBLE);
+                    loadMostPopularPosts(++currentPage);
+                }
+            }
+        });
     }
 
     private void showErrorMessage(String message, boolean isLandingPosts) {
@@ -258,10 +271,5 @@ public class DiscoverFragment extends BaseDiscoverFragment {
             mostPopularLayout.setVisibility(GONE);
         postLoadErrorLayout.setVisibility(VISIBLE);
         postLoadErrorTextView.setText(message);
-    }
-
-    @Override public void onDetach() {
-        super.onDetach();
-        getParentActivity().updateToolbarTitle(previousTitle);
     }
 }

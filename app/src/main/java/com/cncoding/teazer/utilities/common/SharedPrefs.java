@@ -10,6 +10,7 @@ import com.cncoding.teazer.data.model.base.UploadParams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -206,6 +207,13 @@ public class SharedPrefs {
 
     public static String getMedia(Context context, String keyUrl) {
         return getSharedPreferences(context).getString("media_" + keyUrl, null);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void deleteMedia(Context context, String keyUrl) {
+        File file = new File(getMedia(context, keyUrl));
+        if (file.exists()) file.delete();
+        getSharedPreferences(context).edit().remove("media_" + keyUrl).apply();
     }
 
     static void clearMedia(Context context) {

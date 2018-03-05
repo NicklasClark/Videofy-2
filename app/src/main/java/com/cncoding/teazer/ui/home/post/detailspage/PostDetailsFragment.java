@@ -38,7 +38,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -54,6 +56,7 @@ import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.CustomStaggeredGridLayoutManager;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.exoplayer.PlayerEventListener;
 import com.cncoding.teazer.ui.customviews.exoplayer.SimpleExoPlayerView;
@@ -63,8 +66,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularChe
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.post.BasePostFragment;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
@@ -94,13 +95,11 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
-import pl.droidsonroids.gif.GifTextView;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.STREAM_MUSIC;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
@@ -130,12 +129,14 @@ import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchRe
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.common.MediaUtils.releaseAudioLock;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.deleteMedia;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.common.ViewUtils.launchReactionCamera;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setTextViewDrawableStart;
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -156,7 +157,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
 
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.progress_bar) DynamicProgress progressBar;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
     @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
@@ -183,7 +184,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
     @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
     @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
-    @BindView(R.id.loader) GifTextView loader;
+    @BindView(R.id.loader) DynamicProgress loader;
     @BindView(R.id.upload_progress_text) ProximaNovaSemiBoldTextView uploadProgressText;
     @BindView(R.id.video_upload_progress) ProgressBar uploadProgress;
     @BindView(R.id.uploading_status_layout) RelativeLayout uploadingStatusLayout;
@@ -253,11 +254,10 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         ButterKnife.bind(this, view);
 
         if (image != null) playerView.setShutterBackground(image);
+        else playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
-        previousTitle = getParentActivity().getToolbarTitle();
-        getParentActivity().updateToolbarTitle(getString(R.string.post));
         return view;
     }
 
@@ -292,7 +292,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
+//        getParentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getContext(), this);
 
@@ -361,8 +361,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
             Glide.with(this)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
                             postDetails.getPostOwner().getProfileMedia().getThumbUrl() : "")
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.ic_user_male_dp_small))
+                    .apply(RequestOptions.bitmapTransform(new FitCenter()).placeholder(R.drawable.ic_user_male_dp_small))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -454,11 +453,11 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                         postReactionAdapter.updateReactions(reactionsList.getReactions());
                         if (reactionsList.getReactions().size() > 0) {
                             if (reactionsList.getReactions().size() >= 1)
-                                setReactionPic(reactionsList.getReactions().get(0).getMediaDetail().getReactThumbUrl(), reaction1Pic);
+                                setReactionPic(reactionsList.getReactions().get(0).getOwner().getProfileMedia().getThumbUrl(), reaction1Pic);
                             if (reactionsList.getReactions().size() >= 2)
-                                setReactionPic(reactionsList.getReactions().get(1).getMediaDetail().getReactThumbUrl(), reaction2Pic);
+                                setReactionPic(reactionsList.getReactions().get(1).getOwner().getProfileMedia().getThumbUrl(), reaction2Pic);
                             if (reactionsList.getReactions().size() >= 3)
-                                setReactionPic(reactionsList.getReactions().get(2).getMediaDetail().getReactThumbUrl(), reaction3Pic);
+                                setReactionPic(reactionsList.getReactions().get(2).getOwner().getProfileMedia().getThumbUrl(), reaction3Pic);
                         }
                     } else {
                         setNoReactions();
@@ -474,14 +473,20 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 }
                 break;
             case CALL_HIDE_OR_SHOW_POST:
-                Toast.makeText(context, resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() ?
-                        R.string.video_hide_successful : R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                navigation.popFragment();
+                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
+                    Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
+                    viewModel.deleteLocalPost(postDetails.getPostId());
+                    deletecachedMedia();
+                    navigation.popFragment();
+                } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 break;
             case CALL_DELETE_POST:
-                Toast.makeText(context, resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() ?
-                        R.string.video_has_been_deleted : R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                navigation.popFragment();
+                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
+                    Toast.makeText(context, R.string.video_has_been_deleted, Toast.LENGTH_SHORT).show();
+                    viewModel.deleteLocalPost(postDetails.getPostId());
+                    deletecachedMedia();
+                    navigation.popFragment();
+                } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 break;
             case CALL_CREATE_REACTION_BY_GIPHY:
                 loadReactionsOfPost(postDetails.getPostId(), 1);
@@ -515,6 +520,11 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         }
     }
 
+    private void deletecachedMedia() {
+        deleteMedia(context, postDetails.getMedias().get(0).getMediaUrl());
+        deleteMedia(context, postDetails.getMedias().get(0).getThumbUrl());
+    }
+
     private void showErrorMessage(@StringRes int message) {
         postLoadErrorLayout.setVisibility(VISIBLE);
         postLoadErrorTextView.setText(message);
@@ -524,7 +534,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Nullable private String getUserCategories() {
         if (postDetails.getCategories() != null) {
             StringBuilder categories = new StringBuilder();
-            categories.append(postDetails.getCategories().size() > 1 ? "Categories : " : "Category : ");
+//            categories.append(postDetails.getCategories().size() > 1 ? "Categories : " : "Category : ");
             for (int i = 0; i < postDetails.getCategories().size(); i++) {
                 categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
@@ -565,10 +575,10 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     public void setReactionPic(String reactionPicUrl, final AppCompatImageView view) {
-        reaction1Pic.setVisibility(VISIBLE);
+        view.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(reactionPicUrl)
-                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -596,16 +606,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     @OnClick(R.id.media_controller_dp) public void profilePicClicked() {
-        navigation.pushFragment(postDetails.canDelete() ? FragmentNewProfile2.newInstance() :
-                FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
-    }
-
-    @OnClick(R.id.up_btn) public void goBack() {
-        customHandler.removeCallbacks(updateTimerThread);
-        mHandler.removeCallbacks(mDelayedStopRunnable);
-        playerCurrentPosition = 0;
-        getParentActivity().onBackPressed();
-
+        openProfile(navigation, postDetails.canDelete(), postDetails.getPostOwner().getUserId());
     }
 
     @OnClick(R.id.media_controller_eta) public void toggleSound() {
@@ -620,7 +621,6 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = midVolume;
-//                volume = 100 * maxVolume + currentVolume;
                 setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
@@ -635,7 +635,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     @OnClick(R.id.react_btn) public void react() {
-        launchReactionCamera(context, postDetails);
+        launchReactionCamera(context, postDetails.getPostId());
     }
 
     @OnClick(R.id.like) public void likePost() {
@@ -794,15 +794,14 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         }
     }
 
-    private void showAlertDialog(@StringRes final int title, @StringRes int message) {
+    private void showAlertDialog(@StringRes int title, @StringRes final int message) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (title) {
+                        switch (message) {
                             case R.string.hide_post_confirm:
                                 hideOrShowPost(postDetails.getPostId(), HIDE);
                                 break;
@@ -824,6 +823,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onPause() {
         super.onPause();
+//        getParentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         playerCurrentPosition = player.getCurrentPosition();
         player.setPlayWhenReady(!player.getPlayWhenReady());
 
@@ -853,8 +853,6 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onStop() {
         super.onStop();
-        getParentActivity().updateToolbarTitle(previousTitle);
-        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
@@ -907,7 +905,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                             togglePlayPauseBtnVisibility(true);
                             break;
                         case STATE_BUFFERING:
-                            playPauseButton.setVisibility(INVISIBLE);
+                            togglePlayPauseBtnVisibility(false);
                             progressBar.setVisibility(VISIBLE);
                             break;
                         case STATE_READY:
@@ -1030,8 +1028,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     private void postGiphyReaction(UploadParams uploadParams) {
-        createReactionByGiphy(new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
-                uploadParams.getTitle(), uploadParams.getVideoPath()));
+        createReactionByGiphy(new GiphyReactionRequest(uploadParams.getPostId(), uploadParams.getTitle(), uploadParams.getVideoPath()));
     }
     //</editor-fold>
 

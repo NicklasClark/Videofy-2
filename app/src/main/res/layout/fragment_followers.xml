@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/toolbar_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:background="@drawable/bg_card_no_margin_white">
+
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/toolbar_plain_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:gravity="start|center_vertical"
+            android:textSize="20sp"
+            android:text="@string/followers"
+            android:padding="@dimen/padding_thin"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorPrimary_text"
+            android:layout_marginStart="@dimen/action_bar_height"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/nousertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_user_following_you"
+        android:textColor="#cfcfcf"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_title_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:animateLayoutChanges="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="?attr/actionBarSize" />
+
+            <com.cncoding.teazer.ui.customviews.common.DynamicProgress
+                android:id="@+id/loader"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="14dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

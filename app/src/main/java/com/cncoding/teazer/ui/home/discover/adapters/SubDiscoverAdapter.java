@@ -26,8 +26,6 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTex
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.discover.BaseDiscoverFragment;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
 import java.util.ArrayList;
@@ -44,6 +42,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.common.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getClassicCategoryBackground;
 import static com.cncoding.teazer.utilities.common.ViewUtils.initializeShimmer;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.prepareLayout;
 
 /**
@@ -140,19 +139,16 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
                     null, false, null));
         }
 
-        @OnClick(R.id.dp) public void dpClicked() {
+        @OnClick(R.id.dp) void dpClicked() {
             viewProfile();
         }
 
-        @OnClick(R.id.name) public void nameClicked() {
+        @OnClick(R.id.name) void nameClicked() {
             viewProfile();
         }
 
         private void viewProfile() {
-            fragment.navigation.pushFragment(postDetails.canDelete() ?
-                    FragmentNewProfile2.newInstance() :
-                    FragmentNewOtherProfile.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
-                            "", postDetails.getPostOwner().getUserName()));
+            openProfile(fragment.navigation, postDetails.canDelete(), postDetails.getPostOwner().getUserId());
         }
 
         @Override

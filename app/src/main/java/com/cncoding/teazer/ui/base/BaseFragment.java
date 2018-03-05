@@ -22,14 +22,13 @@ import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 
 public class BaseFragment extends Fragment implements NetworkStateListener {
 
-    protected String previousTitle;
     public FragmentNavigation navigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
     private BaseRecyclerView.Adapter adapter;
     public boolean isConnected;
     private NetworkStateReceiver networkStateReceiver;
-    protected Context context;
+    public Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

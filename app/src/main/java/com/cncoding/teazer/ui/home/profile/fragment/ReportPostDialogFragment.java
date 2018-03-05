@@ -129,7 +129,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void getPostReportTypes() {
         loader.setVisibility(View.VISIBLE);
-        ApiCallingService.Application.getPostReportTypes(getContext()).enqueue(new Callback<List<ReportPostTitlesResponse>>() {
+        ApiCallingService.Application.getPostReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
             @Override
             public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
                 try {

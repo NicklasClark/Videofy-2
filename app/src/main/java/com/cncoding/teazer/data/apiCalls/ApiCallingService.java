@@ -48,15 +48,12 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAut
 import com.cncoding.teazer.ui.home.profile.activity.UpdateMobileNumber;
 import com.cncoding.teazer.utilities.common.SharedPrefs;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +62,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithAuthToken;
+import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithoutAuthToken;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
 
 /**
@@ -86,110 +85,95 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes(Context context) {
-            return getApplicationService(context).getPostReportTypes();
+        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
+            return getApplicationService().getPostReportTypes();
         }
 
-        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes(Context context) {
-            return getApplicationService(context).getProfileReportTypes();
+        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes() {
+            return getApplicationService().getProfileReportTypes();
         }
 
-        public static Call<ArrayList<Category>> getCategories(Context context) {
-            return getApplicationService(context).getCategories();
+        public static Call<ArrayList<Category>> getCategories() {
+            return getApplicationService().getCategories();
 
         }
 
-        public static Call<List<DeactivateTypes>> getDeactivationTypesList(Context context) {
-            return getApplicationService(context).getDeactivationTypesList();
+        public static Call<List<DeactivateTypes>> getDeactivationTypesList() {
+            return getApplicationService().getDeactivationTypesList();
         }
 
-        public static Call<DefaultCoverImageResponse> getDefaultcoverImages(Context context,int page) {
-            return getApplicationService(context).getDefaultcoverImages(page);
+        public static Call<DefaultCoverImageResponse> getDefaultcoverImages(Context context, int page) {
+            return getApplicationService().getDefaultcoverImages(page);
         }
 
-        private static TeazerApiCall.ApplicationCalls getApplicationService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClient())
-                    .build();
-            return retrofit.create(TeazerApiCall.ApplicationCalls.class);
+        private static TeazerApiCall.ApplicationCalls getApplicationService() {
+            return getRetrofitWithoutAuthToken().create(TeazerApiCall.ApplicationCalls.class);
         }
     }
 
     public static class Auth {
 
-        public static void checkUsername(Context context, ProximaNovaRegularAutoCompleteTextView usernameView, boolean isSignUp) {
+        public static void checkUsername(ProximaNovaRegularAutoCompleteTextView usernameView, boolean isSignUp) {
             getAvailabilityServiceCallback(
-                    getAuthenticationService(context).checkUsernameAvailability(usernameView.getText().toString()),
+                    getAuthenticationService().checkUsernameAvailability(usernameView.getText().toString()),
                     usernameView, isSignUp);
         }
 
-        public static void checkEmail(Context context, ProximaNovaRegularAutoCompleteTextView emailView, boolean isSignUp) {
+        public static void checkEmail(ProximaNovaRegularAutoCompleteTextView emailView, boolean isSignUp) {
             getAvailabilityServiceCallback(
-                    getAuthenticationService(context).checkEmailAvailability(emailView.getText().toString()),
+                    getAuthenticationService().checkEmailAvailability(emailView.getText().toString()),
                     emailView, isSignUp);
         }
 
-        public static void checkPhoneNumber(Context context, int countryCode, ProximaNovaRegularAutoCompleteTextView phoneNumberView, boolean isSignUp) {
+        public static void checkPhoneNumber(int countryCode, ProximaNovaRegularAutoCompleteTextView phoneNumberView, boolean isSignUp) {
             String phoneString = phoneNumberView.getText().toString();
             if (!phoneString.isEmpty()) {
                 getAvailabilityServiceCallback(
-                        getAuthenticationService(context).checkPhoneNumberAvailability(
+                        getAuthenticationService().checkPhoneNumberAvailability(
                                 countryCode,
                                 Long.parseLong(phoneString)),
                         phoneNumberView, isSignUp);
             }
         }
 
-        public static Call<ResultObject> performSignUp(Context context, Authorize signUpBody) {
-            return getAuthenticationService(context).signUp(signUpBody);
+        public static Call<ResultObject> performSignUp(Authorize signUpBody) {
+            return getAuthenticationService().signUp(signUpBody);
         }
 
-        public static Call<ResultObject> verifySignUp(Context context, Authorize signUpVerificationBody) {
-            return getAuthenticationService(context).verifySignUp(signUpVerificationBody);
+        public static Call<ResultObject> verifySignUp(Authorize signUpVerificationBody) {
+            return getAuthenticationService().verifySignUp(signUpVerificationBody);
         }
 
-        public static Call<ResultObject> socialSignUp(Context context, Authorize socialSignUpDetails) {
-            return getAuthenticationService(context).socialSignUp(socialSignUpDetails);
+        public static Call<ResultObject> socialSignUp(Authorize socialSignUpDetails) {
+            return getAuthenticationService().socialSignUp(socialSignUpDetails);
         }
 
-        public static Call<ResultObject> requestResetPasswordByEmail(Context context, String email) {
-            return getAuthenticationService(context).requestResetPasswordByEmail(email);
+        public static Call<ResultObject> requestResetPasswordByEmail(String email) {
+            return getAuthenticationService().requestResetPasswordByEmail(email);
         }
 
-        public static Call<ResultObject> requestResetPasswordByPhone(Context context, long phoneNumber, int countryCode) {
-            return getAuthenticationService(context).requestResetPasswordByPhone(new Authorize(phoneNumber, countryCode));
+        public static Call<ResultObject> requestResetPasswordByPhone(long phoneNumber, int countryCode) {
+            return getAuthenticationService().requestResetPasswordByPhone(new Authorize(phoneNumber, countryCode));
         }
 
-        public static Call<ResultObject> changePassword(Context context, Authorize resetPasswordDetails) {
-            return getAuthenticationService(context).resetPasswordByOtp(resetPasswordDetails);
+        public static Call<ResultObject> changePassword(Authorize resetPasswordDetails) {
+            return getAuthenticationService().resetPasswordByOtp(resetPasswordDetails);
         }
 
-        public static Call<ResultObject> loginWithPassword(Context context, Authorize loginWithPassword) {
-            return getAuthenticationService(context).loginWithPassword(loginWithPassword);
+        public static Call<ResultObject> loginWithPassword(Authorize loginWithPassword) {
+            return getAuthenticationService().loginWithPassword(loginWithPassword);
         }
 
-        public static Call<ResultObject> loginWithOtp(Context context, Authorize phoneNumberDetails) {
-            return getAuthenticationService(context).loginWithOtp(phoneNumberDetails);
+        public static Call<ResultObject> loginWithOtp(Authorize phoneNumberDetails) {
+            return getAuthenticationService().loginWithOtp(phoneNumberDetails);
         }
 
-        public static Call<ResultObject> verifyLoginWithOtp(Context context, Authorize verifyLoginWithOtp) {
-            return getAuthenticationService(context).verifyLoginWithOtp(verifyLoginWithOtp);
+        public static Call<ResultObject> verifyLoginWithOtp(Authorize verifyLoginWithOtp) {
+            return getAuthenticationService().verifyLoginWithOtp(verifyLoginWithOtp);
         }
 
-        private static TeazerApiCall.AuthenticationCalls getAuthenticationService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//                    .client(getOkHttpClientWithAuthToken(context))
-                    .client(getOkHttpClient())
-                    .build();
-            return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
+        private static TeazerApiCall.AuthenticationCalls getAuthenticationService() {
+            return getRetrofitWithoutAuthToken().create(TeazerApiCall.AuthenticationCalls.class);
         }
     }
 
@@ -253,14 +237,8 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
-                    .build();
-            return retrofit.create(TeazerApiCall.DiscoverCalls.class);
+            //noinspection ConstantConditions
+            return getRetrofitWithAuthToken(SharedPrefs.getAuthToken(context)).create(TeazerApiCall.DiscoverCalls.class);
         }
     }
 
@@ -446,14 +424,8 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.FriendsCalls getFriendsService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
-                    .build();
-            return retrofit.create(TeazerApiCall.FriendsCalls.class);
+            //noinspection ConstantConditions
+            return getRetrofitWithAuthToken(SharedPrefs.getAuthToken(context)).create(TeazerApiCall.FriendsCalls.class);
         }
     }
 
@@ -591,14 +563,8 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
-                    .build();
-            return retrofit.create(TeazerApiCall.ReactCalls.class);
+            //noinspection ConstantConditions
+            return getRetrofitWithAuthToken(SharedPrefs.getAuthToken(context)).create(TeazerApiCall.ReactCalls.class);
         }
     }
 
@@ -685,14 +651,8 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.Posts getPostalService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
-                    .build();
-            return retrofit.create(TeazerApiCall.Posts.class);
+            //noinspection ConstantConditions
+            return getRetrofitWithAuthToken(SharedPrefs.getAuthToken(context)).create(TeazerApiCall.Posts.class);
         }
     }
 
@@ -788,34 +748,25 @@ public class ApiCallingService {
             return getUserService(context).getLikedUserProfile(page);
         }
 
-
-
         private static TeazerApiCall.UserCalls getUserService(Context context) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
-                    .build();
-            return retrofit.create(TeazerApiCall.UserCalls.class);
+            //noinspection ConstantConditions
+            return getRetrofitWithAuthToken(SharedPrefs.getAuthToken(context)).create(TeazerApiCall.UserCalls.class);
         }
     }
 
     public static class Giphy {
 
-        public static Call<TrendingGiphy> getTrendingGiphys(Context context, String api_key, int limit, int offset, String rating) {
-            return getGiphyService(context).getTrendingGiphys(api_key, limit, offset, rating);
+        public static Call<TrendingGiphy> getTrendingGiphys(String api_key, int limit, int offset, String rating) {
+            return getGiphyService().getTrendingGiphys(api_key, limit, offset, rating);
         }
 
-        public static Call<TrendingGiphy> searchGiphy(Context context, String api_key, int limit, int offset, String rating, String lang, String query) {
-            return getGiphyService(context).searchGiphy(api_key, limit, offset, rating, lang, query);
+        public static Call<TrendingGiphy> searchGiphy(String api_key, int limit, int offset, String rating, String lang, String query) {
+            return getGiphyService().searchGiphy(api_key, limit, offset, rating, lang, query);
         }
 
-        private static TeazerApiCall.GiphyCalls getGiphyService(Context context) {
-
+        private static TeazerApiCall.GiphyCalls getGiphyService() {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(context.getString(R.string.giphy_base_url))
+                    .baseUrl("https://api.giphy.com")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getOkHttpClient())
@@ -855,31 +806,11 @@ public class ApiCallingService {
         });
     }
 
-    private static OkHttpClient getOkHttpClientWithAuthToken(final Context context) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request original = chain.request();
-
-                        Request request = original.newBuilder()
-                                .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
-                                .method(original.method(), original.body())
-                                .build();
-//                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
-                        return chain.proceed(request);
-                    }
-                })
-                .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .build();
-    }
-
     private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logging).build();
+//                .addInterceptor(logging)
+                .build();
     }
 }

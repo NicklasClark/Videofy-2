@@ -41,6 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPostDetails;
 
 /**
  * 
@@ -51,14 +52,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private ArrayList<PostDetails> list;
     private ArrayList<PostReaction> reactiolist;
     private Context context;
-    myCreationListener listener;
     Fragment fragment;
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
     private boolean isPostClicked = false;
     int userIdentifier;
     FragmentProfileMyCreations fragmentProfileMyCreations;
-
-
 
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment, int userIdentifier,FragmentProfileMyCreations fragmentProfileMyCreations) {
         this.context = context;
@@ -67,7 +65,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         this.userIdentifier=userIdentifier;
         this.fragmentProfileMyCreations=fragmentProfileMyCreations;
 
-        listener = (myCreationListener) context;
         if (fragment instanceof OnChildFragmentUpdateVideos) {
             onChildFragmentUpdateVideosllistrener = (OnChildFragmentUpdateVideos) fragment;
         }
@@ -178,7 +175,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 public void onClick(View view) {
                     if (!isPostClicked) {
                         isPostClicked = true;
-                        listener.myCreationVideos(2, cont);
+                        fetchPostDetails(context, cont.getPostId());
                     }
                 }
             });
@@ -623,13 +620,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         });
     }
 
-    public interface myCreationListener {
-        void myCreationVideos(int i, PostDetails postDetails);
-        void ReactionPost(int postId);
-    }
-
     public interface OnChildFragmentUpdateVideos {
         void updateVideosCreation(int count);
     }
-
 }

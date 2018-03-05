@@ -159,7 +159,7 @@
                                                 android:layout_marginEnd="10dp"
                                                 android:background="@drawable/border_layout"
                                                 android:drawablePadding="-8dp"
-                                                android:drawableStart="@drawable/ic_share_white"
+                                                android:drawableStart="@drawable/ic_share_white_with_shadow"
                                                 android:gravity="center"
                                                 android:paddingBottom="5dp"
                                                 android:paddingEnd="3dp"
@@ -179,7 +179,7 @@
                                                 android:layout_toEndOf="@+id/btnshare"
                                                 android:background="@drawable/border_layout"
                                                 android:drawablePadding="-8dp"
-                                                android:drawableStart="@drawable/ic_edit"
+                                                android:drawableStart="@drawable/ic_edit_white_with_shadow"
                                                 android:paddingBottom="5dp"
                                                 android:paddingEnd="3dp"
                                                 android:paddingStart="5dp"
@@ -359,14 +359,12 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-
-
-
-    <pl.droidsonroids.gif.GifTextView
+    <com.cncoding.teazer.ui.customviews.common.DynamicProgress
         android:id="@+id/loader"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="14dp"
         android:layout_gravity="center"
-        android:background="@drawable/ic_loader" />
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

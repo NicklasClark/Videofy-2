@@ -83,8 +83,6 @@ public class FragmentLikedUser extends BaseFragment {
         context = getContext();
         ButterKnife.bind(this, view);
 
-        getParentActivity().hideToolbar();
-
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         likedUsersList = new ArrayList<>();

@@ -33,9 +33,12 @@ import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
+import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
+import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
@@ -53,7 +56,6 @@ import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
 import io.branch.referral.util.ShareSheetStyle;
 import jp.wasabeef.blurry.Blurry;
-import pl.droidsonroids.gif.GifTextView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
@@ -103,10 +105,9 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     CircularAppCompatImageView profile_id;
     PublicProfile userProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    private FollowerListListener mListener;
     private String userProfileThumbnail;
     private String userProfileUrl;
-    @BindView(R.id.loader)GifTextView loader;
+    @BindView(R.id.loader) DynamicProgress loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
 
@@ -137,11 +138,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        try {
-            previousTitle = getParentActivity().getToolbarTitle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -197,13 +193,13 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowerListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(String.valueOf(0)), "User"));
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowingListListener(String.valueOf(0), "User");
+                navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(0), "User"));
             }
         });
 
@@ -354,7 +350,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getParentActivity().updateToolbarTitle("My Profile");
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
@@ -512,24 +507,11 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             }.execute();
         }
     }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof FollowerListListener) {
-            mListener = (FollowerListListener) context;
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        getParentActivity().updateToolbarTitle(previousTitle);
-    }
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.arif_image);
+                    R.drawable.backgroundprofile);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
                 @Override
@@ -539,8 +521,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
-        }
-        else {
         }
     }
 
@@ -649,10 +629,4 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         totalvideos=counter;
         _creations.setText(String.valueOf(totalvideos) + " Creations");
     }
-    public interface FollowerListListener {
-
-        void onFollowerListListener(String id, String identifier);
-        void onFollowingListListener(String id, String identifier);
-    }
-
 }

@@ -65,19 +65,19 @@ public class FragmentChangeCoverPhoto extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         coverPicList = new ArrayList<>();
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
-        coverPicList.add(R.drawable.profiledp);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
+        coverPicList.add(R.drawable.backgroundprofile);
         coverPicList.add("hello");
 
 

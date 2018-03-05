@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -26,7 +27,6 @@ import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +36,7 @@ import retrofit2.Response;
  * Created by MOHD ARIF on 07-11-2017.
  */
 
-public class FragmentProfileMyReactions extends Fragment {
+public class FragmentProfileMyReactions extends BaseFragment {
 
     private static String ARG_ID;
     CircularAppCompatImageView menuitem;
@@ -50,7 +50,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProximaNovaRegularTextView alert2;
     ProximaNovaSemiBoldTextView alert3;
     ProximaNovaSemiBoldTextView alert4;
-    GifTextView loader;
+    DynamicProgress loader;
     int followerfollowingid;
 
     boolean next;
@@ -89,7 +89,7 @@ public class FragmentProfileMyReactions extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, myReactions, getParentFragment());
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(this, myReactions, getParentFragment());
         recyclerView.setAdapter(profileMyReactionAdapter);
 
         if(followerfollowingid==0) {

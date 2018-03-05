@@ -24,8 +24,6 @@ import java.util.Stack;
 
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
-import static com.cncoding.teazer.R.anim.float_up;
-import static com.cncoding.teazer.R.anim.sink_down;
 
 /**
  * The class is used to manage navigation through multiple stacks of fragments, as well as coordinate
@@ -178,18 +176,13 @@ public class NavigationController {
             FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
             detachCurrentFragment(ft);
-            ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
+//            ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
             ft.add(containerId, fragment, generateTag(fragment));
             ft.commitAllowingStateLoss();
 
             executePendingTransactions();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    fragmentStacks.get(selectedTabIndex).push(fragment);
-                }
-            }).start();
+            fragmentStacks.get(selectedTabIndex).push(fragment);
 
             currentFragment = fragment;
             if (transactionListener != null) {
@@ -209,20 +202,15 @@ public class NavigationController {
 
 //            detachCurrentFragment(ft);
 
-               // ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
-                ft.add(containerId, fragment, generateTag(fragment));
-                ft.commit();
+            // ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
+            ft.add(containerId, fragment, generateTag(fragment));
+            ft.commit();
 
-                executePendingTransactions();
+            executePendingTransactions();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        fragmentStacks.get(selectedTabIndex).push(fragment);
-                    }
-                }).start();
+            fragmentStacks.get(selectedTabIndex).push(fragment);
 
-                currentFragment = fragment;
+            currentFragment = fragment;
 
             if (transactionListener != null) {
                 transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);

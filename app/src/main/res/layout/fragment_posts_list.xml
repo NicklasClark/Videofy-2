@@ -8,6 +8,28 @@
     android:background="@color/material_grey200"
     android:animateLayoutChanges="true">
 
+    <FrameLayout
+        android:id="@+id/toolbar_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_card_no_margin_white">
+
+        <ImageView
+            android:id="@+id/toolbar_center_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:src="@drawable/ic_teazer_top"
+            android:textColor="@color/colorPrimary_text"
+            android:textSize="@dimen/text_size_h3"
+            android:gravity="center"
+            android:layout_gravity="center"
+            tools:ignore="PrivateResource,RelativeOverlap"
+            android:contentDescription="@string/top_logo" />
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/post_load_error_layout"
         android:layout_width="match_parent"
@@ -17,6 +39,7 @@
         android:paddingTop="@dimen/padding_default"
         android:paddingBottom="@dimen/padding_double"
         android:foreground="@drawable/ripple_dark_no_rounded"
+        android:layout_below="@+id/toolbar_title_layout"
         android:layout_centerInParent="true"
         android:visibility="gone">
 
@@ -44,7 +67,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_title_layout">
 
         <com.cncoding.teazer.ui.customviews.exoplayer.Container
             android:id="@+id/post_list"
@@ -56,40 +80,8 @@
             android:paddingTop="-6dp"
             android:paddingBottom="@dimen/padding_with_navigation_bar_height"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_home_screen_post_new"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-<!--        <android.support.v7.widget.RecyclerView
-            android:id="@+id/post_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.cncoding.teazer.home.HomeScreenPostList"
-            android:paddingStart="0.25dp"
-            android:paddingEnd="0.25dp"
-            android:paddingTop="@dimen/padding_x_thin"
-            android:paddingBottom="@dimen/padding_with_navigation_bar_height"
-            android:clipToPadding="false"
-            app:spanCount="2"
-            app:layoutManager="StaggeredGridLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_home_screen_post" />-->
-
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <!--<include layout="@layout/progress_bar_horizontal"/>-->
-
-<!--    <ProgressBar
-        android:id="@+id/customProgress"
-        style="@style/CustomProgressBar"
-        android:layout_width="match_parent"
-        android:layout_centerInParent="true"/>-->
-    
-<!-- customviewsiews.ButteryProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_centerInParent="true"
-        app:barColor="@color/colorAccent"
-        app:barHeight="@dimen/padding_10dp"
-        app:detentWidth="50dp"/>-->
 
 </RelativeLayout>

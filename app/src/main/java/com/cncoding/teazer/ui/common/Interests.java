@@ -152,7 +152,7 @@ public class Interests extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
-            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back);
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_dark);
         }
     }
 
@@ -164,7 +164,7 @@ public class Interests extends BaseFragment {
     }
 
     private void getCategories() {
-        categoriesCall = ApiCallingService.Application.getCategories(getContext());
+        categoriesCall = ApiCallingService.Application.getCategories();
 
         if (categoriesCall.isExecuted()) categoriesCall.cancel();
 

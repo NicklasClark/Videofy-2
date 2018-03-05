@@ -134,7 +134,7 @@ public class TaggedUser extends BaseModel implements Parcelable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(10, 31)
+        return new HashCodeBuilder(11, 31)
                 .append(tag_id)
                 .append(user_id)
                 .append(user_name)

@@ -49,8 +49,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -75,9 +73,11 @@ import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchPo
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.common.MediaUtils.releaseAudioLock;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 
 /**
  *
@@ -94,7 +94,6 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
 
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
     @BindView(R.id.gif_view) ImageView gifView;
-    @BindView(R.id.btnClose) ImageView btnClose;
     @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView reactionPostCaption;
     @BindView(R.id.reaction_post_dp) CircularAppCompatImageView reactionPostDp;
     @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView reactionPostName;
@@ -147,14 +146,20 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getActivity(), this);
 
-        likeAction(postReaction.canLike(), false);
         initViews();
+        likeAction(postReaction.canLike(), false);
         return view;
     }
 
     private void initViews() {
         try {
             if (postReaction != null) {
+                if (postReaction.getReactTitle() != null)
+                    reactionPostCaption.setText(decodeUnicodeString(postReaction.getReactTitle()));
+                likesView.setText(String.valueOf(postReaction.getLikes()));
+                reactionPostViews.setText(String.valueOf(postReaction.getViews()));
+                postDurationView.setText(postReaction.getMediaDetail().getReactDuration());
+
                 if (isGif) {
                     gifView.setVisibility(View.VISIBLE);
                     switch (postReaction.getMediaDetail().getMediaType()) {
@@ -175,47 +180,34 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
                     }
                 } else playerView.setVisibility(View.VISIBLE);
 
-                if (postReaction != null) {
-                    MiniProfile owner = postReaction.getReactOwner() != null ? postReaction.getReactOwner() : postReaction.getPostOwner();
+                MiniProfile owner = postReaction.getOwner();
+                reactionPostName.setText(owner.getFirstName());
 
-                    Glide.with(this)
-                            .load(postReaction.getReactOwner().getProfileMedia() != null ? owner.getProfileMedia().getThumbUrl()
-                                    : getGenderSpecificDpSmall(owner.getGender()))
-                            .into(reactionPostDp);
-                    if (postReaction.getReactTitle() != null) {
-                        try {
-                            postReaction.setReactTitle(URLDecoder.decode(postReaction.getReactTitle(), "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                Glide.with(this)
+                        .load(owner.getProfileMedia() != null ?
+                                owner.getProfileMedia().getThumbUrl() :
+                                getGenderSpecificDpSmall(owner.getGender()))
+                        .into(reactionPostDp);
+
+                ApiCallingService.Posts.getPostDetails(postReaction.getPostId(), context).enqueue(new Callback<PostDetails>() {
+                    @Override
+                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                        if (response.code() == 200) {
+                            PostDetails postDetails = response.body();
+                            Glide.with(context).load(postDetails.getMedias().get(0).getThumbUrl()).into(postImage);
+                            postTitle.setText(decodeUnicodeString("Reacted on " + postDetails.getTitle()));
                         }
-                        reactionPostCaption.setText(decodeUnicodeString(postReaction.getReactTitle()));
+                        else {
+                            postTitle.setVisibility(GONE);
+                            postImage.setVisibility(GONE);
+                        }
                     }
-                    likesView.setText(String.valueOf(postReaction.getLikes()));
-                    reactionPostViews.setText(String.valueOf(postReaction.getViews()));
-                    postDurationView.setText(postReaction.getMediaDetail().getReactDuration());
-                    reactionPostName.setText(postReaction.getReactOwner().getFirstName());
 
-                    ApiCallingService.Posts.getPostDetails(postReaction.getPostId(), context).enqueue(new Callback<PostDetails>() {
-                        @Override
-                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                            if (response.code() == 200) {
-                                PostDetails postDetails = response.body();
-                                Glide.with(context).load(postDetails.getMedias().get(0).getThumbUrl()).into(postImage);
-                                String reactedOn = "Reacted on " + postDetails.getTitle();
-                                postTitle.setText(reactedOn);
-                            }
-                            else {
-                                postTitle.setVisibility(GONE);
-                                postImage.setVisibility(GONE);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Call<PostDetails> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
             } else {
                 Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
                 navigation.popFragment();
@@ -257,14 +249,7 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     }
 
     @OnClick(R.id.reaction_post_dp) public void viewProfile() {
-        navigation.pushFragment(postReaction.getMySelf() ? FragmentNewProfile2.newInstance() :
-                FragmentNewOtherProfile.newInstance(
-                        String.valueOf(postReaction.getReactOwner().getUserId()), "", ""));
-    }
-
-    @OnClick(R.id.btnClose) public void exit() {
-        reactionPlayerCurrentPosition = 0;
-        navigation.popFragment();
+        openProfile(getUserId(context), navigation, postReaction.getReactOwner().getUserId());
     }
 
     @OnClick(R.id.btnShare) public void onShareClicked() {
@@ -318,14 +303,15 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     }
 
     private void likeAction(boolean isChecked, boolean animate) {
-        likeBtn.setChecked(!isChecked);
         if (!isChecked) {
+            likeBtn.setChecked(true);
             likeBtn.setImageResource(R.drawable.ic_like_filled);
             if (animate) {
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 incrementLikes();
             }
         } else {
+            likeBtn.setChecked(false);
             likeBtn.setImageResource(R.drawable.ic_like_outline);
             if (animate) {
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
@@ -336,14 +322,14 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
 
     public void incrementLikes() {
         postReaction.setLikes(postReaction.getLikes() + 1);
-        String likesText = String.valueOf(postReaction.getLikes());
-        likesView.setText(likesText);
+        likesView.setText(String.valueOf(postReaction.getLikes()));
+        postReaction.setCanLike(false);
     }
 
     public void decrementLikes() {
         postReaction.setLikes(postReaction.getLikes() - 1);
-        String likesText = String.valueOf(postReaction.getLikes());
-        likesView.setText(likesText);
+        likesView.setText(String.valueOf(postReaction.getLikes()));
+        postReaction.setCanLike(true);
     }
 
     public void incrementViews() {
@@ -406,7 +392,6 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().hideToolbar();
         //hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
@@ -440,18 +425,12 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     @Override
     public void onStop() {
         super.onStop();
-        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             releasePlayer();
         }
         releaseAudioLock(getActivity(), this);
         mHandler.removeCallbacks(mDelayedStopRunnable);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getParentActivity().showToolbar();
+        reactionPlayerCurrentPosition = 0;
     }
 
     private void releasePlayer() {

@@ -11,8 +11,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.TaggedUser;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 
 /**
  *
@@ -106,11 +105,9 @@ public class TagListAdapter extends BaseRecyclerView.Adapter {
                     .into(dp);
         }
 
-        @OnClick(R.id.tagged_user_dp) void openProfile() {
-            fragment.navigation.pushFragment(taggedUsers.get(getAdapterPosition()).isMySelf() ?
-                    FragmentNewProfile2.newInstance() :
-                    FragmentNewOtherProfile.newInstance(
-                            String.valueOf(taggedUsers.get(getAdapterPosition()).getUserId()), "", ""));
+        @OnClick(R.id.tagged_user_dp) void openUserProfile() {
+            boolean isMySelf = taggedUsers.get(getAdapterPosition()).isMySelf();
+            openProfile(fragment.navigation, isMySelf, taggedUsers.get(getAdapterPosition()).getUserId());
         }
     }
 }

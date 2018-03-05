@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="facebook_app_id">1807707069304467</string>
     <string name="fb_login_protocol_scheme">fb1807707069304467</string>
     <string name="base_url">http://dev.teazer.online/</string>
+    <string name="google_web_client_id" tools:ignore="TypographyDashes">
+        83958920608-qh5dvoddj2jtmq3aeo9nnfrv5fajipgh.apps.googleusercontent.com
+    </string>
+    <string name="google_places_api_key">AIzaSyAi1nwsB0e-rpDjDI2bwEsuQq-BhC5qTr4</string>
 </resources>

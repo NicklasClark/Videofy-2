@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.home.post.homepage.AdViewHolder;
+import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
@@ -18,8 +20,9 @@ import java.util.List;
  */
 public class PostsListAdapter extends BaseRecyclerView.Adapter {
 
-    List<PostDetails> posts;
-    protected PostsListFragment fragment;
+    public List<PostDetails> posts;
+    public PostsListFragment fragment;
+    private final int POST = 0, AD = 1;
 
     PostsListAdapter(PostsListFragment fragment) {
         this.fragment = fragment;
@@ -28,9 +31,24 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
         }
     }
 
-    @Override public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(PostListViewHolder.LAYOUT_RES, parent, false);
-        return new PostListViewHolder(this, view);
+    @Override public BaseRecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view;
+        BaseRecyclerView.ViewHolder viewHolder = null;
+        if(viewType == POST)
+        {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(PostListViewHolder.LAYOUT_RES, parent, false);
+            viewHolder = new PostListViewHolder(this, view);
+        }
+        else
+        {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(AdViewHolder.LAYOUT_RES, parent, false);
+            viewHolder = new AdViewHolder(this, view);
+        }
+        return viewHolder;
+
     }
 
     @Override public int getItemCount() {
@@ -93,5 +111,13 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
         if (posts != null) {
             posts.clear();
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (posts.get(position) instanceof AdFeedItem)
+            return AD;
+        else
+            return POST;
     }
 }

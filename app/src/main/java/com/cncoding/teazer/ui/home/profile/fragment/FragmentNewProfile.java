@@ -1,19 +1,14 @@
 package com.cncoding.teazer.ui.home.profile.fragment;
 
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toolbar;
@@ -58,64 +53,10 @@ import butterknife.ButterKnife;
             return view;
         }
 
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            getParentActivity().hideToolbar();
-
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            getParentActivity().showToolbar();
-
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-        }
-
-        @Override
-        public void onAttach(Context context) {
-
-            super.onAttach(context);
-
-        }
-
-        @Override
-        public void onDetach() {
-            super.onDetach();
-            getParentActivity().showToolbar();
-
-        }
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            //  menu.clear();
-            // inflater.inflate(R.menu.menu_new_profile, menu);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-
-            return true;
-        }
-
-
         private void dynamicToolbarColor() {
 
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.profiledp);
+                    R.drawable.backgroundprofile);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
 
                 @Override
@@ -126,4 +67,3 @@ import butterknife.ButterKnife;
             });
         }
     }
-
