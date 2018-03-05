@@ -62,7 +62,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -718,7 +717,7 @@ public class OthersProfileFragment extends BaseFragment {
             protected void onPostExecute(final Bitmap result) {
 
                 try {
-                    Blurry.with(context).from(result).into(background_profile);
+                    //Blurry.with(context).from(result).into(background_profile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

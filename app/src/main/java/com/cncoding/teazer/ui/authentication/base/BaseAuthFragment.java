@@ -74,11 +74,11 @@ public abstract class BaseAuthFragment extends Fragment implements NetworkStateL
                         if (resultObject.getError().getMessage().contains(STATUS_FALSE)) {
                             handleResponse(resultObject);
                         }
-                        else handleError(resultObject.getError());
+                        else handleError(resultObject);
                     }
                     else handleResponse(resultObject);
                 }
-                else handleError(new Throwable(context.getString(R.string.something_went_wrong)));
+                else handleError(new ResultObject(new Throwable(context.getString(R.string.something_went_wrong))));
             }
         });
     }
@@ -112,7 +112,7 @@ public abstract class BaseAuthFragment extends Fragment implements NetworkStateL
 
     protected abstract void handleResponse(ResultObject resultObject);
 
-    protected abstract void handleError(Throwable throwable);
+    protected abstract void handleError(ResultObject resultObject);
 
     protected abstract void notifyNoInternetConnection();
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +32,8 @@ import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiNative;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,13 +56,13 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     public boolean manualRefreshTriggered;
     private PostsListAdapter postListAdapter;
 
-    private final List<InMobiNative> mNativeAds = new ArrayList<>();
-    private InMobiNative.NativeAdListener nativeAdListener;
+//    private final List<InMobiNative> mNativeAds = new ArrayList<>();
+//    private InMobiNative.NativeAdListener nativeAdListener;
     private int[] mAdPositions = new int[]{2, 8, 15, 23};
 
     //All the InMobiNativeStrand instances created for this list feed will be held here
     private List<InMobiNative> mStrands = new ArrayList<>();
-    private Map<Integer, PostDetails> mFeedMap = new HashMap<>();
+    private SparseArray<PostDetails> mFeedMap = new SparseArray<>();
 
 
     public PostsListFragment() {}
@@ -98,10 +97,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
         if (scrollListener == null)
             scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
-                @Override
-                public void loadFirstPage() {
-                    new InitialRetrieveTask(PostsListFragment.this).execute();
-                }
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     if (is_next_page) {
@@ -167,7 +162,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
         if (scrollListener != null && scrollToTop) scrollListener.resetState();
         if (isConnected) {
             loadHomePagePosts(1);
-
             //to refresh inmobi ads
             refreshAds();
         }
@@ -181,6 +175,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     public void onResume() {
         super.onResume();
 //        refreshAds();
+        new InitialRetrieveTask(PostsListFragment.this).execute();
     }
 
     @Override
@@ -244,7 +239,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
             } else {
                 postListAdapter.addPosts(currentPage, postList.getPosts());
             }
-            viewModel.insertAllPostsToDB(postList.getPosts());
+            if (currentPage == 1) viewModel.insertAllPostsToDB(postList.getPosts());
             if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -278,7 +273,9 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
 
         @Override
         protected ArrayList<PostDetails> doInBackground(Void... voids) {
-            return new ArrayList<>(fragment.getViewModel().getDatabase().dao().getAllPosts());
+            return fragment.viewModel != null && fragment.viewModel.getPostList().getValue() == null ?
+                    new ArrayList<>(fragment.getViewModel().getDatabase().dao().getAllPosts()) :
+                    null;
         }
 
         @Override
@@ -289,7 +286,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 fragment.manualRefreshTriggered = true;
                 fragment.refreshPosts(true, false);
             } else {
-//                Posts are not available in Room DB, fetch them from server.
+//                Posts are not available in Room DB, or coming back from some other fragment, fetch them from server.
                 fragment.refreshPosts(false, false);
             }
         }
@@ -299,7 +296,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
 
         private int mPosition;
 
-        public StrandAdListener(int position) {
+        StrandAdListener(int position) {
             mPosition = position;
         }
 

@@ -183,10 +183,10 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
-        throwable.printStackTrace();
-        showSnackBar(forgotPasswordEditText, throwable.getMessage() != null ?
-                throwable.getMessage() : getString(R.string.something_went_wrong));
+    protected void handleError(ResultObject resultObject) {
+        resultObject.getError().printStackTrace();
+        showSnackBar(forgotPasswordEditText, resultObject.getMessage() != null ?
+                resultObject.getMessage() : getString(R.string.something_went_wrong));
     }
 
     @Override

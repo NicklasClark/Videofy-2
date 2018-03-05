@@ -212,8 +212,8 @@ public class SignupFragment2 extends BaseAuthFragment {
     }
 
     @Override
-    protected void handleError(Throwable throwable) {
-        showSnackBar(signupBtn, throwable.getMessage().equals(FAILED) ?
+    protected void handleError(ResultObject resultObject) {
+        showSnackBar(signupBtn, resultObject.getMessage().equals(FAILED) ?
                 getString(R.string.something_went_wrong) :getString(R.string.signup_failed));
         signupBtn.setEnabled(true);
     }

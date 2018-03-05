@@ -124,6 +124,7 @@ public class LoginFragment extends BaseAuthFragment {
                     .setDeviceId(getDeviceId(context))
                     .setDeviceType(DEVICE_TYPE_ANDROID);
         }
+        loginBtnClicked = false;
     }
 
     @Override
@@ -226,43 +227,45 @@ public class LoginFragment extends BaseAuthFragment {
 
     @OnClick(R.id.login_btn) public void onLoginBtnClick() {
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
-        if (isConnected) {
-            switch (getLoginState()) {
-                case LOGIN_STATE_PASSWORD:
-                    if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
-                        if (isDigitsOnly(login.getUserName()) && countryCode == -1) {
-                            countryCodePicker.launchCountrySelectionDialog();
-                            return;
-                        }
-                        if (isFieldValidated(Annotations.CHECK_USERNAME)) {
-                            if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
-                                loginBtn.setEnabled(false);
-                                startProgressBar();
-                                loginBtnClicked = true;
-                                loginWithPassword(login);
+        if (!loginBtnClicked) {
+            if (isConnected) {
+                switch (getLoginState()) {
+                    case LOGIN_STATE_PASSWORD:
+                        if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
+                            if (isDigitsOnly(login.getUserName()) && countryCode == -1) {
+                                countryCodePicker.launchCountrySelectionDialog();
+                                return;
+                            }
+                            if (isFieldValidated(Annotations.CHECK_USERNAME)) {
+                                if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
+                                    loginBtn.setEnabled(false);
+                                    startProgressBar();
+                                    loginBtnClicked = true;
+                                    loginWithPassword(login);
+                                } else
+                                    Snackbar.make(loginBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
                             } else
-                                Snackbar.make(loginBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(loginBtn, "Username or phone number not valid", Snackbar.LENGTH_SHORT).show();
                         } else
-                            Snackbar.make(loginBtn, "Username or phone number not valid", Snackbar.LENGTH_SHORT).show();
-                    } else
-                        Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
-                    break;
-                case LOGIN_STATE_OTP:
-                    if (isFieldFilled(Annotations.CHECK_USERNAME) && isDigitsOnly(login.getUserName())) {
-                        loginBtn.setEnabled(false);
-                        startProgressBar();
-                        loginBtnClicked = true;
-                        loginWithOtp(new InitiateLoginWithOtp(Long.parseLong(login.getUserName()), countryCode));
-                    } else {
-                        setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
-                        Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT).show();
-                    }
-                    break;
-                default:
-                    break;
+                            Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
+                        break;
+                    case LOGIN_STATE_OTP:
+                        if (isFieldFilled(Annotations.CHECK_USERNAME) && isDigitsOnly(login.getUserName())) {
+                            loginBtn.setEnabled(false);
+                            startProgressBar();
+                            loginBtnClicked = true;
+                            loginWithOtp(new InitiateLoginWithOtp(Long.parseLong(login.getUserName()), countryCode));
+                        } else {
+                            setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                            Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT).show();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                notifyNoInternetConnection();
             }
-        } else {
-            notifyNoInternetConnection();
         }
     }
 
@@ -399,24 +402,30 @@ public class LoginFragment extends BaseAuthFragment {
         }
     }
 
-    @Override protected void handleError(Throwable throwable) {
-        if (loginBtnClicked) {
-            loginBtnClicked = false;
-            @NonNull String message = throwable.getMessage() != null ? throwable.getMessage() : getString(R.string.something_went_wrong);
-            Snackbar.make(loginBtn, message, Snackbar.LENGTH_LONG).show();
-            switch (getLoginState()) {
-                case LOGIN_STATE_PASSWORD:
-                    logLoginEvent("Email", false, login.getUserName());
-                    break;
-                case LOGIN_STATE_OTP:
-                    logLoginEvent("OTP", false, login.getUserName());
-                    break;
-                default:
-                    break;
-            }
-            removeView(progressBar);
-            loginBtn.setEnabled(true);
+    @Override protected void handleError(ResultObject resultObject) {
+        switch (resultObject.getCallType()) {
+            case LOGIN_STATE_PASSWORD:
+                Snackbar.make(loginBtn, R.string.incorrect_username_password, Snackbar.LENGTH_LONG).show();
+                break;
+            default:
+                loginBtnClicked = false;
+                @NonNull String message = resultObject.getError().getMessage() != null ?
+                        resultObject.getError().getMessage() : getString(R.string.something_went_wrong);
+                Snackbar.make(loginBtn, message, Snackbar.LENGTH_LONG).show();
+                switch (getLoginState()) {
+                    case LOGIN_STATE_PASSWORD:
+                        logLoginEvent("Email", false, login.getUserName());
+                        break;
+                    case LOGIN_STATE_OTP:
+                        logLoginEvent("OTP", false, login.getUserName());
+                        break;
+                    default:
+                        break;
+                }
+                break;
         }
+        removeView(progressBar);
+        loginBtn.setEnabled(true);
     }
 
     @Override protected void notifyNoInternetConnection() {

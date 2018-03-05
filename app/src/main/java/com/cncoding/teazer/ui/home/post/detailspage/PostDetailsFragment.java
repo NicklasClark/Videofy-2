@@ -476,7 +476,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
                     Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
                     viewModel.deleteLocalPost(postDetails.getPostId());
-                    deletecachedMedia();
+                    deleteCachedMedia();
                     navigation.popFragment();
                 } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 break;
@@ -484,7 +484,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
                     Toast.makeText(context, R.string.video_has_been_deleted, Toast.LENGTH_SHORT).show();
                     viewModel.deleteLocalPost(postDetails.getPostId());
-                    deletecachedMedia();
+                    deleteCachedMedia();
                     navigation.popFragment();
                 } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 break;
@@ -520,7 +520,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         }
     }
 
-    private void deletecachedMedia() {
+    private void deleteCachedMedia() {
         deleteMedia(context, postDetails.getMedias().get(0).getMediaUrl());
         deleteMedia(context, postDetails.getMedias().get(0).getThumbUrl());
     }
@@ -1031,6 +1031,10 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         createReactionByGiphy(new GiphyReactionRequest(uploadParams.getPostId(), uploadParams.getTitle(), uploadParams.getVideoPath()));
     }
     //</editor-fold>
+
+    public PostDetails getPostDetails() {
+        return postDetails;
+    }
 
     @Override
     public void onDetach() {

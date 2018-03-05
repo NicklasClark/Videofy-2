@@ -551,8 +551,9 @@ public class FileUtils {
                                 && urls.get(i) != null && !urls.get(i).equalsIgnoreCase("null")) {
                             Intent intent = new Intent(Intent.ACTION_SYNC, null, context.get(), VideoCachingService.class);
                             intent.putExtra("url", urls.get(i));
-                            intent.putExtra("path", context.get().getCacheDir() + "/TeazerCache");
+                            intent.putExtra("path", context.get().getCacheDir() + (isVideo ? "/CachedMedia" : "/CachedThumb"));
                             intent.putExtra("requestId", 101);
+                            intent.putExtra("isVideo", isVideo);
                             context.get().startService(intent);
                         }
                     } catch (Exception e) {

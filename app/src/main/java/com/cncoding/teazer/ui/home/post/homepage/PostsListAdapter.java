@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.home.post.homepage.AdViewHolder;
 import com.cncoding.teazer.model.post.AdFeedItem;
+import com.cncoding.teazer.home.post.homepage.AdViewHolder;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
@@ -105,6 +105,18 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
             e.printStackTrace();
             addPosts(1, postDetailsList);
         }
+    }
+
+    void updatePostAtPosition(PostDetails postDetails) {
+//        adapterPosition of the postDetails object is stored in "callType".
+        final int position = postDetails.getCallType();
+        posts.set(position, postDetails);
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemChanged(position);
+            }
+        });
     }
 
     private void clearData() {

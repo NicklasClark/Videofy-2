@@ -4,6 +4,7 @@ import com.cncoding.teazer.data.model.post.PostDetails;
 import com.inmobi.ads.InMobiNative;
 
 /**
+ *
  * Created by amit on 12/2/18.
  */
 

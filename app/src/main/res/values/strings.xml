@@ -85,7 +85,7 @@
     <string name="email_sent">Email sent\t</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="incorrect_username_password">Username or password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
     <string name="no_text"> </string>
@@ -348,7 +348,7 @@
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
     <!--<string name="base_url">https://api.teazer.online/</string>-->
-    <string name="base_url">http://dev.teazer.online/</string>
+    <string name="base_url">https://api.teazer.online/</string>
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
     <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>

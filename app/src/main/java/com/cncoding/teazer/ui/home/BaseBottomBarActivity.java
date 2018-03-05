@@ -565,6 +565,10 @@ public class BaseBottomBarActivity extends BaseActivity
         }, this.getIntent().getData(), this);
     }
 
+    public PostDetails getPostDetails() {
+        return postDetails;
+    }
+
     //region Fragment navigation methods
     private void maybeRefreshTab(TabLayout.Tab tab) {
         final View tabButton = getTabChild(bottomTabLayout, tab.getPosition());
@@ -582,7 +586,9 @@ public class BaseBottomBarActivity extends BaseActivity
                     break;
                 case TAB2:
                     if (navigationController.getCurrentFragment() instanceof DiscoverFragment) {
+                        ((DiscoverFragment) navigationController.getCurrentFragment()).nestedScrollView.scrollTo(0, 0);
                         navigationController.replaceFragment(getRootFragment(TAB2));
+                        DiscoverFragment.scrollPosition = 0;
                     }
                     break;
                 case TAB4:

@@ -20,7 +20,6 @@ import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.blurry.Blurry;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -130,7 +129,7 @@ public class FragmentHobbyDetails extends DialogFragment {
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
 
-                        Blurry.with(getContext()).from(photobitmap).into(background_profile);
+                      //  Blurry.with(getContext()).from(photobitmap).into(background_profile);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

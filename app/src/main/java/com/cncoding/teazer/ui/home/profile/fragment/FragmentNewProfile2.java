@@ -120,6 +120,8 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     TabLayout tabLayout;
     @BindView(R.id.totallikes)
     ProximaNovaRegularCheckedTextView _totallikes;
+    @BindView(R.id.topReactions)
+    ProximaNovaRegularCheckedTextView topReactions;
     AppBarLayout app_bar;
 
     public static boolean checkpostupdated = false;
@@ -147,8 +149,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
-
-
 
 
         placeholder = view.findViewById(R.id.background);
@@ -277,11 +277,11 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     }
 
     @OnClick(R.id.reaction2) public void openTopReactor2Profile() {
-        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+        openProfile(getUserId(context), navigation, topReactedUserList.get(1).getUserId());
     }
 
     @OnClick(R.id.reaction3) public void openTopReactor3Profile() {
-        openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
+        openProfile(getUserId(context), navigation, topReactedUserList.get(2).getUserId());
     }
 
 //    @Override
@@ -480,6 +480,21 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                         .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                         .into(reaction1);
                             }
+                            else
+                            {
+                                if(topReactedUser1.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction1);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction1);
+                                }
+
+                            }
                         }
                         else if((topReactedUserList.size()==2))
                         {
@@ -493,12 +508,42 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                         .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                         .into(reaction1);
                             }
+                            else
+                            {
+                                if(topReactedUser1.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction1);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction1);
+                                }
+
+                            }
 
                             if(topReactedUser2.getHasProfileMedia())
                             {
                                 Glide.with(context)
                                         .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                         .into(reaction2);
+                            }
+                            else
+                            {
+                                if(topReactedUser2.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction2);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction2);
+                                }
+
                             }
                         }
 
@@ -517,6 +562,21 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                         .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                         .into(reaction1);
                             }
+                            else
+                            {
+                                if(topReactedUser1.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction1);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction1);
+                                }
+
+                            }
 
                             if(topReactedUser2.getHasProfileMedia())
                             {
@@ -524,15 +584,51 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                         .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                         .into(reaction2);
                             }
+                            else
+                            {
+                                if(topReactedUser2.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction2);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction2);
+                                }
+
+                            }
                             if(topReactedUser3.getHasProfileMedia())
                             {
                                 Glide.with(context)
                                         .load(Uri.parse(topReactedUser3.getProfileMedia().getThumbUrl()))
                                         .into(reaction3);
                             }
+                            else
+                            {
+                                if(topReactedUser3.getGender()==1) {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_male_dp)
+                                            .into(reaction3);
+                                }
+                                else
+                                {
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(reaction3);
+                                }
+
+                            }
+                        }
+                        else if(topReactedUserList.size()==0)
+                        {
+                            topReactions.setVisibility(View.GONE);
+
                         }
 
                     }
+
 
 
 
@@ -707,7 +803,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                                 .into(placeholder);
                     }
                     _detail.setText(detail);
-                    _name.setText(firstname);
+                    _name.setText(firstname + " " + lastname);
                     _username.setText(username);
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));

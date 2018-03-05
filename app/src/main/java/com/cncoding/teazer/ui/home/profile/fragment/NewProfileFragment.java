@@ -8,10 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +33,6 @@ import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
-import com.cncoding.teazer.ui.home.profile.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
@@ -70,7 +67,7 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     ProximaNovaRegularCheckedTextView _name;
     ProximaNovaSemiBoldTextView _username;
     ProximaNovaRegularCheckedTextView _detail;
-    de.hdodenhof.circleimageview.CircleImageView profile_id;
+  //  de.hdodenhof.circleimageview.CircleImageView profile_id;
 
     int totalfollowers;
     int totalfollowing;
@@ -156,7 +153,7 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
         _followers = view.findViewById(R.id.follower);
         _following = view.findViewById(R.id.following);
         _reactions = view.findViewById(R.id.reaction);
-        profile_id = view.findViewById(R.id.profilepic);
+        //profile_id = view.findViewById(R.id.profilepic);
 
         mAppBarLayout.addOnOffsetChangedListener(NewProfileFragment.this);
         startAlphaAnimation(mTitle, 0, View.INVISIBLE);
@@ -234,23 +231,23 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
             }
         });
 
-
-        profile_id.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(context, OpenProfilePicActivity.class);
-                intent.putExtra("Image", userProfileUrl);
-                intent.putExtra("candelete",true);
-                intent.putExtra("gender",gender);
-                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
-                Pair<View, String> p2 = Pair.create((View)_username, "text");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
-                startActivity(intent, options.toBundle());
-            }
-
-        });
+//
+//        profile_id.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+//                intent.putExtra("Image", userProfileUrl);
+//                intent.putExtra("candelete",true);
+//                intent.putExtra("gender",gender);
+//                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
+//                Pair<View, String> p2 = Pair.create((View)_username, "text");
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+//                startActivity(intent, options.toBundle());
+//            }
+//
+//        });
 
         return view;
     }
@@ -518,9 +515,9 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                         userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
 
-                        Glide.with(context)
-                                .load(userProfileUrl)
-                                .into(profile_id);
+//                        Glide.with(context)
+//                                .load(userProfileUrl)
+//                                .into(profile_id);
 
                     }
                     else
@@ -530,23 +527,23 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
                         if(gender==1)
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_male_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_male_dp)
+//                                    .into(profile_id);
 
                         }
                         else if(gender==2)
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_female_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_female_dp)
+//                                    .into(profile_id);
 
                         }
                         else
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_male_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_male_dp)
+//                                    .into(profile_id);
 
                         }
                     }
@@ -638,10 +635,10 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                     if (userProfile.getHasProfileMedia()) {
                         userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
-
-                        Glide.with(context)
-                                .load(userProfileUrl)
-                                .into(profile_id);
+//
+//                        Glide.with(context)
+//                                .load(userProfileUrl)
+//                                .into(profile_id);
                    //     profileBlur(userProfileUrl);
                     }
                     else
@@ -652,23 +649,23 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
                         if(gender==1)
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_male_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_male_dp)
+//                                    .into(profile_id);
 
                         }
                         else if(gender==2)
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_female_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_female_dp)
+//                                    .into(profile_id);
 
                         }
                         else
                         {
-                            Glide.with(context)
-                                    .load(R.drawable.ic_user_male_dp)
-                                    .into(profile_id);
+//                            Glide.with(context)
+//                                    .load(R.drawable.ic_user_male_dp)
+//                                    .into(profile_id);
 
                         }
                     }

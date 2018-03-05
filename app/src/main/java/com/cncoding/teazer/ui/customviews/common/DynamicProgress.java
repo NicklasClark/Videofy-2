@@ -45,7 +45,6 @@ public class DynamicProgress extends ProgressBar {
             Color.parseColor("#78909C")
     };
 
-    private ValueAnimator anim;
     private Random random;
     private int endColor;
 
@@ -82,7 +81,7 @@ public class DynamicProgress extends ProgressBar {
         colorToHSV(endColor, end);
 
         random = new Random();
-        anim = ValueAnimator.ofFloat(0, 1);
+        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
         anim.setDuration(5000);
         anim.setRepeatMode(ValueAnimator.RESTART);
         anim.setRepeatCount(ValueAnimator.INFINITE);

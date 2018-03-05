@@ -23,6 +23,9 @@
         android:layout_height="wrap_content"
         android:paddingBottom="?attr/actionBarSize"
         android:layout_margin="5dp"
+        android:smoothScrollbar="true"
+        android:scrollingCache="false"
+        android:animationCache="false"
         android:id="@+id/recycler_view"/>
 
     <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
