@@ -177,7 +177,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         userCoverUrl = intent.getStringExtra("CoverMedia");
         userProfileUrl = intent.getStringExtra("ProfileMedia");
         if (mobileno != null) {
-            mobilenumber = Long.parseLong(mobileno);
+            try {
+                mobilenumber = Long.parseLong(mobileno);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         gender = Integer.parseInt(intent.getStringExtra("Gender"));

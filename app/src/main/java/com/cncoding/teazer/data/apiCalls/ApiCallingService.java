@@ -810,6 +810,7 @@ public class ApiCallingService {
         return new OkHttpClient.Builder()
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logging).build();
+//                .addInterceptor(logging)
+                .build();
     }
 }

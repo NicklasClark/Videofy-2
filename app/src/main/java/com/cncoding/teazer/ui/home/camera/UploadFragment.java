@@ -175,8 +175,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private Context context;
     private Activity activity;
 
-//    private static boolean isCompressing = false;
-//    private static boolean addingWatermark = true;
+    private static boolean isCompressing = false;
     private long initialSize;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private OnUploadFragmentInteractionListener mListener;
@@ -221,16 +220,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
 
         if (!isGiphy) {
-//            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
-//            compressVideoAsyncTask.delegate = this;
-//            compressVideoAsyncTask.execute(videoPath);
-//            isCompressing = true;
+            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
+            compressVideoAsyncTask.delegate = this;
+            compressVideoAsyncTask.execute(videoPath);
+            isCompressing = true;
             initialSize = new File(videoPath).length();
         }
-
-//        AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getContext());
-//        addWaterMarkAsyncTask.delegate = this;
-//        addWaterMarkAsyncTask.execute(videoPath);
 
         checkFacebookButtonPressed = false;
         checkedTwitterButton = false;
@@ -252,9 +247,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        isCompressing = false;
-        long compressedSize = new File(videoPath).length();
-        Log.d("SIZE", "Before: "+initialSize/1024+" After:"+compressedSize/1024);
+        isCompressing = false;
+//        long compressedSize = new File(videoPath).length();
+//        Log.d("SIZE", "Before: "+initialSize/1024+" After:"+compressedSize/1024);
     }
 
     @Override
@@ -379,10 +374,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (addingWatermark) {
 //            disableView(uploadBtn, true);
 //        }
-//        if(isCompressing) {
-//            disableView(uploadBtn, true);
-//            uploadBtn.setText("Processing...");
-//        }
+        if(isCompressing) {
+            disableView(uploadBtn, true);
+            uploadBtn.setText("Processing...");
+        }
 
 //        new Handler().postDelayed(new Runnable() {
 //            public void run() {
