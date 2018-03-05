@@ -71,7 +71,7 @@ public class ClientProvider {
 //                        }
                     }
                 })
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .build();
@@ -79,7 +79,7 @@ public class ClientProvider {
 
     @NonNull private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build();
     }
 
