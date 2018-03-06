@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -28,6 +27,7 @@ import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
@@ -68,10 +68,11 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     private static final int RC_REQUEST_STORAGE = 1001;
 
     PublicProfile userProfile;
-    TextView _creations;
-    TextView _followers;
-    TextView _following;
-    TextView _reactions;
+
+    ProximaNovaBoldTextView _creations;
+    ProximaNovaBoldTextView _followers;
+    ProximaNovaBoldTextView _following;
+    ProximaNovaBoldTextView _reactions;
 
     ProximaNovaRegularCheckedTextView _name;
     ProximaNovaSemiBoldTextView _username;
@@ -687,7 +688,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
-                    _username.setText(username);
+                    _username.setText("@"+username);
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));
@@ -804,7 +805,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
-                    _username.setText(username);
+                    _username.setText("@ "+username);
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));

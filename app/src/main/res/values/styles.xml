@@ -78,11 +78,20 @@
         <item name="android:textColorSecondary">@color/colorSecondary_text</item>
         <item name="android:textColorHint">@color/colorSecondary_text</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item> <!-- sets the style for the overflow button -->
+
 
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
+    </style>
+
+
+
+    <!-- This style is where you define the tint color of your overflow menu button -->
+    <style name="actionOverflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/white</item>
     </style>
     <style name="BaseActivityThemeFullScreen" parent="AppTheme.FullScreen">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -608,7 +617,7 @@
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
     </style>
 
-    <style name="GalaxyZooThemeToolbarDarkOverflow" parent="Theme.AppCompat.NoActionBar">
+    <style name="GalaxyZooThemeToolbarDarkOverflow" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- android:textColorPrimary is the  color of the title text
              in the Toolbar, in the Theme.AppCompat theme:  -->
         <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
