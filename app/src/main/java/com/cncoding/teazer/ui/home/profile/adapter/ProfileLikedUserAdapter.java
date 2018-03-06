@@ -71,7 +71,7 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
             final boolean folower = cont.getFollowInfo().getFollower();
             final boolean following = cont.getFollowInfo().getFollowing();
             final boolean requestsent = cont.getFollowInfo().getRequestSent();
-            final boolean requestrecived = cont.getFollowInfo().getRequestReceived();
+            final boolean requestrecived = cont.getFollowInfo().isRequestReceived();
             final String usertype;
 
             viewHolder.name.setText(likedUsername);

@@ -215,12 +215,12 @@
 
     <ImageView
         android:id="@+id/btnToolbarBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="13dp"
+        android:layout_width="@dimen/action_bar_height"
+        android:layout_height="@dimen/action_bar_height"
+        android:scaleType="center"
         android:layout_gravity="top|start"
         android:src="@drawable/ic_arrow_back_dark"
-        android:visibility="gone"
+        android:visibility="visible"
         android:contentDescription="@string/back" />
 
 </RelativeLayout>

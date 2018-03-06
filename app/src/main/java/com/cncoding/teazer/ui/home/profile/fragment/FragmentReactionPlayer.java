@@ -339,7 +339,7 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
     }
 
     private void incrementView() {
-        if (postReaction.getMySelf() && !postReaction.canDelete()) {
+        if (postReaction.getMySelf() || !postReaction.canDelete()) {
             ApiCallingService.React.incrementReactionViewCount(postReaction.getReactId(), getActivity())
                     .enqueue(new Callback<ResultObject>() {
                         @Override

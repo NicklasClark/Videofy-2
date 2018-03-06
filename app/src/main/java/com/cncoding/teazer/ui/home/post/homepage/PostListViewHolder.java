@@ -73,7 +73,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
 
     @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
     @BindView(R.id.location) ProximaNovaRegularTextView location;
-    @BindView(R.id.category) ProximaNovaSemiBoldTextView category;
+    @BindView(R.id.category) ProximaNovaRegularTextView category;
     @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
     @BindView(R.id.content) SimpleExoPlayerView playerView;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;

@@ -131,7 +131,8 @@
                         android:layout_height="84dp"
                         android:scaleType="centerCrop"
                         android:layout_centerInParent="true"
-                        android:background="@drawable/bg_circle_white_outline"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="3dp"
                         android:src="@drawable/ic_user_male_dp"
                         android:padding="2dp"
                         android:transitionName="profile" />

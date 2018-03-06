@@ -433,7 +433,7 @@ public class OthersProfileFragment extends BaseFragment {
                         int following = profileInfo.getFollowings();
                         int totalvideos = profileInfo.getTotalVideos();
                         hassentrequest = profileInfo.getFollowInfo().getRequestSent();
-                        requestRecieved = profileInfo.getFollowInfo().getRequestReceived();
+                        requestRecieved = profileInfo.getFollowInfo().isRequestReceived();
                         isBlockedyou = profileInfo.getFollowInfo().getIsBlockedYou();
                         isfollower = profileInfo.getFollowInfo().getFollower();
                         isfollowing = profileInfo.getFollowInfo().getFollowing();

@@ -423,7 +423,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         int totalvideos = profileInfo.getTotalVideos();
                         int totalreactions = profileInfo.getTotalReactions();
                         hassentrequest = profileInfo.getFollowInfo().getRequestSent();
-                        requestRecieved = profileInfo.getFollowInfo().getRequestReceived();
+                        requestRecieved = profileInfo.getFollowInfo().isRequestReceived();
                         isBlockedyou = profileInfo.getFollowInfo().getIsBlockedYou();
                         isfollower = profileInfo.getFollowInfo().getFollower();
                         isfollowing = profileInfo.getFollowInfo().getFollowing();

@@ -37,8 +37,11 @@
                 android:layout_marginBottom="210dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp" />
+
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction2"
                 android:layout_width="30dp"
@@ -48,6 +51,8 @@
                 android:layout_marginBottom="210dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="51dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp" />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
@@ -55,11 +60,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:visibility="gone"
-
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="210dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="92dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp" />
 

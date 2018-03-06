@@ -193,7 +193,7 @@
     <string name="account_logout">Logout</string>
 
     <string name="community">Community</string>
-    <string name="leagal">Leagal</string>
+    <string name="legal">Legal</string>
     <string name="my_block_list">My Block List</string>
     <string name="my_hide_vides">My Hide Videos</string>
     <string name="followus_on_instagram">Follow us on Instagram</string>
@@ -201,7 +201,7 @@
     <string name="help_center">Help Center</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="termsofservice">Terms of Service</string>
-    <string name="Licence">Licence</string>
+    <string name="licence">Licence</string>
     <string name="private_account">Private Account</string>
     <string name="showing_reactions_to_other">Showing Reactions to Others</string>
     <string name="videos_save">Videos Saving</string>
@@ -228,7 +228,7 @@
     <string name="delete_request_confirmation">Are you sure you want to delete this request?\nYou won\'t be able to undo this!</string>
     <string name="unfollow_confirmation">Are you sure you want to unfollow&#160;</string>
     <string name="cancel_request_confirmation">Are you sure you want to cancel the request sent to&#160;</string>
-    <string name="unblock_confirmation">Are you sure you want to Unblock&#160;</string>
+    <string name="unblock_confirmation">Are you sure you want to unblock&#160;</string>
     <string name="requested">Requested</string>
     <string name="no_users_tagged_yet">No users tagged yet</string>
     <string name="no_posts_available">No posts available</string>

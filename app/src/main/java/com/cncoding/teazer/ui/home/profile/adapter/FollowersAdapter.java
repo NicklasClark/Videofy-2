@@ -1,691 +1,530 @@
 package com.cncoding.teazer.ui.home.profile.adapter;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.util.DiffUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.friends.MyUserInfo;
 import com.cncoding.teazer.data.model.friends.UserInfo;
 import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
+import com.cncoding.teazer.utilities.diffutil.MyUserInfoDiffCallback;
+import com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
 
 /**
+ *
  * Created by farazhabib on 10/11/17.
  */
 
-public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.ViewHolder> {
+public class FollowersAdapter extends BaseRecyclerView.Adapter {
 
-    private List<UserInfo> list;
-    private List<MyUserInfo> userlist;
+    private List<UserInfo> userInfoList;
+    private List<MyUserInfo> myUserInfoList;
     private BaseFragment fragment;
-    private final int UNBLOCK_STATUS = 2;
-    private int userfollowerstatus;
+    private boolean isMyself;
 
-    public FollowersAdapter(BaseFragment fragment, List<MyUserInfo> userlist, int userfollowerstatus) {
+    public FollowersAdapter(BaseFragment fragment, boolean isMyself) {
         this.fragment = fragment;
-        this.userlist = userlist;
-        this.userfollowerstatus = userfollowerstatus;
-    }
-
-    public FollowersAdapter(BaseFragment fragment, List<UserInfo> list) {
-        this.fragment = fragment;
-        this.list = list;
+        this.myUserInfoList = new ArrayList<>();
+        this.userInfoList = new ArrayList<>();
+        this.isMyself = isMyself;
     }
 
     @Override
-    public FollowersAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public FollowersAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_followers, viewGroup, false);
-        return new FollowersAdapter.ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(final FollowersAdapter.ViewHolder viewHolder, final int i) {
-        try {
-
-            final int followerId;
-
-
-            if (userfollowerstatus == FollowersListFragment.USERS_FOLLOWER) {
-
-                final String usertype;
-                final  int requestId;
-                final MyUserInfo cont = userlist.get(i);
-                final String followername = cont.getUserName();
-                final boolean isfollowersDp = cont.getHasProfileMedia();
-
-                if (isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getMediaUrl();
-                    Glide.with(fragment)
-                            .load(followrsDp)
-                            .apply(new RequestOptions().skipMemoryCache(false))
-                            .into(viewHolder.dp);
-                } else {
-                    Glide.with(fragment)
-                            .load(R.drawable.ic_user_male_dp_small)
-                            .apply(new RequestOptions().centerInside().diskCacheStrategy(DiskCacheStrategy.NONE))
-                            .into(viewHolder.dp);
-                }
-
-                final boolean following = cont.getFollowing();
-                final boolean follower = cont.getFollower();
-                final boolean requestsent = cont.getRequestSent();
-                final boolean requestRecieved=cont.getFollowInfo().getRequestReceived();
-                followerId = cont.getUserId();
-                if(requestRecieved) {
-                  requestId = cont.getFollowInfo().getRequestId();
-                }
-                else
-                {
-                    requestId=0;
-                }
-
-
-                final int accounttype = cont.getAccountType();
-                viewHolder.name.setText(followername);
-
-
-                if (accounttype == 1) {
-
-                    if (following) {
-                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                        usertype = "Following";
-
-                    } else {
-                        if (requestsent) {
-                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                            usertype = "Requested";
-
-                        } else {
-
-                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                            usertype = "Follow";
-                        }
-                    }
-
-                } else {
-                    if (following) {
-                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                        usertype = "Following";
-                    } else {
-                        if (requestsent) {
-                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                            usertype = "Requested";
-                        } else {
-                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                            usertype = "Follow";
-                        }
-                    }
-                }
-
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(followerId)));
-                    }
-                });
-
-
-                viewHolder.action.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.follow))) {
-
-
-                            if (requestRecieved && follower)
-
-                            {
-                                acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, false, true);
-
-                            }
-                            else {
-                                followUser(followerId, fragment.getContext(), viewHolder, accounttype, i, true);
-
-                            }
-
-                        }
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.requested))) {
-                            cancelRequest(followerId, fragment.getContext(), viewHolder, accounttype, i, true);
-
-                        }
-
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.following))) {
-                            unFollowUser(followerId, fragment.getContext(), viewHolder, accounttype, i, true);
-                        }
-
-
-                    }
-                });
-            } else {
-
-                final UserInfo cont = list.get(i);
-                final String usertype;
-                final int requestId;
-                final int accounttype = cont.getAccountType();
-                final boolean myself = cont.getMySelf();
-                final boolean follower = cont.getFollower();
-                final boolean following = cont.getFollowing();
-                final boolean requestsent = cont.getRequestSent();
-                final boolean requestrecived = cont.getRequestRecieved();
-                if (requestrecived) {
-                    requestId = cont.getRequestId();
-                } else requestId = 0;
-
-                final String followername = cont.getUserName();
-                followerId = cont.getUserId();
-                viewHolder.name.setText(followername);
-                final boolean isblockedyou = cont.getIsBlockedYou();
-                final boolean isfollowersDp = cont.getHasProfileMedia();
-                final boolean youBlocked = cont.getYouBlocked();
-                if (isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getMediaUrl();
-                    Glide.with(fragment)
-                            .load(followrsDp)
-                            .apply(new RequestOptions().skipMemoryCache(false))
-                            .into(viewHolder.dp);
-                } else {
-                    Glide.with(fragment)
-                            .load(R.drawable.ic_user_male_dp_small)
-                            .apply(new RequestOptions().centerInside().diskCacheStrategy(DiskCacheStrategy.NONE))
-                            .into(viewHolder.dp);
-                }
-                if (myself) {
-                    viewHolder.name.setTextColor(Color.parseColor("#333333"));
-                    viewHolder.action.setVisibility(View.INVISIBLE);
-                    usertype = "";
-                } else {
-                    if (youBlocked) {
-                        viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
-                        viewHolder.action.setVisibility(View.VISIBLE);
-                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.unblock);
-                        usertype = "";
-                    } else if (isblockedyou) {
-                        viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
-                        viewHolder.action.setVisibility(View.INVISIBLE);
-                        usertype = "";
-                    } else {
-
-                        viewHolder.action.setVisibility(View.VISIBLE);
-                        viewHolder.name.setTextColor(Color.parseColor("#333333"));
-
-                        if (accounttype == 1) {
-
-                            if (following) {
-                                if (requestrecived == true) {
-                                    setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                    usertype = "Accept";
-                                } else {
-                                    setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                                    usertype = "Following";
-                                }
-                            } else {
-                                if (requestsent) {
-                                    if (requestrecived == true) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                        usertype = "Accept";
-                                    } else {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                                        usertype = "Requested";
-                                    }
-                                } else {
-
-
-                                    if (requestrecived == true && follower) {
-
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else if (requestrecived == true && !follower) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                        usertype = "Accept";
-
-                                    } else if (requestrecived == false && follower) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else if (requestrecived == false) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else {
-                                        usertype = "Follow";
-
-                                    }
-
-
-                                }
-                            }
-                        } else {
-                            if (following) {
-                                if (requestrecived == true) {
-                                    setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                    usertype = "Accept";
-                                } else {
-                                    setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                                    usertype = "Following";
-                                }
-                            } else {
-                                if (requestsent) {
-                                    if (requestrecived == true) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                        usertype = "Accept";
-                                    } else {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                                        usertype = "Requested";
-                                    }
-                                } else {
-
-                                    if (requestrecived == true && follower) {
-
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else if (requestrecived == true && !follower) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);
-                                        usertype = "Accept";
-
-                                    } else if (requestrecived == false && follower) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else if (requestrecived == false) {
-                                        setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                        usertype = "Follow";
-                                    } else {
-                                        usertype = "Follow";
-
-                                    }
-
-
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (myself) {
-                            fragment.navigation.pushFragment(FragmentNewProfile2.newInstance());
-                        } else {
-                            if (isblockedyou) {
-                                Toast.makeText(fragment.getContext(), "you can not view this user profile", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(followerId)));
-                            }
-                        }
-                    }
-                });
-                viewHolder.action.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.accept))) {
-                            acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, true,false);
-                        }
-
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.follow))) {
-
-                            if (requestrecived && follower)
-
-                            {
-                                acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, false,false);
-
-                            } else {
-                                followUser(followerId, fragment.getContext(), viewHolder, accounttype, i, false);
-
-                            }
-
-                        }
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.requested))) {
-                            cancelRequest(followerId, fragment.getContext(), viewHolder, accounttype, i, false);
-                        }
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.following))) {
-                            unFollowUser(followerId, fragment.getContext(), viewHolder, accounttype, i, false);
-                        }
-                        if (viewHolder.action.getText().equals(fragment.getString(R.string.unblock))) {
-                            blockUnblockUsers(followerId, UNBLOCK_STATUS, followername, viewHolder, i);
-                        }
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void acceptUser(final int requestId, final ViewHolder viewHolder, final int accounttype, final boolean isfollowing, final boolean requestSent, final int i, final boolean isAcceptFollow,final boolean isUser) {
-        //  loader.setVisibility(View.VISIBLE);
-        ApiCallingService.Friends.acceptJoinRequest(requestId, fragment.getContext())
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        try {
-                            if (response.code() == 200) {
-                                if (response.body().getStatus()) {
-                                    if (isAcceptFollow) {
-                                        Toast.makeText(fragment.getContext(), "Request Accepted", Toast.LENGTH_LONG).show();
-                                        if (isfollowing) {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                                            if(isUser) {
-                                                userlist.get(i).setFollowing(true);
-                                            }
-                                            else
-                                            {
-                                                list.get(i).setFollowing(true);
-
-                                            }
-                                        } else if (requestSent) {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                                            if(isUser) {
-                                                userlist.get(i).setRequestSent(true);
-                                            }else{
-                                                list.get(i).setRequestSent(true);
-                                            }
-                                        } else {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-
-                                            if(isUser)
-                                            {
-                                                userlist.get(i).setFollower(true);}
-                                            else{
-                                                list.get(i).setFollower(true);
-                                            }
-                                        }
-                                    } else {
-
-                                        if (response.body().getFollowInfo().getFollowing()) {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.following);
-                                            if (isUser){
-                                                userlist.get(i).setFollowing(true);
-                                            }else
-                                            {
-                                                list.get(i).setFollowing(true);
-
-                                            }
-
-                                            Toast.makeText(fragment.getContext(), "You also have started following", Toast.LENGTH_LONG).show();
-                                        } else if (response.body().getFollowInfo().getRequestSent()) {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.requested);
-                                            if (isUser) {
-                                                userlist.get(i).setRequestSent(true);
-
-                                            }else{
-                                               list.get(i).setRequestSent(true);
-
-                                            }
-                                            Toast.makeText(fragment.getContext(), "Your request has been sent", Toast.LENGTH_LONG).show();
-
-                                        } else {
-                                            setActionButtonText(fragment.getContext(), viewHolder.action, R.string.follow);
-                                         if(isUser) {
-                                             userlist.get(i).setFollower(true);
-                                         }
-                                         else {
-                                             list.get(i).setFollower(true);
-                                         }
-                                        }
-                                    }
-                                }
-                                else {
-                                    Toast.makeText(fragment.getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(fragment.getContext(), "Something went wrong, Please try again..", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        //loader.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-
-    private void followUser(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype, final int i, final boolean isUser) {
-
-        ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    try {
-                        boolean b = response.body().getStatus();
-                        if (b) {
-
-
-                            if (accounttype == 1) {
-                                setActionButtonText(context, viewHolder.action, R.string.requested);
-                                Toast.makeText(context, "You have sent following request", Toast.LENGTH_LONG).show();
-                                if (isUser) {
-                                    userlist.get(i).setRequestSent(true);
-                                } else {
-                                    list.get(i).setRequestSent(true);
-                                }
-
-
-                            } else {
-                                setActionButtonText(context, viewHolder.action, R.string.following);
-                                Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
-                                if (isUser) {
-                                    userlist.get(i).setFollowing(true);
-                                } else {
-                                    list.get(i).setFollowing(true);
-                                }
-                            }
-
-
-                        } else {
-                            setActionButtonText(context, viewHolder.action, R.string.following);
-                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-
-    private void cancelRequest(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype, final int i, final boolean isUser) {
-
-        ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    try {
-                        boolean b = response.body().getStatus();
-                        if (b) {
-
-                            if (isUser) {
-                                userlist.get(i).setRequestSent(false);
-                            } else {
-                                list.get(i).setRequestSent(false);
-                            }
-                            setActionButtonText(context, viewHolder.action, R.string.follow);
-                            Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
-
-                        } else {
-                            setActionButtonText(context, viewHolder.action, R.string.follow);
-                            Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-
-    public void unFollowUser(int userId, final Context context, final FollowersAdapter.ViewHolder viewHolder, final int accountType, final int i, final boolean isUser)
-
-    {
-
-        ApiCallingService.Friends.unfollowUser(userId, context).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    try {
-                        boolean b = response.body().getStatus();
-                        if (b == true) {
-
-                            Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
-                            //_btnfollow.setText("Follow");
-                            setActionButtonText(context, viewHolder.action, R.string.follow);
-                            if (isUser) {
-                                userlist.get(i).setFollowing(false);
-                            } else {
-                                list.get(i).setFollowing(false);
-                            }
-                        } else {
-
-                            //_btnfollow.setText("Follow");
-                            setActionButtonText(context, viewHolder.action, R.string.follow);
-                            Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-
-                        e.printStackTrace();
-
-                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-
-                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    public void blockUnblockUsers(final int userId, final int status, final String username, final FollowersAdapter.ViewHolder viewHolder, final int i) {
-        android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(fragment.getContext());
-        dialogBuilder.setMessage("Are you sure you want to Unblock " + username + "?");
-        dialogBuilder.setPositiveButton("CONFIRM", null);
-        dialogBuilder.setNegativeButton("CANCEL", null);
-
-        final android.support.v7.app.AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
-
-        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        positiveButton.setTextColor(Color.parseColor("#666666"));
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                blockunBlock(userId, status, viewHolder, i);
-                alertDialog.dismiss();
-
-
-            }
-        });
-    }
-
-
-    public void blockunBlock(int userId, final int status, final FollowersAdapter.ViewHolder holder, final int i) {
-        ApiCallingService.Friends.blockUnblockUser(userId, status, fragment.getContext()).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                try {
-                    boolean b = response.body().getStatus();
-                    if (b == true) {
-
-                        Toast.makeText(fragment.getContext(), "You have Unblocked this user", Toast.LENGTH_SHORT).show();
-                        setActionButtonText(fragment.getContext(), holder.action, R.string.follow);
-                        list.get(i).setYouBlocked(false);
-                    } else {
-                        Toast.makeText(fragment.getContext(), "Already Unblocked this user", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(fragment.getContext(), "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-
-                Toast.makeText(fragment.getContext(), "Oops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
-            }
-        });
+        return new FollowersAdapterViewHolder(view, isMyself);
     }
 
     @Override
     public int getItemCount() {
-        if (userfollowerstatus == FollowersListFragment.USERS_FOLLOWER) {
-            return userlist.size();
-        } else {
-            return list.size();
+        return isMyself ? myUserInfoList.size() : userInfoList.size();
+    }
+
+    @Override
+    public void release() {
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void notifyItemsInserted(final int positionStart, final int itemCount) {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemRangeInserted(positionStart, itemCount);
+            }
+        });
+    }
+
+    private void dispatchUpdates(final DiffUtil.DiffResult result) {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                result.dispatchUpdatesTo(FollowersAdapter.this);
+            }
+        });
+    }
+
+    public void updateUserInfoPosts(List<UserInfo> userInfoList) {
+        try {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                    new UserInfoDiffCallback(new ArrayList<>(this.userInfoList.subList(0, 10)), userInfoList));
+            this.userInfoList.clear();
+            this.userInfoList.addAll(userInfoList);
+            dispatchUpdates(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            addUserInfoPosts(1, userInfoList);
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_layout)
-        LinearLayout layout;
-        @BindView(R.id.dp)
-        CircularAppCompatImageView dp;
-        @BindView(R.id.name)
-        ProximaNovaSemiBoldTextView name;
-        @BindView(R.id.action)
-        ProximaNovaSemiBoldTextView action;
-//        @BindView(R.id.decline) AppCompatImageView declineBtn;
+    public void addUserInfoPosts(int page, List<UserInfo> userInfoList) {
+        if (page == 1) {
+            this.userInfoList.clear();
+            this.userInfoList.addAll(userInfoList);
+            notifyDataChanged();
+        } else {
+            this.userInfoList.addAll(userInfoList);
+            notifyItemsInserted((page - 1) * 10, userInfoList.size());
+        }
+    }
 
-        public ViewHolder(View view) {
+    public void updateMyUserInfoPosts(List<MyUserInfo> myUserInfoList) {
+        try {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                    new MyUserInfoDiffCallback(new ArrayList<>(this.myUserInfoList.subList(0, 10)), myUserInfoList));
+            this.myUserInfoList.clear();
+            this.myUserInfoList.addAll(myUserInfoList);
+            dispatchUpdates(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            addMyUserInfoPosts(1, myUserInfoList);
+        }
+    }
+
+    public void addMyUserInfoPosts(int page, List<MyUserInfo> myUserInfoList) {
+        if (page == 1) {
+            this.myUserInfoList.clear();
+            this.myUserInfoList.addAll(myUserInfoList);
+            notifyDataChanged();
+        } else {
+            this.myUserInfoList.addAll(myUserInfoList);
+            notifyItemsInserted((page - 1) * 10, myUserInfoList.size());
+        }
+    }
+
+    public class FollowersAdapterViewHolder extends BaseRecyclerView.ViewHolder {
+
+        @BindView(R.id.root_layout) LinearLayout layout;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
+        MyUserInfo myUserInfo;
+        UserInfo userInfo;
+        boolean isMyself;
+        private int requestId;
+
+        FollowersAdapterViewHolder(View view, boolean isMyself) {
             super(view);
+            this.isMyself = isMyself;
             ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void bind() {
+            try {
+                if (isMyself) {
+                    myUserInfo = myUserInfoList.get(getAdapterPosition());
+                    requestId = myUserInfo.getFollowInfo().isRequestReceived() ? myUserInfo.getFollowInfo().getRequestId() : 0;
+
+                    Glide.with(fragment)
+                            .load(myUserInfo.getProfileMedia() != null ?
+                                    myUserInfo.getProfileMedia().getThumbUrl() :
+                                    getGenderSpecificDpSmall(myUserInfo.getGender()))
+                            .into(dp);
+
+                    name.setText(myUserInfo.getUserName());
+
+                    if (myUserInfo.isFollowing()) {
+                        setActionButtonText(fragment.getContext(), action, R.string.following);
+                    } else {
+                        if (myUserInfo.isRequestSent()) {
+                            setActionButtonText(fragment.getContext(), action, R.string.requested);
+                        } else {
+                            setActionButtonText(fragment.getContext(), action, R.string.follow);
+                        }
+                    }
+                } else {
+                    userInfo = userInfoList.get(getAdapterPosition());
+                    requestId = userInfo.isRequestRecieved() ? userInfo.getRequestId() : 0;
+
+                    name.setText(userInfo.getUserName());
+                    final boolean youBlocked = userInfo.isYouBlocked();
+                    Glide.with(fragment)
+                            .load(userInfo.getProfileMedia() != null ?
+                                    userInfo.getProfileMedia().getThumbUrl() :
+                                    getGenderSpecificDpSmall(userInfo.getGender()))
+                            .into(dp);
+
+                    if (userInfo.isMySelf()) {
+                        name.setTextColor(Color.parseColor("#333333"));
+                        action.setVisibility(View.INVISIBLE);
+                    } else {
+                        if (youBlocked) {
+                            name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+                            action.setVisibility(View.VISIBLE);
+                            setActionButtonText(fragment.getContext(), action, R.string.unblock);
+                        }
+                        else if (userInfo.isBlockedYou()) {
+                            name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+                            action.setVisibility(View.INVISIBLE);
+                        }
+                        else {
+                            action.setVisibility(View.VISIBLE);
+                            name.setTextColor(Color.parseColor("#333333"));
+
+                            if (userInfo.isFollowing()) {
+                                if (userInfo.isRequestRecieved()) {
+                                    setActionButtonText(fragment.getContext(), action, R.string.accept);
+                                } else {
+                                    setActionButtonText(fragment.getContext(), action, R.string.following);
+                                }
+                            } else {
+                                if (userInfo.isRequestSent()) {
+                                    if (userInfo.isRequestRecieved()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.accept);
+                                    } else {
+                                        setActionButtonText(fragment.getContext(), action, R.string.requested);
+                                    }
+                                } else {
+                                    if (userInfo.isRequestRecieved() && userInfo.isFollower()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                    } else if (userInfo.isRequestRecieved()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.accept);
+                                    } else if (userInfo.isFollower()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                    } else {
+                                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @OnClick(R.id.root_layout) public void rootLayoutClicked() {
+            if (isMyself) {
+                fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(myUserInfo.getUserId())));
+            } else {
+                if (userInfo.isMySelf()) {
+                    fragment.navigation.pushFragment(FragmentNewProfile2.newInstance());
+                } else {
+                    if (userInfo.isBlockedYou()) {
+                        Toast.makeText(fragment.getContext(), "you can not view this user profile", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userInfo.getUserId())));
+                    }
+                }
+            }
+        }
+
+        @OnClick(R.id.action) public void actionBtnClicked() {
+            if (isMyself) {
+                if (action.getText().equals(fragment.getString(R.string.follow))) {
+                    if (myUserInfo.getFollowInfo().isRequestReceived() && myUserInfo.isFollower()) {
+                        acceptUser(requestId, myUserInfo.isFollowing(), myUserInfo.isRequestSent(), false);
+                    }
+                    else {
+                        followUser(myUserInfo.getUserId(), myUserInfo.getAccountType());
+                    }
+                }
+                if (action.getText().equals(fragment.getString(R.string.requested))) {
+                    confirmCancelRequest(myUserInfo.getUserId(), myUserInfo.getUserName());
+                }
+                if (action.getText().equals(fragment.getString(R.string.following))) {
+                    confirmUnfollow(myUserInfo.getUserId(), myUserInfo.getUserName());
+                }
+            } else {
+                if (action.getText().equals(fragment.getString(R.string.accept))) {
+                    acceptUser(requestId, userInfo.isFollowing(), userInfo.isRequestSent(), true);
+                }
+                if (action.getText().equals(fragment.getString(R.string.follow))) {
+                    if (userInfo.isRequestRecieved() && userInfo.isFollower()) {
+                        acceptUser(requestId, userInfo.isFollowing(), userInfo.isRequestSent(), false);
+                    } else {
+                        followUser(userInfo.getUserId(), userInfo.getAccountType());
+                    }
+                }
+                if (action.getText().equals(fragment.getString(R.string.requested))) {
+                    confirmCancelRequest(userInfo.getUserId(), myUserInfo.getUserName());
+                }
+                if (action.getText().equals(fragment.getString(R.string.following))) {
+                    confirmUnfollow(userInfo.getUserId(), userInfo.getUserName());
+                }
+                if (action.getText().equals(fragment.getString(R.string.unblock))) {
+                    confirmBlockUnblock(userInfo.getUserId(), userInfo.getUserName());
+                }
+            }
+        }
+
+        private void acceptUser(final int requestId, final boolean isFollowing, final boolean requestSent, final boolean isAcceptFollow) {
+            ApiCallingService.Friends.acceptJoinRequest(requestId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    try {
+                        if (response.code() == 200) {
+                            if (response.body().getStatus()) {
+                                if (isAcceptFollow) {
+//                                            Toast.makeText(fragment.getContext(), "Request Accepted", Toast.LENGTH_LONG).show();
+                                    if (isFollowing) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.following);
+                                        setFollowing();
+                                    } else if (requestSent) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.requested);
+                                        setRequestSent();
+                                    } else {
+                                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                        setFollower();
+                                    }
+                                } else {
+                                    if (response.body().getFollowInfo().getFollowing()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.following);
+                                        setFollowing();
+//                                        Toast.makeText(fragment.getContext(), "You also have started following", Toast.LENGTH_LONG).show();
+                                    } else if (response.body().getFollowInfo().getRequestSent()) {
+                                        setActionButtonText(fragment.getContext(), action, R.string.requested);
+                                        setRequestSent();
+//                                        Toast.makeText(fragment.getContext(), "Your request has been sent", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                        setFollower();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    t.printStackTrace();
+                    //loader.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        private void followUser(final int userId, final int accountType) {
+            ApiCallingService.Friends.followUser(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    if (response.code() == 200) {
+                        try {
+                            if (response.body().getStatus()) {
+                                if (accountType == 1) {
+                                    setActionButtonText(fragment.getContext(), action, R.string.requested);
+//                                    Toast.makeText(fragment.getContext(), "You have sent following request", Toast.LENGTH_LONG).show();
+                                    setRequestSent();
+                                } else {
+                                    setActionButtonText(fragment.getContext(), action, R.string.following);
+//                                    Toast.makeText(fragment.getContext(), "You have started following", Toast.LENGTH_LONG).show();
+                                    setFollowing();
+                                }
+                            } else {
+                                setActionButtonText(fragment.getContext(), action, R.string.following);
+//                                Toast.makeText(fragment.getContext(), "You are already following", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    t.printStackTrace();
+                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        private void confirmCancelRequest(final int userId, String username) {
+            showAlertDialog(fragment.getString(R.string.cancel_request_confirmation) + username + "?",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            cancelRequest(userId);
+                        }
+                    });
+        }
+
+        private void cancelRequest(final int userId) {
+            ApiCallingService.Friends.cancelRequest(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    if (response.code() == 200) {
+                        try {
+                            if (response.body().getStatus()) {
+                                setRequestSent();
+                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+//                                Toast.makeText(fragment.getContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                            } else {
+                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+//                                Toast.makeText(fragment.getContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    t.printStackTrace();
+                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        private void confirmUnfollow(final int userId, String username) {
+            showAlertDialog(fragment.getString(R.string.unfollow_confirmation) + username + "?",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            unFollowUser(userId);
+                        }
+                    });
+        }
+
+        private void unFollowUser(int userId) {
+            ApiCallingService.Friends.unfollowUser(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    if (response.code() == 200) {
+                        try {
+                            if (response.body().getStatus()) {
+//                                Toast.makeText(context, "User has been un-followed", Toast.LENGTH_LONG).show();
+                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                setFollowing();
+                            } else {
+                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+//                                Toast.makeText(context, "You have already un-followed", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        private void confirmBlockUnblock(final int userId, final String username) {
+            showAlertDialog(fragment.getString(R.string.unblock_confirmation) + username + "?",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            blockUnblockUser(userId);
+                        }
+                    });
+        }
+
+        private void blockUnblockUser(int userId) {
+            ApiCallingService.Friends.blockUnblockUser(userId, 2, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    try {
+                        if (response.body().getStatus()) {
+//                            Toast.makeText(fragment.getContext(), "You have Unblocked this user", Toast.LENGTH_SHORT).show();
+                            setActionButtonText(fragment.getContext(), action, R.string.follow);
+                            userInfo.setYouBlocked(false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        private void showAlertDialog(String message, DialogInterface.OnClickListener positiveButtonListener) {
+            new AlertDialog.Builder(fragment.getParentActivity())
+                    .setMessage(message)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.confirm, positiveButtonListener)
+                    .show();
+        }
+
+        private void setFollowing() {
+            if (isMyself) myUserInfo.setFollowing(true);
+            else userInfo.setFollowing(true);
+        }
+
+        private void setFollower() {
+            if(isMyself) myUserInfo.setFollower(true);
+            else userInfo.setFollower(true);
+        }
+
+        private void setRequestSent() {
+            if (isMyself) myUserInfo.setRequestSent(false);
+            else userInfo.setRequestSent(false);
         }
     }
 }

@@ -9,6 +9,9 @@ import com.cncoding.teazer.data.model.BaseModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -113,4 +116,29 @@ public class Medias extends BaseModel implements Parcelable {
             return new Medias[size];
         }
     };
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(11, 31)
+                .append(mediaId)
+                .append(mediaUrl)
+                .append(thumbUrl)
+                .append(duration)
+                .append(mediaDimension)
+                .append(isImage)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof Medias &&
+                new EqualsBuilder()
+                        .append(mediaId, ((Medias) obj).getMediaId())
+                        .append(mediaUrl, ((Medias) obj).getMediaUrl())
+                        .append(thumbUrl, ((Medias) obj).getThumbUrl())
+                        .append(duration, ((Medias) obj).getDuration())
+                        .append(mediaDimension, ((Medias) obj).getMediaDimension())
+                        .append(isImage, ((Medias) obj).isImage())
+                        .isEquals();
+    }
 }

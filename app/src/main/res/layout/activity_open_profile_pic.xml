@@ -23,7 +23,8 @@
         <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
             android:id="@+id/media_controller_dp"
             android:transitionName="profile"
-            android:background="@drawable/bg_circle_white_outline"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp"
             android:padding="2dp"
             android:layout_width="320dp"
             android:layout_height="320dp"

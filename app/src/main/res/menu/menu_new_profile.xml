@@ -6,7 +6,6 @@
         android:icon="@drawable/ic_edit_white_with_shadow"
         app:showAsAction="ifRoom|withText"
         android:title="@string/edit">
-
     </item>
     <item
         android:id="@+id/share"
