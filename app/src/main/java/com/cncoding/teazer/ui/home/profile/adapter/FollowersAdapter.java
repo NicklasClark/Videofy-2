@@ -280,7 +280,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                                 }
                             }
-                        } else {
+                        } else
+                            {
                             if (following) {
                                 if (requestrecived == true) {
                                     setActionButtonText(fragment.getContext(), viewHolder.action, R.string.accept);

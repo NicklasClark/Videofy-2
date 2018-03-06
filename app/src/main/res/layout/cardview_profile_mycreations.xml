@@ -65,13 +65,12 @@
                 />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 app:srcCompat="@drawable/ic_contextmenu"
                 android:foreground="@drawable/ripple_dark_no_rounded"
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="16dp"
-                android:padding="5dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginEnd="@dimen/padding_default" />
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView

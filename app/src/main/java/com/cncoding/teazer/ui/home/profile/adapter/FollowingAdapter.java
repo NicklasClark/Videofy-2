@@ -358,6 +358,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 }
 
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View view) {
 
