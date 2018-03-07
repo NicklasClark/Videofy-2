@@ -37,7 +37,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="14dp"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
@@ -51,7 +51,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="54dp"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
@@ -65,7 +65,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="75dp"
+                android:layout_marginRight="94dp"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="1dp"
                 android:src="@drawable/ic_user_male_dp"
@@ -120,18 +120,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="5dp"
-                            android:textSize="22dp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            />
+                            android:textSize="22sp"
+                            android:textColor="#212121" />
 
                         <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Creations"
                             android:textColor="#212121"
-                            android:textSize="12dp"
+                            android:textSize="12sp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -268,7 +267,7 @@
                 android:ellipsize="end"
                 android:maxLength="15"
                 android:textColor="#000000"
-                android:textSize="16dp"
+                android:textSize="18sp"
                 android:gravity="left"
                 />
 
@@ -296,7 +295,7 @@
                 android:layout_marginBottom="140dp"
                 android:layout_marginLeft="300dp"
                 android:textColor="#000000"
-                android:textSize="12dp"
+                android:textSize="@dimen/text_size_10sp"
                 android:gravity="start"/>
 
             <ImageView
@@ -306,8 +305,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="137dp"
                 android:layout_marginLeft="275dp"
-                android:src="@drawable/ic_view_outline_dark"
-                />
+                android:src="@drawable/ic_view_outline_dark" />
 
 
 

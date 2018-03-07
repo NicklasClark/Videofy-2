@@ -66,6 +66,7 @@ import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logLoginE
 import static com.cncoding.teazer.utilities.common.SharedPrefs.setCurrentPassword;
 import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
 @SuppressLint("SwitchIntDef")
 public class LoginFragment extends BaseAuthFragment {
@@ -367,21 +368,23 @@ public class LoginFragment extends BaseAuthFragment {
                 markValidity(resultObject.getStatus());
                 break;
             case LOGIN_WITH_PASSWORD:
-                try {
-                    SharedPrefs.saveAuthToken(getParentActivity().getApplicationContext(), resultObject.getAuthToken());
-                    SharedPrefs.saveUserId(getParentActivity().getApplicationContext(), resultObject.getUserId());
-                    setCurrentPassword(context ,passwordView.getText().toString());
+                if (resultObject.getStatus()) {
+                    try {
+                        SharedPrefs.saveAuthToken(getParentActivity().getApplicationContext(), resultObject.getAuthToken());
+                        SharedPrefs.saveUserId(getParentActivity().getApplicationContext(), resultObject.getUserId());
+                        setCurrentPassword(context ,passwordView.getText().toString());
 
-                    logLoginEvent("Email", true, login.getUserName());
+                        logLoginEvent("Email", true, login.getUserName());
 
-                    mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logLoginEvent("Email", false, login.getUserName());
-                }
-                removeView(progressBar);
-                loginBtnClicked = false;
-                loginBtn.setEnabled(true);
+                        mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logLoginEvent("Email", false, login.getUserName());
+                    }
+                    removeView(progressBar);
+                    loginBtnClicked = false;
+                    loginBtn.setEnabled(true);
+                } else showSnackBar(loginBtn, getString(R.string.incorrect_username_password));
                 break;
             case LOGIN_WITH_OTP:
                 try {
