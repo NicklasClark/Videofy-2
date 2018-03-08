@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -754,18 +755,22 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
-        final String placeName = selectedPlace.getPlaceName();
-        if (!placeName.contains("null")) {
-            addLocationBtn.requestFocus();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    addLocationBtn.setText(placeName);
-                }
-            }, 500);
-        } else {
-            addLocationBtn.setText(null);
-            Toast.makeText(activity, R.string.could_not_find_location, Toast.LENGTH_SHORT).show();
+        try {
+            final String placeName = selectedPlace.getPlaceName();
+            if (!placeName.contains("null")) {
+                addLocationBtn.requestFocus();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addLocationBtn.setText(placeName);
+                    }
+                }, 500);
+            } else {
+                addLocationBtn.setText(null);
+                Toast.makeText(activity, R.string.could_not_find_location, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -901,7 +906,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
 //            reference.get().toggleInteraction(true);
-            if (reference != null) {
+            if (reference != null && reference.get().mListener != null) {
                 reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
             }
         }

@@ -156,18 +156,22 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     }
 
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
-        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
-        if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
-        toggleRecyclerViewScrolling(false);
-        if (scrollListener != null && scrollToTop) scrollListener.resetState();
-        if (isConnected) {
-            loadHomePagePosts(1);
-            //to refresh inmobi ads
-            refreshAds();
-        }
-        else {
-            Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_LONG).show();
-            toggleRecyclerViewScrolling(true);
+        try {
+            if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
+            if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
+            toggleRecyclerViewScrolling(false);
+            if (scrollListener != null && scrollToTop) scrollListener.resetState();
+            if (isConnected) {
+                loadHomePagePosts(1);
+                //to refresh inmobi ads
+                refreshAds();
+            }
+            else {
+                Toast.makeText(getContext(), getContext().getString(R.string.no_internet_message), Toast.LENGTH_LONG).show();
+                toggleRecyclerViewScrolling(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

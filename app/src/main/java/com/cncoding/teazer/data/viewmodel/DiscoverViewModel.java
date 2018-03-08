@@ -98,9 +98,13 @@ public class DiscoverViewModel extends ViewModel {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
                             if (page > 1 && postList != null && mostPopularLiveData.getValue() != null) {
-                                List<PostDetails> postDetailsList = mostPopularLiveData.getValue().getPosts();
-                                postDetailsList.addAll(postList.getPosts());
-                                postList.setPosts(postDetailsList);
+                                try {
+                                    List<PostDetails> postDetailsList = mostPopularLiveData.getValue().getPosts();
+                                    postDetailsList.addAll(postList.getPosts());
+                                    postList.setPosts(postDetailsList);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                             mostPopularLiveData.setValue(postList);
                         }

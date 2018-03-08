@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -96,8 +97,13 @@ public class TrendingGiphyAdapter extends BaseRecyclerView.Adapter {
             }
         }
 
-        @OnClick(R.id.giphy_thumbnail) public void gifSelected() {
-            cameraActivity.onTrendingGiphyAdapterInteraction(giphys.get(getAdapterPosition()).getImages());
+        @OnClick(R.id.giphy_thumbnail)
+        void gifSelected() {
+            if (giphys.size() > 0) {
+                cameraActivity.onTrendingGiphyAdapterInteraction(giphys.get(getAdapterPosition()).getImages());
+            }
+            else
+                Toast.makeText(cameraActivity, "Please wait for item to load", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -86,7 +86,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     String lastname;
     int countrycode;
     String emailId;
-    Long mobilenumber;
+    Long mobilenumber = 0L;
     int gender;
     String detail;
     @BindView(R.id.male)
@@ -179,7 +179,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         if (mobileno != null) {
             try {
                 mobilenumber = Long.parseLong(mobileno);
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

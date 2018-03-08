@@ -601,7 +601,7 @@ public class NavigationController {
                             ft.remove(fragment);
                         }
                     }
-                    ft.commit();
+                    ft.commitAllowingStateLoss();
                     executePendingTransactions();
                 }
             }

@@ -263,15 +263,19 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     }
 
     @OnClick(R.id.profilelikebutton) public void profileLikeBtnClicked() {
-        Glide.with(context)
-                .load(canLike ? R.drawable.ic_like_filled :
-                        R.drawable.ic_likebig)
-                .into(profilelikebutton);
-        canLike = !canLike;
-        profileLikedUser(followerfollowingid, !canLike ? SEND_LIKE : SEND_DISLIKE);
-        totalProfileLikes = !canLike ? (totalProfileLikes + 1) : (totalProfileLikes - 1);
-        String likesText = String.valueOf(totalProfileLikes) + (totalProfileLikes == 1 ? " Like" : " Likes");
-        _totalprofilelikes.setText(likesText);
+        try {
+            Glide.with(context)
+                    .load(canLike ? R.drawable.ic_like_filled :
+                            R.drawable.ic_likebig)
+                    .into(profilelikebutton);
+            canLike = !canLike;
+            profileLikedUser(followerfollowingid, !canLike ? SEND_LIKE : SEND_DISLIKE);
+            totalProfileLikes = !canLike ? (totalProfileLikes + 1) : (totalProfileLikes - 1);
+            String likesText = String.valueOf(totalProfileLikes) + (totalProfileLikes == 1 ? " Like" : " Likes");
+            _totalprofilelikes.setText(likesText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.totallikes) public void openLikesOnProfile() {
