@@ -68,7 +68,9 @@ public class FollowingAdapter extends BaseRecyclerView.Adapter {
     }
 
     @Override
-    public void release() {}
+    public void release() {
+
+    }
 
     @Override
     public void notifyDataChanged() {

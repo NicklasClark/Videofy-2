@@ -26,6 +26,7 @@
                 android:layout_height="250dp"
                 android:minHeight="132dp"
                 android:fitsSystemWindows="true"
+                android:background="@drawable/backgroundprofile"
                 android:scaleType="centerCrop"/>
 
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
@@ -101,6 +102,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -191,7 +193,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginLeft="12dp"
-                        android:layout_marginRight="12dp"
                         android:id="@+id/followinglayout"
                         android:orientation="vertical">
 
@@ -225,9 +226,8 @@
                     android:layout_marginRight="100dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:layout_centerVertical="true"
                     android:layout_above="@+id/informationLayout"
+                    android:layout_marginBottom="20dp"
                     android:textColor="#212121"
                     android:textSize="14sp"/>
 
@@ -236,45 +236,63 @@
 
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/profilepic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="120dp"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp"
                 android:background="@drawable/bg_circle_white_outline"/>
-
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="140dp"
-                android:layout_marginLeft="125dp"
-                android:layout_marginRight="25dp"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:maxLength="15"
-                android:textColor="#000000"
-                android:textSize="14dp"
-                android:gravity="left"
-                />
 
-            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="120dp"
-                android:layout_marginLeft="125dp"
+                android:layout_marginBottom="140dp"
+                android:layout_marginLeft="110dp"
                 android:layout_marginRight="25dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:maxLength="17"
+                android:textColor="#000000"
+                android:textSize="17dp"
+                android:gravity="left"
+                />
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
+
+
+
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="120dp"
+                android:layout_marginLeft="110dp"
+                android:layout_marginRight="25dp"
+                android:maxLines="1"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="#000000"
                 android:textSize="14dp"
+                android:gravity="start"
+                />
+
+
+
+
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
+                android:id="@+id/likeliked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="140dp"
+                android:layout_marginLeft="290dp"
+                android:textColor="#000000"
+                android:textSize="12dp"
                 android:gravity="start"/>
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
@@ -282,37 +300,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="140dp"
-                android:layout_marginLeft="300dp"
-                android:textColor="#000000"
-                android:textSize="12dp"
+                android:layout_marginBottom="130dp"
+                android:layout_marginLeft="292dp"
+                android:textColor="#0d0d0d"
+                android:textSize="10dp"
                 android:gravity="start"/>
 
-            <ImageView
-                android:id="@+id/likesimage"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="137dp"
-                android:layout_marginLeft="275dp"
-                android:src="@drawable/ic_view_outline_dark"
-                />
 
             <ImageView
                 android:id="@+id/profilelikebutton"
-                android:layout_width="32dp"
-                android:layout_height="30dp"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="112dp"
-                android:layout_marginRight="35dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="132dp"
+                android:layout_marginLeft="265dp"
                 android:src="@drawable/ic_likebig"
                 />
+
+            <!--<ImageView-->
+                <!--android:id="@+id/profilelikebutton"-->
+                <!--android:layout_width="32dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_gravity="bottom|right"-->
+                <!--android:layout_marginBottom="112dp"-->
+                <!--android:layout_marginRight="35dp"-->
+                <!--android:src="@drawable/ic_likebig"-->
+                <!--/>-->
             <Button
                 android:id="@+id/follow"
                 android:layout_width="wrap_content"
                 android:layout_height="27dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="10dp"
+                android:textAllCaps="false"
                 android:padding="7dp"
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="80dp"

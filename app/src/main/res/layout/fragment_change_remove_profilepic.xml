@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
+
+            android:id="@+id/chnageprofilepic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/close"
+            android:lineSpacingExtra="2dp"
+            android:text="Change Picture"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
+            android:id="@+id/removeprofilepic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_below="@+id/chnageprofilepic"
+            android:lineSpacingExtra="2dp"
+            android:text="Remove Picture"
+            android:textColor="#FF0000"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

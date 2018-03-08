@@ -89,7 +89,7 @@ public class FragmentProfileMyReactions extends BaseFragment {
         layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(this, myReactions, getParentFragment());
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(this, myReactions, getParentFragment(),context);
         recyclerView.setAdapter(profileMyReactionAdapter);
 
         if(followerfollowingid==0) {

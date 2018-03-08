@@ -71,13 +71,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryStatus</item>
         <item name="colorAccent">@color/colorAccent4</item>
         <item name="actionMenuTextColor">@color/colorPrimary_text</item>
-        <item name="android:actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
         <item name="android:actionMenuTextAppearance">@style/AppTheme.Widget.ActionButton</item>
         <!--<item name="android:textColor">@color/colorPrimary_text</item>-->
         <!--<item name="android:textColorPrimary">@color/colorPrimary_text</item>-->
         <item name="android:textColorSecondary">@color/colorSecondary_text</item>
         <item name="android:textColorHint">@color/colorSecondary_text</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+
         <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item> <!-- sets the style for the overflow button -->
 
 
@@ -86,12 +87,17 @@
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
     </style>
-
+    <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
+        <item name="android:minWidth">0dip</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
+    </style>
 
 
     <!-- This style is where you define the tint color of your overflow menu button -->
     <style name="actionOverflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/white</item>
+
     </style>
     <style name="BaseActivityThemeFullScreen" parent="AppTheme.FullScreen">
         <item name="colorPrimary">@color/colorPrimary</item>

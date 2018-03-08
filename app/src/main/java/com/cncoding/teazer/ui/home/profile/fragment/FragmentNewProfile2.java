@@ -74,8 +74,8 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
     ProximaNovaBoldTextView _following;
     ProximaNovaBoldTextView _reactions;
 
-    ProximaNovaRegularCheckedTextView _name;
-    ProximaNovaSemiBoldTextView _username;
+    ProximaNovaRegularCheckedTextView _username;
+    ProximaNovaSemiBoldTextView _name;
     ProximaNovaRegularCheckedTextView _detail;
     CircularAppCompatImageView profile_id;
 
@@ -629,11 +629,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                         }
 
                     }
-
-
-
-
-
                     Long mobilno = userProfile.getPhoneNumber();
 
                     if (mobilno == null) {
@@ -689,15 +684,44 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
                     _username.setText("@"+username);
-                    _followers.setText(String.valueOf(totalfollowers));
-                    _following.setText(String.valueOf(totalfollowing));
-                    _creations.setText(String.valueOf(totalvideos));
-                    _reactions.setText(String.valueOf(reactions));
+                    if(totalfollowers<10)
+                    {
+                        _followers.setText(String.valueOf("0"+totalfollowers));
+
+                    }
+                    else {
+                        _followers.setText(String.valueOf(totalfollowers));
+                    }
+                    if(totalfollowing<10)
+                    {
+                        _following.setText(String.valueOf("0"+totalfollowing));
+
+                    }
+                    else {
+                        _following.setText(String.valueOf(totalfollowing));
+                    }
+                    if(totalvideos<10)
+                    {
+                        _creations.setText(String.valueOf("0"+totalvideos));
+
+                    }
+                    else {
+                        _creations.setText(String.valueOf(totalvideos));
+                    }
+                    if (reactions<10)
+                    {
+
+                        _reactions.setText(String.valueOf("0"+reactions));
+
+                    }else {
+                        _reactions.setText(String.valueOf(reactions));
+
+                    }
                     if(totalProfilelikes==0||totalProfilelikes==1){
-                        _totallikes.setText(String.valueOf(totalProfilelikes)+" Like");
+                        _totallikes.setText(String.valueOf(totalProfilelikes)+" like");
                     } else
                     {
-                        _totallikes.setText(String.valueOf(totalProfilelikes)+" Likes");
+                        _totallikes.setText(String.valueOf(totalProfilelikes)+" likes");
                     }
 
 //                    blur_bacground.setVisibility(View.VISIBLE);
@@ -796,9 +820,6 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     if (hasCoverMedia)
                     {
                         userCoverUrl=userProfile.getCoverMedia().getMediaUrl();
-                        //userCoverUrl=userProfile.getCoverMedia().getThumbUrl();
-
-
                         Glide.with(context)
                                 .load(userCoverUrl)
                                 .into(placeholder);
@@ -806,23 +827,49 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
                     _username.setText("@ "+username);
-                    _followers.setText(String.valueOf(totalfollowers));
-                    _following.setText(String.valueOf(totalfollowing));
-                    _creations.setText(String.valueOf(totalvideos));
-                    _reactions.setText(String.valueOf(reactions));
+                    if(totalfollowers<10)
+                    {
+                        _followers.setText(String.valueOf("0"+totalfollowers));
 
-                    //   loader.setVisibility(View.GONE);
-                    //  blur_bacground.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        _followers.setText(String.valueOf(totalfollowers));
+                    }
+                    if(totalfollowing<10)
+                    {
+                        _following.setText(String.valueOf("0"+totalfollowing));
+
+                    }
+                    else {
+                        _following.setText(String.valueOf(totalfollowing));
+                    }
+                    if(totalvideos<10)
+                    {
+                        _creations.setText(String.valueOf("0"+totalvideos));
+
+                    }
+                    else {
+                        _creations.setText(String.valueOf(totalvideos));
+                    }
+                    if (reactions<10)
+                    {
+
+                        _reactions.setText(String.valueOf("0"+reactions));
+
+                    }else {
+                        _reactions.setText(String.valueOf(reactions));
+
+                    }
+
+
                 }
                 catch (Exception e) {
-                    //  loader.setVisibility(View.GONE);
                     e.printStackTrace();
 
                 }
             }
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
-                //loader.setVisibility(View.GONE);
                 t.printStackTrace();
             }
         });

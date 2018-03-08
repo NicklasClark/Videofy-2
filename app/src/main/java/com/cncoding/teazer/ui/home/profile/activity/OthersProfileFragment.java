@@ -53,6 +53,7 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextVi
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.SignPainterTextView;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersCreationAdapter;
+import com.cncoding.teazer.ui.home.profile.fragment.FragmentChangeRemoveProfilePic;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportUserDialogFragment;
 
 import java.io.IOException;
@@ -306,12 +307,12 @@ public class OthersProfileFragment extends BaseFragment {
             public void onClick(View view) {
 
 
-                //    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
-//                if (fragmentManager != null) {
-//                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
-//
-//                }
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentChangeRemoveProfilePic reportPostDialogFragment = FragmentChangeRemoveProfilePic.newInstance(details,userProfileUrl);
+                if (fragmentManager != null) {
+                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+
+               }
 
 
             }

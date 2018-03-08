@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.home.profile.adapter;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -52,9 +53,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     private BaseFragment fragment;
     private boolean isPostClicked = false;
     private ProfileMyReactionAdapter.OnChildFragmentUpdateReaction updateReaction;
+    Context context;
 
-    public ProfileMyReactionAdapter(BaseFragment fragment, List<PostReaction> list, Fragment updateReaction) {
+    public ProfileMyReactionAdapter(BaseFragment fragment, List<PostReaction> list, Fragment updateReaction,Context context) {
         this.fragment = fragment;
+        this.context = context;
         this.list = list;
         if (updateReaction instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {
             this.updateReaction = (ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) updateReaction;
@@ -75,7 +78,30 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         final String reactDuration = reactions.getMediaDetail().getReactDuration();
         final String thumb_url = reactions.getMediaDetail().getReactThumbUrl();
         final String postOwner = reactions.getPostOwner().getFirstName();
+        final boolean hasprofilemedia = reactions.getPostOwner().hasProfileMedia();
+        final String postownername=reactions.getPostOwner().getUserName();
         final int reaction = reactions.getReactedBy();
+
+        if(hasprofilemedia && reactions.getPostOwner().getProfileMedia() != null)
+        {
+            String postownerimage = reactions.getPostOwner().getProfileMedia().getMediaUrl();
+            if(postownerimage!=null) {
+                Glide.with(context).load(postownerimage)
+                        .into(viewHolder.postowner);
+            }
+            else{
+                {
+                    Glide.with(context).load(R.drawable.ic_user_male_dp)
+                            .into(viewHolder.postowner);
+                }
+            }
+
+        }
+        else
+        {
+            Glide.with(context).load(R.drawable.ic_user_male_dp)
+                    .into(viewHolder.postowner);
+        }
 
 
         if (videoTitle.equals("")) {
@@ -84,6 +110,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
         }
         viewHolder.post_owner.setText(postOwner);
+        viewHolder.postownername.setText(postownername);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
         viewHolder.duration.setText(reactDuration);
@@ -94,13 +121,13 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                     .load(reactions.getMediaDetail().getReactMediaUrl())
                     .apply(new RequestOptions().placeholder(R.drawable.material_flat).diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .into(viewHolder.thumbimage);
-            viewHolder.duration.setVisibility(View.GONE);
+           // viewHolder.duration.setVisibility(View.GONE);
         }
         else if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
             Glide.with(fragment).load(thumb_url)
                     .apply(new RequestOptions().placeholder(R.drawable.material_flat))
                     .into(viewHolder.thumbimage);
-            viewHolder.duration.setVisibility(View.VISIBLE);
+           // viewHolder.duration.setVisibility(View.VISIBLE);
         } else if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIPHY) {
 
             Gson gson = new Gson();
@@ -207,10 +234,13 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         CardView cardView;
         View line;
         TextView post_owner;
+        TextView postownername;
         TextView duration;
         CircularAppCompatImageView menu;
+        CircularAppCompatImageView postowner;
         ImageView playvideo;
         RelativeLayout rootLayout;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -220,9 +250,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             thumbimage = view.findViewById(R.id.demoimage);
             playvideo = view.findViewById(R.id.playvideo);
             menu = view.findViewById(R.id.menu);
+            postowner = view.findViewById(R.id.postowner);
             post_owner = view.findViewById(R.id.post_owner);
             txtlikes = view.findViewById(R.id.txtlikes);
             txtview = view.findViewById(R.id.txtview);
+            postownername = view.findViewById(R.id.postownername);
             duration = view.findViewById(R.id.duration);
             reaction_id = view.findViewById(R.id.reaction_id);
             cardView = view.findViewById(R.id.cardview);

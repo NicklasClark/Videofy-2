@@ -452,12 +452,18 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                         is_next_page = reactionsList.isNextPage();
                         postReactionAdapter.updateReactions(reactionsList.getReactions());
                         if (reactionsList.getReactions().size() > 0) {
-                            if (reactionsList.getReactions().size() >= 1)
-                                setReactionPic(reactionsList.getReactions().get(0).getOwner().getProfileMedia().getThumbUrl(), reaction1Pic);
-                            if (reactionsList.getReactions().size() >= 2)
-                                setReactionPic(reactionsList.getReactions().get(1).getOwner().getProfileMedia().getThumbUrl(), reaction2Pic);
-                            if (reactionsList.getReactions().size() >= 3)
-                                setReactionPic(reactionsList.getReactions().get(2).getOwner().getProfileMedia().getThumbUrl(), reaction3Pic);
+                            if (reactionsList.getReactions().size() >= 1){
+                                if(reactionsList.getReactions().get(0).getOwner().hasProfileMedia())
+                                setReactionPic(reactionsList.getReactions().get(0).getOwner().getProfileMedia().getThumbUrl(), reaction1Pic);}
+                            if (reactionsList.getReactions().size() >= 2){
+
+                                if(reactionsList.getReactions().get(1).getOwner().hasProfileMedia())
+
+                                    setReactionPic(reactionsList.getReactions().get(1).getOwner().getProfileMedia().getThumbUrl(), reaction2Pic);}
+                            if (reactionsList.getReactions().size() >= 3){
+
+                                if(reactionsList.getReactions().get(2).getOwner().hasProfileMedia())
+                                setReactionPic(reactionsList.getReactions().get(2).getOwner().getProfileMedia().getThumbUrl(), reaction3Pic);}
                         }
                     } else {
                         setNoReactions();
