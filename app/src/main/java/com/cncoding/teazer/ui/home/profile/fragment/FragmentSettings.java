@@ -123,21 +123,25 @@ public class FragmentSettings extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        int valueofPrefrencese=preferencesList.get(0).getValue();
+        try {
+            int valueofPrefrencese=preferencesList.get(0).getValue();
 
-        if(valueofPrefrencese==0){
+            if(valueofPrefrencese==0){
 
-            simpleSwitchShowingReactions.setChecked(false);
+                simpleSwitchShowingReactions.setChecked(false);
+            }
+            else
+            {
+                simpleSwitchShowingReactions.setChecked(true);
+
+            }
+            privateAccountSwitch.setChecked(accountType == 1);
+            saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
+            prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
+            saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else
-        {
-            simpleSwitchShowingReactions.setChecked(true);
-
-        }
-        privateAccountSwitch.setChecked(accountType == 1);
-        saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
-        prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
-        saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
     }
 
     @OnClick(R.id.text_hide_layout) public void hideVideosClicked() {

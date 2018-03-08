@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post.homepage;
+package com.cncoding.teazer.ui.home.post.homepage;
 
 import android.app.Activity;
 import android.support.annotation.LayoutRes;
@@ -18,7 +18,6 @@ import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.post.homepage.PostsListAdapter;
 import com.inmobi.ads.InMobiNative;
 
 import org.json.JSONException;

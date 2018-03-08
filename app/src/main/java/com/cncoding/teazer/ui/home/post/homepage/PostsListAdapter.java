@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.model.post.AdFeedItem;
-import com.cncoding.teazer.home.post.homepage.AdViewHolder;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 
