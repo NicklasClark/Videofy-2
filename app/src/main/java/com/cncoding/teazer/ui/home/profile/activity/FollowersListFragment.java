@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.home.profile.activity;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -35,10 +36,16 @@ public class FollowersListFragment extends BaseHomeFragment {
     @BindView(R.id.nousertext) TextView noUserText;
     @BindView(R.id.loader) DynamicProgress loader;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
-
+    CustomLinearLayoutManager layoutManager;
     String identifier;
     String followerId;
     FollowersAdapter followersAdapter;
+    UserFollowerList userFollowerList;
+
+    private static Bundle mBundleRecyclerViewState;
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+
+
 
     public static FollowersListFragment newInstance(String id, String identifier) {
         FollowersListFragment followersListFragment = new FollowersListFragment();
@@ -57,14 +64,14 @@ public class FollowersListFragment extends BaseHomeFragment {
             identifier = getArguments().getString(ARG_IDENTIFIER);
         }
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_followers, container, false);
         ButterKnife.bind(this, view);
-        CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(getActivity());
+        layoutManager = new CustomLinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page) {
@@ -89,19 +96,37 @@ public class FollowersListFragment extends BaseHomeFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (identifier.equals("Other")) {
-            followersAdapter = new FollowersAdapter(this, false);
-            recyclerView.setAdapter(followersAdapter);
-            loader.setVisibility(View.VISIBLE);
-            getOthersFollowerDetails(Integer.parseInt(followerId), 1);
-        }
-        else if (identifier.equals("User")) {
-            followersAdapter = new FollowersAdapter(this, true);
-            recyclerView.setAdapter(followersAdapter);
-            loader.setVisibility(View.VISIBLE);
-            getUserFollowerList(1);
+
+
+            if (identifier.equals("Other")) {
+                followersAdapter = new FollowersAdapter(this, false);
+                recyclerView.setAdapter(followersAdapter);
+                loader.setVisibility(View.VISIBLE);
+                getOthersFollowerDetails(Integer.parseInt(followerId), 1);
+            } else if (identifier.equals("User")) {
+                followersAdapter = new FollowersAdapter(this, true);
+                recyclerView.setAdapter(followersAdapter);
+                loader.setVisibility(View.VISIBLE);
+                getUserFollowerList(1);
+
+            }
 
         }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // save RecyclerView state
+
+
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+
+
+
     }
 
     public void getUserFollowerList(final int page) {
@@ -110,7 +135,7 @@ public class FollowersListFragment extends BaseHomeFragment {
             public void onResponse(Call<UserFollowerList> call, Response<UserFollowerList> response) {
                 if (response.code() == 200) {
                     try {
-                        UserFollowerList userFollowerList = response.body();
+                        userFollowerList = response.body();
                         if (userFollowerList != null) {
                             if (userFollowerList.getFollowers().size() == 0 && page == 1) {
                                 showNoOneIsFollowingYou();
@@ -191,4 +216,9 @@ public class FollowersListFragment extends BaseHomeFragment {
         layout.setVisibility(View.GONE);
         loader.setVisibility(View.GONE);
     }
+
+
+
+
+
 }

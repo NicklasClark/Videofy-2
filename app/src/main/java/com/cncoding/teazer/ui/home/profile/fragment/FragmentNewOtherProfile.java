@@ -60,7 +60,6 @@ import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 
 /**
- *
  * Created by farazhabib on 15/02/18.
  */
 
@@ -72,27 +71,48 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
     private static final int BLOCK_STATUS = 1;
     private static final int UNBLOCK_STATUS = 2;
 
-    @BindView(R.id.app_bar) AppBarLayout app_bar;
-    @BindView(R.id.sliding_tabs) TabLayout tabLayout;
-    @BindView(R.id.creations) TextView _creations;
-    @BindView(R.id.follower) TextView _followers;
-    @BindView(R.id.following) TextView _following;
-    @BindView(R.id.reaction) TextView _reactions;
-    @BindView(R.id.name) ProximaNovaRegularCheckedTextView _name;
-    @BindView(R.id.username) ProximaNovaSemiBoldTextView _username;
-    @BindView(R.id.detail) ProximaNovaRegularCheckedTextView _detail;
-    @BindView(R.id.profilepic) CircularAppCompatImageView profile_id;
-    @BindView(R.id.reaction1) CircularAppCompatImageView reaction1;
-    @BindView(R.id.reaction2) CircularAppCompatImageView reaction2;
-    @BindView(R.id.reaction3) CircularAppCompatImageView reaction3;
-    @BindView(R.id.background) ImageView placeholder;
-    @BindView(R.id.viewpager) ViewPager viewPager;
-    @BindView(R.id.message1) RelativeLayout message1;
-    @BindView(R.id.totallikes) ProximaNovaRegularCheckedTextView _totalprofilelikes;
-    @BindView(R.id.follow) Button _btnfollow;
-    @BindView(R.id.profilelikebutton) ImageView profilelikebutton;
+    @BindView(R.id.app_bar)
+    AppBarLayout app_bar;
+    @BindView(R.id.sliding_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.creations)
+    TextView _creations;
+    @BindView(R.id.follower)
+    TextView _followers;
+    @BindView(R.id.following)
+    TextView _following;
+    @BindView(R.id.reaction)
+    TextView _reactions;
+    @BindView(R.id.name)
+    ProximaNovaSemiBoldTextView _name;
+    @BindView(R.id.username)
+    ProximaNovaRegularCheckedTextView _username;
+    @BindView(R.id.detail)
+    ProximaNovaRegularCheckedTextView _detail;
+    @BindView(R.id.profilepic)
+    CircularAppCompatImageView profile_id;
+    @BindView(R.id.reaction1)
+    CircularAppCompatImageView reaction1;
+    @BindView(R.id.reaction2)
+    CircularAppCompatImageView reaction2;
+    @BindView(R.id.reaction3)
+    CircularAppCompatImageView reaction3;
+    @BindView(R.id.background)
+    ImageView placeholder;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.message1)
+    RelativeLayout message1;
+    @BindView(R.id.totallikes)
+    ProximaNovaRegularCheckedTextView _totalprofilelikes;
+    @BindView(R.id.follow)
+    Button _btnfollow;
+    @BindView(R.id.profilelikebutton)
+    ImageView profilelikebutton;
     @BindView(R.id.topReactions)
     ProximaNovaRegularCheckedTextView topReactions;
+    @BindView(R.id.likeliked)
+    ProximaNovaRegularCheckedTextView _likeliked;
 
     int accountType;
     boolean requestRecieved;
@@ -151,7 +171,7 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
-//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        //toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_with_shadow);
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -211,11 +231,13 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
 //        startActivity(intent, options.toBundle());
 //    }
 
-    @OnClick(R.id.follow) public void followBtnClicked() {
-        if(_btnfollow.getText().equals(getString(R.string.accept))) {
+    @OnClick(R.id.follow)
+    public void followBtnClicked() {
+
+        if (_btnfollow.getText().equals(getString(R.string.accept))) {
             acceptUser(requestId, true);
         }
-        if(_btnfollow.getText().equals(getString(R.string.follow))) {
+        if (_btnfollow.getText().equals(getString(R.string.follow))) {
             if (requestRecieved) {
                 acceptUser(requestId, false);
             } else {
@@ -234,34 +256,36 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
         }
     }
 
-    @OnClick(R.id.follower) public void showFollowersList() {
+    @OnClick(R.id.follower)
+    public void showFollowersList() {
         if (accountType == 1) {
             if (isfollowing) {
                 navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
             } else if (hassentrequest) {
                 if (requestRecieved) {
                     navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
-                }
-                else Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
-            }
-            else Toast.makeText(context, "You can not view follower List", Toast.LENGTH_SHORT).show();
-        }
-        else navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
+                } else
+                    Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(context, "You can not view follower List", Toast.LENGTH_SHORT).show();
+        } else
+            navigation.pushFragment(FollowersListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
     }
 
-    @OnClick(R.id.following) public void showFollowingUsers() {
+    @OnClick(R.id.following)
+    public void showFollowingUsers() {
         if (accountType == 1) {
             if (isfollowing) {
                 navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
             } else if (hassentrequest) {
                 if (requestRecieved) {
                     navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
-                }
-                else Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-            }
-            else Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-        }
-        else navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
+                } else
+                    Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
+        } else
+            navigation.pushFragment(FollowingListFragment.newInstance(String.valueOf(followerfollowingid), "Other"));
     }
 
     @OnClick(R.id.profilelikebutton) public void profileLikeBtnClicked() {
@@ -284,15 +308,18 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
         navigation.pushFragment(FragmentLikedUser.newInstance(followerfollowingid, LIKED_USERS_OF_PROFILE));
     }
 
-    @OnClick(R.id.reaction1) public void openTopReactor1Profile() {
+    @OnClick(R.id.reaction1)
+    public void openTopReactor1Profile() {
         openProfile(getUserId(context), navigation, topReactedUserList.get(0).getUserId());
     }
 
-    @OnClick(R.id.reaction2) public void openTopReactor2Profile() {
+    @OnClick(R.id.reaction2)
+    public void openTopReactor2Profile() {
         openProfile(getUserId(context), navigation, topReactedUserList.get(1).getUserId());
     }
 
-    @OnClick(R.id.reaction3) public void openTopReactor3Profile() {
+    @OnClick(R.id.reaction3)
+    public void openTopReactor3Profile() {
         openProfile(getUserId(context), navigation, topReactedUserList.get(2).getUserId());
     }
 
@@ -333,10 +360,12 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
     }
 
     @Override
-    public void updateVideosCreation(int count) {}
+    public void updateVideosCreation(int count) {
+    }
 
     @Override
-    public void updateReaction(int count) {}
+    public void updateReaction(int count) {
+    }
 
     public static void setActionButtonText(Context context, TextView textView, int resId) {
         textView.setText(resId);
@@ -394,28 +423,28 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    if(response.body().getStatus()) {
-                        if(status==2) {
-                            Toast.makeText(context,"You have disliked this profile",Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(context,"You have liked this profile",Toast.LENGTH_SHORT).show();
+                    if (response.body().getStatus()) {
+                        if (status == 2) {
+//                            Toast.makeText(context, "You have disliked this profile", Toast.LENGTH_SHORT).show();
+                        } else {
+                  //          Toast.makeText(context, "You have liked this profile", Toast.LENGTH_SHORT).show();
                         }
                     }
-                } catch(Exception e) {
-                    Toast.makeText(context,"Oops something went wrong",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, "Oops something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
-                Toast.makeText(context,"Oops something went wrong",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Oops something went wrong", Toast.LENGTH_SHORT).show();
 
 
             }
         });
     }
+
     public void getProfileInformation(final int followersid) {
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
 
@@ -435,182 +464,138 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                         isfollowing = profileInfo.getFollowInfo().isFollowing();
                         youBlocked = profileInfo.getFollowInfo().isYouBlocked();
                         isHideAllPost = profileInfo.getIsHidedAllPosts();
-                        topReactedUserList=profileInfo.getTopReactedUsers();
-                        totalProfileLikes=profileInfo.getTotalProfileLikes();
-                        totalProfileLikes=profileInfo.getTotalProfileLikes();
-                        canLike=profileInfo.getCanLike();
-                        if(canLike)
-                        {   Glide.with(context)
-                                .load(R.drawable.ic_likebig)
-                                .into(profilelikebutton);
+                        topReactedUserList = profileInfo.getTopReactedUsers();
+                        totalProfileLikes = profileInfo.getTotalProfileLikes();
+                        totalProfileLikes = profileInfo.getTotalProfileLikes();
+                        canLike = profileInfo.getCanLike();
+
+                        if (canLike) {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_likebig)
+                                    .into(profilelikebutton);
+                        } else {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_like_filled)
+                                    .into(profilelikebutton);
                         }
-                        else{ Glide.with(context)
-                                .load(R.drawable.ic_like_filled)
-                                .into(profilelikebutton);
-                        }
-                        if (topReactedUserList!=null)
-                        {
-                            if(topReactedUserList.size()==1){
-                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
+                        if (topReactedUserList != null) {
+                            if (topReactedUserList.size() == 1) {
+                                TopReactedUser topReactedUser1 = topReactedUserList.get(0);
                                 reaction1.setVisibility(View.VISIBLE);
-                                if(topReactedUser1.getHasProfileMedia())
-                                {
+                                if (topReactedUser1.getHasProfileMedia()) {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                             .into(reaction1);
-                                }
-                                else
-                                {
-                                    if(topReactedUser1.getGender()==1) {
+                                } else {
+                                    if (topReactedUser1.getGender() == 1) {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction1);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction1);
                                     }
 
                                 }
-                            }
-                            else if((topReactedUserList.size()==2))
-                            {
-                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
-                                TopReactedUser  topReactedUser2=topReactedUserList.get(1);
+                            } else if ((topReactedUserList.size() == 2)) {
+                                TopReactedUser topReactedUser1 = topReactedUserList.get(0);
+                                TopReactedUser topReactedUser2 = topReactedUserList.get(1);
                                 reaction1.setVisibility(View.VISIBLE);
                                 reaction2.setVisibility(View.VISIBLE);
-                                if(topReactedUser1.getHasProfileMedia())
-                                {
+                                if (topReactedUser1.getHasProfileMedia()) {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                             .into(reaction1);
-                                }
-
-                                else
-                                {
-                                    if(topReactedUser2.getGender()==1) {
+                                } else {
+                                    if (topReactedUser2.getGender() == 1) {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction2);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction2);
                                     }
 
                                 }
-                                if(topReactedUser2.getHasProfileMedia())
-                                {
+                                if (topReactedUser2.getHasProfileMedia()) {
+
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                             .into(reaction2);
 
-                                }
-                                else
-                                {
-                                    if(topReactedUser2.getGender()==1) {
+                                } else {
+                                    if (topReactedUser2.getGender() == 1) {
+
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction2);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction2);
                                     }
 
                                 }
-                            }
-
-                            else if((topReactedUserList.size()==3))
-                            {
-                                TopReactedUser  topReactedUser1=topReactedUserList.get(0);
-                                TopReactedUser  topReactedUser2=topReactedUserList.get(1);
-                                TopReactedUser  topReactedUser3=topReactedUserList.get(2);
+                            } else if ((topReactedUserList.size() == 3)) {
+                                TopReactedUser topReactedUser1 = topReactedUserList.get(0);
+                                TopReactedUser topReactedUser2 = topReactedUserList.get(1);
+                                TopReactedUser topReactedUser3 = topReactedUserList.get(2);
                                 reaction1.setVisibility(View.VISIBLE);
                                 reaction2.setVisibility(View.VISIBLE);
                                 reaction3.setVisibility(View.VISIBLE);
 
-                                if(topReactedUser1.getHasProfileMedia())
-                                {
+                                if (topReactedUser1.getHasProfileMedia()) {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser1.getProfileMedia().getThumbUrl()))
                                             .into(reaction1);
-                                }
-                                else
-                                {
-                                    if(topReactedUser1.getGender()==1) {
+                                } else {
+                                    if (topReactedUser1.getGender() == 1) {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction1);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction1);
                                     }
 
                                 }
-
-
-                                if(topReactedUser2.getHasProfileMedia())
-                                {
+                                if (topReactedUser2.getHasProfileMedia()) {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser2.getProfileMedia().getThumbUrl()))
                                             .into(reaction2);
-                                }
-                                else
-                                {
-                                    if(topReactedUser2.getGender()==1) {
+                                } else {
+                                    if (topReactedUser2.getGender() == 1) {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction2);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction2);
                                     }
-
                                 }
-                                if(topReactedUser3.getHasProfileMedia())
-                                {
+                                if (topReactedUser3.getHasProfileMedia()) {
                                     Glide.with(context)
                                             .load(Uri.parse(topReactedUser3.getProfileMedia().getThumbUrl()))
                                             .into(reaction3);
-                                }
-                                else
-                                {
-                                    if(topReactedUser2.getGender()==1) {
+                                } else {
+                                    if (topReactedUser2.getGender() == 1) {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_male_dp)
                                                 .into(reaction2);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Glide.with(context)
                                                 .load(R.drawable.ic_user_female_dp)
                                                 .into(reaction2);
                                     }
-
                                 }
-                            }
-                            else if(topReactedUserList.size()==0)
-                            {
+                            } else if (topReactedUserList.size() == 0) {
                                 topReactions.setVisibility(View.GONE);
-
                             }
-
                         }
-
-
                         if (requestRecieved) {
                             requestId = profileInfo.getFollowInfo().getRequestId();
                         }
@@ -619,17 +604,43 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                             // _unHideAll.setVisibility(View.VISIBLE);
                         }
 
-                        _followers.setText(String.valueOf(follower));
-                        _following.setText(String.valueOf(following));
-                        _creations.setText(String.valueOf(totalvideos));
-                        _reactions.setText(String.valueOf(totalreactions));
 
-                        if(totalProfileLikes==0||totalProfileLikes==1){
-                        _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Like");
-                        } else
-                        {
-                            _totalprofilelikes.setText(String.valueOf(totalProfileLikes)+" Likes");
+                        if (follower < 10) {
+                            _followers.setText(String.valueOf("0" + follower));
+
+                        } else {
+                            _followers.setText(String.valueOf(follower));
                         }
+                        if (following < 10) {
+                            _following.setText(String.valueOf("0" + following));
+
+                        } else {
+                            _following.setText(String.valueOf(following));
+                        }
+                        if (totalvideos < 10) {
+                            _creations.setText(String.valueOf("0" + totalvideos));
+
+                        } else {
+                            _creations.setText(String.valueOf(totalvideos));
+                        }
+                        if (totalreactions < 10) {
+
+                            _reactions.setText(String.valueOf("0" + totalreactions));
+
+                        } else {
+                            _reactions.setText(String.valueOf(totalreactions));
+
+                        }
+
+                        if (totalProfileLikes == 0 || totalProfileLikes == 1) {
+                            _totalprofilelikes.setText(String.valueOf(totalProfileLikes) + " like");
+                        } else {
+                            _totalprofilelikes.setText(String.valueOf(totalProfileLikes) + " likes");
+                        }
+
+
+                        String likesliked = !canLike ? " Liked" : " Like Profile";
+                        _likeliked.setText(likesliked);
 
                         if (response.body().getPrivateProfile() == null) {
                             PublicProfile publicProfile = response.body().getPublicProfile();
@@ -641,7 +652,7 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                             int gender = publicProfile.getGender();
 
                             accountType = publicProfile.getAccountType();
-                            _username.setText(username);
+                            _username.setText("@"+username);
                             _name.setText(firstnamelastname);
                             if (details == null || details.equals("")) {
                                 _detail.setText("");
@@ -649,7 +660,6 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                                 _detail.setText(details);
                             }
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
-
 
 
 //                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
@@ -667,9 +677,8 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                             if (hasProfileMedia == true) {
                                 userProfileUrl = publicProfile.getProfileMedia().getMediaUrl();
                             }
-                            Boolean hasCoverMedia=publicProfile.getHasCoverMedia();
-                            if (hasCoverMedia == true)
-  {
+                            Boolean hasCoverMedia = publicProfile.getHasCoverMedia();
+                            if (hasCoverMedia == true) {
                                 userCoverPicUrl = publicProfile.getCoverMedia().getMediaUrl();
                             }
 
@@ -749,8 +758,7 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
 
                                     viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context, FragmentNewOtherProfile.this, followerfollowingid));
                                     tabLayout.setupWithViewPager(viewPager);
-                                }
-                                else {
+                                } else {
                                     if (isfollowing) {
                                         //getProfileVideos(followersid,1);
 
@@ -785,9 +793,8 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                                 userProfileUrl = privateProfile.getProfileMedia().getMediaUrl();
                             }
 
-                            Boolean hasCoverMedia=privateProfile.isHas_cover_media();
-                            if (hasCoverMedia == true)
-                            {
+                            Boolean hasCoverMedia = privateProfile.isHas_cover_media();
+                            if (hasCoverMedia == true) {
                                 userCoverPicUrl = privateProfile.getCover_media().getMediaUrl();
                             }
 
@@ -819,7 +826,7 @@ public class FragmentNewOtherProfile extends BaseHomeFragment implements Profile
                                 }
 
                             }
-                            _username.setText(username);
+                            _username.setText("@"+username);
                             _name.setText(firstnamelastname);
                             _detail.setText("");
 

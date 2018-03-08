@@ -27,14 +27,14 @@
                 android:src="@drawable/ic_arrow_back_dark" />
 
             <TextView
-                android:id="@+id/appTitle"
+                android:id="@+id/appTitle" android:layout_toRightOf="@id/backbutton"
+                android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
                 android:textColor="#bc202020"
                 android:textStyle="bold"
-                android:text="Add your own Cover"/>
+                android:text="Change Cover"/>
         </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 

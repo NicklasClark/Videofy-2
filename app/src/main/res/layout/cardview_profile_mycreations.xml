@@ -65,8 +65,8 @@
                 />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/menu"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 app:srcCompat="@drawable/ic_contextmenu"
                 android:foreground="@drawable/ripple_dark_no_rounded"
                 android:layout_alignParentEnd="true"
@@ -160,6 +160,7 @@
                 android:textColor="@color/cardview_light_background"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/view"/>
+
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/react"
                 android:layout_width="24dp"
@@ -167,7 +168,7 @@
                 android:background="@drawable/ic_reaction_home"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:layout_marginStart="16dp"
+                android:visibility="invisible"
                 android:layout_marginEnd="3dp"
                 android:layout_toEndOf="@+id/view"/>
 

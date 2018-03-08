@@ -246,10 +246,10 @@ public class CollapsingImageLayout extends FrameLayout {
 
                 if (child.getId() == R.id.name) {
 
-                    int topOffset = (int) ((mSubtitleTopCollapsed - mSubtitleTopExpanded) * offsetFactor) - verticalOffset;
-                    int leftOffset = (int) ((mSubtitleLeftCollapsed - mSubtitleLeftExpanded) * offsetFactor);
-                    offsetHelper.setTopAndBottomOffset(topOffset);
-                    offsetHelper.setLeftAndRightOffset(leftOffset);
+//                    int topOffset = (int) ((mSubtitleTopCollapsed - mSubtitleTopExpanded) * offsetFactor) - verticalOffset;
+//                    int leftOffset = (int) ((mSubtitleLeftCollapsed - mSubtitleLeftExpanded) * offsetFactor);
+//                    offsetHelper.setTopAndBottomOffset(topOffset);
+//                    offsetHelper.setLeftAndRightOffset(leftOffset);
                 }
 
                 if (child.getId() == R.id.detaillayout) {
