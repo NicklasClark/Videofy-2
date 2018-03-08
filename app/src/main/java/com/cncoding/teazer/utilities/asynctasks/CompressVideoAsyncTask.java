@@ -14,6 +14,7 @@ import VideoHandle.EpEditor;
 import VideoHandle.OnEditorListener;
 
 import static com.cncoding.teazer.utilities.common.CommonUtilities.deleteFilePermanently;
+import static com.cncoding.teazer.utilities.common.FileUtils.copyFile;
 
 /**
  *
@@ -26,6 +27,7 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
     public AsyncResponse delegate = null;
     private String filePath;
     private boolean isGallery;
+    private boolean isFileCopied = false;
 
     public CompressVideoAsyncTask(Context context, boolean isGallery) {
         this.context = context;
@@ -43,29 +45,37 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
             projDir.mkdirs();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         final String destinationDir = dirPath + "/teazer_" + timeStamp + ".mp4";
+        String sourceFilepath = sourceFile.getAbsolutePath();
 
+        if(sourceFilepath.contains(" "))
+        {
+            copyFile(sourceFilepath, "fileWithoutSpace" + timeStamp, dirPath);
+            sourceFilepath = dirPath + "/" + "fileWithoutSpace" + timeStamp;
+            isFileCopied = true;
+        }
 //        String[] command = {"-y", "-i", sourceFile.getAbsolutePath(), "-s", "160x120", "-r", "25", "-vcodec", "mp4", "-b:v", "150k", "-b:a", "48000", "-ac", "2", "-ar", "22050", destFile.getAbsolutePath()};
 //        String cmd =  "-y "+"-i "+sourceFile.getAbsolutePath()+" -s "+"160x120 "+"-r "+"25 "+"-vcodec "+"mpeg4 "+"-b:v "+"150k "+"-b:a "+"48000 "+"-ac "+"2 "+"-ar "+"22050 " +"-pix_fmt yuv420p "+ destFile.getAbsolutePath();
 //        String cmd =  "-i "+ sourceFile.getAbsolutePath()+ " -vcodec h264 -acodec mp2" + destFile.getAbsolutePath();
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath()+" -c:v libx264 -preset ultrafast -tune fastdecode "+destFile.getAbsolutePath();;
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -strict experimental -vcodec libx264 -preset ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 320x240 -aspect 4:3 "+ destFile.getAbsolutePath();
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -profile:v baseline -vcodec h264 -acodec aac -movflags +faststart -c:v libx264 -crf 28 -preset ultrafast -strict -2 -b:a 128k "+ destinationDir;
-        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -profile:v baseline -vcodec h264 -movflags +faststart -r 15 -crf 25 -preset ultrafast -strict -2 -b:a 128k -c:a copy "+ destinationDir;
-//
-//
+        String cmd =  "-y -i " +sourceFilepath +" -profile:v baseline -vcodec h264 -movflags +faststart -r 15 -crf 25 -preset ultrafast -strict -2 -b:a 128k -c:a copy "+ destinationDir;
+
         EpEditor epEditor =  new EpEditor(context);
+        final String finalSourceFilepath = sourceFilepath;
         epEditor.execCmd(cmd, 0, new OnEditorListener(){
             @Override
             public void onSuccess(){
                 Log.d("Compress", "Success");
-                if (!isGallery) {
-                    deleteFilePermanently(sourceVideoPath[0]);
+                if (!isGallery || isFileCopied) {
+                    deleteFilePermanently(finalSourceFilepath);
                 }
                 delegate.compressionProcessFinish(destinationDir);
             }
 
             @Override
             public void onFailure(){
+                delegate.compressionProcessFinish(sourceVideoPath[0]);
                 Log.d("Compress", "Failed");
             }
 
