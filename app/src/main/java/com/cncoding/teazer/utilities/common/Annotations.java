@@ -14,6 +14,14 @@ import java.lang.annotation.RetentionPolicy;
 
 public class Annotations {
 
+    public static final String WITH_AUTH_TOKEN = "withAuthToken";
+    public static final String WITHOUT_AUTH_TOKEN = "withoutAuthToken";
+    public static final String AUTH_TOKEN_STRING = "authToken";
+    public static final String BASE_URL_STRING = "withoutAuthToken";
+    public static final String GIPHY = "giphy";
+    public static final String POST_LIST = "postList";
+    public static final String MOST_POPULAR = "mostPopular";
+
     public static final int NO_CALL = 0;
 
     //region Gender types
@@ -47,6 +55,13 @@ public class Annotations {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({HIDE, SHOW})
     public @interface HideOrShow {}
+
+    public static final int BLOCK = 1;
+    public static final int UNBLOCK = 2;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({BLOCK, UNBLOCK})
+    public @interface BlockUnblock {}
 
     //region Authentication calls
     /**
@@ -188,20 +203,33 @@ public class Annotations {
     public static final int CALL_REPORT_USER = 83;
     public static final int CALL_DEACTIVATE_ACCOUNT = 84;
     public static final int CALL_RESET_UNREAD_NOTIFICATION = 85;
+    public static final int CALL_LIKE_DISLIKE_PROFILE = 851;
+    public static final int CALL_GET_LIKED_USERS_LIST = 852;
 
     /**
      * Application calls
      */
+    public static final int CALL_SEND_PUSH_NOTIFICATION_TO_ALL = 861;
+    public static final int CALL_GET_DEFAULT_COVER_IMAGES = 862;
+    public static final int CALL_GET_UPDATE_AND_CONFIG_DETAILS = 863;
     public static final int CALL_GET_POST_REPORT_TYPES = 86;
+    public static final int CALL_GET_REACTION_REPORT_TYPES = 864;
     public static final int CALL_GET_PROFILE_REPORT_TYPES = 87;
     public static final int CALL_GET_DEACTIVATION_TYPES_LIST = 88;
     public static final int CALL_GET_CATEGORIES = 89;
+
+    /**
+     * Giphy calls
+     */
+    public static final int CALL_GET_TRENDING_GIPHYS = 90;
+    public static final int CALL_SEARCH_GIPHYS = 91;
     //endregion
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({NO_CALL,
 
-            CALL_GET_POST_REPORT_TYPES, CALL_GET_PROFILE_REPORT_TYPES, CALL_GET_DEACTIVATION_TYPES_LIST, CALL_GET_CATEGORIES,
+            CALL_SEND_PUSH_NOTIFICATION_TO_ALL, CALL_GET_DEFAULT_COVER_IMAGES, CALL_GET_UPDATE_AND_CONFIG_DETAILS, CALL_GET_POST_REPORT_TYPES,
+            CALL_GET_REACTION_REPORT_TYPES, CALL_GET_PROFILE_REPORT_TYPES, CALL_GET_DEACTIVATION_TYPES_LIST, CALL_GET_CATEGORIES,
 
             CALL_LANDING_POSTS, CALL_MOST_POPULAR_POSTS, CALL_FEATURED_POSTS, CALL_ALL_INTERESTED_CATEGORIES_POSTS, CALL_TRENDING_VIDEOS,
             CALL_TRENDING_POSTS_BY_CATEGORY, CALL_USERS_LIST, CALL_USERS_LIST_WITH_SEARCH_TERM, CALL_VIDEOS_LIST_WITH_SEARCH_TERM,
@@ -224,7 +252,9 @@ public class Annotations {
             CALL_UPDATE_USER_PROFILE_MEDIA, CALL_RESET_FCM_TOKEN, CALL_SET_ACCOUNT_VISIBILITY, CALL_GET_USER_PROFILE, CALL_CHANGE_MOBILE_NUMBER,
             CALL_UPDATE_MOBILE_NUMBER, CALL_GET_USER_PROFILE_DETAIL, CALL_UPDATE_USER_PROFILE, CALL_UPDATE_PASSWORD, CALL_SET_PASSWORD,
             CALL_GET_FOLLOWING_NOTIFICATIONS, CALL_GET_REQUEST_NOTIFICATIONS, CALL_UPDATE_CATEGORIES, CALL_LOGOUT, CALL_REMOVE_PROFILE_PIC,
-            CALL_REPORT_USER, CALL_DEACTIVATE_ACCOUNT, CALL_RESET_UNREAD_NOTIFICATION
+            CALL_REPORT_USER, CALL_DEACTIVATE_ACCOUNT, CALL_RESET_UNREAD_NOTIFICATION, CALL_GET_LIKED_USERS_LIST, CALL_LIKE_DISLIKE_PROFILE,
+
+            CALL_GET_TRENDING_GIPHYS, CALL_SEARCH_GIPHYS
     })
     public @interface CallType {}
 }

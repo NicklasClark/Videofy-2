@@ -24,8 +24,8 @@ public class ProfileMedia extends ViewModel implements Parcelable {
     @SerializedName("media_url") @Expose private String mediaUrl;
     @SerializedName("thumb_url") @Expose private String thumbUrl;
     @SerializedName("duration") @Expose private String duration;
-    @Embedded(prefix = "dimension_") @SerializedName("mediaDimension") @Expose private Dimension mediaDimension;
-    @SerializedName("isImage") @Expose private Boolean isImage;
+    @Embedded(prefix = "dimension_") @SerializedName("media_dimension") @Expose private Dimension mediaDimension;
+    @SerializedName("is_image") @Expose private Boolean isImage;
 
     public ProfileMedia(int pictureId, String mediaUrl, String thumbUrl, String duration, Dimension mediaDimension, Boolean isImage) {
         this.pictureId = pictureId;

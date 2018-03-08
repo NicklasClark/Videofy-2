@@ -17,22 +17,22 @@ import java.util.Objects;
 
 public class UserInfoDiffCallback extends DiffUtil.Callback {
 
-    private static final String DIFF_USER_INFO = "userInfo";
-    private static final String DIFF_USERNAME = "username";
-    private static final String DIFF_FIRST_NAME = "firstName";
-    private static final String DIFF_LAST_NAME = "lastName";
-    private static final String DIFF_GENDER = "gender";
-    private static final String DIFF_IS_BLOCKED_YOU = "isBlockedYou";
-    private static final String DIFF_IS_YOU_BLOCKED = "youBlocked";
-    private static final String DIFF_IS_MYSELF = "mySelf";
-    private static final String DIFF_ACCOUNT_TYPE = "accountType";
-    private static final String DIFF_HAS_PROFILE_MEDIA = "hasProfileMedia";
-    private static final String DIFF_PROFILE_MEDIA = "profileMedia";
-    private static final String DIFF_IS_FOLLOWING = "following";
-    private static final String DIFF_IS_FOLLOWER = "follower";
-    private static final String DIFF_IS_REQUEST_SENT = "requestSent";
-    private static final String DIFF_REQUEST_ID = "requestId";
-    private static final String DIFF_IS_REQUEST_RECEIVED = "requestRecieved";
+    public static final String DIFF_USER_INFO = "userInfo";
+    public static final String DIFF_USERNAME = "username";
+    public static final String DIFF_FIRST_NAME = "firstName";
+    public static final String DIFF_LAST_NAME = "lastName";
+    public static final String DIFF_GENDER = "gender";
+    public static final String DIFF_IS_BLOCKED_YOU = "isBlockedYou";
+    public static final String DIFF_IS_YOU_BLOCKED = "youBlocked";
+    public static final String DIFF_IS_MYSELF = "mySelf";
+    public static final String DIFF_ACCOUNT_TYPE = "accountType";
+    public static final String DIFF_HAS_PROFILE_MEDIA = "hasProfileMedia";
+    public static final String DIFF_PROFILE_MEDIA = "profileMedia";
+    public static final String DIFF_IS_FOLLOWING = "following";
+    public static final String DIFF_IS_FOLLOWER = "follower";
+    public static final String DIFF_IS_REQUEST_SENT = "requestSent";
+    public static final String DIFF_REQUEST_ID = "requestId";
+    public static final String DIFF_IS_REQUEST_RECEIVED = "requestRecieved";
 
     private List<UserInfo> oldUserInfoList;
     private List<UserInfo> newUserInfoList;
@@ -119,7 +119,7 @@ public class UserInfoDiffCallback extends DiffUtil.Callback {
         return diffBundle;
     }
 
-    public static void updatePostDetailsAccordingToDiffBundle(UserInfo userInfo, Bundle bundle) {
+    public static void updateUserInfoAccordingToDiffBundle(UserInfo userInfo, Bundle bundle) {
         for (String key : bundle.keySet()) {
             try {
                 switch (key) {

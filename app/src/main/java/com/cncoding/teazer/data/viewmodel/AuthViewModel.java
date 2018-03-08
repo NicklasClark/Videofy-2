@@ -26,100 +26,100 @@ import javax.inject.Inject;
 
 public class AuthViewModel extends ViewModel {
     
-    private MediatorLiveData<ResultObject> apiResponseLiveData;
+    private MediatorLiveData<ResultObject> resultObjectLiveData;
     private AuthenticationRepository authenticationRepository;
     private Observer<ResultObject> resultObjectObserver;
 
-    @Inject public AuthViewModel(MediatorLiveData<ResultObject> apiResponseLiveData, AuthenticationRepository authenticationRepository,
-                         Observer<ResultObject> resultObjectObserver) {
-        this.apiResponseLiveData = apiResponseLiveData;
+    @Inject public AuthViewModel(MediatorLiveData<ResultObject> resultObjectLiveData, AuthenticationRepository authenticationRepository,
+                                 Observer<ResultObject> resultObjectObserver) {
+        this.resultObjectLiveData = resultObjectLiveData;
         this.authenticationRepository = authenticationRepository;
         this.resultObjectObserver = resultObjectObserver;
     }
 
     public AuthViewModel() {
-        apiResponseLiveData = new MediatorLiveData<>();
+        resultObjectLiveData = new MediatorLiveData<>();
         authenticationRepository = new AuthenticationRepositoryImpl();
         resultObjectObserver = new Observer<ResultObject>() {
             @Override
             public void onChanged(@Nullable ResultObject resultObject) {
-                apiResponseLiveData.setValue(resultObject);
+                resultObjectLiveData.setValue(resultObject);
             }
         };
     }
 
     public MediatorLiveData<ResultObject> getApiResponse() {
-        return apiResponseLiveData;
+        return resultObjectLiveData;
     }
 
     private void clearLiveDataResponse() {
-        if (apiResponseLiveData.getValue() != null) {
-            apiResponseLiveData.getValue().clearData();
+        if (resultObjectLiveData.getValue() != null) {
+            resultObjectLiveData.getValue().clearData();
         }
     }
 
     public void signUp(InitiateSignup initiateSignup) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.signUp(initiateSignup), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.signUp(initiateSignup), resultObjectObserver);
     }
 
     public void verifySignUp(VerifySignUp verifySignUp) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.verifySignUp(verifySignUp), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.verifySignUp(verifySignUp), resultObjectObserver);
     }
 
     public void socialSignUp(SocialSignup socialSignup) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.socialSignUp(socialSignup), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.socialSignUp(socialSignup), resultObjectObserver);
     }
 
     public void loginWithPassword(Login login) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.loginWithPassword(login), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.loginWithPassword(login), resultObjectObserver);
     }
 
     public void loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.loginWithOtp(initiateLoginWithOtp), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.loginWithOtp(initiateLoginWithOtp), resultObjectObserver);
     }
 
     public void verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.verifyLoginWithOtp(verifyLoginWithOtp), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.verifyLoginWithOtp(verifyLoginWithOtp), resultObjectObserver);
     }
 
     public void checkUsernameAvailability(String username) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.checkUsernameAvailability(username), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.checkUsernameAvailability(username), resultObjectObserver);
     }
 
     public void checkEmailAvailability(String email) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.checkEmailAvailability(email), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.checkEmailAvailability(email), resultObjectObserver);
     }
 
     public void checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.checkPhoneNumberAvailability(countryCode, phoneNumber), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.checkPhoneNumberAvailability(countryCode, phoneNumber), resultObjectObserver);
     }
 
     public void verifyForgotPasswordOtp(int otp) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.verifyForgotPasswordOtp(otp), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.verifyForgotPasswordOtp(otp), resultObjectObserver);
     }
 
     public void requestResetPasswordByEmail(String email) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.requestResetPasswordByEmail(email), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.requestResetPasswordByEmail(email), resultObjectObserver);
     }
 
     public void requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.requestResetPasswordByPhone(resetPasswordByPhoneNumber), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.requestResetPasswordByPhone(resetPasswordByPhoneNumber), resultObjectObserver);
     }
 
     public void resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
         clearLiveDataResponse();
-        apiResponseLiveData.addSource(authenticationRepository.resetPasswordByOtp(resetPasswordByOtp), resultObjectObserver);
+        resultObjectLiveData.addSource(authenticationRepository.resetPasswordByOtp(resetPasswordByOtp), resultObjectObserver);
     }
 }

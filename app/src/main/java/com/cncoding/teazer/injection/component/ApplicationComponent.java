@@ -18,13 +18,48 @@
 
 package com.cncoding.teazer.injection.component;
 
-import android.app.Application;
+import android.arch.lifecycle.MediatorLiveData;
 
-import com.cncoding.teazer.injection.module.ApplicationModule;
-import com.cncoding.teazer.injection.module.RoomModule;
-import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
-import com.cncoding.teazer.ui.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.data.local.database.TeazerDB;
+import com.cncoding.teazer.data.model.application.DeactivateTypes;
+import com.cncoding.teazer.data.model.application.ReportTypes;
+import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.VideosList;
+import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.FollowingsList;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.post.LikedUserList;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.post.TaggedUsersList;
+import com.cncoding.teazer.data.model.profile.DefaultCoverImageResponse;
+import com.cncoding.teazer.data.model.react.HiddenReactionsList;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
+import com.cncoding.teazer.data.model.user.BlockedUsersList;
+import com.cncoding.teazer.data.model.user.NotificationsList;
+import com.cncoding.teazer.data.model.user.UserProfile;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.data.remote.apicalls.application.ApplicationRepository;
+import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepository;
+import com.cncoding.teazer.data.remote.apicalls.discover.DiscoverRepository;
+import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepository;
+import com.cncoding.teazer.data.remote.apicalls.giphy.GiphyRepository;
+import com.cncoding.teazer.data.remote.apicalls.post.PostsRepository;
+import com.cncoding.teazer.data.remote.apicalls.react.ReactRepository;
+import com.cncoding.teazer.data.remote.apicalls.user.UserRepository;
+import com.cncoding.teazer.injection.module.mainmodule.local.LiveDataModule;
+import com.cncoding.teazer.injection.module.mainmodule.local.RoomModule;
+import com.cncoding.teazer.injection.module.mainmodule.remote.RepositoryModule;
+import com.cncoding.teazer.utilities.common.Annotations;
 
+import java.util.List;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -36,13 +71,43 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class, RoomModule.class})
+@Component(modules = {
+        RoomModule.class, RepositoryModule.class, LiveDataModule.class,
+})
 public interface ApplicationComponent {
 
-    void inject(PostsListFragment postsListFragment);
-    void inject(PostDetailsFragment postDetailsFragment);
+    MediatorLiveData<ResultObject> resultObjectLiveData();
+    MediatorLiveData<DefaultCoverImageResponse> defaultCoverImageLiveData();
+    MediatorLiveData<List<ReportTypes>> reportTypesListLiveData();
+    MediatorLiveData<List<DeactivateTypes>> deactivateTypesListLiveData();
+    MediatorLiveData<List<Category>> categoriesListLiveData();
+    MediatorLiveData<LandingPostsV2> landingPostsLiveData();
+    @Named(Annotations.POST_LIST) MediatorLiveData<PostList> postListLiveData();
+    @Named(Annotations.MOST_POPULAR) MediatorLiveData<PostList> mostPopularLiveData();
+    MediatorLiveData<UsersList> usersListLiveData();
+    MediatorLiveData<VideosList> videosLiveData();
+    MediatorLiveData<CircleList> circleListLiveData();
+    MediatorLiveData<FollowingsList> followingsListLiveData();
+    MediatorLiveData<FollowersList> followersListLiveData();
+    MediatorLiveData<ProfileInfo> profileInfoLiveData();
+    MediatorLiveData<BlockedUsersList> blockedUsersListLiveData();
+    MediatorLiveData<LikedUserList> likedUserListLiveData();
+    MediatorLiveData<PostDetails> postDetailsLiveData();
+    MediatorLiveData<PostUploadResult> postUploadResultLiveData();
+    MediatorLiveData<TaggedUsersList> taggedUsersListLiveData();
+    MediatorLiveData<ReactionResponse> reactionResponseLiveData();
+    MediatorLiveData<ReactionsList> reactionsListLiveData();
+    MediatorLiveData<HiddenReactionsList> hiddenReactionsLiveData();
+    MediatorLiveData<UserProfile> userProfileLiveData();
+    MediatorLiveData<NotificationsList> notificationsLiveData();
 
-
-
-    Application application();
+    ApplicationRepository applicationRepository();
+    AuthenticationRepository authenticationRepository();
+    DiscoverRepository discoverRepository();
+    FriendsRepository friendsRepository();
+    PostsRepository postsRepository();
+    ReactRepository reactRepository();
+    UserRepository userRepository();
+    GiphyRepository giphyRepository();
+    TeazerDB database();
 }

@@ -3,6 +3,7 @@ package com.cncoding.teazer.ui.home.profile.adapter;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.AppCompatImageView;
@@ -17,12 +18,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.friends.UserInfo;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback;
 
 import java.util.ArrayList;
@@ -36,8 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_USER_INFO;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.updateUserInfoAccordingToDiffBundle;
 
 /**
  *
@@ -47,10 +50,10 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText
 public class FollowingAdapter extends BaseRecyclerView.Adapter {
 
     private List<UserInfo> userInfoList;
-    private BaseFragment fragment;
+    private BaseHomeFragment fragment;
     private boolean isMyself;
 
-    public FollowingAdapter(BaseFragment fragment, boolean isMyself) {
+    public FollowingAdapter(BaseHomeFragment fragment, boolean isMyself) {
         this.fragment = fragment;
         this.isMyself = isMyself;
         this.userInfoList = new ArrayList<>();
@@ -240,19 +243,39 @@ public class FollowingAdapter extends BaseRecyclerView.Adapter {
             }
         }
 
-        @OnClick(R.id.root_layout) public void rootLayoutClicked() {
+        @Override
+        public void bind(List<Object> payloads) {
+            if (payloads.isEmpty()) return;
+
+            if (payloads.get(0) instanceof UserInfo) {
+                userInfoList.set(getAdapterPosition(), (UserInfo) payloads.get(0));
+                bind();
+                return;
+            }
+
+            Bundle bundle = (Bundle) payloads.get(0);
+            if (bundle.containsKey(DIFF_USER_INFO)) {
+                userInfoList.set(getAdapterPosition(), (UserInfo) bundle.getParcelable(DIFF_USER_INFO));
+                bind();
+                return;
+            }
+
+            updateUserInfoAccordingToDiffBundle(userInfo, bundle);
+        }
+
+        @OnClick(R.id.root_layout) void rootLayoutClicked() {
             if (isMyself) {
-                fragment.navigation.pushFragment(FragmentNewProfile2.newInstance());
+                openProfile(getUserId(fragment.context), fragment.navigation, userInfo.getUserId());
             } else {
                 if (userInfo.isBlockedYou()) {
                     Toast.makeText(fragment.getContext(), "you can not view this user profile", Toast.LENGTH_LONG).show();
                 } else {
-                    fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userInfo.getUserId())));
+                    openProfile(getUserId(fragment.context), fragment.navigation, userInfo.getUserId());
                 }
             }
         }
 
-        @OnClick(R.id.action) public void actionBtnClicked() {
+        @OnClick(R.id.action) void actionBtnClicked() {
             CharSequence actionText = action.getText();
             if (isMyself) {
                 if (Objects.equals(actionText, fragment.getString(R.string.following))) {
@@ -301,11 +324,11 @@ public class FollowingAdapter extends BaseRecyclerView.Adapter {
                                         setFollower();
                                     }
                                 } else {
-                                    if (response.body().getFollowInfo().getFollowing()) {
+                                    if (response.body().getFollowInfo().isFollowing()) {
                                         setActionButtonText(fragment.getContext(), action, R.string.following);
                                         setFollowing();
 //                                        Toast.makeText(fragment.getContext(), "You also have started following", Toast.LENGTH_LONG).show();
-                                    } else if (response.body().getFollowInfo().getRequestSent()) {
+                                    } else if (response.body().getFollowInfo().isRequestSent()) {
                                         setActionButtonText(fragment.getContext(), action, R.string.requested);
                                         setRequestSent();
 //                                        Toast.makeText(fragment.getContext(), "Your request has been sent", Toast.LENGTH_LONG).show();

@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NotificationsFragment extends BaseFragment {
+public class NotificationsFragment extends BaseHomeFragment {
 
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;

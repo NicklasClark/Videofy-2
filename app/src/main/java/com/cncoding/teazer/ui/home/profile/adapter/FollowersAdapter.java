@@ -3,6 +3,7 @@ package com.cncoding.teazer.ui.home.profile.adapter;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.DiffUtil;
 import android.view.LayoutInflater;
@@ -17,11 +18,10 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.friends.MyUserInfo;
 import com.cncoding.teazer.data.model.friends.UserInfo;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.utilities.diffutil.MyUserInfoDiffCallback;
 import com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback;
@@ -36,8 +36,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
+import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setActionButtonText;
+import static com.cncoding.teazer.utilities.diffutil.MyUserInfoDiffCallback.DIFF_MY_USER_INFO;
+import static com.cncoding.teazer.utilities.diffutil.MyUserInfoDiffCallback.updateMyUserInfoAccordingToDiffBundle;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_USER_INFO;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.updateUserInfoAccordingToDiffBundle;
 
 /**
  *
@@ -48,10 +54,10 @@ public class FollowersAdapter extends BaseRecyclerView.Adapter {
 
     private List<UserInfo> userInfoList;
     private List<MyUserInfo> myUserInfoList;
-    private BaseFragment fragment;
+    private BaseHomeFragment fragment;
     private boolean isMyself;
 
-    public FollowersAdapter(BaseFragment fragment, boolean isMyself) {
+    public FollowersAdapter(BaseHomeFragment fragment, boolean isMyself) {
         this.fragment = fragment;
         this.myUserInfoList = new ArrayList<>();
         this.userInfoList = new ArrayList<>();
@@ -252,9 +258,46 @@ public class FollowersAdapter extends BaseRecyclerView.Adapter {
             }
         }
 
-        @OnClick(R.id.root_layout) public void rootLayoutClicked() {
+        @Override
+        public void bind(List<Object> payloads) {
+            if (payloads.isEmpty()) return;
+
             if (isMyself) {
-                fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(myUserInfo.getUserId())));
+                if (payloads.get(0) instanceof MyUserInfo) {
+                    myUserInfoList.set(getAdapterPosition(), (MyUserInfo) payloads.get(0));
+                    bind();
+                    return;
+                }
+
+                Bundle bundle = (Bundle) payloads.get(0);
+                if (bundle.containsKey(DIFF_MY_USER_INFO)) {
+                    myUserInfoList.set(getAdapterPosition(), (MyUserInfo) bundle.getParcelable(DIFF_MY_USER_INFO));
+                    bind();
+                    return;
+                }
+
+                updateMyUserInfoAccordingToDiffBundle(myUserInfo, bundle);
+            } else {
+                if (payloads.get(0) instanceof UserInfo) {
+                    userInfoList.set(getAdapterPosition(), (UserInfo) payloads.get(0));
+                    bind();
+                    return;
+                }
+
+                Bundle bundle = (Bundle) payloads.get(0);
+                if (bundle.containsKey(DIFF_USER_INFO)) {
+                    userInfoList.set(getAdapterPosition(), (UserInfo) bundle.getParcelable(DIFF_USER_INFO));
+                    bind();
+                    return;
+                }
+
+                updateUserInfoAccordingToDiffBundle(userInfo, bundle);
+            }
+        }
+
+        @OnClick(R.id.root_layout) void rootLayoutClicked() {
+            if (isMyself) {
+                openProfile(getUserId(fragment.context), fragment.navigation, myUserInfo.getUserId());
             } else {
                 if (userInfo.isMySelf()) {
                     fragment.navigation.pushFragment(FragmentNewProfile2.newInstance());
@@ -263,13 +306,13 @@ public class FollowersAdapter extends BaseRecyclerView.Adapter {
                         Toast.makeText(fragment.getContext(), "you can not view this user profile", Toast.LENGTH_LONG).show();
                     }
                     else {
-                        fragment.navigation.pushFragment(FragmentNewOtherProfile.newInstance(String.valueOf(userInfo.getUserId())));
+                        openProfile(getUserId(fragment.context), fragment.navigation, userInfo.getUserId());
                     }
                 }
             }
         }
 
-        @OnClick(R.id.action) public void actionBtnClicked() {
+        @OnClick(R.id.action) void actionBtnClicked() {
             if (isMyself) {
                 if (action.getText().equals(fragment.getString(R.string.follow))) {
                     if (myUserInfo.getFollowInfo().isRequestReceived() && myUserInfo.isFollower()) {
@@ -328,11 +371,11 @@ public class FollowersAdapter extends BaseRecyclerView.Adapter {
                                         setFollower();
                                     }
                                 } else {
-                                    if (response.body().getFollowInfo().getFollowing()) {
+                                    if (response.body().getFollowInfo().isFollowing()) {
                                         setActionButtonText(fragment.getContext(), action, R.string.following);
                                         setFollowing();
 //                                        Toast.makeText(fragment.getContext(), "You also have started following", Toast.LENGTH_LONG).show();
-                                    } else if (response.body().getFollowInfo().getRequestSent()) {
+                                    } else if (response.body().getFollowInfo().isRequestSent()) {
                                         setActionButtonText(fragment.getContext(), action, R.string.requested);
                                         setRequestSent();
 //                                        Toast.makeText(fragment.getContext(), "Your request has been sent", Toast.LENGTH_LONG).show();

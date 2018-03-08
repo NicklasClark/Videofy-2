@@ -16,7 +16,7 @@
  *
  */
 
-package com.cncoding.teazer.injection.module;
+package com.cncoding.teazer.injection.module.common;
 
 import android.app.Application;
 
@@ -33,18 +33,18 @@ import dagger.Provides;
 
 @Module
 public class ApplicationModule {
+
     private final TeazerApplication application;
+
     public ApplicationModule(TeazerApplication application) {
         this.application = application;
     }
 
-    @Provides
-    TeazerApplication provideRoomDemoApplication(){
+    @Provides TeazerApplication provideRoomDemoApplication(){
         return application;
     }
 
-    @Provides
-    Application provideApplication(){
+    @Provides Application provideApplication(){
         return application;
     }
 }

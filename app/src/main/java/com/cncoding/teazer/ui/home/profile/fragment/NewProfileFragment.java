@@ -29,9 +29,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.UserProfile;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
 import com.cncoding.teazer.ui.home.profile.activity.Settings;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyCreationAdapter;
@@ -55,7 +55,7 @@ import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logProfil
  * Created by farazhabib on 08/02/18.
  */
 
-public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener,ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction{
+public class NewProfileFragment extends BaseHomeFragment implements AppBarLayout.OnOffsetChangedListener,ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction{
 
 
     PublicProfile userProfile;

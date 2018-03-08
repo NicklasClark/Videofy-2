@@ -4,14 +4,15 @@ import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.common.Annotations.HideOrShow;
 import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
@@ -37,7 +38,7 @@ public interface PostsRepository {
 
     LiveData<ResultObject> reportPost(ReportPost reportPostDetails);
 
-    LiveData<ResultObject> hideOrShowPost(int postId, int status);
+    LiveData<ResultObject> hideOrShowPost(int postId, @HideOrShow int status);
 
     LiveData<PostDetails> getPostDetails(int postId);
 
@@ -51,7 +52,7 @@ public interface PostsRepository {
 
     LiveData<PostList> getVideosPostedByFriend(int page, int friendId);
 
-    LiveData<PostReactionsList> getReactionsOfPost(int postId, int page);
+    LiveData<ReactionsList> getReactionsOfPost(int postId, int page);
 
     LiveData<PostList>getHiddenVideosList(int page);
 

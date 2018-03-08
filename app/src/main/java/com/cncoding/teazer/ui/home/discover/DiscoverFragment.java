@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_LANDING_POSTS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_MOST_POPULAR_POSTS;
@@ -163,37 +164,41 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     @SuppressLint("SwitchIntDef") @SuppressWarnings("unchecked") @Override protected void handleResponse(BaseModel resultObject) {
-        switch (resultObject.getCallType()) {
-            case CALL_LANDING_POSTS:
-                if (resultObject instanceof LandingPostsV2)
-                    new NotifyLandingDataSetChanged(this, (LandingPostsV2) resultObject).execute();
-                break;
-            case CALL_MOST_POPULAR_POSTS:
-                if (resultObject instanceof PostList) {
-                    PostList postList = (PostList) resultObject;
-                    if (!postList.getPosts().isEmpty()) {
-                        is_next_page = postList.isNextPage();
-                        mostPopularListAdapter.updatePosts(currentPage, postList.getPosts());
-                        mostPopularLayout.setVisibility(VISIBLE);
-                        mostPopularList.setVisibility(VISIBLE);
-                        noMostPopularVideos.setVisibility(GONE);
-                    } else if (currentPage == 1){
-                        mostPopularLayout.setVisibility(VISIBLE);
-                        mostPopularList.setVisibility(GONE);
-                        noMostPopularVideos.setVisibility(VISIBLE);
+        if (resultObject != null) {
+            switch (resultObject.getCallType()) {
+                case CALL_LANDING_POSTS:
+                    if (resultObject instanceof LandingPostsV2)
+                        new NotifyLandingDataSetChanged(this, (LandingPostsV2) resultObject).execute();
+                    break;
+                case CALL_MOST_POPULAR_POSTS:
+                    if (resultObject instanceof PostList) {
+                        PostList postList = (PostList) resultObject;
+                        if (!postList.getPosts().isEmpty()) {
+                            is_next_page = postList.isNextPage();
+                            mostPopularListAdapter.updatePosts(currentPage, postList.getPosts());
+                            mostPopularLayout.setVisibility(VISIBLE);
+                            mostPopularList.setVisibility(VISIBLE);
+                            noMostPopularVideos.setVisibility(GONE);
+                        } else if (currentPage == 1){
+                            mostPopularLayout.setVisibility(VISIBLE);
+                            mostPopularList.setVisibility(GONE);
+                            noMostPopularVideos.setVisibility(VISIBLE);
+                        }
                     }
-                }
-                if (currentPage == 1 && scrollPosition != nestedScrollView.getScrollY()) {
-                    nestedScrollView.setScrollY(scrollPosition);
-                }
-                mostPopularLoadingProgressBar.setVisibility(GONE);
-                break;
+                    if (currentPage == 1 && scrollPosition != nestedScrollView.getScrollY()) {
+                        nestedScrollView.setScrollY(scrollPosition);
+                    }
+                    mostPopularLoadingProgressBar.setVisibility(GONE);
+                    break;
+            }
         }
     }
 
     @Override protected void handleError(BaseModel baseModel) {
-        showErrorMessage(getString(R.string.something_went_wrong), baseModel.getCallType() == CALL_LANDING_POSTS);
-        mostPopularLoadingProgressBar.setVisibility(GONE);
+        if (baseModel != null) {
+            showErrorMessage(getString(R.string.something_went_wrong), baseModel.getCallType() == CALL_LANDING_POSTS);
+            mostPopularLoadingProgressBar.setVisibility(GONE);
+        }
     }
 
     private static class NotifyLandingDataSetChanged extends AsyncTask<Void, Void, Void> {
@@ -235,7 +240,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
             fragment.landingPostsContainer.setVisibility(VISIBLE);
             if (landingPosts.getUserInterests() == null || landingPosts.getUserInterests().isEmpty() ||
                     landingPosts.getMyInterests() == null || landingPosts.getMyInterests().isEmpty()) {
-                fragment.myInterestsList.setVisibility(GONE);
+                fragment.myInterestsList.setVisibility(INVISIBLE);
                 fragment.noMyInterests.setVisibility(VISIBLE);
             }
             new Handler().postDelayed(new Runnable() {

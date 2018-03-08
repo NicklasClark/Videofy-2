@@ -14,13 +14,13 @@ import com.cncoding.teazer.data.model.base.TaggedUser;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.remote.apicalls.post.PostsRepository;
 import com.cncoding.teazer.data.remote.apicalls.post.PostsRepositoryImpl;
@@ -41,25 +41,19 @@ import okhttp3.MultipartBody;
 @SuppressWarnings("unchecked")
 public class PostViewModel extends AndroidViewModel {
 
-    public static final int DELETE = 0;
-    public static final int INSERT = 1;
-    public static final int LIKE = 2;
-    public static final int DISLIKE = 4;
-    public static final int TAGS = 5;
-    public static final int REACTIONS = 6;
     private MediatorLiveData<PostList> postListLiveData;
     private MediatorLiveData<ResultObject> resultObjectLiveData;
     private MediatorLiveData<PostDetails> postDetailsLiveData;
     private MediatorLiveData<PostUploadResult> postUploadResultLiveData;
     private MediatorLiveData<TaggedUsersList> taggedUsersListLiveData;
-    private MediatorLiveData<PostReactionsList> reactionsListLiveData;
+    private MediatorLiveData<ReactionsList> reactionsListLiveData;
     private MediatorLiveData<ReactionResponse> reactionResponseLiveData;
-    private PostsRepository apiRepository;
+    private PostsRepository postsRepository;
     private TeazerDB database;
 
     public PostViewModel(Application application, String token) {
         super(application);
-        this.apiRepository = new PostsRepositoryImpl(token);
+        this.postsRepository = new PostsRepositoryImpl(token);
         database = TeazerDB.getInstance(this.getApplication());
         postListLiveData = new MediatorLiveData<>();
         this.resultObjectLiveData = new MediatorLiveData<>();
@@ -74,9 +68,9 @@ public class PostViewModel extends AndroidViewModel {
                           MediatorLiveData<ResultObject> resultObjectLiveData, MediatorLiveData<PostDetails> postDetailsLiveData,
                           MediatorLiveData<PostUploadResult> postUploadResultLiveData,
                           MediatorLiveData<TaggedUsersList> taggedUsersListLiveData,
-                          MediatorLiveData<PostReactionsList> reactionsListLiveData,
+                          MediatorLiveData<ReactionsList> reactionsListLiveData,
                           MediatorLiveData<ReactionResponse> reactionResponseLiveData,
-                          PostsRepository apiRepository, TeazerDB database) {
+                          PostsRepository postsRepository, TeazerDB database) {
         super(application);
         this.postListLiveData = postListLiveData;
         this.resultObjectLiveData = resultObjectLiveData;
@@ -85,7 +79,7 @@ public class PostViewModel extends AndroidViewModel {
         this.taggedUsersListLiveData = taggedUsersListLiveData;
         this.reactionsListLiveData = reactionsListLiveData;
         this.reactionResponseLiveData = reactionResponseLiveData;
-        this.apiRepository = apiRepository;
+        this.postsRepository = postsRepository;
         this.database = database;
     }
 
@@ -110,7 +104,7 @@ public class PostViewModel extends AndroidViewModel {
         return taggedUsersListLiveData;
     }
 
-    @NonNull public MediatorLiveData<PostReactionsList> getReactionsListLiveData() {
+    @NonNull public MediatorLiveData<ReactionsList> getReactionsListLiveData() {
         return reactionsListLiveData;
     }
 
@@ -126,7 +120,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadPostList(final int page) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getHomePagePosts(page),
+                    postsRepository.getHomePagePosts(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -165,7 +159,7 @@ public class PostViewModel extends AndroidViewModel {
     }
 
     public void insertAllPostsToDB(List<PostDetails> postDetails) {
-        new DataAccessTasks.InsertAllTask(database).execute(postDetails);
+        new DataAccessTasks.InsertAllTask(database, postDetails).execute();
     }
 
     public void updateLocalPost(PostDetails postDetails) {
@@ -173,19 +167,19 @@ public class PostViewModel extends AndroidViewModel {
     }
 
     public void likeLocalPost(int postId) {
-        new DataAccessTasks.PostUpdateTaskWithId(LIKE, database).execute(postId);
+        new DataAccessTasks.PostUpdateTaskWithId(TeazerDB.LIKE, database).execute(postId);
     }
 
     public void dislikeLocalPost(int postId) {
-        new DataAccessTasks.PostUpdateTaskWithId(DISLIKE, database).execute(postId);
+        new DataAccessTasks.PostUpdateTaskWithId(TeazerDB.DISLIKE, database).execute(postId);
     }
 
     public void deleteLocalPost(int postId) {
-        new DataAccessTasks.PostUpdateTaskWithId(DELETE, database).execute(postId);
+        new DataAccessTasks.PostUpdateTaskWithId(TeazerDB.DELETE, database).execute(postId);
     }
 
     public void deleteLocalPost(PostDetails postDetails) {
-        new DataAccessTasks.PostUpdateTaskWithObject(DELETE, database).execute(postDetails);
+        new DataAccessTasks.PostUpdateTaskWithObject(TeazerDB.DELETE, database).execute(postDetails);
     }
 
     public void deleteAllLocalPosts() {
@@ -197,11 +191,11 @@ public class PostViewModel extends AndroidViewModel {
     }
 
     public void updateLocalTags(ArrayList<TaggedUser> taggedUsers, int postId) {
-        new DataAccessTasks.UpdateTagsReactionsTask(database, taggedUsers, null, false, TAGS, postId).execute();
+        new DataAccessTasks.UpdateTagsReactionsTask(database, taggedUsers, null, false, TeazerDB.TAGS, postId).execute();
     }
 
     public void updateLocalReactions(ArrayList<PostReaction> reactions, boolean canReact, int postId) {
-        new DataAccessTasks.UpdateTagsReactionsTask(database, null, reactions, true, TAGS, postId).execute();
+        new DataAccessTasks.UpdateTagsReactionsTask(database, null, reactions, true, TeazerDB.TAGS, postId).execute();
     }
 
     public void incrementLocalViews(ArrayList<Medias> medias, int postId) {
@@ -214,7 +208,7 @@ public class PostViewModel extends AndroidViewModel {
                             double latitude, double longitude, String tags, String categories) {
         try {
             postUploadResultLiveData.addSource(
-                    apiRepository.uploadVideo(video, title, location, latitude, longitude, tags, categories),
+                    postsRepository.uploadVideo(video, title, location, latitude, longitude, tags, categories),
                     new Observer<PostUploadResult>() {
                         @Override
                         public void onChanged(@Nullable PostUploadResult postUploadResult) {
@@ -229,7 +223,7 @@ public class PostViewModel extends AndroidViewModel {
 
     public void createReactionByGiphy(GiphyReactionRequest giphyReactionRequest) {
         reactionResponseLiveData.addSource(
-                apiRepository.createReactionByGiphy(giphyReactionRequest),
+                postsRepository.createReactionByGiphy(giphyReactionRequest),
                 new Observer<ReactionResponse>() {
                     @Override
                     public void onChanged(@Nullable ReactionResponse reactionResponse) {
@@ -242,7 +236,7 @@ public class PostViewModel extends AndroidViewModel {
     public void updatePost(UpdatePostRequest updatePostRequest) {
         try {
             postUploadResultLiveData.addSource(
-                    apiRepository.updatePost(updatePostRequest),
+                    postsRepository.updatePost(updatePostRequest),
                     new Observer<PostUploadResult>() {
                         @Override
                         public void onChanged(@Nullable PostUploadResult postUploadResult) {
@@ -258,7 +252,7 @@ public class PostViewModel extends AndroidViewModel {
     public void likeDislikePost(int postId, @LikeDislike int status) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.likeDislikePost(postId, status),
+                    postsRepository.likeDislikePost(postId, status),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -274,7 +268,7 @@ public class PostViewModel extends AndroidViewModel {
     public void incrementViewCount(int mediaId) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.incrementViewCount(mediaId),
+                    postsRepository.incrementViewCount(mediaId),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -290,7 +284,7 @@ public class PostViewModel extends AndroidViewModel {
     public void deletePost(int postId) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.deletePost(postId),
+                    postsRepository.deletePost(postId),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -306,7 +300,7 @@ public class PostViewModel extends AndroidViewModel {
     public void reportPost(ReportPost reportPostDetails) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.reportPost(reportPostDetails),
+                    postsRepository.reportPost(reportPostDetails),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -322,7 +316,7 @@ public class PostViewModel extends AndroidViewModel {
     public void hideOrShowPost(int postId, int status) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.hideOrShowPost(postId, status),
+                    postsRepository.hideOrShowPost(postId, status),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -338,7 +332,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadPostDetails(int postId) {
         try {
             postDetailsLiveData.addSource(
-                    apiRepository.getPostDetails(postId),
+                    postsRepository.getPostDetails(postId),
                     new Observer<PostDetails>() {
                         @Override
                         public void onChanged(@Nullable PostDetails postDetails) {
@@ -354,7 +348,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadTaggedUsers(int postId, int page) {
         try {
             taggedUsersListLiveData.addSource(
-                    apiRepository.getTaggedUsers(postId, page),
+                    postsRepository.getTaggedUsers(postId, page),
                     new Observer<TaggedUsersList>() {
                         @Override
                         public void onChanged(@Nullable TaggedUsersList taggedUsersList) {
@@ -370,7 +364,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadHiddenPosts(int page) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getHiddenPosts(page),
+                    postsRepository.getHiddenPosts(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -386,7 +380,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadMyPostedVideos(int page) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getMyPostedVideos(page),
+                    postsRepository.getMyPostedVideos(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -402,7 +396,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadVideosPostedByFriend(int page, int friendId) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getVideosPostedByFriend(page, friendId),
+                    postsRepository.getVideosPostedByFriend(page, friendId),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -418,11 +412,11 @@ public class PostViewModel extends AndroidViewModel {
     public void loadReactionsOfPost(int postId, int page) {
         try {
             reactionsListLiveData.addSource(
-                    apiRepository.getReactionsOfPost(postId, page),
-                    new Observer<PostReactionsList>() {
+                    postsRepository.getReactionsOfPost(postId, page),
+                    new Observer<ReactionsList>() {
                         @Override
-                        public void onChanged(@Nullable PostReactionsList postReactionsList) {
-                            reactionsListLiveData.setValue(postReactionsList);
+                        public void onChanged(@Nullable ReactionsList reactionsList) {
+                            reactionsListLiveData.setValue(reactionsList);
                         }
                     }
             );
@@ -434,7 +428,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadHiddenVideosList(int page) {
         try {
             postListLiveData.addSource(
-                    apiRepository.getHiddenVideosList(page),
+                    postsRepository.getHiddenVideosList(page),
                     new Observer<PostList>() {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
@@ -450,7 +444,7 @@ public class PostViewModel extends AndroidViewModel {
     public void loadAllHiddenVideosList(int postId) {
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.getAllHiddenVideosList(postId),
+                    postsRepository.getAllHiddenVideosList(postId),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {

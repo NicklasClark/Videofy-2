@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.post.PostReaction;
@@ -51,14 +49,12 @@ import static com.cncoding.teazer.utilities.diffutil.PostReactionDiffCallback.up
 
 public class PostReactionAdapter extends BaseRecyclerView.Adapter {
 
-    private SparseArray<Dimension> dimensionSparseArray;
     private List<PostReaction> postReactions;
     private PostDetailsFragment fragment;
 
     PostReactionAdapter(PostDetailsFragment fragment) {
         this.fragment = fragment;
         this.postReactions = new ArrayList<>();
-        dimensionSparseArray = new SparseArray<>();
     }
 
     @Override
@@ -84,7 +80,7 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
         });
     }
 
-    public void updateReactions(List<PostReaction> postReactionList) {
+    void updateReactions(List<PostReaction> postReactionList) {
         try {
             final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
                     new PostReactionDiffCallback(new ArrayList<>(postReactions), postReactionList));
@@ -145,14 +141,9 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
             postReaction = postReactions.get(getAdapterPosition());
             MiniProfile postOwner = postReaction.getReactOwner();
 
-            if (dimensionSparseArray.get(getAdapterPosition()) == null) {
-                adjustViewSize(fragment.getContext(), postReaction.getMediaDetail().getMediaDimension().getWidth(),
-                        postReaction.getMediaDetail().getMediaDimension().getHeight(),
-                        layout.getLayoutParams(), getAdapterPosition(), dimensionSparseArray, false);
-            } else {
-                layout.getLayoutParams().width = dimensionSparseArray.get(getAdapterPosition()).getWidth();
-                layout.getLayoutParams().height = dimensionSparseArray.get(getAdapterPosition()).getHeight();
-            }
+            adjustViewSize(fragment.getContext(), postReaction.getMediaDetail().getMediaDimension().getWidth(),
+                    postReaction.getMediaDetail().getMediaDimension().getHeight(),
+                    layout.getLayoutParams(), getAdapterPosition(), null, false);
 
             Glide.with(fragment)
                     .load(postOwner.getProfileMedia() != null ?

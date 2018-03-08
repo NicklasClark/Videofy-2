@@ -244,13 +244,15 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         if (payloads.isEmpty()) return;
 
         if (payloads.get(0) instanceof PostDetails) {
+            adapter.posts.set(getAdapterPosition(), (PostDetails) payloads.get(0));
             bind();
             return;
         }
 
         Bundle bundle = (Bundle) payloads.get(0);
         if (bundle.containsKey(DIFF_POST_DETAILS)) {
-            postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
+            adapter.posts.set(getAdapterPosition(), (PostDetails) bundle.getParcelable(DIFF_POST_DETAILS));
+            bind();
             return;
         }
 

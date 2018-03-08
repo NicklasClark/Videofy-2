@@ -31,11 +31,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.UserProfile;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
 import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
@@ -63,7 +63,7 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logProfileShareEvent;
 
-public class ProfileFragment extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos {
+public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos {
 
 
 

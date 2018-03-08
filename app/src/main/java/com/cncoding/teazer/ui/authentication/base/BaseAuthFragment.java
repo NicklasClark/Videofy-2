@@ -4,7 +4,6 @@ package com.cncoding.teazer.ui.authentication.base;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,21 +23,16 @@ import com.cncoding.teazer.data.model.auth.VerifySignUp;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.viewmodel.AuthViewModel;
 import com.cncoding.teazer.ui.home.profile.activity.ForgotPasswordActivity;
-import com.cncoding.teazer.utilities.common.Annotations;
-import com.cncoding.teazer.utilities.common.NetworkStateReceiver;
-import com.cncoding.teazer.utilities.common.NetworkStateReceiver.NetworkStateListener;
+import com.cncoding.teazer.utilities.common.Annotations.ValidationType;
 
-import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseAuthFragment extends Fragment implements NetworkStateListener {
+public abstract class BaseAuthFragment extends Fragment {
 
-    protected boolean isConnected;
     protected Context context;
-    private NetworkStateReceiver networkStateReceiver;
     protected  boolean isPasswordShown = true;
     AuthViewModel authViewModel;
 
@@ -51,15 +45,6 @@ public abstract class BaseAuthFragment extends Fragment implements NetworkStateL
         super.onCreate(savedInstanceState);
         context = getParentActivity();
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
-        
-        networkStateReceiver = new NetworkStateReceiver();
-        networkStateReceiver.addListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        context.registerReceiver(networkStateReceiver, new IntentFilter(CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -93,32 +78,15 @@ public abstract class BaseAuthFragment extends Fragment implements NetworkStateL
         else throw new IllegalStateException("Fragment is not attached to MainActivity");
     }
 
-    @Override
-    public void onNetworkAvailable() {
-        isConnected = true;
-    }
-
-    @Override
-    public void onNetworkUnavailable() {
-        isConnected = false;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        networkStateReceiver.removeListener(this);
-        context.unregisterReceiver(networkStateReceiver);
-    }
-
     protected abstract void handleResponse(ResultObject resultObject);
 
     protected abstract void handleError(ResultObject resultObject);
 
     protected abstract void notifyNoInternetConnection();
 
-    protected abstract boolean isFieldValidated(@Annotations.ValidationType int whichType);
+    protected abstract boolean isFieldValidated(@ValidationType int whichType);
 
-    protected abstract boolean isFieldFilled(@Annotations.ValidationType int whichType);
+    protected abstract boolean isFieldFilled(@ValidationType int whichType);
 
     protected void signUp(InitiateSignup initiateSignup) {
         authViewModel.signUp(initiateSignup);

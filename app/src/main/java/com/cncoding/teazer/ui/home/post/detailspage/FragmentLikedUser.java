@@ -1,12 +1,10 @@
 package com.cncoding.teazer.ui.home.post.detailspage;
 
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +13,16 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
-import com.cncoding.teazer.data.model.post.LikedUser;
 import com.cncoding.teazer.data.model.post.LikedUserList;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.LikedUserAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.Contract;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,123 +35,136 @@ import retrofit2.Response;
  * Created by farazhabib on 29/12/17.
  */
 
-public class FragmentLikedUser extends BaseFragment {
-    int postId;
-    int reactId;
-    PostDetails postDetails;
-    Context context;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.btnClose)
-    AppCompatImageView btnClose;
-    RecyclerView.LayoutManager layoutManager;
-    List<LikedUser> likedUsersList;
-    LikedUserAdapter likedUserAdapter;
-    boolean next;
+public class FragmentLikedUser extends BaseHomeFragment {
 
+    private static final String ID = "id";
+    private static final String LIKED_USERS_OF = "likedUserOf";
+    public static final int LIKED_USERS_OF_POSTS = 1;
+    public static final int LIKED_USERS_OF_REACTION = 2;
+    public static final int LIKED_USERS_OF_PROFILE = 3;
+    public static final int SELF = -1;
 
-    public static FragmentLikedUser newInstance(PostDetails postDetails) {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({LIKED_USERS_OF_POSTS, LIKED_USERS_OF_REACTION, LIKED_USERS_OF_PROFILE})
+    @interface LikedUserOf {}
+
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+
+    private int id;
+    @LikedUserOf private int likedUserOf;
+    private LikedUserAdapter likedUserAdapter;
+
+    public static FragmentLikedUser newInstance(int id, @LikedUserOf int likedUserOf) {
         FragmentLikedUser fragment = new FragmentLikedUser();
         Bundle args = new Bundle();
-        args.putString("PostId", String.valueOf(postDetails.getPostId()));
-        args.putParcelable("PostDetails", postDetails);
+        args.putInt(ID, id);
+        args.putInt(LIKED_USERS_OF, likedUserOf);
         fragment.setArguments(args);
         return fragment;
     }
 
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            if (bundle.getParcelable("PostDetails") != null) {
-                postId = Integer.parseInt(bundle.getString("PostId"));
-                postDetails = bundle.getParcelable("PostDetails");
-            }
-
-
+        if (getArguments() != null) {
+            id = getArguments().getInt(ID);
+            likedUserOf = getArguments().getInt(LIKED_USERS_OF);
         }
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_liked_user, container, false);
         context = getContext();
         ButterKnife.bind(this, view);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        likedUsersList = new ArrayList<>();
-        likedUserAdapter = new LikedUserAdapter(context, likedUsersList, postDetails, this);
+        likedUserAdapter = new LikedUserAdapter(this);
         recyclerView.setAdapter(likedUserAdapter);
 
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (next) {
-
-                        getLikedUser(postId, page);
-
+                if (is_next_page) {
+                        getLikedUser(page);
                 }
             }
         };
-
         recyclerView.addOnScrollListener(scrollListener);
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                getParentActivity().onBackPressed();
-            }
-        });
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-
-            getLikedUser(postId, 1);
-
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getLikedUser(1);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void getLikedUser(int page) {
+        switch (likedUserOf) {
+            case LIKED_USERS_OF_POSTS:
+                getLikedUsersOfPost(page);
+                break;
+            case LIKED_USERS_OF_PROFILE:
+                getLikedUsersOfProfile(page);
+                break;
+            case LIKED_USERS_OF_REACTION:
+                getLikedUsersOfReaction(page);
+                break;
+            default:
+                break;
+        }
     }
 
-    public void getLikedUser(final int postId, final int pageId) {
+    private void getLikedUsersOfPost(final int page) {
+        ApiCallingService.Posts.getLikedUsers(id, page, context).enqueue(likedUserCallback(page));
+    }
 
-        ApiCallingService.Friends.getLikedUsers(postId, pageId, context).enqueue(new Callback<LikedUserList>() {
+    private void getLikedUsersOfReaction(int page) {
+        ApiCallingService.React.getLikedUsersReaction(id, page, context).enqueue(likedUserCallback(page));
+    }
 
+    private void getLikedUsersOfProfile(int page) {
+        if (id == SELF) getMyProfileLikedUsers(page);
+        else getOtherProfileLikedUser(page);
+    }
+
+    private void getMyProfileLikedUsers(int page) {
+        ApiCallingService.User.getLikedUserProfile(page, context).enqueue(likedUserCallback(page));
+    }
+
+    private void getOtherProfileLikedUser(int page) {
+        ApiCallingService.Friends.getLikedUserFriendProfile(id, page, context).enqueue(likedUserCallback(page));
+    }
+
+    @NonNull @Contract(pure = true)
+    private Callback<LikedUserList> likedUserCallback(final int page) {
+        return new Callback<LikedUserList>() {
             @Override
             public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
-
-                try {
-
-                    likedUsersList.addAll(response.body().getLikedUsers());
-
-                    if ((likedUsersList != null && likedUsersList.size() != 0) || pageId != 1) {
-                        next = response.body().getNextPage();
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        likedUserAdapter.notifyItemRangeInserted(likedUserAdapter.getItemCount(), likedUsersList.size() - 1);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-
+                if (isAdded()) {
+                    handleResponse(page, response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<LikedUserList> call, Throwable t) {
-                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-
+                t.printStackTrace();
+                if (isAdded()) {
+                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                }
             }
-        });
+        };
+    }
+
+    private void handleResponse(int page, LikedUserList likedUserList) {
+        try {
+            if ((likedUserList.getLikedUsers() != null && !likedUserList.getLikedUsers().isEmpty())) {
+                is_next_page = likedUserList.getNextPage();
+                if (page == 1)
+                    likedUserAdapter.updatePosts(likedUserList.getLikedUsers());
+                else likedUserAdapter.addPosts(page, likedUserList.getLikedUsers());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+        }
     }
 }

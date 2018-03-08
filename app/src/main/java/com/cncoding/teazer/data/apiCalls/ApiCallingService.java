@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.application.DeactivateTypes;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.base.Authorize;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.discover.LandingPosts;
@@ -21,7 +21,6 @@ import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
@@ -85,11 +84,11 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
+        public static Call<List<ReportTypes>> getPostReportTypes() {
             return getApplicationService().getPostReportTypes();
         }
 
-        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes() {
+        public static Call<List<ReportTypes>> getProfileReportTypes() {
             return getApplicationService().getProfileReportTypes();
         }
 
@@ -383,9 +382,6 @@ public class ApiCallingService {
         public static Call<ProfileInfo> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
-//            public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
-//            return getFriendsService(context).getOthersProfileInfoNoti(userId);
-//        }
 
         /**
          * Call this service to Block/Unblock a user
@@ -395,10 +391,6 @@ public class ApiCallingService {
         public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context) {
             return getFriendsService(context).blockUnblockUser(userId, status);
 
-        }
-
-        public static Call<LikedUserList> getLikedUsers(int postId, int page, Context context) {
-            return getFriendsService(context).getLikedUsers(postId, page);
         }
 
         /**
@@ -633,7 +625,7 @@ public class ApiCallingService {
             return getPostalService(context).getVideosPostedByFriend(page, friendId);
         }
 
-        public static Call<PostReactionsList> getReactionsOfPost(int postId, int page, Context context) {
+        public static Call<ReactionsList> getReactionsOfPost(int postId, int page, Context context) {
             return getPostalService(context).getReactionsOfPost(postId, page);
         }
 
@@ -648,6 +640,10 @@ public class ApiCallingService {
 
         public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context) {
             return getPostalService(context).getAllHiddenVideosList(userID);
+        }
+
+        public static Call<LikedUserList> getLikedUsers(int postId, int page, Context context) {
+            return getPostalService(context).getLikedUsers(postId, page);
         }
 
         private static TeazerApiCall.Posts getPostalService(Context context) {
@@ -744,7 +740,7 @@ public class ApiCallingService {
             return getUserService(context).profileLikeDislike(userId,status);
         }
 
-        public static Call<LikedUserList> getLikedUserProfile(Context context, int page) {
+        public static Call<LikedUserList> getLikedUserProfile(int page, Context context) {
             return getUserService(context).getLikedUserProfile(page);
         }
 

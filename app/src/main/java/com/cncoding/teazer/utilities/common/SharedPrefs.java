@@ -297,9 +297,13 @@ public class SharedPrefs {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void deleteFileIfExists(String path) {
-        if (path != null && !path.equals("null")) {
-            File file = new File(path);
-            if (file.exists()) file.delete();
+        try {
+            if (path != null && !path.equals("null")) {
+                File file = new File(path);
+                if (file.exists()) file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

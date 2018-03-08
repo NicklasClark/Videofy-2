@@ -11,6 +11,17 @@ import com.cncoding.teazer.data.model.friends.MyUserInfo;
 import java.util.List;
 import java.util.Objects;
 
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_ACCOUNT_TYPE;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_FIRST_NAME;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_GENDER;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_HAS_PROFILE_MEDIA;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_IS_FOLLOWER;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_IS_FOLLOWING;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_IS_REQUEST_SENT;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_LAST_NAME;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_PROFILE_MEDIA;
+import static com.cncoding.teazer.utilities.diffutil.UserInfoDiffCallback.DIFF_USERNAME;
+
 /**
  * 
  * Created by Prem$ on 3/6/2018.
@@ -18,18 +29,8 @@ import java.util.Objects;
 
 public class MyUserInfoDiffCallback extends DiffUtil.Callback {
 
-    private static final String DIFF_USER_INFO = "userInfo";
-    private static final String DIFF_USERNAME = "username";
-    private static final String DIFF_FIRST_NAME = "firstName";
-    private static final String DIFF_LAST_NAME = "lastName";
-    private static final String DIFF_GENDER = "gender";
-    private static final String DIFF_ACCOUNT_TYPE = "accountType";
-    private static final String DIFF_HAS_PROFILE_MEDIA = "hasProfileMedia";
-    private static final String DIFF_PROFILE_MEDIA = "profileMedia";
-    private static final String DIFF_IS_FOLLOWING = "following";
-    private static final String DIFF_IS_FOLLOWER = "follower";
-    private static final String DIFF_IS_REQUEST_SENT = "requestSent";
-    private static final String DIFF_FOLLOW_INFO = "followInfo";
+    static final String DIFF_FOLLOW_INFO = "followInfo";
+    public static final String DIFF_MY_USER_INFO = "myUserInfo";
 
     private List<MyUserInfo> oldMyUserInfoList;
     private List<MyUserInfo> newMyUserInfoList;
@@ -68,7 +69,7 @@ public class MyUserInfoDiffCallback extends DiffUtil.Callback {
             Bundle diffBundle = new Bundle();
             try {
                 if (!Objects.equals(oldMyUserInfo.getUserId(), newMyUserInfo.getUserId())) {
-                    diffBundle.putParcelable(DIFF_USER_INFO, newMyUserInfo);
+                    diffBundle.putParcelable(DIFF_MY_USER_INFO, newMyUserInfo);
                     return diffBundle;
                 } else {
                     return getDiffBundle(oldMyUserInfo, newMyUserInfo, diffBundle);
@@ -108,7 +109,7 @@ public class MyUserInfoDiffCallback extends DiffUtil.Callback {
         return diffBundle;
     }
 
-    public static void updatePostDetailsAccordingToDiffBundle(MyUserInfo myUserInfo, Bundle bundle) {
+    public static void updateMyUserInfoAccordingToDiffBundle(MyUserInfo myUserInfo, Bundle bundle) {
         for (String key : bundle.keySet()) {
             try {
                 switch (key) {

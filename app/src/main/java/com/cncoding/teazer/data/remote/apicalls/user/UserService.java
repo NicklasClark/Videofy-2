@@ -7,7 +7,6 @@ import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.data.model.updatemobilenumber.UpdateMobileNumber;
 import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.data.model.user.Profile;
 import com.cncoding.teazer.data.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.data.model.user.ReportUser;
 import com.cncoding.teazer.data.model.user.SetPasswordRequest;
@@ -34,9 +33,6 @@ import retrofit2.http.Query;
  **/
 
 public interface UserService {
-//        @GET("/api/DepartmentCRUD/FindAllDepartment")
-//        Call<List<Test1>>  getUserDetail();
-
     /**
      * To update a user profile media
      * Call this service to update a user profile media
@@ -76,9 +72,6 @@ public interface UserService {
 
     @PUT("/api/v1/user/change/phonenumber/verify/otp")
     Call<ResultObject> updateMobileNumber(@Body UpdateMobileNumber updateMobileNumber);
-
-    @GET("/api/v1/user/profile")
-    Call<Profile> getUserProfileDetail();
 
     /**
      * Update user profile
@@ -133,12 +126,8 @@ public interface UserService {
     @PUT("api/v1/user/reset/notification/count")
     Call<ResultObject> resetUnreadNotification(@Query("type") int notificationType);
 
-    // newly added for profile like
-
     @POST("/api/v1/friend/profile/like/{user_id}/{status}")
-    Call<com.cncoding.teazer.data.apiCalls.ResultObject> setProfileLike(@Path("user_id") int userId, @Path("status") int status);
-
-    // newly added for getLikedUser
+    Call<ResultObject> setProfileLike(@Path("user_id") int userId, @Path("status") int status);
 
     @GET("/api/v1/user/profile/liked/users/{page}")
     Call<LikedUserList>getLikedUserProfile(@Path("user_id") int userId);

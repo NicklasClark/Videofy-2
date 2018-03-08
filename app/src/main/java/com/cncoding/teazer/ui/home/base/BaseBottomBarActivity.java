@@ -1,4 +1,4 @@
-package com.cncoding.teazer.ui.home;
+package com.cncoding.teazer.ui.home.base;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -39,12 +39,12 @@ import com.cncoding.teazer.data.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
 import com.cncoding.teazer.ui.base.BaseActivity;
-import com.cncoding.teazer.ui.base.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment.FragmentNavigation;
 import com.cncoding.teazer.ui.home.camera.UploadFragment;
 import com.cncoding.teazer.ui.home.discover.DiscoverFragment;
 import com.cncoding.teazer.ui.home.discover.SubDiscoverFragment;
@@ -645,8 +645,12 @@ public class BaseBottomBarActivity extends BaseActivity
         navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
 
+        try {
 //        clear the notification count badge if notifications t
-        if (navigationController.getCurrentFragment() instanceof NotificationsFragment) clearNotificationBadge();
+            if (navigationController.getCurrentFragment() instanceof NotificationsFragment) clearNotificationBadge();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         switch (position) {
             case TAB1:
@@ -869,7 +873,7 @@ public class BaseBottomBarActivity extends BaseActivity
             launchVideoUploadService(this, videoUploadParams, videoUploadReceiver);
         }
         UploadParams reactionUploadParams = getReactionUploadSession(getApplicationContext());
-        if (reactionUploadParams != null) {
+        if (reactionUploadParams != null && !(navigationController.getCurrentFragment() instanceof PostDetailsFragment)) {
             if (!reactionUploadParams.isGiphy()) {
                 setupReactionUploadServiceReceiver(reactionUploadParams);
                 launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
@@ -1046,7 +1050,8 @@ public class BaseBottomBarActivity extends BaseActivity
         ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.body().getCode() == 200)
+                ResultObject resultObject = response.body();
+                if (resultObject != null && resultObject.getCode() == 200)
                     Toast.makeText(BaseBottomBarActivity.this, "Reaction posted", Toast.LENGTH_SHORT).show();
             }
 

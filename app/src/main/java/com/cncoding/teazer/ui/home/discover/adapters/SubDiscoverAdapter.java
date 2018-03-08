@@ -3,7 +3,6 @@ package com.cncoding.teazer.ui.home.discover.adapters;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -18,7 +17,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
@@ -53,13 +51,11 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.prepareLayout;
 public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
 
     private ArrayList<PostDetails> postDetailsArrayList;
-    private SparseArray<Dimension> dimensionSparseArray;
     private BaseDiscoverFragment fragment;
 
     public SubDiscoverAdapter(BaseDiscoverFragment fragment) {
         this.fragment = fragment;
         if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
-        if (dimensionSparseArray == null) dimensionSparseArray = new SparseArray<>();
     }
 
     @Override
@@ -85,32 +81,53 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
         });
     }
 
-    public void updatePosts(List<PostDetails> postDetailsList) {
+    private void notifyItemsInserted(final int positionStart, final int itemCount) {
+        fragment.getParentActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemRangeInserted(positionStart, itemCount);
+            }
+        });
+    }
+
+    public void updatePosts(int page, List<PostDetails> postDetailsList) {
         try {
-            final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList), postDetailsList));
-            postDetailsArrayList.clear();
-            postDetailsArrayList.addAll(postDetailsList);
-            fragment.getParentActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    result.dispatchUpdatesTo(SubDiscoverAdapter.this);
-                }
-            });
+            if (page == 1) {
+                if (!postDetailsArrayList.isEmpty()) {
+                    final DiffUtil.DiffResult result = calculateDiff(
+                            new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList.subList(0, 10)), postDetailsList));
+                    postDetailsArrayList.clear();
+                    postDetailsArrayList.addAll(postDetailsList);
+                    fragment.getParentActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.dispatchUpdatesTo(SubDiscoverAdapter.this);
+                        }
+                    });
+                } else addPosts(page, postDetailsList);
+            } else {
+                addPosts(page, postDetailsList);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                addPosts(postDetailsList);
+                addPosts(page, postDetailsList);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
     }
 
-    private void addPosts(List<PostDetails> postDetailsList) {
-        if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
-        else postDetailsArrayList.clear();
-        postDetailsArrayList.addAll(postDetailsList);
-        notifyDataChanged();
+    private void addPosts(int page, List<PostDetails> postDetailsList) {
+        if (page == 1) {
+            if (postDetailsArrayList == null) postDetailsArrayList = new ArrayList<>();
+            else postDetailsArrayList.clear();
+            postDetailsArrayList.addAll(postDetailsList);
+            notifyDataChanged();
+        } else {
+            postDetailsArrayList.addAll(postDetailsList);
+            notifyItemsInserted((page - 1) * 10, postDetailsList.size());
+        }
     }
 
     protected class SubDiscoverViewHolder extends BaseRecyclerView.ViewHolder {
@@ -159,14 +176,9 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
                 postDetails = postDetailsArrayList.get(getAdapterPosition());
 
                 /*Adjust view size before loading anything*/
-                if (dimensionSparseArray.get(getAdapterPosition()) == null) {
-                    adjustViewSize(fragment.getContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
-                            postDetails.getMedias().get(0).getMediaDimension().getHeight(),
-                            layout.getLayoutParams(), getAdapterPosition(), dimensionSparseArray, false);
-                } else {
-                    layout.getLayoutParams().width = dimensionSparseArray.get(getAdapterPosition()).getWidth();
-                    layout.getLayoutParams().height = dimensionSparseArray.get(getAdapterPosition()).getHeight();
-                }
+                adjustViewSize(fragment.getContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                        postDetails.getMedias().get(0).getMediaDimension().getHeight(),
+                        layout.getLayoutParams(), getAdapterPosition(), null, false);
 
                 title.setText(decodeUnicodeString(postDetails.getTitle()));
 

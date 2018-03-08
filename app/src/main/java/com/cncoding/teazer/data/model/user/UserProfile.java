@@ -11,7 +11,6 @@ import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,26 +20,26 @@ import java.util.List;
 
 public class UserProfile extends BaseModel implements Parcelable {
 
-    @SerializedName("user_profile") @Expose private PublicProfile user_profile;
+    @SerializedName("user_profile") @Expose private PublicProfile userProfile;
     @SerializedName("followers") @Expose private int followers;
     @SerializedName("followings") @Expose private int followings;
     @SerializedName("total_videos") @Expose private int total_videos;
-    @SerializedName("can_change_password") @Expose private boolean can_change_password;
+    @SerializedName("can_change_password") @Expose private boolean canChangePassword;
     @SerializedName("total_reactions") @Expose private Integer totalReactions;
     @SerializedName("total_profile_likes") @Expose private Integer totalProfileLikes;
-    @SerializedName("preferences") @Expose private ArrayList<Preference> preferences = null;
-    @SerializedName("top_reacted_users") @Expose private List<TopReactedUser> topReactedUsers = null;
+    @SerializedName("preferences") @Expose private List<Preference> preferences;
+    @SerializedName("top_reacted_users") @Expose private List<TopReactedUser> topReactedUsers;
 
     public UserProfile(Throwable error) {
         this.error = error;
     }
 
     protected UserProfile(Parcel in) {
-        user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+        userProfile = in.readParcelable(PublicProfile.class.getClassLoader());
         followers = in.readInt();
         followings = in.readInt();
         total_videos = in.readInt();
-        can_change_password = in.readByte() != 0;
+        canChangePassword = in.readByte() != 0;
         if (in.readByte() == 0) {
             totalReactions = null;
         } else {
@@ -56,11 +55,11 @@ public class UserProfile extends BaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(user_profile, flags);
+        dest.writeParcelable(userProfile, flags);
         dest.writeInt(followers);
         dest.writeInt(followings);
         dest.writeInt(total_videos);
-        dest.writeByte((byte) (can_change_password ? 1 : 0));
+        dest.writeByte((byte) (canChangePassword ? 1 : 0));
         if (totalReactions == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -99,17 +98,17 @@ public class UserProfile extends BaseModel implements Parcelable {
     }
 
 
-    public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
-        this.user_profile = user_profile;
+    public UserProfile(PublicProfile userProfile, int followers, int followings, int total_videos, boolean canChangePassword) {
+        this.userProfile = userProfile;
         this.followers = followers;
         this.followings = followings;
         this.total_videos = total_videos;
-        this.can_change_password = can_change_password;
+        this.canChangePassword = canChangePassword;
     }
 
 
     public PublicProfile getUserProfile() {
-        return user_profile;
+        return userProfile;
     }
 
     public int getFollowers() {
@@ -125,26 +124,22 @@ public class UserProfile extends BaseModel implements Parcelable {
     }
 
     public boolean canChangePassword() {
-        return can_change_password;
+        return canChangePassword;
     }
 
     public Integer getTotalReactions() {
         return totalReactions;
     }
 
-    public void setcanChangePassword(boolean can_change_password) {
-        this.can_change_password = can_change_password;
-    }
-
-    public PublicProfile getUser_profile() {
-        return user_profile;
+    public void setCanChangePassword(boolean can_change_password) {
+        this.canChangePassword = can_change_password;
     }
 
     public Integer getTotalProfileLikes() {
         return totalProfileLikes;
     }
 
-    public ArrayList<Preference> getPreferences() {
+    public List<Preference> getPreferences() {
         return preferences;
     }
 

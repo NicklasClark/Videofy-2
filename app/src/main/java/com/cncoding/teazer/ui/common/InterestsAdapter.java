@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  *
@@ -94,19 +95,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
             setCheck(holder.chip, position, false,
                     selectedInterestsArray.get(interestsListFiltered.get(holder.getAdapterPosition()).getCategoryId() - 1), false);
         }
-
         checkButtonAccess();
-
-        holder.chip.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                selectedInterestsArray.put(
-                        interestsListFiltered.get(holder.getAdapterPosition()).getCategoryId() - 1, !holder.chip.isChecked());
-                setCheck(holder.chip, holder.getAdapterPosition(), true, !holder.chip.isChecked(), true);
-                checkButtonAccess();
-            }
-        });
     }
 
     @Override
@@ -208,6 +197,12 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.chip) public void interestSelected() {
+            selectedInterestsArray.put(interestsListFiltered.get(getAdapterPosition()).getCategoryId() - 1, !chip.isChecked());
+            setCheck(chip, getAdapterPosition(), true, !chip.isChecked(), true);
+            checkButtonAccess();
         }
     }
 

@@ -14,11 +14,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.friends.FollowingsList;
 import com.cncoding.teazer.data.model.friends.UserInfo;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowingAdapter;
 
 import java.util.List;
@@ -32,7 +32,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment.ARG_ID;
 import static com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment.ARG_IDENTIFIER;
 
-public class FollowingListFragment extends BaseFragment {
+public class FollowingListFragment extends BaseHomeFragment {
 
     @BindView(R.id.layout) NestedScrollView layout;
     @BindView(R.id.nousertext) TextView noUserText;

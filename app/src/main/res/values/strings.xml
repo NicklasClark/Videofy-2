@@ -403,4 +403,5 @@
     </string>
     <string name="no_user_following_you">No User following you</string>
     <string name="profile">Profile</string>
+    <string name="no_featured_videos">No features videos yet</string>
 </resources>

@@ -2,6 +2,7 @@ package com.cncoding.teazer.data.model.post;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.base.MediaDetail;
@@ -158,7 +159,7 @@ public class PostReaction extends BaseModel implements Parcelable {
         return reactOwner;
     }
 
-    public MiniProfile getOwner() {
+    @NonNull public MiniProfile getOwner() {
         return reactOwner != null ? reactOwner : postOwner;
     }
 

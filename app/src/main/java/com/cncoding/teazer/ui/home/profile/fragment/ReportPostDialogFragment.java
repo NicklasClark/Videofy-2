@@ -23,7 +23,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
@@ -129,9 +129,9 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void getPostReportTypes() {
         loader.setVisibility(View.VISIBLE);
-        ApiCallingService.Application.getPostReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
+        ApiCallingService.Application.getPostReportTypes().enqueue(new Callback<List<ReportTypes>>() {
             @Override
-            public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
+            public void onResponse(Call<List<ReportTypes>> call, Response<List<ReportTypes>> response) {
                 try {
                     if (response.code() == 200) {
                         if (response.body() != null) {
@@ -147,7 +147,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
             }
 
             @Override
-            public void onFailure(Call<List<ReportPostTitlesResponse>> call, Throwable t) {
+            public void onFailure(Call<List<ReportTypes>> call, Throwable t) {
                 loader.setVisibility(View.GONE);
             }
         });
@@ -169,7 +169,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
 
     @Override
-    public void titleSelected(ReportPostTitlesResponse value) {
+    public void titleSelected(ReportTypes value) {
         selectedReportId = value.getReportTypeId();
         postReportOptionSelected = true;
         enableView(submitReport);

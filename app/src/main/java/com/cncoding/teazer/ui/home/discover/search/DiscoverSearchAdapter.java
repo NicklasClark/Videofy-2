@@ -57,6 +57,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_SEND_JOIN_RE
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_UNFOLLOW_USER;
 import static com.cncoding.teazer.utilities.common.Annotations.PRIVATE_ACCOUNT;
 import static com.cncoding.teazer.utilities.common.Annotations.PUBLIC_ACCOUNT;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.common.ViewUtils.BLANK_SPACE;
@@ -227,7 +228,7 @@ public class DiscoverSearchAdapter extends BaseRecyclerView.Adapter {
             viewModel.getResultObject().observe(fragment, new Observer<ResultObject>() {
                 @Override
                 public void onChanged(@Nullable ResultObject resultObject) {
-                    if (fragment.isConnected) {
+                    if (isConnected(fragment.context)) {
                         if (resultObject != null) {
                             if (resultObject.getError() != null) handleError();
                             else handleResponse(resultObject);

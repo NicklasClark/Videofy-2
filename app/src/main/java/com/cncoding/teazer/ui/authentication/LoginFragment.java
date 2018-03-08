@@ -59,6 +59,7 @@ import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getEnteredUserFormat;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.AuthUtils.isValidPhoneNumber;
 import static com.cncoding.teazer.utilities.common.AuthUtils.removeView;
 import static com.cncoding.teazer.utilities.common.AuthUtils.setCountryCode;
@@ -229,7 +230,7 @@ public class LoginFragment extends BaseAuthFragment {
     @OnClick(R.id.login_btn) public void onLoginBtnClick() {
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
         if (!loginBtnClicked) {
-            if (isConnected) {
+            if (isConnected(context)) {
                 switch (getLoginState()) {
                     case LOGIN_STATE_PASSWORD:
                         if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
@@ -381,10 +382,10 @@ public class LoginFragment extends BaseAuthFragment {
                         e.printStackTrace();
                         logLoginEvent("Email", false, login.getUserName());
                     }
-                    removeView(progressBar);
-                    loginBtnClicked = false;
-                    loginBtn.setEnabled(true);
                 } else showSnackBar(loginBtn, getString(R.string.incorrect_username_password));
+                removeView(progressBar);
+                loginBtnClicked = false;
+                loginBtn.setEnabled(true);
                 break;
             case LOGIN_WITH_OTP:
                 try {

@@ -34,11 +34,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.ui.customviews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.ui.customviews.coachMark.shape.CircleShape;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.home.profile.activity.ReactionPlayerActivity;
@@ -107,7 +107,7 @@ public class ViewUtils {
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(BaseFragment fragment, PostReaction postReaction) {
+    public static void playOnlineVideoInExoPlayer(BaseHomeFragment fragment, PostReaction postReaction) {
         fragment.navigation.pushFragment(FragmentReactionPlayer.newInstance(postReaction,
                 Objects.equals(postReaction.getMediaDetail().getMediaType(), CommonUtilities.MEDIA_TYPE_GIF) ||
                 Objects.equals(postReaction.getMediaDetail().getMediaType(), CommonUtilities.MEDIA_TYPE_GIPHY)));
@@ -180,7 +180,7 @@ public class ViewUtils {
         view.setCompoundDrawablesWithIntrinsicBounds(drawableResId, 0, 0, 0);
     }
 
-    public static void setEditTextDrawableEnd(AppCompatAutoCompleteTextView view, @DrawableRes int drawableResId) {
+    public static void setEditTextDrawableEnd(TextView view, @DrawableRes int drawableResId) {
         view.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableResId, 0);
     }
 
@@ -481,7 +481,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using integer userId.
      */
-    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, int userId) {
+    public static void openProfile(BaseHomeFragment.FragmentNavigation navigation, boolean isMySelf, int userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -494,7 +494,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using String userId.
      */
-    public static void openProfile(BaseFragment.FragmentNavigation navigation, boolean isMySelf, String userId) {
+    public static void openProfile(BaseHomeFragment.FragmentNavigation navigation, boolean isMySelf, String userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -508,7 +508,7 @@ public class ViewUtils {
      * Call this method to push the suitable profile fragment WHEN YOU ARE NOT SURE ABOUT "isMySelf" flag.
      * @param selfUserId must be the userId stored in SharedPreferences while logging in.
      */
-    public static void openProfile(int selfUserId, BaseFragment.FragmentNavigation navigation, int userId) {
+    public static void openProfile(int selfUserId, BaseHomeFragment.FragmentNavigation navigation, int userId) {
         if (selfUserId >= 0) {
             try {
                 navigation.pushFragment(selfUserId == userId ?

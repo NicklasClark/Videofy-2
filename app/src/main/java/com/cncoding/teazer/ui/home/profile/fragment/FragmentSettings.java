@@ -16,8 +16,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.profile.Preference;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.activity.BlockUserList;
 import com.cncoding.teazer.ui.home.profile.activity.InviteFriend;
 import com.cncoding.teazer.ui.home.profile.activity.PasswordChange;
@@ -46,7 +46,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by farazhabib on 03/12/17.
  */
 
-public class FragmentSettings extends BaseFragment {
+public class FragmentSettings extends BaseHomeFragment {
 
     public static final String ACCOUNT_TYPE = "accountType";
     public static final String PREFERENCES = "preferences";
@@ -123,21 +123,21 @@ public class FragmentSettings extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        int valueofPrefrencese=preferencesList.get(0).getValue();
-
-        if(valueofPrefrencese==0){
-
-            simpleSwitchShowingReactions.setChecked(false);
+        try {
+            int valueOfPreferences = 0;
+            try {
+                valueOfPreferences = preferencesList.get(0).getValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            simpleSwitchShowingReactions.setChecked(valueOfPreferences != 0);
+            privateAccountSwitch.setChecked(accountType == 1);
+            saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
+            prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
+            saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else
-        {
-            simpleSwitchShowingReactions.setChecked(true);
-
-        }
-        privateAccountSwitch.setChecked(accountType == 1);
-        saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
-        prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
-        saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
     }
 
     @OnClick(R.id.text_hide_layout) public void hideVideosClicked() {

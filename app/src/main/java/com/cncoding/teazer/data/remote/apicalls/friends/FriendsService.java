@@ -137,10 +137,6 @@ public interface FriendsService {
     @GET("/api/v1/friend/profile/{user_id}")
     Call<ProfileInfo> getOthersProfileInfo(@Path("user_id") int userId);
 
-
-//        @GET("/api/v1/friend/profile/{user_id}")
-//        Call<Profile> getOthersProfileInfoNoti(@Path("user_id") int userId);
-
     /**
      * Call this service to Block/Unblock a user
      * @param status should be 1 for block and 2 for unblock

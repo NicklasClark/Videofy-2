@@ -18,9 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -44,11 +41,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.ui.home.discover.DiscoverFragment.ACTION_VIEW_FEATURED;
 import static com.cncoding.teazer.ui.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.ui.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_FEATURED_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_MOST_POPULAR_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_TRENDING_POSTS_BY_CATEGORY;
 
 public class SubDiscoverFragment extends BaseDiscoverFragment {
 
@@ -63,6 +65,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
     @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.action_edit) ProximaNovaSemiBoldTextView editInterestsBtn;
 
     private int currentPage;
     private ArrayList<Category> categories;
@@ -83,7 +86,6 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             action = getArguments().getInt(ACTION);
-            if (action == ACTION_VIEW_MY_INTERESTS) setHasOptionsMenu(true);
             categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
         }
         currentPage = 1;
@@ -93,6 +95,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
         View rootView = inflater.inflate(R.layout.fragment_sub_discover, container, false);
         ButterKnife.bind(this, rootView);
 
+        editInterestsBtn.setVisibility(action == ACTION_VIEW_MY_INTERESTS ? VISIBLE : GONE);
         switch (action) {
             case ACTION_VIEW_FEATURED:
                 toolbarTitle.setText(R.string.featured_videos);
@@ -228,7 +231,6 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
                 view.setTextColor(Color.parseColor("#666666"));
             }
         }
-
     }
 
     private int get34dp() {
@@ -245,15 +247,31 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
 
     @SuppressLint("SwitchIntDef") @Override protected void handleResponse(BaseModel resultObject) {
         try {
-            if (resultObject instanceof PostList && recyclerView.getAdapter() != null) {
+            if (resultObject != null && resultObject instanceof PostList &&
+                    recyclerView.getAdapter() != null && resultObject.getCallType() != CALL_MOST_POPULAR_POSTS) {
                 PostList postList = (PostList) resultObject;
                 is_next_page = postList.isNextPage();
-                if (!postList.getPosts().isEmpty()) {
-                    //noinspection unchecked
-                    new UpdatePosts(this).execute(postList.getPosts());
-                } else if (currentPage == 1) {
-                    showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+                if (resultObject.getCallType() == CALL_FEATURED_POSTS && action == ACTION_VIEW_FEATURED) {
+                    if (!postList.getPosts().isEmpty()) {
+                        noPosts.setVisibility(GONE);
+                        noPosts2.setVisibility(GONE);
+                        //noinspection unchecked
+                        new UpdatePosts(this, currentPage).execute(postList.getPosts());
+                    } else if (currentPage == 1) {
+                        showErrorMessage(R.string.no_featured_videos, R.string.be_the_first_one_to_upload_one);
+                    }
+                } else if (resultObject.getCallType() == (CALL_TRENDING_POSTS_BY_CATEGORY + categories.get(0).getCategoryId()) &&
+                        action == ACTION_VIEW_TRENDING) {
+                    if (!postList.getPosts().isEmpty()) {
+                        noPosts.setVisibility(GONE);
+                        noPosts2.setVisibility(GONE);
+                        //noinspection unchecked
+                        new UpdatePosts(this, currentPage).execute(postList.getPosts());
+                    } else if (currentPage == 1) {
+                        showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
+                    }
                 }
+
                 if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
             }
         } catch (Exception e) {
@@ -262,9 +280,11 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
 
     @Override protected void handleError(BaseModel baseModel) {
-        showErrorMessage(R.string.something_went_wrong, R.string.swipe_down_to_retry);
-        baseModel.getError().printStackTrace();
-        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        if (baseModel != null) {
+            showErrorMessage(R.string.something_went_wrong, R.string.swipe_down_to_retry);
+            baseModel.getError().printStackTrace();
+            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void showErrorMessage(@StringRes int message1, @StringRes int message2) {
@@ -274,16 +294,14 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
         noPosts2.setVisibility(VISIBLE);
     }
 
-    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_my_interests, menu);
+    @OnClick(R.id.action_edit) public void editInterests() {
+        navigation.pushFragmentOnto(Interests.newInstance(false, true, categories, null, false));
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_edit) {
-            navigation.pushFragmentOnto(Interests.newInstance(false, true, categories, null, false));
-            return true;
-        }
-        return false;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        clearPostListLiveData();
     }
 
     /**
@@ -310,14 +328,16 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     private static class UpdatePosts extends AsyncTask<List<PostDetails>, Void, Void>{
 
         private SubDiscoverFragment fragment;
+        private int currentPage;
 
-        UpdatePosts(SubDiscoverFragment fragment) {
+        UpdatePosts(SubDiscoverFragment fragment, int currentPage) {
             this.fragment = fragment;
+            this.currentPage = currentPage;
         }
 
         @Override
         protected Void doInBackground(List<PostDetails>[] lists) {
-            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(lists[0]);
+            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(currentPage, lists[0]);
             return null;
         }
     }

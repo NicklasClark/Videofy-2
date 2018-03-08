@@ -25,8 +25,8 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
 import com.google.gson.Gson;
 
@@ -49,11 +49,11 @@ import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicode
 public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReactionAdapter.ViewHolder> {
 
     private List<PostReaction> list;
-    private BaseFragment fragment;
+    private BaseHomeFragment fragment;
     private boolean isPostClicked = false;
     private ProfileMyReactionAdapter.OnChildFragmentUpdateReaction updateReaction;
 
-    public ProfileMyReactionAdapter(BaseFragment fragment, List<PostReaction> list, Fragment updateReaction) {
+    public ProfileMyReactionAdapter(BaseHomeFragment fragment, List<PostReaction> list, Fragment updateReaction) {
         this.fragment = fragment;
         this.list = list;
         if (updateReaction instanceof ProfileMyReactionAdapter.OnChildFragmentUpdateReaction) {

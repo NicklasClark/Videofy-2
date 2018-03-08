@@ -16,12 +16,12 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.react.ReactionsList;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileMyReactionAdapter;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import retrofit2.Response;
  * Created by MOHD ARIF on 07-11-2017.
  */
 
-public class FragmentProfileMyReactions extends BaseFragment {
+public class FragmentProfileMyReactions extends BaseHomeFragment {
 
     private static String ARG_ID;
     CircularAppCompatImageView menuitem;
@@ -176,7 +176,7 @@ public class FragmentProfileMyReactions extends BaseFragment {
                 if (response.code() == 200) {
                     try {
 
-                        if (response.body().getCanShowReactions()) {
+                        if (response.body().canShowReactions()) {
 
                             if ((response.body().getReactions() == null || response.body().getReactions().size() == 0) && page == 1) {
 

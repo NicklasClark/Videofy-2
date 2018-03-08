@@ -27,11 +27,12 @@ import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CheckImageButton;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
+import com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -64,6 +65,7 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.view.View.GONE;
+import static com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser.LIKED_USERS_OF_REACTION;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_DISLIKE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_LIKE;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIF;
@@ -84,7 +86,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
  * Created by farazhabib on 23/01/18.
  */
 
-public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocusChangeListener {
+public class FragmentReactionPlayer extends BaseHomeFragment implements OnAudioFocusChangeListener {
 
     public static final int OPENED_FROM_OTHER_SOURCE = 0;
     public static final int OPENED_FROM_PROFILE = 1;
@@ -250,6 +252,10 @@ public class FragmentReactionPlayer extends BaseFragment implements OnAudioFocus
 
     @OnClick(R.id.reaction_post_dp) public void viewProfile() {
         openProfile(getUserId(context), navigation, postReaction.getReactOwner().getUserId());
+    }
+
+    @OnClick(R.id.reaction_post_likes) public void openLikedUsers() {
+        navigation.pushFragment(FragmentLikedUser.newInstance(postReaction.getReactId(), LIKED_USERS_OF_REACTION));
     }
 
     @OnClick(R.id.btnShare) public void onShareClicked() {

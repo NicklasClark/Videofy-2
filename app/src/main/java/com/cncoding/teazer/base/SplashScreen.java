@@ -8,7 +8,7 @@ import android.util.Log;
 import com.cncoding.teazer.BuildConfig;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.ui.authentication.base.MainActivity;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -16,7 +16,7 @@ import com.inmobi.sdk.InMobiSdk;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.NOTIFICATION_TYPE;
+import static com.cncoding.teazer.ui.home.base.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.utilities.common.AuthUtils.isUserLoggedIn;
 import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.getFollowingNotificationsUnreadCount;
 import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.getRequestNotificationsUnreadCount;

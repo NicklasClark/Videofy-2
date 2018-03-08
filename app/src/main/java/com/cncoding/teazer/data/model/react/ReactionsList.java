@@ -15,16 +15,9 @@ import java.util.ArrayList;
 
 public class ReactionsList extends BaseModel {
 
-    private boolean next_page;
-    private ArrayList<PostReaction> reactions;
-    @SerializedName("can_show_reactions")
-    @Expose
-    private Boolean canShowReactions;
-
-
-    public Boolean getCanShowReactions() {
-        return canShowReactions;
-    }
+    @SerializedName("next_page") @Expose private boolean nextPage;
+    @SerializedName("reactions") @Expose private ArrayList<PostReaction> reactions;
+    @SerializedName("can_show_reactions") @Expose private boolean canShowReactions;
 
     public ReactionsList(Throwable error)
     {
@@ -37,10 +30,26 @@ public class ReactionsList extends BaseModel {
     }
 
     public boolean isNextPage() {
-        return next_page;
+        return nextPage;
     }
 
     public ArrayList<PostReaction> getReactions() {
         return reactions;
+    }
+
+    public boolean canShowReactions() {
+        return canShowReactions;
+    }
+
+    public void setNextPage(boolean nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    public void setReactions(ArrayList<PostReaction> reactions) {
+        this.reactions = reactions;
+    }
+
+    public void setCanShowReactions(boolean canShowReactions) {
+        this.canShowReactions = canShowReactions;
     }
 }

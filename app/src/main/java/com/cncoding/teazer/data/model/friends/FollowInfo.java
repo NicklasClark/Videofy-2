@@ -106,7 +106,7 @@ public class FollowInfo implements Parcelable {
             this.requestId = requestId;
         }
 
-        public Boolean getFollowing() {
+        public Boolean isFollowing() {
             return following;
         }
 
@@ -114,7 +114,7 @@ public class FollowInfo implements Parcelable {
             this.following = following;
         }
 
-        public Boolean getFollower() {
+        public Boolean isFollower() {
             return follower;
         }
 
@@ -122,7 +122,7 @@ public class FollowInfo implements Parcelable {
             this.follower = follower;
         }
 
-        public Boolean getRequestSent() {
+        public Boolean isRequestSent() {
             return requestSent;
         }
 
@@ -138,7 +138,7 @@ public class FollowInfo implements Parcelable {
             this.requestReceived = requestReceived;
         }
 
-        public Boolean getIsBlockedYou() {
+        public Boolean isBlockedYou() {
             return isBlockedYou;
         }
 
@@ -146,7 +146,7 @@ public class FollowInfo implements Parcelable {
             this.isBlockedYou = isBlockedYou;
         }
 
-        public Boolean getYouBlocked() {
+        public Boolean isYouBlocked() {
             return youBlocked;
         }
 

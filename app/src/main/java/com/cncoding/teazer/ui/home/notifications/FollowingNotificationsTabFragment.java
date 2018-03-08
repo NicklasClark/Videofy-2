@@ -16,9 +16,9 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.user.Notification;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ import static com.cncoding.teazer.utilities.common.SharedPrefs.setFollowingNotif
 /**
  * A fragment representing a list of Items.
  */
-public class FollowingNotificationsTabFragment extends BaseFragment {
+public class FollowingNotificationsTabFragment extends BaseHomeFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;

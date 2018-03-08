@@ -1,5 +1,6 @@
 package com.cncoding.teazer.ui.home.post.homepage;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ import butterknife.ButterKnife;
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_DOWN;
 import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.AuthUtils.isConnectedToWifi;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getCanSaveMediaOnlyOnWiFi;
 
@@ -156,18 +158,22 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     }
 
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
-        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
-        if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
-        toggleRecyclerViewScrolling(false);
-        if (scrollListener != null && scrollToTop) scrollListener.resetState();
-        if (isConnected) {
-            loadHomePagePosts(1);
-            //to refresh inmobi ads
-            refreshAds();
-        }
-        else {
-            Toast.makeText(getContext(), R.string.no_internet_message, Toast.LENGTH_LONG).show();
-            toggleRecyclerViewScrolling(true);
+        try {
+            if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
+            if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
+            if (!scrollToTop) toggleRecyclerViewScrolling(false);
+            if (scrollListener != null && scrollToTop) scrollListener.resetState();
+            if (isConnected(context)) {
+                loadHomePagePosts(1);
+                //to refresh inmobi ads
+                refreshAds();
+            }
+            else {
+                Toast.makeText(context, R.string.no_internet_message, Toast.LENGTH_LONG).show();
+                if (!scrollToTop) toggleRecyclerViewScrolling(true);
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -218,7 +224,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
     }
 
     private void preDownloadVideos(List<PostDetails> postDetailsList) {
-        if (isConnected) {
+        if (isConnected(context)) {
             if (!getCanSaveMediaOnlyOnWiFi(context))
                 recyclerView.preDownload(postDetailsList, context);
             else if (isConnectedToWifi(context))

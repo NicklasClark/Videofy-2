@@ -27,17 +27,17 @@ public class DiscoverViewModel extends ViewModel {
     private MediatorLiveData<LandingPostsV2> landingPostsLiveData;
     private MediatorLiveData<PostList> postListLiveData;
     private MediatorLiveData<PostList> mostPopularLiveData;
-    private MediatorLiveData<UsersList> usersLiveData;
+    private MediatorLiveData<UsersList> usersListLiveData;
     private MediatorLiveData<VideosList> videosLiveData;
     private DiscoverRepository discoverRepository;
 
     @Inject DiscoverViewModel(MediatorLiveData<LandingPostsV2> landingPostsLiveData, MediatorLiveData<PostList> postListLiveData,
-                              MediatorLiveData<PostList> mostPopularLiveData, MediatorLiveData<UsersList> usersLiveData,
+                              MediatorLiveData<PostList> mostPopularLiveData, MediatorLiveData<UsersList> usersListLiveData,
                               MediatorLiveData<VideosList> videosLiveData, DiscoverRepository discoverRepository) {
         this.landingPostsLiveData = landingPostsLiveData;
         this.postListLiveData = postListLiveData;
         this.mostPopularLiveData = mostPopularLiveData;
-        this.usersLiveData = usersLiveData;
+        this.usersListLiveData = usersListLiveData;
         this.videosLiveData = videosLiveData;
         this.discoverRepository = discoverRepository;
     }
@@ -46,7 +46,7 @@ public class DiscoverViewModel extends ViewModel {
         landingPostsLiveData = new MediatorLiveData<>();
         postListLiveData = new MediatorLiveData<>();
         mostPopularLiveData = new MediatorLiveData<>();
-        usersLiveData = new MediatorLiveData<>();
+        usersListLiveData = new MediatorLiveData<>();
         videosLiveData = new MediatorLiveData<>();
         discoverRepository = new DiscoverRepositoryImpl(token);
     }
@@ -65,13 +65,17 @@ public class DiscoverViewModel extends ViewModel {
     }
 
     public MediatorLiveData<UsersList> getUsersList() {
-        return usersLiveData;
+        return usersListLiveData;
     }
 
     public MediatorLiveData<VideosList> getVideosList() {
         return videosLiveData;
     }
     //endregion
+
+//    public void clearPostListLiveData() {
+//        postListLiveData.setValue(null);
+//    }
 
     //region API Calls
     public void loadLandingPosts() {
@@ -161,12 +165,12 @@ public class DiscoverViewModel extends ViewModel {
 
     public void loadUsersList(int page) {
         try {
-            usersLiveData.addSource(
+            usersListLiveData.addSource(
                     discoverRepository.getUsersListToFollow(page),
                     new Observer<UsersList>() {
                         @Override
                         public void onChanged(@Nullable UsersList usersList) {
-                            usersLiveData.setValue(usersList);
+                            usersListLiveData.setValue(usersList);
                         }
                     }
             );
@@ -177,12 +181,12 @@ public class DiscoverViewModel extends ViewModel {
 
     public void loadUsersListWithSearchTerm(int page, String searchTerm) {
         try {
-            usersLiveData.addSource(
+            usersListLiveData.addSource(
                     discoverRepository.getUsersListToFollowWithSearchTerm(page, searchTerm),
                     new Observer<UsersList>() {
                         @Override
                         public void onChanged(@Nullable UsersList usersList) {
-                            usersLiveData.setValue(usersList);
+                            usersListLiveData.setValue(usersList);
                         }
                     }
             );

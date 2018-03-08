@@ -39,6 +39,7 @@ import butterknife.OnTouch;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cncoding.teazer.ui.authentication.base.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.common.ViewUtils.setEditTextDrawableEnd;
@@ -89,23 +90,31 @@ public class SignupFragment extends BaseAuthFragment {
     }
 
     @OnTextChanged(R.id.signup_password) public void signupPasswordTextChanged(CharSequence charSequence) {
-        proceedSignup.setPassword(charSequence.toString());
-        if (charSequence.toString().equals(""))
-            clearDrawables(passwordView);
-        else
-        if (passwordView.getCompoundDrawables()[2] == null)
-            setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
+        try {
+            proceedSignup.setPassword(charSequence.toString());
+            if (charSequence.toString().equals(""))
+                clearDrawables(passwordView);
+            else
+            if (passwordView.getCompoundDrawables()[2] == null)
+                setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnFocusChange(R.id.signup_username) public void onUsernameFocusChanged(boolean isFocused) {
-        if (!isFocused) {
-            if (!proceedSignup.getUserName().isEmpty()) {
-                checkUsernameAvailability(usernameView.getText().toString());
+        try {
+            if (!isFocused) {
+                if (proceedSignup.getUserName() != null && !proceedSignup.getUserName().isEmpty()) {
+                    checkUsernameAvailability(usernameView.getText().toString());
+                } else {
+                    setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                }
             } else {
-                setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                clearDrawables(usernameView);
             }
-        } else {
-            clearDrawables(usernameView);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -125,19 +134,23 @@ public class SignupFragment extends BaseAuthFragment {
     }
 
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
-        if (isConnected) {
-            if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
-                if (isFieldValidated(Annotations.CHECK_USERNAME)) {
-                    if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
-                        mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION, proceedSignup, picturePath);
+        try {
+            if (isConnected(context)) {
+                if (isFieldFilled(Annotations.CHECK_USERNAME) && isFieldFilled(Annotations.CHECK_PASSWORD)) {
+                    if (isFieldValidated(Annotations.CHECK_USERNAME)) {
+                        if (isFieldValidated(Annotations.CHECK_PASSWORD)) {
+                            mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION, proceedSignup, picturePath);
+                        }
+                        else Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
                     }
-                    else Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
+                    else Snackbar.make(signupProceedBtn, "Username must be 4 to 50 characters", Snackbar.LENGTH_SHORT).show();
                 }
-                else Snackbar.make(signupProceedBtn, "Username must be 4 to 50 characters", Snackbar.LENGTH_SHORT).show();
+                else Snackbar.make(signupProceedBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
             }
-            else Snackbar.make(signupProceedBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
+            else notifyNoInternetConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else notifyNoInternetConnection();
     }
 
 //    private void performCrop(String picUri) {
@@ -178,37 +191,46 @@ public class SignupFragment extends BaseAuthFragment {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences prefs = getParentActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
-        final String imageUri = prefs.getString("USER_DP_IMAGES", null);
-        if(imageUri != null) {
-            Glide.with(this)
-                    .load(Uri.parse(imageUri))
-                    .into(dp);
-            dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+        try {
+            SharedPreferences prefs = getParentActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+            final String imageUri = prefs.getString("USER_DP_IMAGES", null);
+            if(imageUri != null) {
+                Glide.with(this)
+                        .load(Uri.parse(imageUri))
+                        .into(dp);
+                dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @OnTouch(R.id.signup_password) public boolean onPasswordShow(MotionEvent event) {
-        if (passwordView.getCompoundDrawables()[2] != null) {
-            if (event.getAction() == MotionEvent.ACTION_UP &&
-                    event.getRawX() >= passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
-                if(isPasswordShown) {
-                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
-                    passwordView.setSelection(passwordView.getText().length());
-                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    passwordView.setTypeface(new TypeFactory(context).regular);
-                    isPasswordShown =false;
+        try {
+            if (passwordView.getCompoundDrawables()[2] != null) {
+                if (event.getAction() == MotionEvent.ACTION_UP &&
+                        event.getRawX() >= passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+                    if(isPasswordShown) {
+                        passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
+                        passwordView.setSelection(passwordView.getText().length());
+                        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        passwordView.setTypeface(new TypeFactory(context).regular);
+                        isPasswordShown =false;
+                    }
+                    else
+                    {
+                        passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                        passwordView.setSelection(passwordView.getText().length());
+                        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                        passwordView.setTypeface(new TypeFactory(context).regular);
+                        isPasswordShown =true;
+                    }
+                    return true;
                 }
-                else
-                {
-                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
-                    passwordView.setSelection(passwordView.getText().length());
-                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
-                    passwordView.setTypeface(new TypeFactory(context).regular);
-                    isPasswordShown =true;
-                }
-                return true;
+                return false;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return false;

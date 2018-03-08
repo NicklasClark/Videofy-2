@@ -26,7 +26,7 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 
@@ -327,9 +327,9 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
     public void getPostReaction(final FollowersCreationAdapter.ViewHolder viewHolder, int postId) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<ReactionsList>() {
             @Override
-            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -419,7 +419,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 }
             }
             @Override
-            public void onFailure (Call < PostReactionsList > call, Throwable t){
+            public void onFailure (Call < ReactionsList > call, Throwable t){
             }
         });
     }

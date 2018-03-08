@@ -12,6 +12,9 @@ import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.utilities.common.Annotations;
+import com.cncoding.teazer.utilities.common.Annotations.BlockUnblock;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +59,10 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_UNFOLLOW_USE
 public class FriendsRepositoryImpl implements FriendsRepository {
 
     private FriendsService friendsService;
+
+    @Inject public FriendsRepositoryImpl(FriendsService friendsService) {
+        this.friendsService = friendsService;
+    }
 
     public FriendsRepositoryImpl(String token) {
         friendsService = getRetrofitWithAuthToken(token).create(FriendsService.class);
@@ -206,7 +213,7 @@ public class FriendsRepositoryImpl implements FriendsRepository {
     }
 
     @Override
-    public LiveData<ResultObject> blockUnblockUser(int userId, int status) {
+    public LiveData<ResultObject> blockUnblockUser(int userId, @BlockUnblock int status) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         friendsService.blockUnblockUser(userId, status).enqueue(resultObjectCallback(liveData, CALL_BLOCK_UNBLOCK_USER));
         return liveData;

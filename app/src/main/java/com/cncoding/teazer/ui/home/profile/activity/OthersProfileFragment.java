@@ -45,13 +45,13 @@ import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.model.user.PrivateProfile;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.SignPainterTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportUserDialogFragment;
 
@@ -67,7 +67,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 //910
-public class OthersProfileFragment extends BaseFragment {
+public class OthersProfileFragment extends BaseHomeFragment {
 
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
@@ -432,12 +432,12 @@ public class OthersProfileFragment extends BaseFragment {
                         int follower = profileInfo.getFollowers();
                         int following = profileInfo.getFollowings();
                         int totalvideos = profileInfo.getTotalVideos();
-                        hassentrequest = profileInfo.getFollowInfo().getRequestSent();
+                        hassentrequest = profileInfo.getFollowInfo().isRequestSent();
                         requestRecieved = profileInfo.getFollowInfo().isRequestReceived();
-                        isBlockedyou = profileInfo.getFollowInfo().getIsBlockedYou();
-                        isfollower = profileInfo.getFollowInfo().getFollower();
-                        isfollowing = profileInfo.getFollowInfo().getFollowing();
-                        youBlocked = profileInfo.getFollowInfo().getYouBlocked();
+                        isBlockedyou = profileInfo.getFollowInfo().isBlockedYou();
+                        isfollower = profileInfo.getFollowInfo().isFollower();
+                        isfollowing = profileInfo.getFollowInfo().isFollowing();
+                        youBlocked = profileInfo.getFollowInfo().isYouBlocked();
                         isHideAllPost=profileInfo.getIsHidedAllPosts();
                         if(requestRecieved) {
                             requestId = profileInfo.getFollowInfo().getRequestId();
@@ -1041,8 +1041,8 @@ public class OthersProfileFragment extends BaseFragment {
                         try {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
-                                    requestRecieved= response.body().getFollowInfo().getRequestSent();
-                                    isfollowing=response.body().getFollowInfo().getFollowing();
+                                    requestRecieved= response.body().getFollowInfo().isRequestSent();
+                                    isfollowing=response.body().getFollowInfo().isFollowing();
 
                                     if(isacceptFollow) {
                                         Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();

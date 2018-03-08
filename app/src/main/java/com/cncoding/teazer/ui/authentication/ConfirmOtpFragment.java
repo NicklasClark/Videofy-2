@@ -57,6 +57,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.VERIFY_LOGIN_WITH
 import static com.cncoding.teazer.utilities.common.Annotations.VERIFY_SIGNUP;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -195,13 +196,13 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
     @OnClick(R.id.otp_resend_btn) public void resendOtp() {
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
-                if (isConnected) {
+                if (isConnected(context)) {
                     signUp(new InitiateSignup().extractFromVerifySignUp(verifySignUp));
                 } else
                     notifyNoInternetConnection();
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                if (isConnected) {
+                if (isConnected(context)) {
                     otp1EditText.getText().clear();
                     otp2EditText.getText().clear();
                     otp3EditText.getText().clear();
@@ -251,7 +252,7 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
     private void verifyOtp() {
         otpVerifiedTextView.setText("");
         ViewUtils.hideKeyboard(getParentActivity(), otp4EditText);
-        if (isConnected) {
+        if (isConnected(context)) {
             switch (launchAction) {
                 case SIGNUP_WITH_EMAIL_ACTION:
                     verifySignUp(verifySignUp
