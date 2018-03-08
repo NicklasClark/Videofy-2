@@ -832,7 +832,7 @@ public class CameraActivity extends AppCompatActivity
                     }
                     cursor.close();
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -840,7 +840,11 @@ public class CameraActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            reference.get().videoGalleryRecyclerView.getAdapter().notifyDataSetChanged();
+            try {
+                reference.get().videoGalleryRecyclerView.getAdapter().notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             super.onPostExecute(aVoid);
         }
     }
