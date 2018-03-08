@@ -17,61 +17,25 @@ import java.util.ArrayList;
  */
 
 public class PublicProfile implements Parcelable {
-    @SerializedName("user_id")
-    @Expose
-    private Integer userId;
-    @SerializedName("user_name")
-    @Expose
-    private String userName;
-    @SerializedName("first_name")
-    @Expose
-    private String firstName;
-    @SerializedName("last_name")
-    @Expose
-    private String lastName;
-    @SerializedName("email")
-    @Expose
-    private String email;
-    @SerializedName("phone_number")
-    @Expose
-    private Long phoneNumber;
-    @SerializedName("country_code")
-    @Expose
-    private Integer countryCode;
-    @SerializedName("gender")
-    @Expose
-    private Integer gender;
-    @SerializedName("is_active")
-    @Expose
-    private Boolean isActive;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("account_type")
-    @Expose
-    private Integer accountType;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
-    @SerializedName("updated_at")
-    @Expose
-    private String updatedAt;
-    @SerializedName("has_profile_media")
-    @Expose
-    private Boolean hasProfileMedia;
-    @SerializedName("profile_media")
-    @Expose
-    private Medias profileMedia;
-    @SerializedName("has_cover_media")
-    @Expose
-    private Boolean hasCoverMedia;
-    @SerializedName("cover_media")
-    @Expose
-    private CoverMedia coverMedia;
 
-    @SerializedName("categories")
-    @Expose
-    private ArrayList<Category> categories = null;
+    @SerializedName("user_id") @Expose private Integer userId;
+    @SerializedName("user_name") @Expose private String userName;
+    @SerializedName("first_name") @Expose private String firstName;
+    @SerializedName("last_name") @Expose private String lastName;
+    @SerializedName("email") @Expose private String email;
+    @SerializedName("phone_number") @Expose private Long phoneNumber;
+    @SerializedName("country_code") @Expose private Integer countryCode;
+    @SerializedName("gender") @Expose private Integer gender;
+    @SerializedName("is_active") @Expose private Boolean isActive;
+    @SerializedName("description") @Expose private String description;
+    @SerializedName("account_type") @Expose private Integer accountType;
+    @SerializedName("created_at") @Expose private String createdAt;
+    @SerializedName("updated_at") @Expose private String updatedAt;
+    @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
+    @SerializedName("profile_media") @Expose private Medias profileMedia;
+    @SerializedName("has_cover_media") @Expose private Boolean hasCoverMedia;
+    @SerializedName("cover_media") @Expose private CoverMedia coverMedia;
+    @SerializedName("categories") @Expose private ArrayList<Category> categories;
 
     protected PublicProfile(Parcel in) {
         if (in.readByte() == 0) {
@@ -123,6 +87,10 @@ public class PublicProfile implements Parcelable {
 
     public CoverMedia getCoverMedia() {
         return coverMedia;
+    }
+
+    public void setCoverMedia(CoverMedia coverMedia) {
+        this.coverMedia = coverMedia;
     }
 
     @Override

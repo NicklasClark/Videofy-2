@@ -80,7 +80,8 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                 if (videoUploadCall == null)
                     videoUploadCall = ApiCallingService.Posts.uploadVideo(
                             part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
-                            uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
+                            uploadParams.getLongitude(), uploadParams.getSelectedTagsToSend(),
+                            uploadParams.getSelectedCategoriesToSend(), getApplicationContext());
                 try {
                     Response<PostUploadResult> response = videoUploadCall.execute();
                     if (response.isSuccessful()) {

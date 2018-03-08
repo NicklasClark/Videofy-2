@@ -152,7 +152,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.home.BaseBottomBarActivity"
+            android:name=".ui.home.base.BaseBottomBarActivity"
             android:label="Teazer"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

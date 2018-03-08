@@ -17,7 +17,7 @@ import android.view.Window;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.ui.home.profile.adapter.ReportPostSubtitleAdapter;
@@ -46,7 +46,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     DynamicProgress loader;
     @BindView(R.id.report_remark)
     TextInputEditText reportRemark;
-    private ReportPostTitlesResponse reportPostTitlesResponse;
+    private ReportTypes reportTypes;
     private View rootView;
     private ReportPostSubTitleResponse selectedReportType;
     private String userName;
@@ -57,10 +57,10 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
         // Use `newInstance` instead as shown below
     }
 
-    public static ReportPostSubtitleFragment newInstance(ReportPostTitlesResponse reportPostTitlesResponse, String userName) {
+    public static ReportPostSubtitleFragment newInstance(ReportTypes reportTypes, String userName) {
         ReportPostSubtitleFragment frag = new ReportPostSubtitleFragment();
         Bundle args = new Bundle();
-        args.putParcelable("report", reportPostTitlesResponse);
+        args.putParcelable("report", reportTypes);
         args.putString("userName", userName);
         frag.setArguments(args);
         return frag;
@@ -86,7 +86,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reportPostTitlesResponse = getArguments().getParcelable("report");
+        reportTypes = getArguments().getParcelable("report");
         userName = getArguments().getString("userName");
     }
 
@@ -113,7 +113,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
 
     private void getPostSubReportTypes() {
         loader.setVisibility(View.VISIBLE);
-        reportPostSubtitleAdapter = new ReportPostSubtitleAdapter(reportPostTitlesResponse.getSubReports(), getContext(), ReportPostSubtitleFragment.this, userName);
+        reportPostSubtitleAdapter = new ReportPostSubtitleAdapter(reportTypes.getSubReports(), getContext(), ReportPostSubtitleFragment.this, userName);
         reportTitlesRecyclerView.setAdapter(reportPostSubtitleAdapter);
         loader.setVisibility(View.GONE);
     }

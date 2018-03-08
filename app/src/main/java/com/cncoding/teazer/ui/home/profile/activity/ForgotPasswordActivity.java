@@ -15,7 +15,7 @@ import com.cncoding.teazer.data.model.auth.Login;
 import com.cncoding.teazer.ui.authentication.ForgotPasswordFragment;
 import com.cncoding.teazer.ui.authentication.LoginFragment;
 import com.cncoding.teazer.ui.authentication.ResetPasswordFragment;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

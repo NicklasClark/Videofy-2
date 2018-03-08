@@ -10,6 +10,9 @@ import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.model.react.ReportReaction;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.common.Annotations.HideOrShow;
+
+import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -47,6 +50,10 @@ import static com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 public class ReactRepositoryImpl implements ReactRepository {
 
     private ReactService reactService;
+
+    @Inject public ReactRepositoryImpl(ReactService reactService) {
+        this.reactService = reactService;
+    }
 
     public ReactRepositoryImpl(String token) {
         reactService = getRetrofitWithAuthToken(token).create(ReactService.class);
@@ -102,7 +109,7 @@ public class ReactRepositoryImpl implements ReactRepository {
     }
 
     @Override
-    public LiveData<ResultObject> hideOrShowReaction(int reactId, int status) {
+    public LiveData<ResultObject> hideOrShowReaction(int reactId, @HideOrShow int status) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         reactService.hideOrShowReaction(reactId, status).enqueue(resultObjectCallback(liveData, CALL_HIDE_OR_SHOW_REACTION));
         return liveData;

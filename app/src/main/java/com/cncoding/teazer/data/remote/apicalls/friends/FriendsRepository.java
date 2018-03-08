@@ -10,6 +10,7 @@ import com.cncoding.teazer.data.model.friends.UsersList;
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.common.Annotations.BlockUnblock;
 
 /**
  *
@@ -54,7 +55,7 @@ public interface FriendsRepository {
 
     LiveData<ProfileInfo> getOthersProfileInfo(int userId);
 
-    LiveData<ResultObject> blockUnblockUser(int userId, int status);
+    LiveData<ResultObject> blockUnblockUser(int userId, @BlockUnblock int status);
 
     LiveData<BlockedUsersList> getBlockedUsers(int page);
 

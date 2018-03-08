@@ -27,6 +27,7 @@ import static android.text.TextUtils.isDigitsOnly;
 import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_EMAIL;
 import static com.cncoding.teazer.utilities.common.Annotations.REQUEST_RESET_PASSWORD_BY_PHONE;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
 
@@ -136,7 +137,7 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
 
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
         try {
-            if (isConnected) {
+            if (isConnected(context)) {
                 if (isFieldFilled(Annotations.CHECK_USERNAME) || isFieldFilled(Annotations.CHECK_EMAIL)) {
                     if (isDigitsOnly(username)) {
 //                        Phone number is entered

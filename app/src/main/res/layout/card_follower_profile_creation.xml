@@ -205,24 +205,13 @@
                         android:layout_height="wrap_content" />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/image1_layout"
+                <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
+                    android:id="@+id/image1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:visibility="gone"
-                    android:layout_marginEnd="10dp"
-                    android:layout_toStartOf="@+id/reactiontext"
-                    android:background="@drawable/bg_circle_white_outline"
-                    >
-                    <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
-                        android:id="@+id/image1"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_margin="1dp" />
-                </RelativeLayout>
+                    android:layout_margin="1dp"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="3dp" />
 
                 <RelativeLayout
                     android:id="@+id/image2_layout"
@@ -233,7 +222,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:layout_toStartOf="@+id/image1_layout"
+                    android:layout_toStartOf="@+id/image1"
                     android:layout_marginStart="@dimen/padding_half"
                     android:background="@drawable/bg_circle_white_outline">
 

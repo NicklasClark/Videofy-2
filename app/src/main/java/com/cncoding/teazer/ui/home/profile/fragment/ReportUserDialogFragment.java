@@ -22,7 +22,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.user.ReportUser;
 import com.cncoding.teazer.ui.customviews.common.DynamicProgress;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
@@ -127,9 +127,9 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
 
     private void getPostReportTypes() {
         loader.setVisibility(View.VISIBLE);
-        ApiCallingService.Application.getProfileReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
+        ApiCallingService.Application.getProfileReportTypes().enqueue(new Callback<List<ReportTypes>>() {
             @Override
-            public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
+            public void onResponse(Call<List<ReportTypes>> call, Response<List<ReportTypes>> response) {
                 try {
                     if (response.code() == 200) {
                         if (response.body() != null) {
@@ -145,7 +145,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
             }
 
             @Override
-            public void onFailure(Call<List<ReportPostTitlesResponse>> call, Throwable t) {
+            public void onFailure(Call<List<ReportTypes>> call, Throwable t) {
                 loader.setVisibility(View.GONE);
             }
         });

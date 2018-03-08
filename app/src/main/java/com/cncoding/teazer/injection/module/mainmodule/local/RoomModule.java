@@ -16,7 +16,7 @@
  *
  */
 
-package com.cncoding.teazer.injection.module;
+package com.cncoding.teazer.injection.module.mainmodule.local;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
@@ -25,6 +25,7 @@ import android.arch.persistence.room.Room;
 import com.cncoding.teazer.data.local.dao.PostDetailsDao;
 import com.cncoding.teazer.data.local.database.TeazerDB;
 import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
+import com.cncoding.teazer.injection.module.common.ApplicationModule;
 
 import javax.inject.Singleton;
 
@@ -36,34 +37,22 @@ import dagger.Provides;
  * Created by Prem$ on 8/18/2017.
  */
 
-@Module
+@Module(includes = ApplicationModule.class)
 public class RoomModule {
 
-    private final TeazerDB database;
-
-    public RoomModule(Application application) {
-        this.database = Room.databaseBuilder(
+    @Provides @Singleton TeazerDB getDatabase(Application application) {
+        return Room.databaseBuilder(
                 application,
                 TeazerDB.class,
                 "Teazer.db"
         ).build();
     }
 
-    @Provides
-    @Singleton
-    PostDetailsDao provideListItemDao(TeazerDB database){
+    @Provides @Singleton PostDetailsDao getPostDetailsDao(TeazerDB database){
         return database.dao();
     }
 
-    @Provides
-    @Singleton
-    TeazerDB provideListItemDatabase(Application application){
-        return database;
-    }
-
-    @Provides
-    @Singleton
-    ViewModelProvider.Factory provideViewModelFactory(Application application, String token){
+    @Provides @Singleton ViewModelProvider.Factory provideViewModelFactory(Application application, String token){
         return new AuthTokenViewModelFactory(application, token);
     }
 }

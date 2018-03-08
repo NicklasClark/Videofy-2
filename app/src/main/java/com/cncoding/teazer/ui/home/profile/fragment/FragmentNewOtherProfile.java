@@ -33,10 +33,11 @@ import com.cncoding.teazer.data.model.friends.ProfileInfo;
 import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.user.PrivateProfile;
 import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
+import com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
 import com.cncoding.teazer.ui.home.profile.adapter.ProfileCreationReactionPagerAdapter;
@@ -52,6 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser.LIKED_USERS_OF_PROFILE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_DISLIKE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_LIKE;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
@@ -62,7 +64,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
  * Created by farazhabib on 15/02/18.
  */
 
-public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
+public class FragmentNewOtherProfile extends BaseHomeFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
 
     private static final String ARG_ID = "UserID";
     private static final String ARG_NOTIFICATION_ID = "notification";
@@ -279,7 +281,7 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
     }
 
     @OnClick(R.id.totallikes) public void openLikesOnProfile() {
-        navigation.pushFragment(FragmentLikedUserProfile.newInstance2(followerfollowingid));
+        navigation.pushFragment(FragmentLikedUser.newInstance(followerfollowingid, LIKED_USERS_OF_PROFILE));
     }
 
     @OnClick(R.id.reaction1) public void openTopReactor1Profile() {
@@ -426,12 +428,12 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
                         int following = profileInfo.getFollowings();
                         int totalvideos = profileInfo.getTotalVideos();
                         int totalreactions = profileInfo.getTotalReactions();
-                        hassentrequest = profileInfo.getFollowInfo().getRequestSent();
-                        requestRecieved = profileInfo.getFollowInfo().getRequestReceived();
-                        isBlockedyou = profileInfo.getFollowInfo().getIsBlockedYou();
-                        isfollower = profileInfo.getFollowInfo().getFollower();
-                        isfollowing = profileInfo.getFollowInfo().getFollowing();
-                        youBlocked = profileInfo.getFollowInfo().getYouBlocked();
+                        hassentrequest = profileInfo.getFollowInfo().isRequestSent();
+                        requestRecieved = profileInfo.getFollowInfo().isRequestReceived();
+                        isBlockedyou = profileInfo.getFollowInfo().isBlockedYou();
+                        isfollower = profileInfo.getFollowInfo().isFollower();
+                        isfollowing = profileInfo.getFollowInfo().isFollowing();
+                        youBlocked = profileInfo.getFollowInfo().isYouBlocked();
                         isHideAllPost = profileInfo.getIsHidedAllPosts();
                         topReactedUserList=profileInfo.getTopReactedUsers();
                         totalProfileLikes=profileInfo.getTotalProfileLikes();
@@ -1021,8 +1023,8 @@ public class FragmentNewOtherProfile extends BaseFragment implements ProfileMyCr
 
                                 if (response.body().getStatus()) {
 
-                                    requestRecieved = response.body().getFollowInfo().getRequestSent();
-                                    isfollowing = response.body().getFollowInfo().getFollowing();
+                                    requestRecieved = response.body().getFollowInfo().isRequestSent();
+                                    isfollowing = response.body().getFollowInfo().isFollowing();
 
                                     if (isacceptFollow) {
                                         Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();

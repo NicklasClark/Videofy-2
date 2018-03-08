@@ -23,6 +23,19 @@
             android:textColor="@color/colorPrimary_text"
             android:layout_marginStart="@dimen/action_bar_height"/>
 
+        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/action_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_height"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@string/edit"
+            android:layout_gravity="end|center_vertical"
+            android:textColor="@color/colorPrimary_text"
+            android:layout_marginStart="@dimen/action_bar_height"/>
+
     </FrameLayout>
 
     <LinearLayout

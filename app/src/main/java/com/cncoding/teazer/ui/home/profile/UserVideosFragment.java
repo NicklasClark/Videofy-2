@@ -13,13 +13,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
 
-public class UserVideosFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener {
+public class UserVideosFragment extends BaseHomeFragment implements AppBarLayout.OnOffsetChangedListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

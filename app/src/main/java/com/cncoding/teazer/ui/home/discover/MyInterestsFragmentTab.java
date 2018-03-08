@@ -64,7 +64,7 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
                 is_next_page = postList.isNextPage();
                 if (!postList.getPosts().isEmpty()) {
                     //noinspection unchecked
-                    new UpdatePosts(this).execute(postList.getPosts());
+                    new UpdatePosts(this, currentPage).execute(postList.getPosts());
                 } else if (currentPage == 1){
                     showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
                 }
@@ -114,6 +114,12 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         getPosts(1);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        clearPostListLiveData();
+    }
+
     private void getPosts(int page) {
         loadAllInterestedCategoriesPosts(page, categoryId);
     }
@@ -129,14 +135,16 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
     private static class UpdatePosts extends AsyncTask<List<PostDetails>, Void, Void> {
 
         private MyInterestsFragmentTab fragment;
+        private int currentPage;
 
-        UpdatePosts(MyInterestsFragmentTab fragment) {
+        UpdatePosts(MyInterestsFragmentTab fragment, int currentPage) {
             this.fragment = fragment;
+            this.currentPage = currentPage;
         }
 
         @Override
         protected Void doInBackground(List<PostDetails>[] lists) {
-            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(lists[0]);
+            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(currentPage, lists[0]);
             return null;
         }
     }

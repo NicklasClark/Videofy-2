@@ -3,6 +3,8 @@ package com.cncoding.teazer.data.model.application;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * Created by amit on 24/11/17.
  */
 
-public class ReportPostTitlesResponse implements Parcelable {
+public class ReportTypes extends BaseModel implements Parcelable {
     @SerializedName("report_type_id")
     @Expose
     private Integer reportTypeId;
@@ -23,9 +25,8 @@ public class ReportPostTitlesResponse implements Parcelable {
     @SerializedName("sub_reports")
     @Expose
     private List<ReportPostSubTitleResponse> subReports = null;
-    private Throwable error;
 
-    public ReportPostTitlesResponse(Throwable error) {
+    public ReportTypes(Throwable error) {
         this.error = error;
     }
 
@@ -53,8 +54,9 @@ public class ReportPostTitlesResponse implements Parcelable {
         this.subReports = subReports;
     }
 
-    public Throwable getError() {
-        return error;
+    public ReportTypes setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
     }
 
     @Override
@@ -69,24 +71,24 @@ public class ReportPostTitlesResponse implements Parcelable {
         dest.writeTypedList(this.subReports);
     }
 
-    public ReportPostTitlesResponse() {
+    public ReportTypes() {
     }
 
-    protected ReportPostTitlesResponse(Parcel in) {
+    protected ReportTypes(Parcel in) {
         this.reportTypeId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.title = in.readString();
         this.subReports = in.createTypedArrayList(ReportPostSubTitleResponse.CREATOR);
     }
 
-    public static final Creator<ReportPostTitlesResponse> CREATOR = new Creator<ReportPostTitlesResponse>() {
+    public static final Creator<ReportTypes> CREATOR = new Creator<ReportTypes>() {
         @Override
-        public ReportPostTitlesResponse createFromParcel(Parcel source) {
-            return new ReportPostTitlesResponse(source);
+        public ReportTypes createFromParcel(Parcel source) {
+            return new ReportTypes(source);
         }
 
         @Override
-        public ReportPostTitlesResponse[] newArray(int size) {
-            return new ReportPostTitlesResponse[size];
+        public ReportTypes[] newArray(int size) {
+            return new ReportTypes[size];
         }
     };
 }

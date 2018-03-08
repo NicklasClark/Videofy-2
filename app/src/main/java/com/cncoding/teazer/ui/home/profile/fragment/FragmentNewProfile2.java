@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -26,10 +25,12 @@ import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.cncoding.teazer.data.model.profile.Preference;
 import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.data.model.user.userProfile.TopReactedUser;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
+import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
+import com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.ui.home.profile.activity.EditProfile;
 import com.cncoding.teazer.ui.home.profile.activity.FollowersListFragment;
 import com.cncoding.teazer.ui.home.profile.activity.FollowingListFragment;
@@ -54,6 +55,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser.LIKED_USERS_OF_PROFILE;
+import static com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser.SELF;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logProfileShareEvent;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getUserId;
 import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
@@ -63,15 +66,16 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
  * Created by farazhabib on 19/02/18.
  */
 
-public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
+public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction {
 
     private static final int RC_REQUEST_STORAGE = 1001;
 
     PublicProfile userProfile;
-    TextView _creations;
-    TextView _followers;
-    TextView _following;
-    TextView _reactions;
+
+    ProximaNovaBoldTextView _creations;
+    ProximaNovaBoldTextView _followers;
+    ProximaNovaBoldTextView _following;
+    ProximaNovaBoldTextView _reactions;
 
     ProximaNovaRegularCheckedTextView _name;
     ProximaNovaSemiBoldTextView _username;
@@ -251,7 +255,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
         _totallikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigation.pushFragment(FragmentLikedUserProfile.newInstance());
+                navigation.pushFragment(FragmentLikedUser.newInstance(SELF, LIKED_USERS_OF_PROFILE));
             }
         });
         return view;
@@ -331,7 +335,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
               //  Bundle bundle = new Bundle();
              //   bundle.putParcelableArrayList("UserPrefrences", userPrefrences);
                // mintent.putExtras(bundle);
-                mintent.putParcelableArrayListExtra("UserPrefrences", userPrefrences);
+                mintent.putParcelableArrayListExtra("UserPreferences", userPrefrences);
                 startActivity(mintent);
                 break;
 
@@ -465,7 +469,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     gender = userProfile.getGender();
                     reactions=response.body().getTotalReactions();
                     totalProfilelikes=response.body().getTotalProfileLikes();
-                    userPrefrences=response.body().getPreferences();
+                    userPrefrences=new ArrayList<>(response.body().getPreferences());
                     topReactedUserList=response.body().getTopReactedUsers();
 
 
@@ -687,7 +691,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
-                    _username.setText(username);
+                    _username.setText("@"+username);
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));
@@ -742,7 +746,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     totalvideos = response.body().getTotalVideos();
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
-                    userPrefrences=response.body().getPreferences();
+                    userPrefrences=new ArrayList<>(response.body().getPreferences());
 
                     Long mobilno = userProfile.getPhoneNumber();
                     if (mobilno == null) {
@@ -804,7 +808,7 @@ public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreati
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
-                    _username.setText(username);
+                    _username.setText("@ "+username);
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));

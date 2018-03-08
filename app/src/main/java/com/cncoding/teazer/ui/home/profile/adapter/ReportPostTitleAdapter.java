@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitleAdapter.ViewHolder> {
 
-    private final List<ReportPostTitlesResponse> reportsType;
+    private final List<ReportTypes> reportsType;
     private final ReportPostDialogFragment fragmentContext;
     private Context context;
     private PostsListFragment postsListFragment;
@@ -36,7 +36,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
     private int lastSelectedRow = -1;
     private String userName;
 
-    public ReportPostTitleAdapter(List<ReportPostTitlesResponse> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment, String userName) {
+    public ReportPostTitleAdapter(List<ReportTypes> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment, String userName) {
         this.reportsType = reportsType;
         this.context = context;
         this.fragmentContext = reportPostDialogFragment;
@@ -62,7 +62,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
 
     @Override
     public void onBindViewHolder(final ReportPostTitleAdapter.ViewHolder holder, final int position) {
-        final ReportPostTitlesResponse report = reportsType.get(position);
+        final ReportTypes report = reportsType.get(position);
 
         if(position == lastSelectedRow)
             holder.tickView.setVisibility(View.VISIBLE);
@@ -130,6 +130,6 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
 
     public interface TitleSelectedInterface
     {
-        void titleSelected(ReportPostTitlesResponse value);
+        void titleSelected(ReportTypes value);
     }
 }

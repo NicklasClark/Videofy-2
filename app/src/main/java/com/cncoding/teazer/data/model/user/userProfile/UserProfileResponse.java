@@ -1,5 +1,6 @@
 package com.cncoding.teazer.data.model.user.userProfile;
 
+import com.cncoding.teazer.data.model.friends.PublicProfile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +13,7 @@ public class UserProfileResponse {
 
     @SerializedName("user_profile")
         @Expose
-        private UserProfile userProfile;
+        private PublicProfile userProfile;
         @SerializedName("followers")
         @Expose
         private Integer followers;
@@ -26,11 +27,11 @@ public class UserProfileResponse {
         @Expose
         private Boolean canChangePassword;
 
-        public UserProfile getUserProfile() {
+        public PublicProfile getUserProfile() {
             return userProfile;
         }
 
-        public void setUserProfile(UserProfile userProfile) {
+        public void setUserProfile(PublicProfile userProfile) {
             this.userProfile = userProfile;
         }
 

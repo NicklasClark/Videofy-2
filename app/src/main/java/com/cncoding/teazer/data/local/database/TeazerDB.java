@@ -22,6 +22,13 @@ import javax.inject.Singleton;
 @TypeConverters({ConvertersFactory.class})
 public abstract class TeazerDB extends RoomDatabase {
 
+    public static final int DELETE = 0;
+    public static final int INSERT = 1;
+    public static final int LIKE = 2;
+    public static final int DISLIKE = 4;
+    public static final int TAGS = 5;
+    public static final int REACTIONS = 6;
+
     private static TeazerDB INSTANCE;
     public abstract PostDetailsDao dao();
     private static final Object sLock = new Object();

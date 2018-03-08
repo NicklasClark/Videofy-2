@@ -38,7 +38,7 @@ import com.cncoding.teazer.ui.customviews.coachMark.shape.RectangleShape;
 import com.cncoding.teazer.ui.customviews.coachMark.shape.Shape;
 import com.cncoding.teazer.ui.customviews.coachMark.target.Target;
 import com.cncoding.teazer.ui.customviews.coachMark.target.ViewTarget;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 
 import java.util.ArrayList;
 import java.util.List;

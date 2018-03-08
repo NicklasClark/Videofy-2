@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import retrofit2.http.HEAD;
+
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
 
@@ -173,20 +175,24 @@ public class NavigationController {
      */
     public void pushFragment(@Nullable final Fragment fragment, @Nullable NavigationTransactionOptions transactionOptions) {
         if (fragment != null && selectedTabIndex != NO_TAB) {
-            FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
+            try {
+                FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
-            detachCurrentFragment(ft);
+                detachCurrentFragment(ft);
 //            ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
-            ft.add(containerId, fragment, generateTag(fragment));
-            ft.commitAllowingStateLoss();
+                ft.add(containerId, fragment, generateTag(fragment));
+                ft.commitAllowingStateLoss();
 
-            executePendingTransactions();
+                executePendingTransactions();
 
-            fragmentStacks.get(selectedTabIndex).push(fragment);
+                fragmentStacks.get(selectedTabIndex).push(fragment);
 
-            currentFragment = fragment;
-            if (transactionListener != null) {
-                transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
+                currentFragment = fragment;
+                if (transactionListener != null) {
+                    transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -594,15 +600,19 @@ public class NavigationController {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (fragmentManager.getFragments() != null) {
-                    FragmentTransaction ft = createTransactionWithOptions(null);
-                    for (Fragment fragment : fragmentManager.getFragments()) {
-                        if (fragment != null) {
-                            ft.remove(fragment);
+                try {
+                    if (fragmentManager.getFragments() != null) {
+                        FragmentTransaction ft = createTransactionWithOptions(null);
+                        for (Fragment fragment : fragmentManager.getFragments()) {
+                            if (fragment != null) {
+                                ft.remove(fragment);
+                            }
                         }
+                        ft.commitAllowingStateLoss();
+                        executePendingTransactions();
                     }
-                    ft.commitAllowingStateLoss();
-                    executePendingTransactions();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

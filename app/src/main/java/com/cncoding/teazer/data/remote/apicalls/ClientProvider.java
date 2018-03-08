@@ -24,25 +24,14 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ClientProvider {
 
     private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
-    private static Retrofit retrofitWithAuthToken;
+    private static OkHttpClient okHttpClientWithAuthToken;
+    private static OkHttpClient okHttpClient;
     private static Retrofit retrofitWithoutAuthToken;
-
-    public static Retrofit getRetrofitWithAuthToken(@NonNull final String token) {
-        if (retrofitWithAuthToken == null) {
-//            retrofitWithoutAuthToken = null;
-            retrofitWithAuthToken = new Retrofit.Builder()
-                    .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(token))
-                    .build();
-        }
-        return retrofitWithAuthToken;
-    }
+    private static Retrofit retrofitWithAuthToken;
+    private static Retrofit giphyRetrofit;
 
     public static Retrofit getRetrofitWithoutAuthToken() {
         if (retrofitWithoutAuthToken == null) {
-//            retrofitWithAuthToken = null;
             retrofitWithoutAuthToken = new Retrofit.Builder()
                     .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -53,34 +42,64 @@ public class ClientProvider {
         return retrofitWithoutAuthToken;
     }
 
+    public static Retrofit getRetrofitWithAuthToken(@NonNull final String token) {
+        if (retrofitWithAuthToken == null) {
+            retrofitWithAuthToken = new Retrofit.Builder()
+                    .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClientWithAuthToken(token))
+                    .build();
+        }
+        return retrofitWithAuthToken;
+    }
+
+    public static Retrofit getGiphyRetrofit() {
+        if (giphyRetrofit == null) {
+            giphyRetrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.giphy.com")
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
+                    .build();
+        }
+        return giphyRetrofit;
+    }
+
     @NonNull private static OkHttpClient getOkHttpClientWithAuthToken(@NonNull final String authToken) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
-//                        try {
-                            Request original = chain.request();
-                            Request request = original.newBuilder()
-                                    .header("Authorization", "Bearer " + authToken)
-                                    .method(original.method(), original.body())
-                                    .build();
-                            return chain.proceed(request);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            return null;
-//                        }
-                    }
-                })
-//                .addInterceptor(logging)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .build();
+        if (okHttpClientWithAuthToken == null) {
+            okHttpClientWithAuthToken = new OkHttpClient.Builder()
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
+    //                        try {
+                                Request original = chain.request();
+                                Request request = original.newBuilder()
+                                        .header("Authorization", "Bearer " + authToken)
+                                        .method(original.method(), original.body())
+                                        .build();
+                                return chain.proceed(request);
+    //                        } catch (Exception e) {
+    //                            e.printStackTrace();
+    //                            return null;
+    //                        }
+                        }
+                    })
+//                    .addInterceptor(logging)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .build();
+        }
+        return okHttpClientWithAuthToken;
     }
 
     @NonNull private static OkHttpClient getOkHttpClient() {
-        return new OkHttpClient.Builder()
-//                .addInterceptor(logging)
-                .build();
+        if (okHttpClient == null) {
+            okHttpClient = new OkHttpClient.Builder()
+//                    .addInterceptor(logging)
+                    .build();
+        }
+        return okHttpClient;
     }
 
     public static void clearRetrofitWithAuthToken() {

@@ -1,5 +1,7 @@
 package com.cncoding.teazer.data.model.application;
 
+import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by farazhabib on 06/12/17.
  */
 
-public class DeactivateTypes {
+public class DeactivateTypes extends BaseModel {
 
     @SerializedName("deactivate_id")
     @Expose
@@ -19,6 +21,15 @@ public class DeactivateTypes {
     @SerializedName("title")
     @Expose
     private String title;
+
+    public DeactivateTypes(Throwable error) {
+        this.error = error;
+    }
+
+    public DeactivateTypes setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     public Integer getDeactivateId() {
         return deactivateId;

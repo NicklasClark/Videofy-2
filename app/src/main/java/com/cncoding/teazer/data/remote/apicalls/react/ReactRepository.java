@@ -9,6 +9,7 @@ import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.model.react.ReportReaction;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.common.Annotations.HideOrShow;
 import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
@@ -34,7 +35,7 @@ public interface ReactRepository {
 
     LiveData<ResultObject> reportReaction(ReportReaction reportReaction);
 
-    LiveData<ResultObject> hideOrShowReaction(int reactId, int status);
+    LiveData<ResultObject> hideOrShowReaction(int reactId, @HideOrShow int status);
 
     LiveData<ReactionsList> getMyReactions(int page);
     

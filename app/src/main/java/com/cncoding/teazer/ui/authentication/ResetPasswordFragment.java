@@ -31,6 +31,7 @@ import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.common.ViewUtils.showSnackBar;
@@ -165,7 +166,7 @@ public class ResetPasswordFragment extends BaseAuthFragment {
 
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
         hideKeyboard(getParentActivity(), statusView);
-        if (isConnected) {
+        if (isConnected(context)) {
             if (isFieldFilled(Annotations.CHECK_PASSWORD)) {
                 if (newPass.equals(confirmPass)) {
                     ResetPasswordByOtp resetPasswordDetails;

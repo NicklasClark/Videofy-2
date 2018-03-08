@@ -6,7 +6,6 @@ import com.cncoding.teazer.data.model.base.Medias;
 import com.cncoding.teazer.data.model.base.TaggedUser;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.viewmodel.PostViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +72,11 @@ public class DataAccessTasks {
 
         @Override protected Void doInBackground(Void... voids) {
             switch (type) {
-                case PostViewModel.TAGS:
+                case TeazerDB.TAGS:
                     database.dao().updateTotalTagsCount(taggedUsers != null ? taggedUsers.size() : 0, postId);
                     database.dao().updateTaggedUsers(taggedUsers, postId);
                     break;
-                case PostViewModel.REACTIONS:
+                case TeazerDB.REACTIONS:
                     database.dao().updateTotalReactionCount(reactions != null ? reactions.size() : 0, canReact, postId);
                     database.dao().updateReactions(reactions, postId);
                     break;
@@ -101,10 +100,10 @@ public class DataAccessTasks {
         @Override
         protected Void doInBackground(PostDetails... postDetails) {
             switch (arg) {
-                case PostViewModel.DELETE:
+                case TeazerDB.DELETE:
                     database.dao().deletePost(postDetails[0]);
                     break;
-                case PostViewModel.INSERT:
+                case TeazerDB.INSERT:
                     database.dao().insertPost(postDetails[0]);
                     break;
                 default:
@@ -128,13 +127,13 @@ public class DataAccessTasks {
         protected PostDetails doInBackground(Integer... integers) {
             try {
                 switch (arg) {
-                    case PostViewModel.LIKE:
+                    case TeazerDB.LIKE:
                         database.dao().likePost(integers[0]);
                         return null;
-                    case PostViewModel.DISLIKE:
+                    case TeazerDB.DISLIKE:
                         database.dao().dislikePost(integers[0]);
                         return null;
-                    case PostViewModel.DELETE:
+                    case TeazerDB.DELETE:
                         database.dao().deletePost(integers[0]);
                         return null;
                     default:
@@ -147,18 +146,20 @@ public class DataAccessTasks {
         }
     }
 
-    public static class InsertAllTask extends AsyncTask<List<PostDetails>, Void, Void> {
+    public static class InsertAllTask extends AsyncTask<Void, Void, Void> {
 
         private TeazerDB database;
+        private List<PostDetails> list;
 
-        public InsertAllTask(TeazerDB database) {
+        public InsertAllTask(TeazerDB database, List<PostDetails> list) {
             this.database = database;
+            this.list = list;
         }
 
         @Override
-        protected Void doInBackground(List<PostDetails>[] lists) {
+        protected Void doInBackground(Void... voids) {
             database.dao().clearTable();
-            database.dao().insertAll(lists[0]);
+            database.dao().insertAll(list);
             return null;
         }
     }

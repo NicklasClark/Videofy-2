@@ -9,6 +9,8 @@ import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.UsersList;
 import com.cncoding.teazer.data.model.post.PostList;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +40,10 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
 
     private DiscoverService discoverService;
 
+    @Inject public DiscoverRepositoryImpl(DiscoverService discoverService) {
+        this.discoverService = discoverService;
+    }
+
     public DiscoverRepositoryImpl(String token) {
         discoverService = getRetrofitWithAuthToken(token).create(DiscoverService.class);
     }
@@ -47,8 +53,15 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
         discoverService.getNewDiscoverLandingPosts().enqueue(new Callback<LandingPostsV2>() {
             @Override
             public void onResponse(Call<LandingPostsV2> call, Response<LandingPostsV2> response) {
-                LandingPostsV2 landingPostsV2 = response.body().setCallType(CALL_LANDING_POSTS);
-                liveData.setValue(response.isSuccessful() ? landingPostsV2 : new LandingPostsV2(new Throwable(NOT_SUCCESSFUL)));
+                try {
+                    LandingPostsV2 landingPostsV2 = response.body().setCallType(CALL_LANDING_POSTS);
+                    liveData.setValue(response.isSuccessful() ?
+                            landingPostsV2 :
+                            new LandingPostsV2(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_LANDING_POSTS));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    liveData.setValue(new LandingPostsV2((new Throwable(NOT_SUCCESSFUL))).setCallType(CALL_LANDING_POSTS));
+                }
             }
 
             @Override
@@ -74,7 +87,8 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
 
     @Override public LiveData<PostList> getTrendingVideosByCategory(int page, int categoryId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
-        discoverService.getTrendingVideosByCategory(page, categoryId).enqueue(postListCallback(liveData, CALL_TRENDING_POSTS_BY_CATEGORY));
+        discoverService.getTrendingVideosByCategory(page, categoryId)
+                .enqueue(postListCallback(liveData, CALL_TRENDING_POSTS_BY_CATEGORY + categoryId));
         return liveData;
     }
 
@@ -90,6 +104,7 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
                 .enqueue(postListCallback(liveData, CALL_ALL_INTERESTED_CATEGORIES_POSTS + categoryId));
         return liveData;
     }
+
     @Override
     public LiveData<UsersList> getUsersListToFollow(int page) {
         final MutableLiveData<UsersList> liveData = new MutableLiveData<>();

@@ -1,5 +1,6 @@
 package com.cncoding.teazer.ui.authentication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.auth.InitiateSignup;
 import com.cncoding.teazer.data.model.auth.ProceedSignup;
 import com.cncoding.teazer.data.model.auth.VerifySignUp;
@@ -21,6 +22,8 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAut
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.common.Annotations;
 import com.hbb20.CountryCodePicker;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +36,11 @@ import static com.cncoding.teazer.data.remote.apicalls.authentication.Authentica
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 import static com.cncoding.teazer.ui.authentication.ResetPasswordFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_EMAIL_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
+import static com.cncoding.teazer.utilities.common.Annotations.SIGNUP;
 import static com.cncoding.teazer.utilities.common.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.AuthUtils.isValidEmailAddress;
 import static com.cncoding.teazer.utilities.common.AuthUtils.isValidPhoneNumber;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.TEAZER;
@@ -144,7 +151,7 @@ public class SignupFragment2 extends BaseAuthFragment {
         if (!isFocused) {
             String email = emailView.getText().toString();
             if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
-                ApiCallingService.Auth.checkEmail(emailView, true);
+                checkEmailAvailability(initiateSignup.getEmail());
             } else {
                 setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
@@ -154,7 +161,7 @@ public class SignupFragment2 extends BaseAuthFragment {
     @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
         if (!isFocused) {
             if (isValidPhoneNumber(phoneNumberView.getText().toString()))
-                ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+                checkPhoneNumberAvailability(countryCodeView.getDefaultCountryCodeAsInt(), initiateSignup.getPhoneNumber());
             else
                 setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
         }
@@ -165,21 +172,25 @@ public class SignupFragment2 extends BaseAuthFragment {
     }
 
     @OnClick(R.id.signup_btn) public void performSignup() {
-        hideKeyboard(getParentActivity(), signupBtn);
-        if (isConnected) {
-            if (isFieldFilled(Annotations.CHECK_USERNAME)) {
-                if (getFirstAndLastNames(nameView.getText().toString()).length < 2) {
-                    if (isValidEmailAddress(emailView.getText().toString())) {
-                        signupBtn.setEnabled(false);
-                        signUp(initiateSignup);
+        try {
+            hideKeyboard(getParentActivity(), signupBtn);
+            if (isConnected(context)) {
+                if (isFieldFilled(Annotations.CHECK_USERNAME)) {
+                    if (getFirstAndLastNames(nameView.getText().toString()).length < 2) {
+                        if (isValidEmailAddress(emailView.getText().toString())) {
+                            signupBtn.setEnabled(false);
+                            signUp(initiateSignup);
+                        }
+                        else showSnackBar(signupBtn, "Please provide a valid email address.");
                     }
-                    else showSnackBar(signupBtn, "Please provide a valid email address.");
+                    else showSnackBar(signupBtn, "Please provide both first and last names, separated by blank space");
                 }
-                else showSnackBar(signupBtn, "Please provide both first and last names, separated by blank space");
+                else showSnackBar(signupBtn, "All fields are required");
             }
-            else showSnackBar(signupBtn, "All fields are required");
+            else notifyNoInternetConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else notifyNoInternetConnection();
     }
 
     public static String[] getFirstAndLastNames(String name) {
@@ -190,37 +201,62 @@ public class SignupFragment2 extends BaseAuthFragment {
             return names;
     }
 
-    @Override
+    @SuppressLint("SwitchIntDef") @Override
     protected void handleResponse(ResultObject resultObject) {
-        signupBtn.setEnabled(true);
-        if (resultObject.getError() != null) {
-            //noinspection ThrowableNotThrown
-            switch (resultObject.getError().getMessage()) {
-                case NOT_SUCCESSFUL:
-                    showSnackBar(signupBtn, getString(R.string.something_is_not_right));
+        try {
+            switch (resultObject.getCallType()) {
+                case CHECK_EMAIL_AVAILABILITY:
+                    markValidity(resultObject.getStatus(), emailView);
                     break;
-                case STATUS_FALSE:
-                    showSnackBar(signupBtn, context.getString(R.string.already_exists_signup));
+                case CHECK_PHONE_NUMBER_AVAILABILITY:
+                    markValidity(resultObject.getStatus(), phoneNumberView);
                     break;
-                default:
-                    showSnackBar(signupBtn, getString(R.string.signup_failed));
+                case SIGNUP:
+                    if (resultObject.getError() != null) {
+                        //noinspection ThrowableNotThrown
+                        switch (resultObject.getError().getMessage()) {
+                            case NOT_SUCCESSFUL:
+                                showSnackBar(signupBtn, getString(R.string.something_is_not_right));
+                                break;
+                            case STATUS_FALSE:
+                                showSnackBar(signupBtn, context.getString(R.string.already_exists_signup));
+                                break;
+                            default:
+                                showSnackBar(signupBtn, getString(R.string.signup_failed));
+                                break;
+                        }
+                    } else if (mListener != null) {
+                        mListener.onFinalEmailSignupInteraction(new VerifySignUp().setInitialSignup(initiateSignup), picturePath);
+                    }
                     break;
             }
-        } else
-            mListener.onFinalEmailSignupInteraction(new VerifySignUp().setInitialSignup(initiateSignup), picturePath);
-        signupBtn.setEnabled(true);
+            signupBtn.setEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void handleError(ResultObject resultObject) {
-        showSnackBar(signupBtn, resultObject.getMessage().equals(FAILED) ?
-                getString(R.string.something_went_wrong) :getString(R.string.signup_failed));
-        signupBtn.setEnabled(true);
+        try {
+            showSnackBar(signupBtn, Objects.equals(resultObject.getMessage(), FAILED) ?
+                    getString(R.string.something_went_wrong) :getString(R.string.signup_failed));
+            signupBtn.setEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void notifyNoInternetConnection() {
         Snackbar.make(signupBtn, R.string.not_connected_message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void markValidity(boolean status, TextView view) {
+        setEditTextDrawableEnd(view,
+                status ?
+                        R.drawable.ic_cross :
+                        R.drawable.ic_tick_circle);
     }
 
     @Override
@@ -241,9 +277,6 @@ public class SignupFragment2 extends BaseAuthFragment {
         super.onAttach(context);
         if (context instanceof OnFinalSignupInteractionListener) {
             mListener = (OnFinalSignupInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFinalSignupInteractionListener");
         }
     }
 

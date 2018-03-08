@@ -12,17 +12,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Preference implements Parcelable {
 
-
-
-    @SerializedName("preference_id")
-    @Expose
-    private Integer preferenceId;
-    @SerializedName("preference_name")
-    @Expose
-    private String preferenceName;
-    @SerializedName("value")
-    @Expose
-    private Integer value;
+    @SerializedName("preference_id") @Expose private Integer preferenceId;
+    @SerializedName("preference_name") @Expose private String preferenceName;
+    @SerializedName("value") @Expose private Integer value;
 
     public Preference(Integer preferenceId, String preferenceName, Integer value) {
         this.preferenceId = preferenceId;

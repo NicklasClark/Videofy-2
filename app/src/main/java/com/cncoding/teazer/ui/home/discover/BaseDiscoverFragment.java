@@ -18,7 +18,7 @@ import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.viewmodel.DiscoverViewModel;
 import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import org.jetbrains.annotations.Contract;
 
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.cncoding.teazer.utilities.common.Annotations.NO_CALL;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getAuthToken;
 
 /**
@@ -34,7 +33,7 @@ import static com.cncoding.teazer.utilities.common.SharedPrefs.getAuthToken;
  * Created by Prem$ on 2/20/2018.
  */
 
-public abstract class BaseDiscoverFragment extends BaseFragment {
+public abstract class BaseDiscoverFragment extends BaseHomeFragment {
 
     protected static DiscoverViewModel viewModel;
     protected int currentPage;
@@ -93,6 +92,10 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
         });
     }
 
+//    public void clearPostListLiveData() {
+//        viewModel.clearPostListLiveData();
+//    }
+
     @Contract(pure = true) public DiscoverViewModel getViewModel() {
         return viewModel;
     }
@@ -102,10 +105,10 @@ public abstract class BaseDiscoverFragment extends BaseFragment {
             if (baseModel.getError() != null) handleError(baseModel);
             else handleResponse(baseModel);
         }
-        else handleError(
-                new BaseModel()
-                        .loadError(new Throwable(getString(R.string.something_went_wrong)))
-                        .loadCallType(NO_CALL));
+//        else handleError(
+//                new BaseModel()
+//                        .loadError(new Throwable(getString(R.string.something_went_wrong)))
+//                        .loadCallType(NO_CALL));
     }
 
     private void notifyNoInternetConnection() {

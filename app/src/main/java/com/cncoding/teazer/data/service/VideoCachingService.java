@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 
 import static com.cncoding.teazer.utilities.common.SharedPrefs.saveMedia;
 
@@ -30,21 +29,22 @@ public class VideoCachingService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
         String path = intent.getStringExtra("path");
+        String fileName = intent.getStringExtra("fileName");
         boolean isVideo = intent.getBooleanExtra("isVideo", true);
 
         if (!TextUtils.isEmpty(url)) {
-            downloadData(url,path, isVideo);
+            downloadData(url, fileName, path, isVideo);
         }
         this.stopSelf();
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void downloadData(String requestUrl, String path, boolean isVideo) {
+    private void downloadData(String requestUrl, String fileName, String path, boolean isVideo) {
         try {
             File rootDir = new File(path);
             if (!rootDir.exists()) rootDir.mkdir();
             String fileExtension = "." + StringUtils.substringAfterLast(requestUrl, ".");
-            File rootFile = File.createTempFile(String.valueOf(new Date().getTime()), fileExtension, rootDir);
+            File rootFile = File.createTempFile(fileName, fileExtension, rootDir);
             if (rootFile.exists()) {
                 stopSelf();
                 return;
@@ -66,6 +66,5 @@ public class VideoCachingService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

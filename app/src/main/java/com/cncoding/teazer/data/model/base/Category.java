@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.utilities.common.Annotations.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +25,15 @@ public class Category extends BaseModel implements Parcelable {
     @SerializedName("category_name") @Expose private String category_name;
     @SerializedName("color") @Expose private String color;
     @SerializedName("my_color") @Expose private String my_color;
+
+    public Category(Throwable error) {
+        this.error = error;
+    }
+
+    public Category setCallType(@CallType int callType) {
+        setCall(callType);
+        return this;
+    }
 
     public Category(int category_id, String category_name, String color, String my_color) {
         this.category_id = category_id;

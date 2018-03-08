@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import butterknife.ButterKnife;
 
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
      * Created by farazhabib on 19/02/18.
      */
 
-    public class FragmentNewProfile extends BaseFragment {
+    public class FragmentNewProfile extends BaseHomeFragment {
         Context context;
         private CollapsingToolbarLayout collapsingToolbarLayout;
         Toolbar toolbar;

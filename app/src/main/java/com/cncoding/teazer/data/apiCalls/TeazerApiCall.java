@@ -3,7 +3,7 @@ package com.cncoding.teazer.data.apiCalls;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.data.model.application.DeactivateTypes;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.base.Authorize;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.discover.LandingPosts;
@@ -18,7 +18,6 @@ import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
@@ -35,7 +34,6 @@ import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.data.model.user.BlockedUsersList;
 import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.data.model.user.Profile;
 import com.cncoding.teazer.data.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.data.model.user.ReportUser;
 import com.cncoding.teazer.data.model.user.SetPasswordRequest;
@@ -88,15 +86,15 @@ import retrofit2.http.Query;
          * To get the post report types
          * */
         @GET("/api/v1/application/post/report/types")
-        Call<List<ReportPostTitlesResponse>> getPostReportTypes();
+        Call<List<ReportTypes>> getPostReportTypes();
 
         /**
          * To get the profile report types
          * */
         @GET("/api/v1/application/profile/report/types")
-        Call<List<ReportPostTitlesResponse>> getProfileReportTypes();
+        Call<List<ReportTypes>> getProfileReportTypes();
 
-       @GET("/api/v1/application/deactivate/types")
+        @GET("/api/v1/application/deactivate/types")
         Call<List<DeactivateTypes>> getDeactivationTypesList();
 
         /**
@@ -108,7 +106,6 @@ import retrofit2.http.Query;
 
         @GET("/api/v1/application/default/cover/medias/{page}")
         Call<DefaultCoverImageResponse> getDefaultcoverImages(@Path("page") int page);
-
 
 
     }
@@ -400,10 +397,6 @@ import retrofit2.http.Query;
         @GET("/api/v1/friend/profile/{user_id}")
         Call<ProfileInfo> getOthersProfileInfo(@Path("user_id") int userId);
 
-
-//        @GET("/api/v1/friend/profile/{user_id}")
-//        Call<Profile> getOthersProfileInfoNoti(@Path("user_id") int userId);
-
         /**
          * Call this service to Block/Unblock a user
          * @param status should be 1 for block and 2 for unblock
@@ -428,10 +421,6 @@ import retrofit2.http.Query;
          */
         @GET("/api/v1/friend/application/users")
         Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
-
-        @GET("/api/v1/post/liked/users/{post_id}/{page}")
-        Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
-
 
         @GET("/api/v1/friend/profile/liked/users/{user_id}/{page}")
         Call<LikedUserList>getLikedUserFriendProfile(@Path("user_id") int userId, @Path("page") int page);
@@ -701,12 +690,12 @@ import retrofit2.http.Query;
          * Call this service to get the reactions of a post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link PostReactionsList}
+         *               Returns tagged user to {@link ReactionsList}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/video/reactions/{post_id}/{page}")
-        Call<PostReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
+        Call<ReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
 
 
         @GET("/api/v1/post/my/hided/videos/{page}")
@@ -715,9 +704,8 @@ import retrofit2.http.Query;
         @POST("/api/v1/post/unhide/all/posts/{user_id}")
         Call<ResultObject> getAllHiddenVideosList(@Path("user_id") int postId);
 
-
-
-
+        @GET("/api/v1/post/liked/users/{post_id}/{page}")
+        Call<LikedUserList>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
     }
 
     /**
@@ -777,10 +765,6 @@ import retrofit2.http.Query;
 
         @PUT("/api/v1/user/change/phonenumber/verify/otp")
         Call<ResultObject> updateMobileNumber(@Body UpdateMobileNumber updateMobileNumber);
-
-
-        @GET("/api/v1/user/profile")
-        Call<Profile> getUserProfileDetail();
 
         /**
          * Update user profile

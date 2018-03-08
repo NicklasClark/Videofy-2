@@ -58,7 +58,7 @@ import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 import com.cncoding.teazer.ui.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.camera.adapters.TrendingGiphyAdapter;
@@ -732,8 +732,7 @@ public class CameraActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     try {
-                        uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                                resultToShow, resultToSend, count);
+                        uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT, resultToShow, resultToSend, count);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

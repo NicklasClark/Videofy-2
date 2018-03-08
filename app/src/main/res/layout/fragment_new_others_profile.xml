@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/BaseActivityTheme">
 
         <com.cncoding.teazer.utilities.common.CollapsingImageLayoutOthersProfile
             android:id="@+id/collapsing_imagelayout"
@@ -32,22 +32,27 @@
                 android:id="@+id/reaction1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="gone"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="210dp"
+                android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="14dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp" />
+
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="gone"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="210dp"
+                android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="51dp"
+                android:layout_marginRight="54dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_user_male_dp"
                 android:padding="2dp" />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
@@ -55,12 +60,13 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:visibility="gone"
-
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="210dp"
+                android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="92dp"
+                android:layout_marginRight="94dp"
                 android:src="@drawable/ic_user_male_dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
                 android:padding="2dp" />
 
 
@@ -106,25 +112,22 @@
                         android:id="@+id/creationslayout"
                         android:orientation="vertical">
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                             android:id="@+id/creations"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="12dp"
                             android:layout_marginTop="5dp"
-                            android:textSize="22dp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="#212121"
-                           />
+                            />
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
                             android:text="Creations"
-                            android:textColor="#212121"
+                            android:textColor="@color/DialogBoxConfirm"
                             android:textSize="12dp"
-
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
 
@@ -137,31 +140,25 @@
                         android:id="@+id/reactionlayout"
                         android:orientation="vertical">
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                             android:id="@+id/reaction"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="12dp"
-
                             android:layout_marginTop="5dp"
-
-
-                            android:textSize="22dp"
+                            android:textSize="24dp"
                             android:textColor="#212121"
                             android:textStyle="bold"
-                            />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="Reaction"
-                            android:textColor="#212121"
+                            android:text="Reactions"
+                            android:textColor="@color/DialogBoxConfirm"
                             android:textSize="12dp"
-
-
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -171,25 +168,21 @@
                         android:id="@+id/followerlayout"
                         android:orientation="vertical">
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                             android:id="@+id/follower"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="12dp"
-
                             android:layout_marginTop="5dp"
                             android:textStyle="bold"
-                            android:textSize="22dp"
-
+                            android:textSize="24dp"
                             android:textColor="#212121"
-                            />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
                             android:text="Followers"
-                            android:textColor="#212121"
+                            android:textColor="@color/DialogBoxConfirm"
                             android:textSize="12dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
@@ -202,26 +195,23 @@
                         android:id="@+id/followinglayout"
                         android:orientation="vertical">
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
                             android:id="@+id/following"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="12dp"
                             android:textStyle="bold"
                             android:layout_marginTop="5dp"
-                            android:textSize="22dp"
+                            android:textSize="24dp"
                             android:textColor="#212121"
-                      />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
-                        <TextView
+                        <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
                             android:text="Following"
                             android:textSize="12dp"
-                            android:textColor="#212121"
+                            android:textColor="@color/DialogBoxConfirm"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
                     </LinearLayout>
 
 

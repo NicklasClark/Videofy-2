@@ -3,11 +3,11 @@ package com.cncoding.teazer.data.remote.apicalls.user;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.data.model.updatemobilenumber.UpdateMobileNumber;
 import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.data.model.user.Profile;
 import com.cncoding.teazer.data.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.data.model.user.ReportUser;
 import com.cncoding.teazer.data.model.user.SetPasswordRequest;
@@ -15,6 +15,9 @@ import com.cncoding.teazer.data.model.user.UpdateCategories;
 import com.cncoding.teazer.data.model.user.UpdatePasswordRequest;
 import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
+
+import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -30,9 +33,10 @@ import static com.cncoding.teazer.utilities.common.Annotations.AccountType;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_CHANGE_MOBILE_NUMBER;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_DEACTIVATE_ACCOUNT;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_FOLLOWING_NOTIFICATIONS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_LIKED_USERS_LIST;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_REQUEST_NOTIFICATIONS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USER_PROFILE;
-import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USER_PROFILE_DETAIL;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_LIKE_DISLIKE_PROFILE;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_LOGOUT;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_REMOVE_PROFILE_PIC;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_REPORT_USER;
@@ -54,6 +58,10 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_UPDATE_USER_
 public class UserRepositoryImpl implements UserRepository {
 
     private UserService userService;
+
+    @Inject public UserRepositoryImpl(UserService userService) {
+        this.userService = userService;
+    }
 
     public UserRepositoryImpl(String token) {
         userService = getRetrofitWithAuthToken(token).create(UserService.class);
@@ -111,26 +119,6 @@ public class UserRepositoryImpl implements UserRepository {
     public LiveData<ResultObject> updateMobileNumber(UpdateMobileNumber updateMobileNumber) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         userService.updateMobileNumber(updateMobileNumber).enqueue(resultObjectCallback(liveData, CALL_UPDATE_MOBILE_NUMBER));
-        return liveData;
-    }
-
-    @Override
-    public LiveData<Profile> getUserProfileDetail() {
-        final MutableLiveData<Profile> liveData = new MutableLiveData<>();
-        userService.getUserProfileDetail().enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-                liveData.setValue(response.isSuccessful() ?
-                        response.body().setCallType(CALL_GET_USER_PROFILE_DETAIL) :
-                        new Profile(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_USER_PROFILE_DETAIL));
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                t.printStackTrace();
-                liveData.setValue(new Profile(new Throwable(FAILED)).setCallType(CALL_GET_USER_PROFILE_DETAIL));
-            }
-        });
         return liveData;
     }
 
@@ -208,6 +196,33 @@ public class UserRepositoryImpl implements UserRepository {
     public LiveData<ResultObject> resetUnreadNotification(int notificationType) {
         MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
         userService.resetUnreadNotification(notificationType).enqueue(resultObjectCallback(liveData, CALL_RESET_UNREAD_NOTIFICATION));
+        return liveData;
+    }
+
+    @Override
+    public LiveData<ResultObject> likeDislikeProfile(int userId, @LikeDislike int status) {
+        MutableLiveData<ResultObject> liveData = new MutableLiveData<>();
+        userService.setProfileLike(userId, status).enqueue(resultObjectCallback(liveData, CALL_LIKE_DISLIKE_PROFILE));
+        return liveData;
+    }
+
+    @Override
+    public LiveData<LikedUserList> getLikedUsersList(int userId) {
+        final MutableLiveData<LikedUserList> liveData = new MutableLiveData<>();
+        userService.getLikedUserProfile(userId).enqueue(new Callback<LikedUserList>() {
+            @Override
+            public void onResponse(Call<LikedUserList> call, Response<LikedUserList> response) {
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(CALL_GET_LIKED_USERS_LIST) :
+                        new LikedUserList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_LIKED_USERS_LIST));
+            }
+
+            @Override
+            public void onFailure(Call<LikedUserList> call, Throwable t) {
+                t.printStackTrace();
+                liveData.setValue(new LikedUserList(new Throwable(FAILED)).setCallType(CALL_GET_LIKED_USERS_LIST));
+            }
+        });
         return liveData;
     }
 }

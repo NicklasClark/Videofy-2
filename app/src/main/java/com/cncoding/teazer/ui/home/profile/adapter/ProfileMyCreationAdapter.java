@@ -27,7 +27,7 @@ import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.home.profile.activity.EditPost;
@@ -431,9 +431,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     }
     public void getPostReactionFour(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<ReactionsList>() {
             @Override
-            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -512,16 +512,16 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 }
             }
             @Override
-            public void onFailure(Call<PostReactionsList> call, Throwable t) {
+            public void onFailure(Call<ReactionsList> call, Throwable t) {
             }
         });
     }
 
     public void getPostReactionThree(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<ReactionsList>() {
             @Override
-            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -614,7 +614,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 }
             }
             @Override
-            public void onFailure(Call<PostReactionsList> call, Throwable t) {
+            public void onFailure(Call<ReactionsList> call, Throwable t) {
                 t.printStackTrace();
             }
         });

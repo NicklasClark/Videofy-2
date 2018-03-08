@@ -18,9 +18,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.post.LikedUser;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 
 import java.util.List;
 
@@ -41,9 +41,9 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
     public static boolean isLikedUser = false;
     List<LikedUser> list;
     private Context context;
-    BaseFragment fragment;
+    BaseHomeFragment fragment;
 
-    public ProfileLikedUserAdapter(Context context, List<LikedUser> list, BaseFragment fragment) {
+    public ProfileLikedUserAdapter(Context context, List<LikedUser> list, BaseHomeFragment fragment) {
         this.context = context;
         this.list = list;
         this.fragment = fragment;
@@ -62,16 +62,16 @@ public class ProfileLikedUserAdapter extends RecyclerView.Adapter<ProfileLikedUs
 
             final int requestId;
             final String likedUsername = cont.getUserName();
-            final boolean islikedUserDp = cont.getHasProfileMedia();
+            final boolean islikedUserDp = cont.hasProfileMedia();
             final int userId = cont.getUserId();
-            final boolean ismyself = cont.getMySelf();
-            final boolean isblockedyou = cont.getFollowInfo().getIsBlockedYou();
-            final boolean youBlocked = cont.getFollowInfo().getYouBlocked();
+            final boolean ismyself = cont.isMySelf();
+            final boolean isblockedyou = cont.getFollowInfo().isBlockedYou();
+            final boolean youBlocked = cont.getFollowInfo().isYouBlocked();
             final int accounttype = cont.getAccountType();
-            final boolean folower = cont.getFollowInfo().getFollower();
-            final boolean following = cont.getFollowInfo().getFollowing();
-            final boolean requestsent = cont.getFollowInfo().getRequestSent();
-            final boolean requestrecived = cont.getFollowInfo().getRequestReceived();
+            final boolean folower = cont.getFollowInfo().isFollower();
+            final boolean following = cont.getFollowInfo().isFollowing();
+            final boolean requestsent = cont.getFollowInfo().isRequestSent();
+            final boolean requestrecived = cont.getFollowInfo().isRequestReceived();
             final String usertype;
 
             viewHolder.name.setText(likedUsername);

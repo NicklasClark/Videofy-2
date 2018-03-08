@@ -12,16 +12,17 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.viewmodel.PostViewModel;
 import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
-import com.cncoding.teazer.ui.base.BaseFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
 import okhttp3.MultipartBody;
@@ -35,7 +36,7 @@ import static com.cncoding.teazer.utilities.common.SharedPrefs.getAuthToken;
  * Created by Prem$ on 2/26/2018.
  */
 
-public abstract class BasePostFragment extends BaseFragment {
+public abstract class BasePostFragment extends BaseHomeFragment {
 
     protected PostViewModel viewModel;
     protected int currentPage;
@@ -91,10 +92,17 @@ public abstract class BasePostFragment extends BaseFragment {
             }
         });
 
-        viewModel.getReactionsListLiveData().observe(this, new Observer<PostReactionsList>() {
+        viewModel.getReactionsListLiveData().observe(this, new Observer<ReactionsList>() {
             @Override
-            public void onChanged(@Nullable PostReactionsList postReactionsList) {
-                handleLiveDataChange(postReactionsList);
+            public void onChanged(@Nullable ReactionsList reactionsList) {
+                handleLiveDataChange(reactionsList);
+            }
+        });
+
+        viewModel.getReactionResponseLiveData().observe(this, new Observer<ReactionResponse>() {
+            @Override
+            public void onChanged(@Nullable ReactionResponse reactionResponse) {
+                handleLiveDataChange(reactionResponse);
             }
         });
     }

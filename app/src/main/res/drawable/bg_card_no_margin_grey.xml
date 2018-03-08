@@ -19,7 +19,7 @@
                 android:right="0dp"
                 android:bottom="0dp"
                 android:left="0dp"/>
-            <solid android:color="#F4F4F4"/>
+            <solid android:color="@color/colorDisabled"/>
         </shape>
     </item>
 </layer-list>

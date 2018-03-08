@@ -24,8 +24,8 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.apiCalls.ResultObject;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.user.UpdateCategories;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
@@ -47,7 +47,7 @@ import retrofit2.Response;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.SELECTED_DATA;
 
-public class Interests extends BaseFragment {
+public class Interests extends BaseHomeFragment {
     private static final String ARG_IS_FOR_VIDEO = "isForVideo";
     private static final String ARG_IS_FROM_DISCOVER = "isFromDiscover";
     private static final String ARG_IS_EDITING = "isEditing";

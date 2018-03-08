@@ -31,6 +31,7 @@ public class TeazerApplication extends Application  {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
+//    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
@@ -70,10 +71,9 @@ public class TeazerApplication extends Application  {
 
         MobiruckSdk.getInstance().startTracking();  // this starts the tracking system.
 
-//        applicationComponent = DaggerApplicationComponent
-//                .builder()
+//        applicationComponent = DaggerApplicationComponent.builder()
 //                .applicationModule(new ApplicationModule(this))
-//                .roomModule(new RoomModule(this))
+//                .contextModule(new ContextModule(this))
 //                .build();
     }
 

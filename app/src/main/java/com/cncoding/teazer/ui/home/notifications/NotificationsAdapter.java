@@ -36,11 +36,11 @@ import com.cncoding.teazer.data.model.post.PostReaction;
 import com.cncoding.teazer.data.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.data.model.user.Notification;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
 import com.cncoding.teazer.ui.customviews.common.TypeFactory;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.UniversalTextView;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewOtherProfile;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentReactionPlayer;
@@ -83,11 +83,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int LIKED_YOUR_REACTION = 6;
     private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
 
-    private BaseFragment fragment;
+    private BaseHomeFragment fragment;
     private boolean isFollowingTab;
     private final NotificationsList notificationsList;
 
-    NotificationsAdapter(BaseFragment fragment, boolean isFollowingTab, NotificationsList notificationsList) {
+    NotificationsAdapter(BaseHomeFragment fragment, boolean isFollowingTab, NotificationsList notificationsList) {
         this.fragment = fragment;
         this.isFollowingTab = isFollowingTab;
         this.notificationsList = notificationsList;
@@ -406,7 +406,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
-                                                        if (response.body().getFollowInfo().getFollowing()) {
+                                                        if (response.body().getFollowInfo().isFollowing()) {
                                                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                                                             holder2.notification.setIs_actioned(true);
                                                             holder2.notification.setFollowing(true);

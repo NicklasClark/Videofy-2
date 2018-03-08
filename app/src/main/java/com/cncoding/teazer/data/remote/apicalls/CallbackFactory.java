@@ -3,12 +3,14 @@ package com.cncoding.teazer.data.remote.apicalls;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.CircleList;
 import com.cncoding.teazer.data.model.friends.FollowersList;
 import com.cncoding.teazer.data.model.friends.FollowingsList;
 import com.cncoding.teazer.data.model.friends.UsersList;
+import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
@@ -103,26 +105,28 @@ public class CallbackFactory {
 
     @NonNull
     @Contract(pure = true)
-    public static Callback<List<ReportPostTitlesResponse>> reportPostTitlesResponse(
-            final MutableLiveData<List<ReportPostTitlesResponse>> liveData) {
-        return new Callback<List<ReportPostTitlesResponse>>() {
+    public static Callback<List<ReportTypes>> reportTypesCallback(final MutableLiveData<List<ReportTypes>> liveData,
+                                                                  @CallType final int callType) {
+        return new Callback<List<ReportTypes>>() {
             @Override
-            public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
+            public void onResponse(Call<List<ReportTypes>> call, Response<List<ReportTypes>> response) {
                 if (response.isSuccessful()) {
-                    liveData.setValue(response.body());
+                    List<ReportTypes> reportTypesList = response.body();
+                    setListCallType(reportTypesList, callType);
+                    liveData.setValue(reportTypesList);
                 } else {
-                    ReportPostTitlesResponse response1 = new ReportPostTitlesResponse(new Throwable(NOT_SUCCESSFUL));
-                    List<ReportPostTitlesResponse> list = new ArrayList<>();
+                    ReportTypes response1 = new ReportTypes(new Throwable(NOT_SUCCESSFUL)).setCallType(callType);
+                    List<ReportTypes> list = new ArrayList<>();
                     list.add(response1);
                     liveData.setValue(list);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ReportPostTitlesResponse>> call, Throwable t) {
+            public void onFailure(Call<List<ReportTypes>> call, Throwable t) {
                 t.printStackTrace();
-                ReportPostTitlesResponse response1 = new ReportPostTitlesResponse(new Throwable(FAILED));
-                List<ReportPostTitlesResponse> list = new ArrayList<>();
+                ReportTypes response1 = new ReportTypes(new Throwable(FAILED)).setCallType(callType);
+                List<ReportTypes> list = new ArrayList<>();
                 list.add(response1);
                 liveData.setValue(list);
             }
@@ -313,5 +317,31 @@ public class CallbackFactory {
                 t.printStackTrace();
             }
         };
+    }
+
+    public static Callback<TrendingGiphy> trendingGiphyCallback(final MutableLiveData<TrendingGiphy> liveData,
+                                                                @CallType final int callType) {
+        return new Callback<TrendingGiphy>() {
+            @Override
+            public void onResponse(Call<TrendingGiphy> call, Response<TrendingGiphy> response) {
+                liveData.setValue(response.isSuccessful() ?
+                        response.body().setCallType(callType) :
+                        new TrendingGiphy(new Throwable(NOT_SUCCESSFUL)).setCallType(callType));
+            }
+
+            @Override
+            public void onFailure(Call<TrendingGiphy> call, Throwable t) {
+                t.printStackTrace();
+                liveData.setValue(new TrendingGiphy(new Throwable(NOT_SUCCESSFUL)).setCallType(callType));
+            }
+        };
+    }
+
+    public static void setListCallType(List<? extends BaseModel> list, @CallType int callType) {
+        list.get(0).setCall(callType);
+    }
+
+    public static int getListCallType(List<? extends BaseModel> list) {
+        return list.get(0).getCallType();
     }
 }

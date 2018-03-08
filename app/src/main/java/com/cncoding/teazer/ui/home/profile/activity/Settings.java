@@ -63,7 +63,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#0000000'>Settings</font>"));
         Intent intent=getIntent();
         int accountType = Integer.parseInt(intent.getStringExtra("AccountType"));
-        list=intent.getExtras().getParcelableArrayList("UserPrefrences");
+        list=intent.getExtras().getParcelableArrayList("UserPreferences");
 
         // int i=list.get(0).getValue();
         // int j=list.get(0).getPreferenceId();
@@ -71,8 +71,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
        // Toast.makeText(context,String.valueOf(list.get(0).getPreferenceId()),Toast.LENGTH_SHORT).show();
 
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.container, FragmentSettings.
-                        newInstance(String.valueOf(accountType),list)).commit();
+                replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accountType),list)).commit();
     }
 
     @Override

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:layout_marginTop="10dp"
-    android:background="@color/white">
+    android:background="@drawable/bg_card_no_margin_white">
 
     <com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout
         android:id="@+id/shimmer_layout_top"
@@ -74,16 +74,17 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical|end">
 
-            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
+            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:minWidth="52dp"
+                android:minHeight="18dp"
                 android:textColor="@color/white"
                 android:paddingStart="11dp"
                 android:paddingEnd="11dp"
                 android:layout_marginStart="16dp"
-                android:textSize="@dimen/text_size_10sp"
+                android:textSize="@dimen/text_size_11_sp"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:maxLines="1"
@@ -111,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:animateLayoutChanges="true"
-        android:background="@color/colorDisabled">
+        android:background="@drawable/bg_card_no_margin_grey">
 
         <com.cncoding.teazer.ui.customviews.exoplayer.SimpleExoPlayerView
             android:id="@+id/content"
@@ -156,8 +157,9 @@
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/username"
-                android:layout_width="87dp"
-                android:layout_height="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:minWidth="87dp"
                 android:layout_alignTop="@+id/dp"
                 android:layout_toEndOf="@+id/dp"
                 android:background="@drawable/bg_shimmer_dark"
@@ -223,7 +225,7 @@
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldButton
                 android:id="@+id/react_btn"
-                android:layout_width="90dp"
+                android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:gravity="center"
                 android:text="@string/react"
@@ -231,7 +233,6 @@
                 android:textSize="@dimen/text_size_11_sp"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="12dp"
-                android:layout_marginBottom="12dp"
                 android:drawablePadding="6dp"
                 android:paddingEnd="@dimen/padding_default"
                 android:paddingStart="@dimen/padding_thin"

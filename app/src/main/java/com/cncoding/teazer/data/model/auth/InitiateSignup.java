@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 /**
  *
  * Created by Prem$ on 2/9/2018.
@@ -149,7 +151,15 @@ public class InitiateSignup extends BaseAuth implements Parcelable {
     }
 
     public void setPhoneNumberOnly(String phoneNumber) {
-        this.phoneNumber = Long.parseLong(phoneNumber);
+        try {
+            if (phoneNumber != null && !phoneNumber.isEmpty() && !Objects.equals(phoneNumber, "null")) {
+                this.phoneNumber = Long.parseLong(phoneNumber);
+            } else {
+                this.phoneNumber = -1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setCountryCodeOnly(int countryCode) {

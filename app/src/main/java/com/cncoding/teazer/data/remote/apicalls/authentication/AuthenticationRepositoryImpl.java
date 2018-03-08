@@ -4,8 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.cncoding.teazer.R;
-import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.data.model.auth.InitiateSignup;
 import com.cncoding.teazer.data.model.auth.Login;
@@ -19,15 +17,13 @@ import com.cncoding.teazer.utilities.common.Annotations.AuthCallType;
 
 import org.jetbrains.annotations.Contract;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.cncoding.teazer.data.remote.apicalls.ClientProvider.getRetrofitWithoutAuthToken;
 import static com.cncoding.teazer.utilities.common.Annotations.CHECK_EMAIL_AVAILABILITY;
 import static com.cncoding.teazer.utilities.common.Annotations.CHECK_PHONE_NUMBER_AVAILABILITY;
 import static com.cncoding.teazer.utilities.common.Annotations.CHECK_USERNAME_AVAILABILITY;
@@ -55,16 +51,12 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     private AuthenticationService authenticationService;
 
+    @Inject public AuthenticationRepositoryImpl(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     public AuthenticationRepositoryImpl() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(TeazerApplication.getContext().getString(R.string.base_url))
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(new OkHttpClient.Builder()
-                        .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build())
-                .build();
-        authenticationService = retrofit.create(AuthenticationService.class);
+        authenticationService = getRetrofitWithoutAuthToken().create(AuthenticationService.class);
     }
 
     @Override
@@ -171,6 +163,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                         ResultObject tempResultObject = response.body();
                         tempResultObject.setCodeOnly(response.code());
                         tempResultObject.setAuthCallType(callType);
+                        tempResultObject.setStatus(response.body().getStatus());
                         if (tempResultObject.getStatus()) {
                             liveData.setValue(tempResultObject);
                         } else {

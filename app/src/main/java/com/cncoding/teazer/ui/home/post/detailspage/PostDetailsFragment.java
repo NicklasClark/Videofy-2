@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -48,9 +49,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView;
@@ -110,8 +111,9 @@ import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRES
 import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.ui.customviews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_ZOOM;
-import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.COACH_MARK_DELAY;
-import static com.cncoding.teazer.ui.home.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
+import static com.cncoding.teazer.ui.home.base.BaseBottomBarActivity.COACH_MARK_DELAY;
+import static com.cncoding.teazer.ui.home.base.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
+import static com.cncoding.teazer.ui.home.post.detailspage.FragmentLikedUser.LIKED_USERS_OF_POSTS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_CREATE_REACTION_BY_GIPHY;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_DELETE_POST;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_POST_DETAILS;
@@ -123,6 +125,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_LIKE_DISLIKE
 import static com.cncoding.teazer.utilities.common.Annotations.HIDE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_DISLIKE;
 import static com.cncoding.teazer.utilities.common.Annotations.SEND_LIKE;
+import static com.cncoding.teazer.utilities.common.AuthUtils.isConnected;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.common.CommonWebServicesUtil.fetchReactionDetails;
@@ -391,7 +394,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         EndlessRecyclerViewScrollListener scrollListener1 = new EndlessRecyclerViewScrollListener(manager1) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (isConnected) {
+                if (isConnected(context)) {
                     if (is_next_page) {
                         currentPage = page;
                         loadReactionsOfPost(postDetails.getPostId(), page);
@@ -411,7 +414,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         EndlessRecyclerViewScrollListener scrollListener2 = new EndlessRecyclerViewScrollListener(manager2) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (isConnected) {
+                if (isConnected(context)) {
                     if (taggedUsersIsNextPage) {
                         taggedUsersPage = page;
                         loadTaggedUsers(postDetails.getPostId(), page);
@@ -426,73 +429,80 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
 
     @SuppressLint("SwitchIntDef") @Override
     protected void handleResponse(BaseModel resultObject) {
-        switch (resultObject.getCallType()) {
-            case CALL_GET_POST_DETAILS:
-                if (resultObject instanceof PostDetails) {
-                    postDetails = (PostDetails) resultObject;
-                    prepareViews();
-                }
-                break;
-            case CALL_INCREMENT_VIEW_COUNT:
-                incrementViews();
-                viewModel.incrementLocalViews(postDetails.getMedias(), postDetails.getPostId());
-                break;
-            case CALL_LIKE_DISLIKE_POST:
-                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() &&
-                        ((ResultObject) resultObject).getMessage().contains("Unlike"))
-                    viewModel.dislikeLocalPost(postDetails.getPostId());
-                else viewModel.likeLocalPost(postDetails.getPostId());
-                break;
-            case CALL_GET_REACTIONS_OF_POST:
-                if (resultObject instanceof PostReactionsList) {
-                    PostReactionsList reactionsList = (PostReactionsList) resultObject;
-                    if (reactionsList.getReactions() != null && !reactionsList.getReactions().isEmpty()) {
-//                        viewModel.updateLocalReactions(reactionsList.getReactions(), postDetails.canReact(), postDetails.getPostId());
-                        postLoadErrorLayout.setVisibility(GONE);
-                        is_next_page = reactionsList.isNextPage();
-                        postReactionAdapter.updateReactions(reactionsList.getReactions());
-                        if (reactionsList.getReactions().size() > 0) {
-                            if (reactionsList.getReactions().size() >= 1)
-                                setReactionPic(reactionsList.getReactions().get(0).getOwner().getProfileMedia().getThumbUrl(), reaction1Pic);
-                            if (reactionsList.getReactions().size() >= 2)
-                                setReactionPic(reactionsList.getReactions().get(1).getOwner().getProfileMedia().getThumbUrl(), reaction2Pic);
-                            if (reactionsList.getReactions().size() >= 3)
-                                setReactionPic(reactionsList.getReactions().get(2).getOwner().getProfileMedia().getThumbUrl(), reaction3Pic);
-                        }
-                    } else {
-                        setNoReactions();
-                        showNoReactionMessage();
+        try {
+            switch (resultObject.getCallType()) {
+                case CALL_GET_POST_DETAILS:
+                    if (resultObject instanceof PostDetails) {
+                        postDetails = (PostDetails) resultObject;
+                        prepareViews();
                     }
-                }
-                break;
-            case CALL_GET_TAGGED_USERS:
-                if (resultObject instanceof TaggedUsersList) {
-                    TaggedUsersList taggedList = (TaggedUsersList) resultObject;
-                    taggedUsersIsNextPage = taggedList.isNextPage();
-                    tagListAdapter.addPosts(taggedUsersPage, taggedList.getTaggedUsers());
-                }
-                break;
-            case CALL_HIDE_OR_SHOW_POST:
-                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
-                    Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
-                    viewModel.deleteLocalPost(postDetails.getPostId());
-                    deleteCachedMedia();
-                    navigation.popFragment();
-                } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                break;
-            case CALL_DELETE_POST:
-                if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
-                    Toast.makeText(context, R.string.video_has_been_deleted, Toast.LENGTH_SHORT).show();
-                    viewModel.deleteLocalPost(postDetails.getPostId());
-                    deleteCachedMedia();
-                    navigation.popFragment();
-                } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                break;
-            case CALL_CREATE_REACTION_BY_GIPHY:
-                loadReactionsOfPost(postDetails.getPostId(), 1);
-                break;
-            default:
-                break;
+                    break;
+                case CALL_INCREMENT_VIEW_COUNT:
+                    incrementViews();
+                    viewModel.incrementLocalViews(postDetails.getMedias(), postDetails.getPostId());
+                    break;
+                case CALL_LIKE_DISLIKE_POST:
+                    if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus() &&
+                            ((ResultObject) resultObject).getMessage().contains("Unlike"))
+                        viewModel.dislikeLocalPost(postDetails.getPostId());
+                    else viewModel.likeLocalPost(postDetails.getPostId());
+                    break;
+                case CALL_GET_REACTIONS_OF_POST:
+                    if (resultObject instanceof ReactionsList) {
+                        ReactionsList reactionsList = (ReactionsList) resultObject;
+                        if (reactionsList.getReactions() != null && !reactionsList.getReactions().isEmpty()) {
+    //                        viewModel.updateLocalReactions(reactionsList.getReactions(), postDetails.canReact(), postDetails.getPostId());
+                            postLoadErrorLayout.setVisibility(GONE);
+                            is_next_page = reactionsList.isNextPage();
+                            postReactionAdapter.updateReactions(reactionsList.getReactions());
+                            if (reactionsList.getReactions().size() > 0) {
+                                if (reactionsList.getReactions().size() >= 1 &&
+                                        reactionsList.getReactions().get(0).getOwner().getProfileMedia() != null)
+                                    setReactionPic(reactionsList.getReactions().get(0).getOwner().getProfileMedia().getThumbUrl(), reaction1Pic);
+                                if (reactionsList.getReactions().size() >= 2 &&
+                                        reactionsList.getReactions().get(1).getOwner().getProfileMedia() != null)
+                                    setReactionPic(reactionsList.getReactions().get(1).getOwner().getProfileMedia().getThumbUrl(), reaction2Pic);
+                                if (reactionsList.getReactions().size() >= 3 &&
+                                        reactionsList.getReactions().get(2).getOwner().getProfileMedia() != null)
+                                    setReactionPic(reactionsList.getReactions().get(2).getOwner().getProfileMedia().getThumbUrl(), reaction3Pic);
+                            }
+                        } else {
+                            setNoReactions();
+                            showNoReactionMessage();
+                        }
+                    }
+                    break;
+                case CALL_GET_TAGGED_USERS:
+                    if (resultObject instanceof TaggedUsersList) {
+                        TaggedUsersList taggedList = (TaggedUsersList) resultObject;
+                        taggedUsersIsNextPage = taggedList.isNextPage();
+                        tagListAdapter.addPosts(taggedUsersPage, taggedList.getTaggedUsers());
+                    }
+                    break;
+                case CALL_HIDE_OR_SHOW_POST:
+                    if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
+                        Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
+                        viewModel.deleteLocalPost(postDetails.getPostId());
+                        deleteCachedMedia();
+                        navigation.popFragment();
+                    } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    break;
+                case CALL_DELETE_POST:
+                    if (resultObject instanceof ResultObject && ((ResultObject) resultObject).getStatus()) {
+                        Toast.makeText(context, R.string.video_has_been_deleted, Toast.LENGTH_SHORT).show();
+                        viewModel.deleteLocalPost(postDetails.getPostId());
+                        deleteCachedMedia();
+                        navigation.popFragment();
+                    } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    break;
+                case CALL_CREATE_REACTION_BY_GIPHY:
+                    loadReactionsOfPost(postDetails.getPostId(), 1);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -601,7 +611,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
 
     @OnClick(R.id.media_controller_likes) public void likeClicked() {
         if(postDetails.getLikes() > 0) {
-            navigation.pushFragment(FragmentLikedUser.newInstance(postDetails));
+            navigation.pushFragment(FragmentLikedUser.newInstance(postDetails.getPostId(), LIKED_USERS_OF_POSTS));
         }
     }
 
@@ -661,7 +671,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         popupMenu.show();
     }
 
-    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
+    @OnClick({R.id.controls, R.id.media_controller_play_pause}) public void toggleMediaControllerVisibility() {
         try {
             player.setPlayWhenReady(!player.getPlayWhenReady());
             togglePlayPauseBtnVisibility(!player.getPlayWhenReady());

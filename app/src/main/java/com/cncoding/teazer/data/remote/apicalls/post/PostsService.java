@@ -2,13 +2,13 @@ package com.cncoding.teazer.data.remote.apicalls.post;
 
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.data.model.post.ReportPost;
 import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.model.post.UpdatePostRequest;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
+import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.utilities.common.Annotations.LikeDislike;
 
@@ -27,7 +27,7 @@ import retrofit2.http.Path;
  * Created by Prem$ on 2/5/2018.
  **/
 
-public interface PostService {
+public interface PostsService {
     /**
      * Call this service to post a video
      * */
@@ -159,12 +159,12 @@ public interface PostService {
      * Call this service to get the reactions of a post.
      * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
      *               If “next_page” is false no more records present.
-     *               Returns tagged user to {@link PostReactionsList}
+     *               Returns tagged user to {@link ReactionsList}
      *      or 401 : Un-Authorized access
      *      or 412 : Validation Failed
      * */
     @GET("/api/v1/post/video/reactions/{post_id}/{page}")
-    Call<PostReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
+    Call<ReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
 
 
     @GET("/api/v1/post/my/hided/videos/{page}")

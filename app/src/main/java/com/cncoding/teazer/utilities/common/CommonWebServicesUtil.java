@@ -12,8 +12,8 @@ import com.cncoding.teazer.data.model.react.PostReactDetail;
 import com.cncoding.teazer.data.model.react.ReactOwner;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.user.NotificationsList;
-import com.cncoding.teazer.ui.base.BaseFragment;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.post.detailspage.PostDetailsFragment;
 
 import retrofit2.Call;
@@ -98,7 +98,7 @@ public class CommonWebServicesUtil {
                 });
     }
 
-    public static void fetchReactionDetails(final BaseFragment fragment, final int postId) {
+    public static void fetchReactionDetails(final BaseHomeFragment fragment, final int postId) {
         ApiCallingService.React.getReactionDetail(postId, fragment.getContext())
                 .enqueue(new Callback<ReactionResponse>() {
                     @Override

@@ -524,18 +524,18 @@ public class FileUtils {
     public static class PreDownloadTask extends AsyncTask<Void, Void, List<String>> {
 
         private WeakReference<Context> context;
-        private List<PostDetails> list1;
+        private List<PostDetails> postDetailsList;
         private final boolean isVideo;
 
-        public PreDownloadTask(Context context, List<PostDetails> list1, boolean isVideo) {
+        public PreDownloadTask(Context context, List<PostDetails> postDetailsList, boolean isVideo) {
             this.context = new WeakReference<>(context);
-            this.list1 = list1;
+            this.postDetailsList = postDetailsList;
             this.isVideo = isVideo;
         }
 
         @Override protected List<String> doInBackground(Void... voids) {
             HashSet<String> list = new HashSet<>();
-            for (PostDetails postDetails : list1) {
+            for (PostDetails postDetails : postDetailsList) {
                 try {
                     list.add(isVideo ? postDetails.getMedias().get(0).getMediaUrl() : postDetails.getMedias().get(0).getThumbUrl());
                 } catch (Exception e) {
@@ -556,6 +556,7 @@ public class FileUtils {
                                 && urls.get(i) != null && !urls.get(i).equalsIgnoreCase("null")) {
                             Intent intent = new Intent(Intent.ACTION_SYNC, null, context.get(), VideoCachingService.class);
                             intent.putExtra("url", urls.get(i));
+                            intent.putExtra("fileName", postDetailsList.get(i).getCreatedAt());
                             intent.putExtra("path", context.get().getCacheDir() + (isVideo ? "/CachedMedia" : "/CachedThumb"));
                             intent.putExtra("requestId", 101);
                             intent.putExtra("isVideo", isVideo);

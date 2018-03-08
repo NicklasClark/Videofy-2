@@ -52,7 +52,7 @@ import com.cncoding.teazer.ui.authentication.WelcomeFragment;
 import com.cncoding.teazer.ui.authentication.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.ui.common.Interests;
 import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 import com.cncoding.teazer.utilities.common.SharedPrefs;
 
 import java.io.ByteArrayOutputStream;

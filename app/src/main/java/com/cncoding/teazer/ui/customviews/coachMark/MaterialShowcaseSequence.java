@@ -2,7 +2,7 @@ package com.cncoding.teazer.ui.customviews.coachMark;
 
 import android.view.View;
 
-import com.cncoding.teazer.ui.home.BaseBottomBarActivity;
+import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 
 import java.util.LinkedList;
 import java.util.Queue;

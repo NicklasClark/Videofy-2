@@ -73,7 +73,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
 
     @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
     @BindView(R.id.location) ProximaNovaRegularTextView location;
-    @BindView(R.id.category) ProximaNovaSemiBoldTextView category;
+    @BindView(R.id.category) ProximaNovaRegularTextView category;
     @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
     @BindView(R.id.content) SimpleExoPlayerView playerView;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
@@ -244,13 +244,15 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         if (payloads.isEmpty()) return;
 
         if (payloads.get(0) instanceof PostDetails) {
+            adapter.posts.set(getAdapterPosition(), (PostDetails) payloads.get(0));
             bind();
             return;
         }
 
         Bundle bundle = (Bundle) payloads.get(0);
         if (bundle.containsKey(DIFF_POST_DETAILS)) {
-            postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
+            adapter.posts.set(getAdapterPosition(), (PostDetails) bundle.getParcelable(DIFF_POST_DETAILS));
+            bind();
             return;
         }
 

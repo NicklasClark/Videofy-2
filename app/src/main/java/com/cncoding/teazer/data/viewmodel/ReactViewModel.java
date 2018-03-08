@@ -32,18 +32,18 @@ public class ReactViewModel extends ViewModel {
     private MediatorLiveData<HiddenReactionsList> hiddenReactionsListLiveData;
     private MediatorLiveData<ReactionResponse> reactionResponseLiveData;
     private MediatorLiveData<LikedUserList> likedUserListLiveData;
-    private ReactRepository apiRepository;
+    private ReactRepository reactRepository;
 
     @Inject public ReactViewModel(MediatorLiveData<ResultObject> resultObjectLiveData, MediatorLiveData<ReactionsList> reactionsListLiveData,
                                   MediatorLiveData<HiddenReactionsList> hiddenReactionsListLiveData,
                                   MediatorLiveData<ReactionResponse> reactionResponseLiveData,
-                                  MediatorLiveData<LikedUserList> likedUserListLiveData, ReactRepository apiRepository) {
+                                  MediatorLiveData<LikedUserList> likedUserListLiveData, ReactRepository reactRepository) {
         this.resultObjectLiveData = resultObjectLiveData;
         this.reactionsListLiveData = reactionsListLiveData;
         this.hiddenReactionsListLiveData = hiddenReactionsListLiveData;
         this.reactionResponseLiveData = reactionResponseLiveData;
         this.likedUserListLiveData = likedUserListLiveData;
-        this.apiRepository = apiRepository;
+        this.reactRepository = reactRepository;
     }
 
     public ReactViewModel(String token) {
@@ -52,7 +52,7 @@ public class ReactViewModel extends ViewModel {
         hiddenReactionsListLiveData = new MediatorLiveData<>();
         reactionResponseLiveData = new MediatorLiveData<>();
         likedUserListLiveData = new MediatorLiveData<>();
-        apiRepository = new ReactRepositoryImpl(token);
+        reactRepository = new ReactRepositoryImpl(token);
     }
 
     //region Getters
@@ -81,7 +81,7 @@ public class ReactViewModel extends ViewModel {
     public void uploadReaction(MultipartBody.Part video, int postId, String title){
         try {
             reactionResponseLiveData.addSource(
-                    apiRepository.uploadReaction(video, postId, title),
+                    reactRepository.uploadReaction(video, postId, title),
                     new Observer<ReactionResponse>() {
                         @Override
                         public void onChanged(@Nullable ReactionResponse reactionResponse) {
@@ -97,7 +97,7 @@ public class ReactViewModel extends ViewModel {
     public void createReactionByGiphy(GiphyReactionRequest giphyReactionRequest) {
         try {
             reactionResponseLiveData.addSource(
-                    apiRepository.createReactionByGiphy(giphyReactionRequest),
+                    reactRepository.createReactionByGiphy(giphyReactionRequest),
                     new Observer<ReactionResponse>() {
                         @Override
                         public void onChanged(@Nullable ReactionResponse reactionResponse) {
@@ -113,7 +113,7 @@ public class ReactViewModel extends ViewModel {
     public void getReactionDetail(int reactId){
         try {
             reactionResponseLiveData.addSource(
-                    apiRepository.getReactionDetail(reactId),
+                    reactRepository.getReactionDetail(reactId),
                     new Observer<ReactionResponse>() {
                         @Override
                         public void onChanged(@Nullable ReactionResponse reactionResponse) {
@@ -129,7 +129,7 @@ public class ReactViewModel extends ViewModel {
     public void likeDislikeReaction(int reactId, @LikeDislike int status){
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.likeDislikeReaction(reactId, status),
+                    reactRepository.likeDislikeReaction(reactId, status),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -145,7 +145,7 @@ public class ReactViewModel extends ViewModel {
     public void incrementReactionViewCount(int mediaId){
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.incrementReactionViewCount(mediaId),
+                    reactRepository.incrementReactionViewCount(mediaId),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -161,7 +161,7 @@ public class ReactViewModel extends ViewModel {
     public void deleteReaction(int reactId){
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.deleteReaction(reactId),
+                    reactRepository.deleteReaction(reactId),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -177,7 +177,7 @@ public class ReactViewModel extends ViewModel {
     public void reportReaction(ReportReaction reportReaction){
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.reportReaction(reportReaction),
+                    reactRepository.reportReaction(reportReaction),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -193,7 +193,7 @@ public class ReactViewModel extends ViewModel {
     public void hideOrShowReaction(int reactId, int status){
         try {
             resultObjectLiveData.addSource(
-                    apiRepository.hideOrShowReaction(reactId, status),
+                    reactRepository.hideOrShowReaction(reactId, status),
                     new Observer<ResultObject>() {
                         @Override
                         public void onChanged(@Nullable ResultObject resultObject) {
@@ -209,7 +209,7 @@ public class ReactViewModel extends ViewModel {
     public void getMyReactions(int page){
         try {
             reactionsListLiveData.addSource(
-                    apiRepository.getMyReactions(page),
+                    reactRepository.getMyReactions(page),
                     new Observer<ReactionsList>() {
                         @Override
                         public void onChanged(@Nullable ReactionsList reactionsList) {
@@ -225,7 +225,7 @@ public class ReactViewModel extends ViewModel {
     public void getFriendsReactions(int page, int friend_id){
         try {
             reactionsListLiveData.addSource(
-                    apiRepository.getFriendsReactions(page, friend_id),
+                    reactRepository.getFriendsReactions(page, friend_id),
                     new Observer<ReactionsList>() {
                         @Override
                         public void onChanged(@Nullable ReactionsList reactionsList) {
@@ -241,7 +241,7 @@ public class ReactViewModel extends ViewModel {
     public void getHiddenReactions(int page){
         try {
             hiddenReactionsListLiveData.addSource(
-                    apiRepository.getHiddenReactions(page),
+                    reactRepository.getHiddenReactions(page),
                     new Observer<HiddenReactionsList>() {
                         @Override
                         public void onChanged(@Nullable HiddenReactionsList hiddenReactionsList) {
@@ -257,7 +257,7 @@ public class ReactViewModel extends ViewModel {
     @Deprecated @SuppressWarnings("deprecation") public void getOldLikedUsersOfReaction(int reactId, int page){
         try {
             likedUserListLiveData.addSource(
-                    apiRepository.getOldLikedUsersOfReaction(reactId, page),
+                    reactRepository.getOldLikedUsersOfReaction(reactId, page),
                     new Observer<LikedUserList>() {
                         @Override
                         public void onChanged(@Nullable LikedUserList hiddenReactionsList) {
@@ -274,7 +274,7 @@ public class ReactViewModel extends ViewModel {
     public void getOldLikedUsersOfReactionWithSearchTerm(int reactId, int page, String searchTerm){
         try {
             likedUserListLiveData.addSource(
-                    apiRepository.getOldLikedUsersOfReactionWithSearchTerm(reactId, page, searchTerm),
+                    reactRepository.getOldLikedUsersOfReactionWithSearchTerm(reactId, page, searchTerm),
                     new Observer<LikedUserList>() {
                         @Override
                         public void onChanged(@Nullable LikedUserList hiddenReactionsList) {
@@ -290,7 +290,7 @@ public class ReactViewModel extends ViewModel {
     public void getLikedUsersOfReaction(int reactId, int page){
         try {
             likedUserListLiveData.addSource(
-                    apiRepository.getLikedUsersOfReaction(reactId, page),
+                    reactRepository.getLikedUsersOfReaction(reactId, page),
                     new Observer<LikedUserList>() {
                         @Override
                         public void onChanged(@Nullable LikedUserList hiddenReactionsList) {
@@ -306,7 +306,7 @@ public class ReactViewModel extends ViewModel {
     public void getLikedUsersOfReactionWithSearchTerm(int reactId, int page, String searchTerm){
         try {
             likedUserListLiveData.addSource(
-                    apiRepository.getLikedUsersOfReactionWithSearchTerm(reactId, page, searchTerm),
+                    reactRepository.getLikedUsersOfReactionWithSearchTerm(reactId, page, searchTerm),
                     new Observer<LikedUserList>() {
                         @Override
                         public void onChanged(@Nullable LikedUserList hiddenReactionsList) {
