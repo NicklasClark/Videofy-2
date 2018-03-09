@@ -13,8 +13,8 @@ import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.data.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;

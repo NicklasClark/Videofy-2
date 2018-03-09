@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cncoding.teazer.data.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback;
 

@@ -1,6 +1,5 @@
-package com.cncoding.teazer.model.post;
+package com.cncoding.teazer.data.model.post;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
 import com.inmobi.ads.InMobiNative;
 
 /**

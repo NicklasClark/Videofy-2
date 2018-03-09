@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.home.post.homepage;
 
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,10 +19,10 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.data.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.viewmodel.PostViewModel;
-import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.exoplayer.Container;
