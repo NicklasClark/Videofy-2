@@ -66,7 +66,11 @@ public class FabricAnalyticsUtil {
 
     public static void logSearchEvent(String query)
     {
-        Answers.getInstance().logSearch(new SearchEvent()
-                .putQuery(query));
+        try {
+            Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(query));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

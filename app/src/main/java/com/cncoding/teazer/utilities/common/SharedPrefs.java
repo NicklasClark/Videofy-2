@@ -90,7 +90,7 @@ public class SharedPrefs {
     }
 
     public static void resetAuthToken(Context context) {
-        getSharedPreferences(context).edit().remove(AUTH_TOKEN).apply();
+        getSharedPreferences(context).edit().remove(AUTH_TOKEN).commit();
     }
 
     public static void saveFcmToken(Context context, String fcmToken) {
