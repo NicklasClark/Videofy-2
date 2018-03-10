@@ -20,7 +20,6 @@ import com.cncoding.teazer.data.viewmodel.BaseViewModel;
 
 public class BrokerLiveData<T> extends MediatorLiveData<T> {
 
-
     /**
      * <p> Use this method to observe to the {@link LiveData} emitted by the API call.</p>
      * <p> This method adds the {@link LiveData} returned by the API call
