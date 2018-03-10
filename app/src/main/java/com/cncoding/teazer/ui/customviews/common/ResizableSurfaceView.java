@@ -31,7 +31,7 @@ public class ResizableSurfaceView extends SurfaceView {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int windowWidth = displayMetrics.widthPixels;
             int windowHeight = displayMetrics.heightPixels;
-//            int margin = (int) (getContext().getResources().getDisplayMetrics().density* MARGIN_DP);
+//            int margin = (int) (getTheContext().getResources().getDisplayMetrics().density* MARGIN_DP);
             float videoRatio;
             if (windowWidth < windowHeight) {
                 videoRatio = ((float) (videoWidth)) / videoHeight;

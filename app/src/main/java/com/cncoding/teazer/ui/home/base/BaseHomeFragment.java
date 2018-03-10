@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
+import com.cncoding.teazer.ui.base.BaseActivity;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.base.BaseViewModelFragment;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
@@ -17,25 +17,24 @@ import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListen
 
 public class BaseHomeFragment extends BaseViewModelFragment {
 
-    public FragmentNavigation navigation;
+    public BaseActivity.FragmentNavigation navigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
     private BaseRecyclerView.Adapter adapter;
     public boolean isConnected;
-    public Context context;
+    protected int currentPage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getContext();
+        currentPage = 1;
     }
 
     protected void bindRecyclerViewAdapter(BaseRecyclerView.Adapter adapter) {
         this.adapter = adapter;
     }
 
-    @NonNull
-    public BaseBottomBarActivity getParentActivity() {
+    @NonNull public BaseBottomBarActivity getParentActivity() {
         try {
             if (getActivity() != null && getActivity() instanceof BaseBottomBarActivity) {
                 return (BaseBottomBarActivity) getActivity();
@@ -49,8 +48,8 @@ public class BaseHomeFragment extends BaseViewModelFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentNavigation) {
-            navigation = (FragmentNavigation) context;
+        if (context instanceof BaseActivity.FragmentNavigation) {
+            navigation = (BaseActivity.FragmentNavigation) context;
         }
     }
 
@@ -63,11 +62,5 @@ public class BaseHomeFragment extends BaseViewModelFragment {
             scrollListener = null;
         }
         if (adapter != null) adapter.release();
-    }
-
-    public interface FragmentNavigation {
-        void pushFragment(Fragment fragment);
-        void pushFragmentOnto(Fragment fragment);
-        void popFragment();
     }
 }

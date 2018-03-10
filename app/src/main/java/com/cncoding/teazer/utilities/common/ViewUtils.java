@@ -21,9 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -31,9 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.model.base.Dimension;
 import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.ui.base.BaseActivity;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.ui.customviews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.ui.customviews.coachMark.shape.CircleShape;
@@ -339,15 +339,49 @@ public class ViewUtils {
         }
     }
 
+//    @SuppressWarnings("SuspiciousNameCombination")
+//    public static void adjustViewSize(Context context, int postWidth, int postHeight, LayoutParams layoutParams,
+//                                      int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
+//        try {
+//            int width = isPostList ?
+//                    getDeviceWidth(context) :
+//    //                in case of home page post lists, decrease 0.5dp from half the screen width
+//    //                (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)):
+//    //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
+//                    (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
+//
+//            layoutParams.width = width;
+////                resize posts in shimmerLayout
+//            if (!isPostList) {
+//                if (postHeight <= postWidth) {
+//                    postHeight = width;
+//                    layoutParams.height = postHeight;
+//                } else {
+//                    layoutParams.height = width * postHeight / postWidth;
+//                }
+//            } else {
+//                if (postHeight >= postWidth) {
+//                    layoutParams.height = layoutParams.width;
+//                } else {
+//                    layoutParams.height = width * postHeight / postWidth;
+//                }
+////                layoutParams.height = layoutParams.width * 3 / 4;
+//            }
+////                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
+////                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio
+////                layoutParams.height = normalHeight > maxHeight ? maxHeight : normalHeight;
+//            if (dimensionSparseArray != null)
+//                dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @SuppressWarnings("SuspiciousNameCombination")
-    public static void adjustViewSize(Context context, int postWidth, int postHeight, ViewGroup.LayoutParams layoutParams,
-                                      int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
+    public static void adjustViewSize(Context context, int postWidth, int postHeight, LayoutParams layoutParams, boolean isPostList) {
         try {
             int width = isPostList ?
                     getDeviceWidth(context) :
-    //                in case of home page post lists, decrease 0.5dp from half the screen width
-    //                (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)):
-    //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
                     (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
 
             layoutParams.width = width;
@@ -360,13 +394,13 @@ public class ViewUtils {
                     layoutParams.height = width * postHeight / postWidth;
                 }
             } else {
-                layoutParams.height = layoutParams.width * 3 / 4;
+//                resize posts on homepage
+                if (postHeight >= postWidth) {
+                    layoutParams.height = layoutParams.width;
+                } else {
+                    layoutParams.height = width * postHeight / postWidth;
+                }
             }
-//                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
-//                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio
-//                layoutParams.height = normalHeight > maxHeight ? maxHeight : normalHeight;
-            if (dimensionSparseArray != null)
-                dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -481,7 +515,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using integer userId.
      */
-    public static void openProfile(BaseHomeFragment.FragmentNavigation navigation, boolean isMySelf, int userId) {
+    public static void openProfile(BaseActivity.FragmentNavigation navigation, boolean isMySelf, int userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -494,7 +528,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using String userId.
      */
-    public static void openProfile(BaseHomeFragment.FragmentNavigation navigation, boolean isMySelf, String userId) {
+    public static void openProfile(BaseActivity.FragmentNavigation navigation, boolean isMySelf, String userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -508,7 +542,7 @@ public class ViewUtils {
      * Call this method to push the suitable profile fragment WHEN YOU ARE NOT SURE ABOUT "isMySelf" flag.
      * @param selfUserId must be the userId stored in SharedPreferences while logging in.
      */
-    public static void openProfile(int selfUserId, BaseHomeFragment.FragmentNavigation navigation, int userId) {
+    public static void openProfile(int selfUserId, BaseActivity.FragmentNavigation navigation, int userId) {
         if (selfUserId >= 0) {
             try {
                 navigation.pushFragment(selfUserId == userId ?

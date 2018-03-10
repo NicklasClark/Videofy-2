@@ -280,7 +280,7 @@ public class NewProfileFragment extends BaseHomeFragment implements AppBarLayout
             NewProfileFragment.checkprofileupdated = false;
         }
 //        if(NewProfileFragment.checkpostupdated) {
-//            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),NewProfileFragment.this));
+//            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(),NewProfileFragment.this));
 //            tabLayout.setupWithViewPager(viewPager);
 //            NewProfileFragment.checkpostupdated=false;
 //        }
@@ -299,7 +299,7 @@ public class NewProfileFragment extends BaseHomeFragment implements AppBarLayout
 //                collapsingToolbar.setStatusBarScrimColor(palette.getMutedColor(R.attr.colorPrimaryDark));
 //            }
 //        });
-//        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),NewProfileFragment.this));
+//        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(),NewProfileFragment.this));
 //        tabLayout.setupWithViewPager(viewPager);
 
 
@@ -365,7 +365,7 @@ public class NewProfileFragment extends BaseHomeFragment implements AppBarLayout
                         .setAsFullWidthStyle(true)
                         .setSharingTitle("Share With");
 
-                branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
+                branchUniversalObject.generateShortUrl(getTheContext(), linkProperties, new Branch.BranchLinkCreateListener() {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {

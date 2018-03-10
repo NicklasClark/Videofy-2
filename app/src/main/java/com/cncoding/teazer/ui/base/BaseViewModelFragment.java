@@ -1,24 +1,48 @@
 package com.cncoding.teazer.ui.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
+import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.viewmodel.BaseViewModel;
-
-import javax.inject.Inject;
+import com.cncoding.teazer.injection.home.base.component.DaggerBaseActivityComponent;
 
 /**
  *
  * Created by Prem$ on 3/7/2018.
  */
 
-public class BaseViewModelFragment extends Fragment {
+public abstract class BaseViewModelFragment extends BaseFragment {
 
-    @Inject protected BaseViewModel viewModel;
+    protected BaseViewModel viewModel;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = DaggerBaseActivityComponent.builder()
+                .appComponent(TeazerApplication.get(getParentActivity()).getAppComponent())
+                .build()
+                .baseViewModel();
+    }
+
+    @NonNull public Context getTheContext() {
+        return context;
+    }
+
+    public BaseViewModel getViewModel() {
+        return viewModel;
+    }
+
+    @NonNull @Override public Activity getParentActivity() {
+        try {
+            if (getActivity() != null) {
+                return getActivity();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getActivity();
     }
 }

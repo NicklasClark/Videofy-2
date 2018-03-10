@@ -22,7 +22,6 @@ import com.cncoding.teazer.data.model.BaseModel;
 import com.cncoding.teazer.data.model.post.AdFeedItem;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.data.viewmodel.PostViewModel;
 import com.cncoding.teazer.ui.customviews.common.CustomLinearLayoutManager;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.ui.customviews.exoplayer.Container;
@@ -102,7 +101,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     if (is_next_page) {
                         currentPage = page;
-                        loadHomePagePosts(page);
+                        viewModel.loadHomePagePostsApiCall(page);
 
                         //for inmobi ads
                         createStrands();
@@ -163,7 +162,7 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
             if (!scrollToTop) toggleRecyclerViewScrolling(false);
             if (scrollListener != null && scrollToTop) scrollListener.resetState();
             if (isConnected(context)) {
-                loadHomePagePosts(1);
+                viewModel.loadHomePagePostsApiCall(1);
                 //to refresh inmobi ads
                 refreshAds();
             }
@@ -216,10 +215,6 @@ public class PostsListFragment extends BasePostFragment implements View.OnKeyLis
 
     private void toggleRecyclerViewScrolling(boolean enabled) {
         ((CustomLinearLayoutManager) recyclerView.getLayoutManager()).setScrollEnabled(enabled);
-    }
-
-    public PostViewModel getViewModel() {
-        return viewModel;
     }
 
     private void preDownloadVideos(List<PostDetails> postDetailsList) {

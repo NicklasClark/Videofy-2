@@ -141,9 +141,8 @@ public class PostReactionAdapter extends BaseRecyclerView.Adapter {
             postReaction = postReactions.get(getAdapterPosition());
             MiniProfile postOwner = postReaction.getReactOwner();
 
-            adjustViewSize(fragment.getContext(), postReaction.getMediaDetail().getMediaDimension().getWidth(),
-                    postReaction.getMediaDetail().getMediaDimension().getHeight(),
-                    layout.getLayoutParams(), getAdapterPosition(), null, false);
+            adjustViewSize(fragment.getTheContext(), postReaction.getMediaDetail().getMediaDimension().getWidth(),
+                    postReaction.getMediaDetail().getMediaDimension().getHeight(), layout.getLayoutParams(), false);
 
             Glide.with(fragment)
                     .load(postOwner.getProfileMedia() != null ?

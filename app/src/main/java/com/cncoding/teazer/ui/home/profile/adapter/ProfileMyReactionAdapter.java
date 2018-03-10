@@ -157,14 +157,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(fragment.context, viewHolder.menu);
+                PopupMenu popup = new PopupMenu(fragment.getTheContext(), viewHolder.menu);
                 popup.inflate(R.menu.menu_profile_reaction);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_delete:
-                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(fragment.context);
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(fragment.getTheContext());
                                 alertDialog.setTitle("Confirm Deletion...");
                                 alertDialog.setMessage("Are you sure you want to delete this video.");
                                 alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
@@ -197,14 +197,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
 
     private void deleteVideos(int deleteId) {
-        ApiCallingService.React.deleteReaction(deleteId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.React.deleteReaction(deleteId, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     if (response.code() == 200) {
-                        Toast.makeText(fragment.getContext(), "Reaction has been deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getTheContext(), "Reaction has been deleted", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(fragment.getContext(), "Reaction has not been deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getTheContext(), "Reaction has not been deleted", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -213,7 +213,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
-                Toast.makeText(fragment.getContext(), "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getTheContext(), "Something went wrong please try again", Toast.LENGTH_SHORT).show();
             }
 
         });

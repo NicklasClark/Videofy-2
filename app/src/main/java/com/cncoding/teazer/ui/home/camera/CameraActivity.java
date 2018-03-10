@@ -34,9 +34,8 @@ import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +50,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.camera.SelectedPlace;
+import com.cncoding.teazer.data.model.camera.Videos;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
+import com.cncoding.teazer.ui.base.BaseActivity;
 import com.cncoding.teazer.ui.common.Interests;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
@@ -61,11 +63,11 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAut
 import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 import com.cncoding.teazer.ui.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.ui.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
+import com.cncoding.teazer.ui.home.camera.adapters.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
 import com.cncoding.teazer.ui.home.camera.adapters.TrendingGiphyAdapter;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.ui.home.camera.adapters.VideoGalleryAdapter;
+import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment;
+import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment.OnNearbyPlacesListInteractionListener;
 import com.cncoding.teazer.utilities.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.utilities.videoTrim.TrimmerActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -121,7 +123,7 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORE
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
 
-public class CameraActivity extends AppCompatActivity
+public class CameraActivity extends BaseActivity
         implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
         TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener, Interests.OnInterestsInteractionListener,
         NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse,
@@ -626,7 +628,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onNearbyPlacesAdapterInteraction(final SelectedPlace selectedPlace) {
-        fragmentManager.popBackStack();
+        popFragment();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -661,7 +663,7 @@ public class CameraActivity extends AppCompatActivity
                                 places.get(0).getLatLng().latitude,
                                 places.get(0).getLatLng().longitude
                         ));
-                        fragmentManager.popBackStack();
+                        popFragment();
                     } else {
                         Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_SHORT).show();
                     }
@@ -680,7 +682,7 @@ public class CameraActivity extends AppCompatActivity
                 uploadFragment.currentLocation.getLatitude(),
                 uploadFragment.currentLocation.getLongitude()
         ));
-        fragmentManager.popBackStack();
+        popFragment();
     }
 
     public String getAddress(double lat, double lng) {
@@ -709,7 +711,7 @@ public class CameraActivity extends AppCompatActivity
     public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend,
                                                final SparseBooleanArray selectedTagsArray, final int count) {
         try {
-            fragmentManager.popBackStack();
+            popFragment();
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -727,7 +729,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onInterestsSelected(final String resultToShow, final String resultToSend, final int count) {
-        fragmentManager.popBackStack();
+        popFragment();
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -743,35 +745,44 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData) {
         if (tag != null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (tag) {
                 case TAG_TAGS_FRAGMENT:
-                    fragmentTransaction.replace(R.id.uploading_container,
-                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData), tag);
+                    pushFragment(TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData));
                     break;
                 case TAG_CATEGORIES_FRAGMENT:
-                    fragmentTransaction.replace(R.id.uploading_container,
-                            Interests.newInstance(true, false, null, selectedData, false), tag);
+                    pushFragment(Interests.newInstance(true, false, null, selectedData, false));
                     break;
                 case TAG_NEARBY_PLACES:
-                    fragmentTransaction.replace(R.id.uploading_container,
-                            NearbyPlacesList.newInstance(googlePlaces), tag);
+                    pushFragment(NearbyPlacesFragment.newInstance(googlePlaces));
                     break;
                 case TAG_NULL_NEARBY_PLACES:
-                    fragmentTransaction.replace(R.id.uploading_container,
-                            NearbyPlacesList.newInstance(null), tag);
+                    pushFragment(NearbyPlacesFragment.newInstance(null));
                     break;
                 default:
                     break;
             }
-            fragmentTransaction.addToBackStack(tag);
-            fragmentTransaction.commit();
         } else {
-            fragmentManager.popBackStack();
+            popFragment();
         }
     }
 
     @Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+    @Override
+    public void pushFragment(Fragment fragment) {
+        String tag = getTag(fragment);
+        fragmentManager.beginTransaction().replace(R.id.uploading_container, fragment, tag).addToBackStack(tag).commit();
+    }
+
+    @Override public void pushFragmentOnto(Fragment fragment) {}
+
+    @Override public void popFragment() {
+        fragmentManager.popBackStack();
+    }
+
+    private String getTag(Fragment fragment) {
+        return fragment.getClass().getSimpleName();
+    }
 
     private static class GetVideoGalleryData extends AsyncTask<Void, Void, Void> {
 
@@ -793,8 +804,8 @@ public class CameraActivity extends AppCompatActivity
             Cursor cursor;
             int columnIndexData;
 //                int columnId;
-            int duration;
-            int thumbnailData;
+//            int duration;
+//            int thumbnailData;
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
             String[] projection = {
@@ -814,9 +825,9 @@ public class CameraActivity extends AppCompatActivity
                         orderByDateTaken + " DESC");
                 if (cursor != null) {
                     columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                    duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-                    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
+//                    duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+//                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+//                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
                     while (cursor.moveToNext()) {
                         try {
@@ -940,9 +951,7 @@ public class CameraActivity extends AppCompatActivity
                 slidingUpPanelLayout.getPanelState() == EXPANDED) {
             slidingUpPanelLayout.setPanelState(COLLAPSED);
         } else if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-//            if (uploadFragment != null)
-//                uploadFragment.toggleInteraction(true);
+            popFragment();
         } else {
             if (!isReaction) {
                 startActivity(new Intent(this, BaseBottomBarActivity.class));

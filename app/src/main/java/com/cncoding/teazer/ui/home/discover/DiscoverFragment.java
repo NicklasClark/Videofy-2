@@ -116,13 +116,13 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     private void initRecyclerViews() {
-        featuredPostsList.setLayoutManager(new CustomLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        featuredPostsList.setLayoutManager(new CustomLinearLayoutManager(getTheContext(), LinearLayoutManager.HORIZONTAL, false));
         featuredPostsList.setAdapter(featuredPostsListAdapter);
 
-        myInterestsList.setLayoutManager(new CustomLinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        myInterestsList.setLayoutManager(new CustomLinearLayoutManager(getTheContext(), LinearLayoutManager.VERTICAL, false));
         myInterestsList.setAdapter(myInterestsListAdapter);
 
-        trendingList.setLayoutManager(new CustomLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        trendingList.setLayoutManager(new CustomLinearLayoutManager(getTheContext(), LinearLayoutManager.HORIZONTAL, false));
         trendingList.setAdapter(trendingListAdapter);
 
         mostPopularList.setLayoutManager(new CustomStaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -132,7 +132,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     public void loadPosts() {
         postLoadErrorLayout.setVisibility(GONE);
 //        if (viewModel != null && viewModel.getLandingPosts().getValue() == null)
-        loadLandingPosts();
+        viewModel.loadLandingPostsApiCall();
     }
 
     @OnClick(R.id.featured_posts_view_all) public void viewAllMostPopular() {
@@ -250,7 +250,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                 }
             }, 500);
 //            if (viewModel != null && viewModel.getMostPopularPosts().getValue() == null)
-            fragment.loadMostPopularPosts(1);
+            fragment.viewModel.loadMostPopularPostsApiCall(1);
         }
     }
 
@@ -262,7 +262,7 @@ public class DiscoverFragment extends BaseDiscoverFragment {
 //                              SCROLLED TO BOTTOM
                     is_next_page = false;
                     mostPopularLoadingProgressBar.setVisibility(VISIBLE);
-                    loadMostPopularPosts(++currentPage);
+                    viewModel.loadMostPopularPostsApiCall(++currentPage);
                 }
             }
         });

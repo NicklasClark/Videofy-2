@@ -19,9 +19,10 @@ import java.util.List;
  */
 public class PostsListAdapter extends BaseRecyclerView.Adapter {
 
+    private static final int POST = 0, AD = 1;
+
     public List<PostDetails> posts;
     public PostsListFragment fragment;
-    private final int POST = 0, AD = 1;
 
     PostsListAdapter(PostsListFragment fragment) {
         this.fragment = fragment;
@@ -31,17 +32,14 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
     }
 
     @Override public BaseRecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view;
-        BaseRecyclerView.ViewHolder viewHolder = null;
-        if(viewType == POST)
-        {
+        BaseRecyclerView.ViewHolder viewHolder;
+        if(viewType == POST) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(PostListViewHolder.LAYOUT_RES, parent, false);
             viewHolder = new PostListViewHolder(this, view);
         }
-        else
-        {
+        else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(AdViewHolder.LAYOUT_RES, parent, false);
             viewHolder = new AdViewHolder(this, view);
@@ -106,17 +104,17 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
         }
     }
 
-    void updatePostAtPosition(PostDetails postDetails) {
-//        adapterPosition of the postDetails object is stored in "callType".
-        final int position = postDetails.getCallType();
-        posts.set(position, postDetails);
-        fragment.getParentActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                notifyItemChanged(position);
-            }
-        });
-    }
+//    void updatePostAtPosition(PostDetails postDetails) {
+////        adapterPosition of the postDetails object is stored in "callType".
+//        final int position = postDetails.getCallType();
+//        posts.set(position, postDetails);
+//        fragment.getParentActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                notifyItemChanged(position);
+//            }
+//        });
+//    }
 
     private void clearData() {
         if (posts != null) {

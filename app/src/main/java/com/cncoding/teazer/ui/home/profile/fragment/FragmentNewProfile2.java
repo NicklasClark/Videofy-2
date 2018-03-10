@@ -270,7 +270,7 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
             updateProfile();
         }
         if(FragmentNewProfile2.checkpostupdated) {
-            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(), FragmentNewProfile2.this,0));
+            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(), FragmentNewProfile2.this,0));
             tabLayout.setupWithViewPager(viewPager);
             FragmentNewProfile2.checkpostupdated=false;
         }
@@ -302,7 +302,7 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),FragmentNewProfile2.this,0));
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(),FragmentNewProfile2.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
     }
@@ -371,7 +371,7 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
                         .setAsFullWidthStyle(true)
                         .setSharingTitle("Share With");
 
-                branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
+                branchUniversalObject.generateShortUrl(getTheContext(), linkProperties, new Branch.BranchLinkCreateListener() {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {

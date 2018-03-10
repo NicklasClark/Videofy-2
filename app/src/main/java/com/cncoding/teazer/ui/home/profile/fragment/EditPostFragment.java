@@ -41,6 +41,7 @@ import com.cncoding.teazer.data.apiCalls.ApiCallingService;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.base.TaggedUser;
+import com.cncoding.teazer.data.model.camera.SelectedPlace;
 import com.cncoding.teazer.data.model.friends.CircleList;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostUploadResult;
@@ -51,8 +52,7 @@ import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTex
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DownloadUrl;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -95,8 +95,8 @@ import static com.cncoding.teazer.data.apiCalls.ApiCallingService.SUCCESS_OK_FAL
 import static com.cncoding.teazer.data.apiCalls.ApiCallingService.SUCCESS_OK_TRUE;
 import static com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
-import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
+import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
+import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.encodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
@@ -935,7 +935,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
             reference.get().mListener.onUploadInteraction(false,
-                    NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
+                    NearbyPlacesFragment.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
 
@@ -1036,7 +1036,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
         mListener.onUploadInteraction(false,
-                NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
+                NearbyPlacesFragment.newInstance(null), TAG_NEARBY_PLACES);
     }
 
     private void stopLocationUpdates() {

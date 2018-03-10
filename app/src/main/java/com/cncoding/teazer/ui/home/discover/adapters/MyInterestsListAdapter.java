@@ -46,7 +46,7 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
                 String categoryName = (String) myInterests.keySet().toArray()[position];
                 holder.header.setText(categoryName);
 
-                holder.recyclerView.setLayoutManager(new CustomLinearLayoutManager(fragment.getContext(), HORIZONTAL, false));
+                holder.recyclerView.setLayoutManager(new CustomLinearLayoutManager(fragment.getTheContext(), HORIZONTAL, false));
                 MyInterestsListItemAdapter adapter = new MyInterestsListItemAdapter(myInterests.get(categoryName), fragment);
                 holder.recyclerView.setAdapter(adapter);
 //                new AddListItemPostsTask((MyInterestsListItemAdapter) holder.recyclerView.getAdapter(), postDetailsList).execute();

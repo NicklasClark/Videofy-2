@@ -93,9 +93,9 @@ public class FragmentSettings extends BaseHomeFragment {
             @Override
             public void onClick(View view) {
                 if (saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()) {
-                    SharedPrefs.setSaveVideoFlag(getContext(), true);
+                    SharedPrefs.setSaveVideoFlag(getTheContext(), true);
                 } else if(!saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()) {
-                    SharedPrefs.setSaveVideoFlag(getContext(), false);
+                    SharedPrefs.setSaveVideoFlag(getTheContext(), false);
                 }
             }
         });
@@ -132,9 +132,9 @@ public class FragmentSettings extends BaseHomeFragment {
             }
             simpleSwitchShowingReactions.setChecked(valueOfPreferences != 0);
             privateAccountSwitch.setChecked(accountType == 1);
-            saveVideosSwitch.setChecked(getSaveVideoFlag(getContext()));
+            saveVideosSwitch.setChecked(getSaveVideoFlag(getTheContext()));
             prefetchVideosSwitch.setChecked(getCanSaveMediaOnlyOnWiFi(context));
-            saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getContext()));
+            saveVideosSwitch.setChecked(SharedPrefs.getSaveVideoFlag(getTheContext()));
         } catch (Exception e) {
             e.printStackTrace();
         }

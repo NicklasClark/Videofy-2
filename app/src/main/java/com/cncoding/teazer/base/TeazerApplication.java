@@ -12,6 +12,10 @@ import android.support.v4.provider.FontRequest;
 import android.util.Log;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.injection.app.component.AppComponent;
+import com.cncoding.teazer.injection.app.component.DaggerAppComponent;
+import com.cncoding.teazer.injection.app.module.ApplicationModule;
+import com.cncoding.teazer.injection.app.module.ContextModule;
 import com.expletus.mobiruck.MobiruckSdk;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
@@ -31,7 +35,7 @@ public class TeazerApplication extends Application  {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-//    private ApplicationComponent applicationComponent;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -71,23 +75,23 @@ public class TeazerApplication extends Application  {
 
         MobiruckSdk.getInstance().startTracking();  // this starts the tracking system.
 
-//        applicationComponent = DaggerApplicationComponent.builder()
-//                .applicationModule(new ApplicationModule(this))
-//                .contextModule(new ContextModule(this))
-//                .build();
-    }
-
-//    public ApplicationComponent getApplicationComponent() {
-//        return applicationComponent;
-//    }
-
-    @Contract(pure = true)
-    public static Context getContext() {
-        return context;
+        appComponent = DaggerAppComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .contextModule(new ContextModule(this))
+                .build();
     }
 
     public static TeazerApplication get(Activity activity) {
         return (TeazerApplication) activity.getApplication();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    @Contract(pure = true)
+    public static Context getContext() {
+        return context;
     }
 
     private void initFFmpegBinary(Context context) {

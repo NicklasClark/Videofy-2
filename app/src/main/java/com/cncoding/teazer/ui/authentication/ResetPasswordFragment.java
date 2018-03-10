@@ -172,7 +172,7 @@ public class ResetPasswordFragment extends BaseAuthFragment {
                     ResetPasswordByOtp resetPasswordDetails;
                     resetPasswordDetails = isEmail ? new ResetPasswordByOtp(confirmPass, enteredText, null, countryCode, otp) :
                             new ResetPasswordByOtp(confirmPass, null, Long.parseLong(enteredText), countryCode, otp);
-                    resetPasswordByOtp(resetPasswordDetails);
+                    viewModel.resetPasswordByOtp(resetPasswordDetails);
                 }
                 else showSnackBar(resetOtpView, getString(R.string.passwords_dont_match));
             }

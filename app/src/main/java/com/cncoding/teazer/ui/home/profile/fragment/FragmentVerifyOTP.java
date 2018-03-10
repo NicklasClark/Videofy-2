@@ -170,7 +170,7 @@ public class FragmentVerifyOTP extends DialogFragment {
         otpVerifiedTextView.setText("");
         ViewUtils.hideKeyboard(getActivity(), otp4EditText);
         String otp= otp1EditText.getText().toString()+otp2EditText.getText().toString()+otp3EditText.getText().toString()+otp4EditText.getText().toString();
-        //Toast.makeText(getContext(),otp,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getTheContext(),otp,Toast.LENGTH_SHORT).show();
         UpdateMobileNumber updateMobileNumber=new UpdateMobileNumber(mobilenumber,countrycode,Integer.parseInt(otp));
 
         ApiCallingService.User.updateMobileNumber(context,updateMobileNumber)

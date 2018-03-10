@@ -176,9 +176,9 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
                 postDetails = postDetailsArrayList.get(getAdapterPosition());
 
                 /*Adjust view size before loading anything*/
-                adjustViewSize(fragment.getContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                adjustViewSize(fragment.getTheContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
                         postDetails.getMedias().get(0).getMediaDimension().getHeight(),
-                        layout.getLayoutParams(), getAdapterPosition(), null, false);
+                        layout.getLayoutParams(), false);
 
                 title.setText(decodeUnicodeString(postDetails.getTitle()));
 

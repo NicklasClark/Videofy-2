@@ -2,7 +2,6 @@ package com.cncoding.teazer.ui.authentication.base;
 
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,16 +11,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.model.auth.InitiateLoginWithOtp;
-import com.cncoding.teazer.data.model.auth.InitiateSignup;
-import com.cncoding.teazer.data.model.auth.Login;
-import com.cncoding.teazer.data.model.auth.ResetPasswordByOtp;
-import com.cncoding.teazer.data.model.auth.ResetPasswordByPhoneNumber;
-import com.cncoding.teazer.data.model.auth.SocialSignup;
-import com.cncoding.teazer.data.model.auth.VerifyLoginWithOtp;
-import com.cncoding.teazer.data.model.auth.VerifySignUp;
+import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.viewmodel.AuthViewModel;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.home.profile.activity.ForgotPasswordActivity;
 import com.cncoding.teazer.utilities.common.Annotations.ValidationType;
 
@@ -30,27 +23,23 @@ import static com.cncoding.teazer.data.remote.apicalls.authentication.Authentica
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseAuthFragment extends Fragment {
+public abstract class BaseAuthFragment extends BaseFragment {
 
-    protected Context context;
     protected  boolean isPasswordShown = true;
-    AuthViewModel authViewModel;
+    protected AuthViewModel viewModel;
 
-    public BaseAuthFragment() {
-        // Required empty public constructor
-    }
+    public BaseAuthFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getParentActivity();
-        authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
+        viewModel = TeazerApplication.get(getParentActivity()).getAppComponent().authComponentBuilder().build().authViewModel();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        authViewModel.getApiResponse().observe(this, new Observer<ResultObject>() {
+        viewModel.getApiResponse().observe(this, new Observer<ResultObject>() {
             @SuppressWarnings("ThrowableNotThrown")
             @Override
             public void onChanged(@Nullable ResultObject resultObject) {
@@ -68,7 +57,11 @@ public abstract class BaseAuthFragment extends Fragment {
         });
     }
 
-    @NonNull
+    @NonNull public Context getTheContext() {
+        return context;
+    }
+
+    @NonNull @Override
     public FragmentActivity getParentActivity() {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             return getActivity();
@@ -87,56 +80,4 @@ public abstract class BaseAuthFragment extends Fragment {
     protected abstract boolean isFieldValidated(@ValidationType int whichType);
 
     protected abstract boolean isFieldFilled(@ValidationType int whichType);
-
-    protected void signUp(InitiateSignup initiateSignup) {
-        authViewModel.signUp(initiateSignup);
-    }
-
-    protected void verifySignUp(VerifySignUp verifySignUp) {
-        authViewModel.verifySignUp(verifySignUp);
-    }
-
-    protected void socialSignUp(SocialSignup socialSignup) {
-        authViewModel.socialSignUp(socialSignup);
-    }
-
-    protected void loginWithPassword(Login login) {
-        authViewModel.loginWithPassword(login);
-    }
-
-    protected void loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
-        authViewModel.loginWithOtp(initiateLoginWithOtp);
-    }
-
-    protected void verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
-        authViewModel.verifyLoginWithOtp(verifyLoginWithOtp);
-    }
-
-    protected void checkUsernameAvailability(String username) {
-        authViewModel.checkUsernameAvailability(username);
-    }
-
-    protected void checkEmailAvailability(String email) {
-        authViewModel.checkEmailAvailability(email);
-    }
-
-    protected void checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
-        authViewModel.checkPhoneNumberAvailability(countryCode, phoneNumber);
-    }
-
-    protected void verifyForgotPasswordOtp(int otp) {
-        authViewModel.verifyForgotPasswordOtp(otp);
-    }
-
-    protected void requestResetPasswordByEmail(String email) {
-        authViewModel.requestResetPasswordByEmail(email);
-    }
-
-    protected void requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
-        authViewModel.requestResetPasswordByPhone(resetPasswordByPhoneNumber);
-    }
-
-    protected void resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
-        authViewModel.resetPasswordByOtp(resetPasswordByOtp);
-    }
 }

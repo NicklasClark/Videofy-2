@@ -280,7 +280,7 @@ public class WelcomeFragment extends BaseAuthFragment implements NetworkStateRec
     private void handleFacebookLogin() {
         try {
             socialSignup.extractFromFacebookData(facebookProfile, facebookData, context);
-            socialSignUp(socialSignup);
+            viewModel.socialSignUp(socialSignup);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,7 +289,7 @@ public class WelcomeFragment extends BaseAuthFragment implements NetworkStateRec
     private void handleGoogleSignIn() {
         try {
             socialSignup.extractFromGoogleData(googleAccount, context);
-            socialSignUp(socialSignup);
+            viewModel.socialSignUp(socialSignup);
         } catch (Exception e) {
             e.printStackTrace();
         }

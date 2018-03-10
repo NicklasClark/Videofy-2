@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
@@ -49,13 +48,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.camera.SelectedPlace;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.ui.home.camera.base.BaseCameraFragment;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DownloadUrl;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.GifConvertAsyncTask;
@@ -76,8 +76,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.inmobi.sdk.InMobiSdk;
 import com.google.gson.Gson;
+import com.inmobi.sdk.InMobiSdk;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -103,7 +103,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
+import static com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.encodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_REACTION;
@@ -117,7 +117,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.playVideoInExoPlaye
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks,
+public class UploadFragment extends BaseCameraFragment implements EasyPermissions.PermissionCallbacks,
         CompressVideoAsyncTask.AsyncResponse,
         AddWaterMarkAsyncTask.WatermarkAsyncResponse,
         GifConvertAsyncTask.GifConvertAsyncResponse {
@@ -173,11 +173,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private SelectedPlace selectedPlace;
-    private Context context;
     private Activity activity;
 
     private static boolean isCompressing = false;
-    private long initialSize;
+//    private long initialSize;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private OnUploadFragmentInteractionListener mListener;
     private boolean convertToGif = false;
@@ -188,9 +187,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean isGiphy;
     private int postId;
 
-    public UploadFragment() {
-        // Required empty public constructor
-    }
+    public UploadFragment() {}
 
     public static UploadFragment newInstance(int postId, String videoPath, boolean isReaction,
                                              boolean isGallery, int videoDuration, boolean isGiphy) {
@@ -210,7 +207,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        context = getContext();
         if (bundle != null) {
             postId = bundle.getInt(POST_ID);
             videoPath = bundle.getString(VIDEO_PATH);
@@ -221,11 +217,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
 
         if (!isGiphy) {
-            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
+            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getTheContext(), isGallery);
             compressVideoAsyncTask.delegate = this;
             compressVideoAsyncTask.execute(videoPath);
             isCompressing = true;
-            initialSize = new File(videoPath).length();
+//            initialSize = new File(videoPath).length();
         }
 
         checkFacebookButtonPressed = false;
@@ -264,7 +260,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         Glide.with(context)
                 .load(gifPath)
-//                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(thumbnailView);
 
         enableView(uploadBtn);
@@ -328,7 +323,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
                         if (null == gifPath) {
                             thumbnailProgressBar.setVisibility(VISIBLE);
-                            GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getContext());
+                            GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getTheContext());
                             gifConvertAsyncTask.delegate = UploadFragment.this;
                             gifConvertAsyncTask.execute(videoPath);
                         } else {
@@ -377,7 +372,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        }
         if(isCompressing) {
             disableView(uploadBtn, true);
-            uploadBtn.setText("Processing...");
+            uploadBtn.setText(R.string.processing);
         }
 
 //        new Handler().postDelayed(new Runnable() {

@@ -74,7 +74,7 @@ public class FragmentLikedUser extends BaseHomeFragment {
 
     @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_liked_user, container, false);
-        context = getContext();
+        context = getTheContext();
         ButterKnife.bind(this, view);
 
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(getActivity());

@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getMedia;
+import static com.cncoding.teazer.utilities.common.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.getGenderSpecificDpSmall;
@@ -75,6 +77,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     @BindView(R.id.location) ProximaNovaRegularTextView location;
     @BindView(R.id.category) ProximaNovaRegularTextView category;
     @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
+    @BindView(R.id.video_layout) RelativeLayout videoLayout;
     @BindView(R.id.content) SimpleExoPlayerView playerView;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.volume_control) ImageView volumeControl;
@@ -148,7 +151,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
 
     @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
         String remoteMediaUrl = postDetails.getMedias().get(0).getMediaUrl();
-        String savedMediaPath = getMedia(adapter.fragment.getContext(), remoteMediaUrl);
+        String savedMediaPath = getMedia(adapter.fragment.getTheContext(), remoteMediaUrl);
         if (helper == null) {
             helper = new ExoPlayerViewHelper(container, this,
                     Uri.parse(savedMediaPath != null && new File(savedMediaPath).exists() ? savedMediaPath : remoteMediaUrl));
@@ -196,6 +199,9 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         try {
             postDetails = adapter.posts.get(getAdapterPosition());
 
+            adjustViewSize(adapter.fragment.getTheContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                    postDetails.getMedias().get(0).getMediaDimension().getHeight(), videoLayout.getLayoutParams(), true);
+
                 if (!postDetails.canReact()) disableView(reactBtn, true);
                 else enableView(reactBtn);
 
@@ -229,7 +235,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
             if (postDetails.getReactions() != null && postDetails.getReactions().size() > 0) {
                 reactionListView.setVisibility(VISIBLE);
                 reactionListView.setLayoutManager(
-                        new LinearLayoutManager(adapter.fragment.getContext(), LinearLayoutManager.HORIZONTAL, false));
+                        new LinearLayoutManager(adapter.fragment.getTheContext(), LinearLayoutManager.HORIZONTAL, false));
                 reactionListView.setAdapter(new ReactionAdapter(adapter.fragment, postDetails.getReactions()));
             } else {
                 reactionListView.setVisibility(GONE);
@@ -342,7 +348,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     private GradientDrawable getBackground(ColorStateList color) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(color);
-        gradientDrawable.setCornerRadius(getPixels(adapter.fragment.getContext(), 2));
+        gradientDrawable.setCornerRadius(getPixels(adapter.fragment.getTheContext(), 2));
         return gradientDrawable;
     }
 

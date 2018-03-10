@@ -243,7 +243,7 @@ public class LoginFragment extends BaseAuthFragment {
                                     loginBtn.setEnabled(false);
                                     startProgressBar();
                                     loginBtnClicked = true;
-                                    loginWithPassword(login);
+                                    viewModel.loginWithPassword(login);
                                 } else
                                     Snackbar.make(loginBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
                             } else
@@ -256,7 +256,7 @@ public class LoginFragment extends BaseAuthFragment {
                             loginBtn.setEnabled(false);
                             startProgressBar();
                             loginBtnClicked = true;
-                            loginWithOtp(new InitiateLoginWithOtp(Long.parseLong(login.getUserName()), countryCode));
+                            viewModel.loginWithOtp(new InitiateLoginWithOtp(Long.parseLong(login.getUserName()), countryCode));
                         } else {
                             setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                             Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT).show();
@@ -468,18 +468,19 @@ public class LoginFragment extends BaseAuthFragment {
             switch (getEnteredUserFormat(usernameView.getText().toString())) {
                 case PHONE_NUMBER_FORMAT:
                     if (isValidPhoneNumber(usernameView.getText().toString()))
-                        checkPhoneNumberAvailability(getCountryCode(null, getParentActivity()), Long.parseLong(usernameView.getText().toString()));
+                        viewModel.checkPhoneNumberAvailability(getCountryCode(null, getParentActivity()),
+                                Long.parseLong(usernameView.getText().toString()));
                     else
                         ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                     break;
                 case EMAIL_FORMAT:
                     if (AuthUtils.isValidEmailAddress(usernameView.getText().toString()))
-                        checkEmailAvailability(usernameView.getText().toString());
+                        viewModel.checkEmailAvailability(usernameView.getText().toString());
                     else
                         ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                     break;
                 case USERNAME_FORMAT:
-                    checkUsernameAvailability(usernameView.getText().toString());
+                    viewModel.checkUsernameAvailability(usernameView.getText().toString());
                     break;
                 default:
                     break;

@@ -2,7 +2,6 @@ package com.cncoding.teazer.data.remote.apicalls.react;
 
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.data.model.react.HiddenReactionsList;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.model.react.ReportReaction;
@@ -95,7 +94,7 @@ public interface ReactService {
      * Call this service to get the reactions hidden by user.
      */
     @GET("/api/v1/react/my/hided/reactions/{page}")
-    Call<HiddenReactionsList> getHiddenReactions(@Path("page") int page);
+    Call<ReactionsList> getHiddenReactions(@Path("page") int page);
 
     /**
      * Call this service to get the liked users from a reaction.

@@ -99,7 +99,7 @@ public class CommonWebServicesUtil {
     }
 
     public static void fetchReactionDetails(final BaseHomeFragment fragment, final int postId) {
-        ApiCallingService.React.getReactionDetail(postId, fragment.getContext())
+        ApiCallingService.React.getReactionDetail(postId, fragment.getTheContext())
                 .enqueue(new Callback<ReactionResponse>() {
                     @Override
                     public void onResponse(Call<ReactionResponse> call, Response<ReactionResponse> response) {
@@ -126,15 +126,15 @@ public class CommonWebServicesUtil {
                                 //play video in exo player
                                 ViewUtils.playOnlineVideoInExoPlayer(fragment, postReaction);
                             } else {
-                                Toast.makeText(fragment.getContext(), R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(fragment.getTheContext(), R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
                             }
                         } else
-                            Toast.makeText(fragment.getContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(fragment.getTheContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<ReactionResponse> call, Throwable t) {
-                        Toast.makeText(fragment.getContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getTheContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

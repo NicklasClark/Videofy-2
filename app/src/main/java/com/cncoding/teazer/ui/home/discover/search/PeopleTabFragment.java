@@ -90,8 +90,8 @@ public class PeopleTabFragment extends BaseDiscoverFragment {
     }
 
     private void getUsersList(final int page) {
-        if (isSearchTerm) loadUsersListWithSearchTerm(page, searchTerm);
-        else loadUsersList(page);
+        if (isSearchTerm) viewModel.loadUsersListWithSearchTermApiCall(page, searchTerm);
+        else viewModel.loadUsersListApiCall(page);
     }
 
     @Override protected void handleResponse(BaseModel resultObject) {

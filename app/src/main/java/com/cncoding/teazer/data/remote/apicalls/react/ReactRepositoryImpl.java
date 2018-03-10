@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.data.model.react.HiddenReactionsList;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.model.react.ReportReaction;
@@ -130,22 +129,22 @@ public class ReactRepositoryImpl implements ReactRepository {
     }
 
     @Override
-    public LiveData<HiddenReactionsList> getHiddenReactions(int page) {
-        final MutableLiveData<HiddenReactionsList> liveData = new MutableLiveData<>();
-        reactService.getHiddenReactions(page).enqueue(new Callback<HiddenReactionsList>() {
+    public LiveData<ReactionsList> getHiddenReactions(int page) {
+        final MutableLiveData<ReactionsList> liveData = new MutableLiveData<>();
+        reactService.getHiddenReactions(page).enqueue(new Callback<ReactionsList>() {
             @Override
-            public void onResponse(Call<HiddenReactionsList> call, Response<HiddenReactionsList> response) {
-                HiddenReactionsList result = response.body();
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
+                ReactionsList result = response.body();
                 if (result != null)
                     liveData.setValue(response.isSuccessful() ?
                             result.setCallType(CALL_GET_HIDDEN_REACTIONS) :
-                            new HiddenReactionsList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_HIDDEN_REACTIONS));
+                            new ReactionsList(new Throwable(NOT_SUCCESSFUL)).setCallType(CALL_GET_HIDDEN_REACTIONS));
             }
 
             @Override
-            public void onFailure(Call<HiddenReactionsList> call, Throwable t) {
+            public void onFailure(Call<ReactionsList> call, Throwable t) {
                 t.printStackTrace();
-                liveData.setValue(new HiddenReactionsList(new Throwable(FAILED)).setCallType(CALL_GET_HIDDEN_REACTIONS));
+                liveData.setValue(new ReactionsList(new Throwable(FAILED)).setCallType(CALL_GET_HIDDEN_REACTIONS));
             }
         });
         return liveData;

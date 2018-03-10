@@ -109,6 +109,7 @@
     </com.cncoding.teazer.ui.customviews.shimmer.ShimmerRelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/video_layout"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:animateLayoutChanges="true"

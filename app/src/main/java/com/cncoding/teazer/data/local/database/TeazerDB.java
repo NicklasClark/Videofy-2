@@ -9,15 +9,14 @@ import android.content.Context;
 import com.cncoding.teazer.data.local.ConvertersFactory;
 import com.cncoding.teazer.data.local.dao.PostDetailsDao;
 import com.cncoding.teazer.data.model.post.PostDetails;
-
-import javax.inject.Singleton;
+import com.cncoding.teazer.injection.scope.BaseScope;
 
 /**
  *
  * Created by Prem$ on 1/23/2018.
  */
 
-@Singleton
+@BaseScope
 @Database(entities =  {PostDetails.class}, version = 1, exportSchema = false)
 @TypeConverters({ConvertersFactory.class})
 public abstract class TeazerDB extends RoomDatabase {

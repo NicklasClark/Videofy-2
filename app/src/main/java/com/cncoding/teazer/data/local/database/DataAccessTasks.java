@@ -164,24 +164,26 @@ public class DataAccessTasks {
         }
     }
 
-    public static class IncrementViewsTask extends AsyncTask<ArrayList<Medias>, Void, Void> {
+    public static class IncrementViewsTask extends AsyncTask<Void, Void, Void> {
 
         private TeazerDB database;
         private int postId;
+        private ArrayList<Medias> medias;
 
-        public IncrementViewsTask(TeazerDB database, int postId) {
+        public IncrementViewsTask(TeazerDB database, int postId, ArrayList<Medias> medias) {
             this.database = database;
             this.postId = postId;
+            this.medias = medias;
         }
 
         @Override
-        protected Void doInBackground(ArrayList<Medias>[] lists) {
-            database.dao().incrementViews(lists[0], postId);
+        protected Void doInBackground(Void... voids) {
+            database.dao().incrementViews(medias, postId);
             return null;
         }
     }
 
-    public static class DeleteAllTask extends AsyncTask<ArrayList<Medias>, Void, Void> {
+    public static class DeleteAllTask extends AsyncTask<Void, Void, Void> {
 
         private TeazerDB database;
 
@@ -190,7 +192,7 @@ public class DataAccessTasks {
         }
 
         @Override
-        protected Void doInBackground(ArrayList<Medias>[] lists) {
+        protected Void doInBackground(Void... voids) {
             database.dao().clearTable();
             return null;
         }

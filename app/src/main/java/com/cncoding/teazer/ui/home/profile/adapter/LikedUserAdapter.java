@@ -208,7 +208,7 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
         }
 
         private void setButtonText(@StringRes int stringId) {
-            setActionButtonText(fragment.context, action, stringId);
+            setActionButtonText(fragment.getTheContext(), action, stringId);
         }
 
         @OnClick(R.id.action) void actionButtonClicked() {
@@ -234,13 +234,13 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
         }
 
         private void acceptUser(final int requestId, final boolean isFollowing, final boolean requestSent) {
-            ApiCallingService.Friends.acceptJoinRequest(requestId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+            ApiCallingService.Friends.acceptJoinRequest(requestId, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                     try {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
-                                Toast.makeText(fragment.getContext(), "Request Accepted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(fragment.getTheContext(), "Request Accepted", Toast.LENGTH_SHORT).show();
                                 if (isFollowing) {
                                     setButtonText(R.string.following);
                                     setFollowing();
@@ -252,46 +252,46 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
                                     setFollower();
                                 }
                             } else {
-                                Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                             }
                         }
                     } catch (Exception e) {
-                        Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         private void followUser(final int userId, final int accountType) {
-            ApiCallingService.Friends.followUser(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+            ApiCallingService.Friends.followUser(userId, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                     if (response.code() == 200) {
                         try {
                             if (response.body().getStatus()) {
                                 if (accountType == 1) {
-                                    setActionButtonText(fragment.getContext(), action, R.string.requested);
-//                                    Toast.makeText(fragment.getContext(), "You have sent following request", Toast.LENGTH_LONG).show();
+                                    setActionButtonText(fragment.getTheContext(), action, R.string.requested);
+//                                    Toast.makeText(fragment.getTheContext(), "You have sent following request", Toast.LENGTH_LONG).show();
                                     setRequestSent();
                                 } else {
-                                    setActionButtonText(fragment.getContext(), action, R.string.following);
-//                                    Toast.makeText(fragment.getContext(), "You have started following", Toast.LENGTH_LONG).show();
+                                    setActionButtonText(fragment.getTheContext(), action, R.string.following);
+//                                    Toast.makeText(fragment.getTheContext(), "You have started following", Toast.LENGTH_LONG).show();
                                     setFollowing();
                                 }
                             } else {
-                                setActionButtonText(fragment.getContext(), action, R.string.following);
-//                                Toast.makeText(fragment.getContext(), "You are already following", Toast.LENGTH_LONG).show();
+                                setActionButtonText(fragment.getTheContext(), action, R.string.following);
+//                                Toast.makeText(fragment.getTheContext(), "You are already following", Toast.LENGTH_LONG).show();
                                 setFollowing();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                            Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -299,7 +299,7 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -315,22 +315,22 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
         }
 
         private void cancelRequest(final int userId) {
-            ApiCallingService.Friends.cancelRequest(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+            ApiCallingService.Friends.cancelRequest(userId, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                     if (response.code() == 200) {
                         try {
                             if (response.body().getStatus()) {
                                 setRequestSent();
-                                setActionButtonText(fragment.getContext(), action, R.string.follow);
-//                                Toast.makeText(fragment.getContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                                setActionButtonText(fragment.getTheContext(), action, R.string.follow);
+//                                Toast.makeText(fragment.getTheContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
                             } else {
-                                setActionButtonText(fragment.getContext(), action, R.string.follow);
-//                                Toast.makeText(fragment.getContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                                setActionButtonText(fragment.getTheContext(), action, R.string.follow);
+//                                Toast.makeText(fragment.getTheContext(), "Your request has been cancelled", Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                            Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -338,7 +338,7 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -354,31 +354,31 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
         }
 
         private void unFollowUser(int userId) {
-            ApiCallingService.Friends.unfollowUser(userId, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+            ApiCallingService.Friends.unfollowUser(userId, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                     if (response.code() == 200) {
                         try {
                             if (response.body().getStatus()) {
 //                                Toast.makeText(context, "User has been un-followed", Toast.LENGTH_LONG).show();
-                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                setActionButtonText(fragment.getTheContext(), action, R.string.follow);
                                 setFollowing();
                                 likedUserList.remove(getAdapterPosition());
                                 notifyItemRemoved(getAdapterPosition());
                             } else {
-                                setActionButtonText(fragment.getContext(), action, R.string.follow);
+                                setActionButtonText(fragment.getTheContext(), action, R.string.follow);
 //                                Toast.makeText(context, "You have already un-followed", Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                            Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -394,25 +394,25 @@ public class LikedUserAdapter extends BaseRecyclerView.Adapter {
         }
 
         private void blockUnblockUser(int userId) {
-            ApiCallingService.Friends.blockUnblockUser(userId, 2, fragment.getContext()).enqueue(new Callback<ResultObject>() {
+            ApiCallingService.Friends.blockUnblockUser(userId, 2, fragment.getTheContext()).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                     try {
-                        setActionButtonText(fragment.getContext(), action, R.string.follow);
+                        setActionButtonText(fragment.getTheContext(), action, R.string.follow);
                         likedUser.setYouBlocked(false);
 //                        if (response.body().getStatus()) {
-//                            Toast.makeText(fragment.getContext(), "You have Unblocked this user", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(fragment.getTheContext(), "You have Unblocked this user", Toast.LENGTH_SHORT).show();
 //                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
 
-                    Toast.makeText(fragment.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragment.getTheContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
             });
         }

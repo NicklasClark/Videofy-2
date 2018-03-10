@@ -121,7 +121,7 @@ public class Interests extends BaseHomeFragment {
         }
         ButterKnife.bind(this, rootView);
 
-        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getTheContext(), FlexDirection.ROW, FlexWrap.WRAP);
         flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
         flexboxLayoutManager.setJustifyContent(isForVideo ? JustifyContent.FLEX_START : JustifyContent.CENTER);
         recyclerView.setLayoutManager(flexboxLayoutManager);
@@ -143,7 +143,7 @@ public class Interests extends BaseHomeFragment {
         }
 
         recyclerView.setLayoutAnimation(new LayoutAnimationController(
-                AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in), 0.04f)
+                AnimationUtils.loadAnimation(getTheContext(), android.R.anim.fade_in), 0.04f)
         );
         return rootView;
     }
@@ -242,7 +242,7 @@ public class Interests extends BaseHomeFragment {
         selectedData = getSelectedInterestsToShow(selectedInterests);
         String resultToSend = getSelectedInterestsToSend(selectedInterests);
         if (!isForVideo) {
-            ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
+            ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getTheContext())
                     .enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -352,7 +352,7 @@ public class Interests extends BaseHomeFragment {
                 selectedData = getSelectedInterestsToShow(selectedInterests);
                 String resultToSend = getSelectedInterestsToSend(selectedInterests);
                 if (!isForVideo) {
-                    ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
+                    ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getTheContext())
                             .enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -385,7 +385,7 @@ public class Interests extends BaseHomeFragment {
                     mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
                 }
             } else {
-                Toast.makeText(getContext(), "Please select at least five interests.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getTheContext(), "Please select at least five interests.", Toast.LENGTH_SHORT).show();
             }
             return true;
         }

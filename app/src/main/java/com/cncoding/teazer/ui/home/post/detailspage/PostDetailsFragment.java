@@ -83,6 +83,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -134,6 +135,7 @@ import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.common.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.deleteMedia;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.finishReactionUploadSession;
+import static com.cncoding.teazer.utilities.common.SharedPrefs.getMedia;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.common.ViewUtils.enableView;
@@ -267,7 +269,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadPostDetails(postDetails.getPostId());
+        viewModel.loadPostDetailsApiCall(postDetails.getPostId());
         oneShotFlag = true;
 
         updateTextureViewSize(postDetails.getMedias().get(0).getMediaDimension().getWidth(),
@@ -297,7 +299,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         super.onResume();
 //        getParentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //acquire audio play access(transient)
-        audioAccessGranted = acquireAudioLock(getContext(), this);
+        audioAccessGranted = acquireAudioLock(getTheContext(), this);
 
         checkIfAnyReactionIsUploading();
 
@@ -397,14 +399,14 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 if (isConnected(context)) {
                     if (is_next_page) {
                         currentPage = page;
-                        loadReactionsOfPost(postDetails.getPostId(), page);
+                        viewModel.loadReactionsOfPostApiCall(postDetails.getPostId(), page);
                     }
                 }
-                else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
+                else Toast.makeText(getTheContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
             }
         };
         recyclerView.addOnScrollListener(scrollListener1);
-        loadReactionsOfPost(postDetails.getPostId(), 1);
+        viewModel.loadReactionsOfPostApiCall(postDetails.getPostId(), 1);
 
 //        Preparing tagged users list
         CustomLinearLayoutManager manager2 = new CustomLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -417,14 +419,14 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 if (isConnected(context)) {
                     if (taggedUsersIsNextPage) {
                         taggedUsersPage = page;
-                        loadTaggedUsers(postDetails.getPostId(), page);
+                        viewModel.loadTaggedUsersApiCall(postDetails.getPostId(), page);
                     }
                 }
-                else Toast.makeText(getContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
+                else Toast.makeText(getTheContext(), R.string.could_not_load_new_posts, Toast.LENGTH_SHORT).show();
             }
         };
         taggedUserListView.addOnScrollListener(scrollListener2);
-        loadTaggedUsers(postDetails.getPostId(), 1);
+        viewModel.loadTaggedUsersApiCall(postDetails.getPostId(), 1);
     }
 
     @SuppressLint("SwitchIntDef") @Override
@@ -496,7 +498,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                     } else Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                     break;
                 case CALL_CREATE_REACTION_BY_GIPHY:
-                    loadReactionsOfPost(postDetails.getPostId(), 1);
+                    viewModel.loadReactionsOfPostApiCall(postDetails.getPostId(), 1);
                     break;
                 default:
                     break;
@@ -649,7 +651,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     @OnClick(R.id.like) public void likePost() {
-        likeDislikePost(postDetails.getPostId(), !likeBtn.isChecked() ? SEND_LIKE : SEND_DISLIKE);
+        viewModel.likeDislikePostApiCall(postDetails.getPostId(), !likeBtn.isChecked() ? SEND_LIKE : SEND_DISLIKE);
         likeAction(likeBtn.isChecked(), true);
     }
 
@@ -813,10 +815,10 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (message) {
                             case R.string.hide_post_confirm:
-                                hideOrShowPost(postDetails.getPostId(), HIDE);
+                                viewModel.hideOrShowPostApiCall(postDetails.getPostId(), HIDE);
                                 break;
                             case R.string.delete_post_confirm:
-                                deletePost(postDetails.getPostId());
+                                viewModel.deletePostApiCall(postDetails.getPostId());
                                 break;
                         }
                     }
@@ -855,7 +857,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         super.onStart();
         if (Util.SDK_INT > 23) {
             //acquire audio play access(transient)
-            audioAccessGranted = acquireAudioLock(getContext(), this);
+            audioAccessGranted = acquireAudioLock(getTheContext(), this);
             initializePlayer();
         }
     }
@@ -867,7 +869,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
         }
-        releaseAudioLock(getContext(), this);
+        releaseAudioLock(getTheContext(), this);
     }
 
     private void releasePlayer() {
@@ -878,28 +880,12 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     private void togglePlayPauseBtnVisibility(boolean visible) {
-        if (visible) {
-            playPauseButton.animate()
-                    .scaleY(1)
-                    .scaleX(1)
-                    .setDuration(200)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
-            //  playPauseButton.setVisibility(VISIBLE);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    playPauseButton.animate()
-                            .scaleY(0)
-                            .scaleX(0)
-                            .setDuration(200)
-                            .setInterpolator(new DecelerateInterpolator())
-                            .start();
-            //          playPauseButton.setVisibility(INVISIBLE);
-                }
-            }, 500);
-        }
+        playPauseButton.animate()
+                .scaleY(visible ? 1 : 0)
+                .scaleX(visible ? 1 : 0)
+                .setDuration(200)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
     }
 
     private void initializePlayer() {
@@ -929,7 +915,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
-                                    incrementViewCount(postDetails.getMedias().get(0).getMediaId());
+                                    viewModel.incrementViewCountApiCall(postDetails.getMedias().get(0).getMediaId());
                                 }
                             }
                             break;
@@ -942,8 +928,11 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
             });
 
             playerView.setPlayer(player);
+            String remoteMediaUrl = postDetails.getMedias().get(0).getMediaUrl();
+            String savedMediaPath = getMedia(context, remoteMediaUrl);
             player.prepare(new LoopingMediaSource(
-                    new ExtractorMediaSource(Uri.parse(postDetails.getMedias().get(0).getMediaUrl()),
+                    new ExtractorMediaSource(Uri.parse(savedMediaPath != null && !savedMediaPath.equals("null") &&
+                    new File(savedMediaPath).exists() ? savedMediaPath : remoteMediaUrl),
                     new DefaultHttpDataSourceFactory("exoplayer_video"),
                     new DefaultExtractorsFactory(), null, null)));
             if (audioAccessGranted) {
@@ -983,7 +972,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                                 disableView(reactBtn, true);
 
                                 finishReactionUploadSession(context);
-                                loadReactionsOfPost(postDetails.getPostId(), 1);
+                                viewModel.loadReactionsOfPostApiCall(postDetails.getPostId(), 1);
                                 //add watermark for local creations/reactions
                                 if(resultData.getBoolean(ADD_WATERMARK)) {
                                     AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getActivity());
@@ -1038,7 +1027,8 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     }
 
     private void postGiphyReaction(UploadParams uploadParams) {
-        createReactionByGiphy(new GiphyReactionRequest(uploadParams.getPostId(), uploadParams.getTitle(), uploadParams.getVideoPath()));
+        viewModel.createReactionByGiphyApiCall(
+                new GiphyReactionRequest(uploadParams.getPostId(), uploadParams.getTitle(), uploadParams.getVideoPath()));
     }
     //</editor-fold>
 
@@ -1050,7 +1040,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     public void onDetach() {
         super.onDetach();
         try {
-            releaseAudioLock(getContext(), this);
+            releaseAudioLock(getTheContext(), this);
             mHandler.removeCallbacks(mDelayedStopRunnable);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1059,7 +1049,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);
-        releaseAudioLock(getContext(), this);
+        releaseAudioLock(getTheContext(), this);
         //  onBackPressed();
         playerCurrentPosition = 0;
         mHandler.removeCallbacks(mDelayedStopRunnable);

@@ -197,7 +197,7 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 if (isConnected(context)) {
-                    signUp(new InitiateSignup().extractFromVerifySignUp(verifySignUp));
+                    viewModel.signUp(new InitiateSignup().extractFromVerifySignUp(verifySignUp));
                 } else
                     notifyNoInternetConnection();
                 break;
@@ -208,7 +208,7 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
                     otp3EditText.getText().clear();
                     otp4EditText.getText().clear();
                     otp1EditText.requestFocus();
-                    loginWithOtp(initiateLoginWithOtp);
+                    viewModel.loginWithOtp(initiateLoginWithOtp);
                 } else {
                     notifyNoInternetConnection();
                 }
@@ -255,13 +255,13 @@ public class ConfirmOtpFragment extends BaseAuthFragment {
         if (isConnected(context)) {
             switch (launchAction) {
                 case SIGNUP_WITH_EMAIL_ACTION:
-                    verifySignUp(verifySignUp
+                    viewModel.verifySignUp(verifySignUp
                             .setFcmToken(getFcmToken(context))
                             .setDeviceId(getDeviceId(context))
                             .setDeviceType(DEVICE_TYPE_ANDROID).setOtp(getOtp()));
                     break;
                 case LOGIN_WITH_OTP_ACTION:
-                    verifyLoginWithOtp(
+                    viewModel.verifyLoginWithOtp(
                             new VerifyLoginWithOtp()
                                     .setFcmToken(getFcmToken(context))
                                     .setDeviceId(getDeviceId(context))

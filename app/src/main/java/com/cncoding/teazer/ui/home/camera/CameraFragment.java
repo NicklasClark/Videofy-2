@@ -48,7 +48,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
@@ -68,6 +67,7 @@ import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.ui.customviews.common.AutoFitTextureView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.ui.home.camera.base.BaseCameraFragment;
 import com.cncoding.teazer.utilities.common.OnSwipeTouchListener;
 
 import java.io.File;
@@ -90,7 +90,7 @@ import butterknife.OnClick;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.common.ViewUtils.updateMediaStoreDatabase;
 
-public class CameraFragment extends Fragment {
+public class CameraFragment extends BaseCameraFragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
@@ -289,7 +289,7 @@ public class CameraFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        context = getContext();
+        context = getTheContext();
 
         new CreateVideoFolder(this).execute();
 
@@ -319,9 +319,9 @@ public class CameraFragment extends Fragment {
         if(isReaction)
             cameraGifView.setVisibility(View.VISIBLE);
 
-        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getTheContext()) {
             @Override public void onSwipeTop() {
-//                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getTheContext(), "top", Toast.LENGTH_SHORT).show();
             }
             @Override public void onSwipeRight() {
                 if (selected_filter_mode_index > 0) {
@@ -340,12 +340,12 @@ public class CameraFragment extends Fragment {
                 }
             }
             @Override public void onSwipeBottom() {
-//                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getTheContext(), "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-        showFilterTip(getContext().getString(R.string.swipe_for_filter_text), false);
+        showFilterTip(getTheContext().getString(R.string.swipe_for_filter_text), false);
     }
 
     private void showFilterTip(String text, boolean isFilterName) {

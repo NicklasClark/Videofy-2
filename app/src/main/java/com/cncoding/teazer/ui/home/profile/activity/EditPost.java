@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.camera.SelectedPlace;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.home.camera.CameraFragment;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesAdapter;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesList;
-import com.cncoding.teazer.ui.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.ui.home.camera.adapters.NearbyPlacesAdapter;
+import com.cncoding.teazer.ui.home.camera.nearbyPlaces.NearbyPlacesFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.EditPostFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.FragmentEditPostUpdateCtaegories;
 import com.google.android.gms.common.ConnectionResult;
@@ -36,7 +36,7 @@ import static android.R.anim.fade_out;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
-        TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
+        TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesFragment.OnNearbyPlacesListInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener, GoogleApiClient.OnConnectionFailedListener, FragmentEditPostUpdateCtaegories.UpdateCategoriesResponse{
     
     private Context context;

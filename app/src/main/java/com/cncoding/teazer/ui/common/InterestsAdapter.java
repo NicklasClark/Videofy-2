@@ -47,8 +47,8 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         this.interestsList = interestsList;
         interestsListFiltered = interestsList;
         this.interests = interests;
-        REGULAR = new TypeFactory(interests.getContext()).regular;
-        SEMI_BOLD = new TypeFactory(interests.getContext()).semiBold;
+        REGULAR = new TypeFactory(interests.getTheContext()).regular;
+        SEMI_BOLD = new TypeFactory(interests.getTheContext()).semiBold;
         selectedInterestsArray = categories != null ? categories : new SparseBooleanArray();
         this.selectedCategoriesString = selectedCategoriesString;
         this.isForVideo = isForVideo;
@@ -149,14 +149,14 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
                 checkAction(view, position, checked);
             } else {
                 if (checked) {
-                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
-                    Toast.makeText(interests.getContext(), R.string.selection_limit_message, Toast.LENGTH_SHORT).show();
+                    view.startAnimation(AnimationUtils.loadAnimation(interests.getTheContext(), R.anim.deselected));
+                    Toast.makeText(interests.getTheContext(), R.string.selection_limit_message, Toast.LENGTH_SHORT).show();
                 } else
                     checkAction(view, position, false);
             }
         }
         if (animate && view.getAnimation() != null)
-            view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+            view.startAnimation(AnimationUtils.loadAnimation(interests.getTheContext(), R.anim.selected));
     }
 
     private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean checked) {
@@ -165,24 +165,24 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
             selectedInterests.put(interestsList.get(position).getCategoryId(), interestsList.get(position));
             view.setTypeface(SEMI_BOLD);
 //            if (!isForVideo) {
-                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.parseColor("#26C6DA"),
+                view.setBackground(ViewUtils.getBackground(interests.getTheContext(), view, Color.parseColor("#26C6DA"),
                         Color.parseColor("#26C6DA"), Color.WHITE, 40));
 //            } else {
-//                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+//                view.setBackground(ViewUtils.getBackground(interests.getTheContext(), view, Color.TRANSPARENT,
 //                        Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
 //            }
         } else {
             selectedInterests.delete(interestsList.get(position).getCategoryId());
             view.setTypeface(REGULAR);
             if (!isForVideo) {
-                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                view.setBackground(ViewUtils.getBackground(interests.getTheContext(), view, Color.TRANSPARENT,
                         Color.WHITE, Color.WHITE, 40));
             } else {
-                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                view.setBackground(ViewUtils.getBackground(interests.getTheContext(), view, Color.TRANSPARENT,
                         Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
             }
         }
-//        view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+//        view.startAnimation(AnimationUtils.loadAnimation(interests.getTheContext(), R.anim.selected));
     }
 
     @Override

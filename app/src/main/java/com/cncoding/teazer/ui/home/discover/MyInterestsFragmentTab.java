@@ -121,7 +121,7 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
     }
 
     private void getPosts(int page) {
-        loadAllInterestedCategoriesPosts(page, categoryId);
+        viewModel.loadAllInterestedCategoriesPostsApiCall(page, categoryId);
     }
 
     private void showErrorMessage(@StringRes int message1, @StringRes int message2) {

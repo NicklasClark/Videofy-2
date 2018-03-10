@@ -143,7 +143,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        context = getContext();
+        context = getTheContext();
         ButterKnife.bind(this,view);
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
@@ -234,7 +234,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
                         .setAsFullWidthStyle(true)
                         .setSharingTitle("Share With");
 
-                branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
+                branchUniversalObject.generateShortUrl(getTheContext(), linkProperties, new Branch.BranchLinkCreateListener() {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
@@ -333,7 +333,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
         if(ProfileFragment.checkpostupdated)
         {
 
-            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
+            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(),ProfileFragment.this,0));
             tabLayout.setupWithViewPager(viewPager);
             checkpostupdated=false;
         }
@@ -349,7 +349,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext(),ProfileFragment.this,0));
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getTheContext(),ProfileFragment.this,0));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
     }
@@ -471,7 +471,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
     public void profileBlur(final String pic) {
         String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (!EasyPermissions.hasPermissions(getContext(), perm)) {
+        if (!EasyPermissions.hasPermissions(getTheContext(), perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
         } else {
@@ -497,7 +497,7 @@ public class ProfileFragment extends BaseHomeFragment implements ProfileMyCreati
                         Bitmap userImage = scaleDown(result, 200, true);
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
-                    //    Blurry.with(getContext()).from(photobitmap).into(bgImage);
+                    //    Blurry.with(getTheContext()).from(photobitmap).into(bgImage);
                     }
                     catch (Exception e) {
                         e.printStackTrace();

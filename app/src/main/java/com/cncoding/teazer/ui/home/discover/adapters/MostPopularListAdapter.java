@@ -169,14 +169,9 @@ public class MostPopularListAdapter extends BaseRecyclerView.Adapter {
             postDetails = mostPopularList.get(getAdapterPosition());
 
             /*Adjust view size before loading anything*/
-            if (dimensionSparseArray.get(getAdapterPosition()) == null) {
-                adjustViewSize(fragment.getContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
-                        postDetails.getMedias().get(0).getMediaDimension().getHeight(),
-                        layout.getLayoutParams(), getAdapterPosition(), dimensionSparseArray, false);
-            } else {
-                layout.getLayoutParams().width = dimensionSparseArray.get(getAdapterPosition()).getWidth();
-                layout.getLayoutParams().height = dimensionSparseArray.get(getAdapterPosition()).getHeight();
-            }
+            adjustViewSize(fragment.getTheContext(), postDetails.getMedias().get(0).getMediaDimension().getWidth(),
+                    postDetails.getMedias().get(0).getMediaDimension().getHeight(),
+                    layout.getLayoutParams(), false);
 
             /*Setting title*/
             title.setText(decodeUnicodeString(postDetails.getTitle()));

@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.model.post.LikedUserList;
 import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
-import com.cncoding.teazer.data.model.react.HiddenReactionsList;
 import com.cncoding.teazer.data.model.react.ReactionResponse;
 import com.cncoding.teazer.data.model.react.ReactionsList;
 import com.cncoding.teazer.data.model.react.ReportReaction;
@@ -41,7 +40,7 @@ public interface ReactRepository {
     
     LiveData<ReactionsList> getFriendsReactions(int page, int friend_id);
 
-    LiveData<HiddenReactionsList> getHiddenReactions(int page);
+    LiveData<ReactionsList> getHiddenReactions(int page);
 
     @Deprecated LiveData<LikedUserList> getOldLikedUsersOfReaction(int reactId, int page);
 

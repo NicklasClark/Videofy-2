@@ -75,7 +75,7 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
                 break;
         }
 
-        ///    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_change_cover_photo, parent, false);
+        ///    View view = LayoutInflater.from(parent.getTheContext()).inflate(R.layout.cardview_change_cover_photo, parent, false);
         return viewHolder;
     }
 

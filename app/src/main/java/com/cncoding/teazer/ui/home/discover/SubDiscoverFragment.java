@@ -164,7 +164,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
             });
             tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         } else {
-            Toast.makeText(getContext(), R.string.no_interests_selected_message, Toast.LENGTH_LONG).show();
+            Toast.makeText(getTheContext(), R.string.no_interests_selected_message, Toast.LENGTH_LONG).show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -238,11 +238,11 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
     
     private void getTrendingVideos(int page) {
-        loadTrendingPostsByCategory(page, categories.get(0).getCategoryId());
+        viewModel.loadTrendingPostsByCategoryApiCall(page, categories.get(0).getCategoryId());
     }
     
     private void getFeaturedPosts(int page) {
-        loadFeaturedPosts(page);
+        viewModel.loadFeaturedPostsApiCall(page);
     }
 
     @SuppressLint("SwitchIntDef") @Override protected void handleResponse(BaseModel resultObject) {

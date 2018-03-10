@@ -90,8 +90,8 @@ public class VideosTabFragment extends BaseDiscoverFragment {
     }
 
     private void getVideos(int page) {
-        if (isSearchTerm) loadVideosWithSearchTerm(page, searchTerm);
-        else loadTrendingVideos(page);
+        if (isSearchTerm) viewModel.loadVideosWithSearchTermApiCall(page, searchTerm);
+        else viewModel.loadTrendingVideosApiCall(page);
     }
 
     @Override protected void handleResponse(BaseModel resultObject) {
