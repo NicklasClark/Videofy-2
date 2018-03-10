@@ -1,4 +1,4 @@
-package com.cncoding.teazer.injection.home.base.module.remote;
+package com.cncoding.teazer.injection.module.base.remote;
 
 import com.cncoding.teazer.injection.scope.BaseScope;
 

@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.viewmodel.BaseViewModel;
-import com.cncoding.teazer.injection.home.base.component.DaggerBaseActivityComponent;
+import com.cncoding.teazer.injection.module.base.component.DaggerBaseComponent;
 
 /**
  *
@@ -21,7 +21,7 @@ public abstract class BaseViewModelFragment extends BaseFragment {
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = DaggerBaseActivityComponent.builder()
+        viewModel = DaggerBaseComponent.builder()
                 .appComponent(TeazerApplication.get(getParentActivity()).getAppComponent())
                 .build()
                 .baseViewModel();

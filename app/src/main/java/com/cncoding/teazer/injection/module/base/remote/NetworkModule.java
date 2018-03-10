@@ -1,4 +1,4 @@
-package com.cncoding.teazer.injection.home.base.module.remote;
+package com.cncoding.teazer.injection.module.base.remote;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

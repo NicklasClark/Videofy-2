@@ -1,4 +1,4 @@
-package com.cncoding.teazer.injection.home.base.module.local;
+package com.cncoding.teazer.injection.module.base.local;
 
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;

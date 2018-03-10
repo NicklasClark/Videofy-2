@@ -1,8 +1,8 @@
-package com.cncoding.teazer.injection.auth.component;
+package com.cncoding.teazer.injection.component;
 
 import com.cncoding.teazer.data.viewmodel.AuthViewModel;
-import com.cncoding.teazer.injection.auth.module.AuthRepositoryModule;
-import com.cncoding.teazer.injection.auth.module.AuthViewModelModule;
+import com.cncoding.teazer.injection.module.auth.AuthRepositoryModule;
+import com.cncoding.teazer.injection.module.auth.AuthViewModelModule;
 import com.cncoding.teazer.injection.scope.AuthScope;
 
 import dagger.Subcomponent;

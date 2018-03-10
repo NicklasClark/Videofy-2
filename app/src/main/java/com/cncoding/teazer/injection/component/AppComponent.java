@@ -16,14 +16,13 @@
  *
  */
 
-package com.cncoding.teazer.injection.app.component;
+package com.cncoding.teazer.injection.component;
 
 import android.content.Context;
 
 import com.cncoding.teazer.base.TeazerApplication;
-import com.cncoding.teazer.injection.app.module.ApplicationModule;
-import com.cncoding.teazer.injection.app.module.ContextModule;
-import com.cncoding.teazer.injection.auth.component.AuthComponent;
+import com.cncoding.teazer.injection.module.app.ApplicationModule;
+import com.cncoding.teazer.injection.module.app.ContextModule;
 
 import javax.inject.Singleton;
 

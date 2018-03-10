@@ -1,8 +1,8 @@
-package com.cncoding.teazer.injection.app.module;
+package com.cncoding.teazer.injection.module.app;
 
 import android.content.Context;
 
-import com.cncoding.teazer.injection.auth.component.AuthComponent;
+import com.cncoding.teazer.injection.component.AuthComponent;
 
 import javax.inject.Singleton;
 

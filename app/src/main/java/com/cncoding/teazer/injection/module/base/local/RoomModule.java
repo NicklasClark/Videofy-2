@@ -16,32 +16,37 @@
  *
  */
 
-package com.cncoding.teazer.injection.app.module;
+package com.cncoding.teazer.injection.module.base.local;
+
+import android.arch.persistence.room.Room;
 
 import com.cncoding.teazer.base.TeazerApplication;
-import com.cncoding.teazer.injection.auth.component.AuthComponent;
-
-import javax.inject.Singleton;
+import com.cncoding.teazer.data.local.dao.PostDetailsDao;
+import com.cncoding.teazer.data.local.database.TeazerDB;
+import com.cncoding.teazer.injection.scope.BaseScope;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
  *
- *
- * Created by R_KAY on 8/15/2017.
+ * Created by Prem$ on 8/18/2017.
  */
 
-@Module(subcomponents = AuthComponent.class)
-public class ApplicationModule {
+@Module
+public class RoomModule {
 
-    private final TeazerApplication application;
-
-    public ApplicationModule(TeazerApplication application) {
-        this.application = application;
+    @Provides @BaseScope
+    TeazerDB getDatabase(TeazerApplication application) {
+        return Room.databaseBuilder(
+                application,
+                TeazerDB.class,
+                "Teazer.db"
+        ).build();
     }
 
-    @Provides @Singleton TeazerApplication provideApplication(){
-        return application;
+    @Provides @BaseScope
+    PostDetailsDao getPostDetailsDao(TeazerDB database){
+        return database.dao();
     }
 }

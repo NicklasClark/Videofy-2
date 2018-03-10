@@ -1,4 +1,4 @@
-package com.cncoding.teazer.injection.auth.module;
+package com.cncoding.teazer.injection.module.auth;
 
 import com.cncoding.teazer.data.BrokerLiveData;
 import com.cncoding.teazer.data.remote.ResultObject;

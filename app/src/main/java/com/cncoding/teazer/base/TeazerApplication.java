@@ -12,10 +12,10 @@ import android.support.v4.provider.FontRequest;
 import android.util.Log;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.injection.app.component.AppComponent;
-import com.cncoding.teazer.injection.app.component.DaggerAppComponent;
-import com.cncoding.teazer.injection.app.module.ApplicationModule;
-import com.cncoding.teazer.injection.app.module.ContextModule;
+import com.cncoding.teazer.injection.component.AppComponent;
+import com.cncoding.teazer.injection.component.DaggerAppComponent;
+import com.cncoding.teazer.injection.module.app.ApplicationModule;
+import com.cncoding.teazer.injection.module.app.ContextModule;
 import com.expletus.mobiruck.MobiruckSdk;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;

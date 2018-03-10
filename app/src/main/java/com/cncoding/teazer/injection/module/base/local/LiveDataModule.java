@@ -1,4 +1,4 @@
-package com.cncoding.teazer.injection.home.base.module.local;
+package com.cncoding.teazer.injection.module.base.local;
 
 import com.cncoding.teazer.data.BrokerLiveData;
 import com.cncoding.teazer.data.model.application.ConfigDetails;
