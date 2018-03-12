@@ -57,7 +57,7 @@ import com.cncoding.teazer.data.remote.apicalls.friends.FriendsRepository;
 import com.cncoding.teazer.data.remote.apicalls.post.PostsRepository;
 import com.cncoding.teazer.data.remote.apicalls.react.ReactRepository;
 import com.cncoding.teazer.data.remote.apicalls.user.UserRepository;
-import com.cncoding.teazer.injection.module.base.component.DaggerBaseComponent;
+import com.cncoding.teazer.injection.component.DaggerBaseComponent;
 import com.cncoding.teazer.utilities.common.Annotations.AccountType;
 import com.cncoding.teazer.utilities.common.Annotations.BlockUnblock;
 import com.cncoding.teazer.utilities.common.Annotations.HideOrShow;

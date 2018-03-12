@@ -22,5 +22,9 @@ public abstract class BaseFragment extends Fragment {
         context = getContext();
     }
 
+    @NonNull public Context getTheContext() {
+        return context;
+    }
+
     @NonNull public abstract Activity getParentActivity();
 }

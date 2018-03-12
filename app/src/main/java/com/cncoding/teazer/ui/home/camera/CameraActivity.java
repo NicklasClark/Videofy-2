@@ -54,7 +54,8 @@ import com.cncoding.teazer.data.model.camera.SelectedPlace;
 import com.cncoding.teazer.data.model.camera.Videos;
 import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.data.model.giphy.TrendingGiphy;
-import com.cncoding.teazer.ui.base.BaseActivity;
+import com.cncoding.teazer.ui.base.BaseViewModelActivity;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.common.Interests;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.common.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
@@ -123,8 +124,8 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORE
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
 
-public class CameraActivity extends BaseActivity
-        implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
+public class CameraActivity extends BaseViewModelActivity
+        implements FragmentNavigation, OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
         TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener, Interests.OnInterestsInteractionListener,
         NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse,
         EasyPermissions.PermissionCallbacks{

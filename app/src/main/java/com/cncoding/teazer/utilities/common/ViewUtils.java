@@ -33,7 +33,7 @@ import android.widget.TextView;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.ui.base.BaseActivity;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.ui.customviews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.ui.customviews.coachMark.shape.CircleShape;
@@ -515,7 +515,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using integer userId.
      */
-    public static void openProfile(BaseActivity.FragmentNavigation navigation, boolean isMySelf, int userId) {
+    public static void openProfile(FragmentNavigation navigation, boolean isMySelf, int userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -528,7 +528,7 @@ public class ViewUtils {
     /**
      * Call this method to push the suitable profile fragment using String userId.
      */
-    public static void openProfile(BaseActivity.FragmentNavigation navigation, boolean isMySelf, String userId) {
+    public static void openProfile(FragmentNavigation navigation, boolean isMySelf, String userId) {
         try {
             navigation.pushFragment(isMySelf ?
                     FragmentNewProfile2.newInstance() :
@@ -542,7 +542,7 @@ public class ViewUtils {
      * Call this method to push the suitable profile fragment WHEN YOU ARE NOT SURE ABOUT "isMySelf" flag.
      * @param selfUserId must be the userId stored in SharedPreferences while logging in.
      */
-    public static void openProfile(int selfUserId, BaseActivity.FragmentNavigation navigation, int userId) {
+    public static void openProfile(int selfUserId, FragmentNavigation navigation, int userId) {
         if (selfUserId >= 0) {
             try {
                 navigation.pushFragment(selfUserId == userId ?

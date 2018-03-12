@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.ui.base.BaseActivity;
+import com.cncoding.teazer.data.viewmodel.BaseViewModel;
+import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
-import com.cncoding.teazer.ui.base.BaseViewModelFragment;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
 
 /**
@@ -15,19 +16,25 @@ import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListen
  * Created by Prem $ on 11/02/2017.
  */
 
-public class BaseHomeFragment extends BaseViewModelFragment {
+public class BaseHomeFragment extends BaseFragment {
 
-    public BaseActivity.FragmentNavigation navigation;
+    public FragmentNavigation navigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
     private BaseRecyclerView.Adapter adapter;
     public boolean isConnected;
     protected int currentPage;
+    protected BaseViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentPage = 1;
+        viewModel = getParentActivity().getBaseViewModel();
+    }
+
+    public BaseViewModel getViewModel() {
+        return viewModel;
     }
 
     protected void bindRecyclerViewAdapter(BaseRecyclerView.Adapter adapter) {
@@ -48,8 +55,8 @@ public class BaseHomeFragment extends BaseViewModelFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof BaseActivity.FragmentNavigation) {
-            navigation = (BaseActivity.FragmentNavigation) context;
+        if (context instanceof FragmentNavigation) {
+            navigation = (FragmentNavigation) context;
         }
     }
 

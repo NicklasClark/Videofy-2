@@ -38,8 +38,8 @@ import com.cncoding.teazer.data.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.data.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
-import com.cncoding.teazer.ui.base.BaseActivity;
-import com.cncoding.teazer.ui.base.BaseActivity.FragmentNavigation;
+import com.cncoding.teazer.ui.base.BaseViewModelActivity;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView;
@@ -131,7 +131,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.launchVideoUploadCa
 import static com.cncoding.teazer.utilities.common.ViewUtils.openProfile;
 import static com.cncoding.teazer.utilities.common.ViewUtils.showCoachMark;
 
-public class BaseBottomBarActivity extends BaseActivity
+public class BaseBottomBarActivity extends BaseViewModelActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Category/Interests listener

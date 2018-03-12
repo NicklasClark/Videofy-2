@@ -14,10 +14,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -50,6 +50,8 @@ import com.cncoding.teazer.ui.authentication.SignupFragment2;
 import com.cncoding.teazer.ui.authentication.SignupFragment2.OnFinalSignupInteractionListener;
 import com.cncoding.teazer.ui.authentication.WelcomeFragment;
 import com.cncoding.teazer.ui.authentication.WelcomeFragment.OnWelcomeInteractionListener;
+import com.cncoding.teazer.ui.base.BaseAuthActivity;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.common.Interests;
 import com.cncoding.teazer.ui.common.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
@@ -75,8 +77,8 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logSignUpEvent;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 
-public class MainActivity extends AppCompatActivity
-        implements OnWelcomeInteractionListener, LoginInteractionListener, OnOtpInteractionListener,
+public class MainActivity extends BaseAuthActivity
+        implements FragmentNavigation, OnWelcomeInteractionListener, LoginInteractionListener, OnOtpInteractionListener,
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
         OnForgotPasswordInteractionListener, OnResetForgotPasswordInteractionListener, OnInterestsInteractionListener {
 
@@ -357,6 +359,21 @@ public class MainActivity extends AppCompatActivity
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment) {
+
+    }
+
+    @Override
+    public void pushFragmentOnto(Fragment fragment) {
+
+    }
+
+    @Override
+    public void popFragment() {
+
     }
 
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {

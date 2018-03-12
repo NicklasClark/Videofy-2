@@ -2,10 +2,10 @@ package com.cncoding.teazer.ui.home.profile.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -13,8 +13,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.auth.BaseAuth;
 import com.cncoding.teazer.data.model.auth.Login;
 import com.cncoding.teazer.ui.authentication.ForgotPasswordFragment;
+import com.cncoding.teazer.ui.authentication.ForgotPasswordFragment.OnForgotPasswordInteractionListener;
 import com.cncoding.teazer.ui.authentication.LoginFragment;
 import com.cncoding.teazer.ui.authentication.ResetPasswordFragment;
+import com.cncoding.teazer.ui.base.BaseAuthActivity;
+import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.home.base.BaseBottomBarActivity;
 
 import butterknife.BindView;
@@ -30,7 +33,8 @@ import static com.cncoding.teazer.ui.authentication.base.MainActivity.TAG_OTP_FR
 import static com.cncoding.teazer.ui.authentication.base.MainActivity.TAG_RESET_PASSWORD_FRAGMENT;
 import static com.cncoding.teazer.utilities.common.AuthUtils.logout;
 
-public class ForgotPasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnForgotPasswordInteractionListener,
+public class ForgotPasswordActivity extends BaseAuthActivity
+        implements FragmentNavigation, OnForgotPasswordInteractionListener,
         ResetPasswordFragment.OnResetForgotPasswordInteractionListener,
         LoginFragment.LoginInteractionListener {
 
@@ -138,5 +142,20 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ForgotP
             default:
                 return true;
         }
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment) {
+
+    }
+
+    @Override
+    public void pushFragmentOnto(Fragment fragment) {
+
+    }
+
+    @Override
+    public void popFragment() {
+
     }
 }

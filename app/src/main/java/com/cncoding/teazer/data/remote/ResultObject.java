@@ -14,18 +14,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class ResultObject extends BaseModel {
 
-    @SerializedName("code") @Expose private Integer code;
+    @SerializedName("code") @Expose private int code;
     @SerializedName("message") @Expose private String message;
     @SerializedName("auth_token") @Expose private String authToken;
-    @SerializedName("status") @Expose private Boolean status;
+    @SerializedName("status") @Expose private boolean status;
     @SerializedName("errorBody") @Expose private ErrorBody errorBody;
-    @SerializedName("user_id") @Expose private Integer userId;
+    @SerializedName("user_id") @Expose private int userId;
     @SerializedName("follow_info") @Expose private FollowInfo followInfo;
     @AuthCallType private int authCallType;
     private int adapterPosition;
 
-    public ResultObject(Integer code, String message, String authToken, Boolean status,
-                        ErrorBody errorBody, Integer userId, FollowInfo followInfo) {
+    public ResultObject(int code, String message, String authToken, boolean status,
+                        ErrorBody errorBody, int userId, FollowInfo followInfo) {
         this.code = code;
         this.message = message;
         this.authToken = authToken;
@@ -44,7 +44,7 @@ public class ResultObject extends BaseModel {
         this.authCallType = authCallType;
     }
 
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 
@@ -52,7 +52,7 @@ public class ResultObject extends BaseModel {
         return message;
     }
 
-    public Boolean getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -68,7 +68,7 @@ public class ResultObject extends BaseModel {
         return errorBody;
     }
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -81,16 +81,6 @@ public class ResultObject extends BaseModel {
         return this;
     }
 
-    public void clearData() {
-        code = null;
-        message = null;
-        status = null;
-        authToken = null;
-        errorBody = null;
-        userId = null;
-        error = null;
-    }
-
     @AuthCallType public int getAuthCallType() {
         return authCallType;
     }
@@ -100,16 +90,16 @@ public class ResultObject extends BaseModel {
         return this;
     }
 
-    public void setCodeOnly(Integer code) {
+    public void setCodeOnly(int code) {
         this.code = code;
     }
 
-    public ResultObject setCode(Integer code) {
+    public ResultObject setCode(int code) {
         this.code = code;
         return this;
     }
 
-    public ResultObject setStatus(Boolean status) {
+    public ResultObject setStatus(boolean status) {
         this.status = status;
         return this;
     }

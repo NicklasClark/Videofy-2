@@ -93,7 +93,7 @@ public class LiveDataModule {
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<VideosList> videosLiveData() {
+    public BrokerLiveData<VideosList> videosListLiveData() {
         return new BrokerLiveData<>();
     }
 
