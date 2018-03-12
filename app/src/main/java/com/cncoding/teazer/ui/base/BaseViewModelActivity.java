@@ -14,18 +14,24 @@ import com.cncoding.teazer.injection.component.DaggerBaseComponent;
 
 public abstract class BaseViewModelActivity extends BaseActivity {
 
-    protected BaseViewModel viewModel;
+    protected static BaseViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = DaggerBaseComponent.builder()
-                .appComponent(TeazerApplication.get(this).getAppComponent())
-                .build()
-                .baseViewModel();
+        if (viewModel == null)
+            viewModel = DaggerBaseComponent.builder()
+                    .appComponent(TeazerApplication.get(this).getAppComponent())
+                    .build()
+                    .baseViewModel();
     }
 
     public BaseViewModel getBaseViewModel() {
-        return viewModel;
+        return viewModel != null ?
+                viewModel :
+                DaggerBaseComponent.builder()
+                        .appComponent(TeazerApplication.get(this).getAppComponent())
+                        .build()
+                        .baseViewModel();
     }
 }

@@ -32,6 +32,7 @@ import dagger.Provides;
  * Created by R_KAY on 8/15/2017.
  */
 
+@Singleton
 @Module(subcomponents = AuthComponent.class)
 public class ApplicationModule {
 

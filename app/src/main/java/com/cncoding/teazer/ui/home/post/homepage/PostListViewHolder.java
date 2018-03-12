@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -50,10 +51,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import im.ene.toro.media.PlaybackInfo;
 
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.common.MediaUtils.acquireAudioLock;
+import static com.cncoding.teazer.utilities.common.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.common.SharedPrefs.getMedia;
 import static com.cncoding.teazer.utilities.common.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.common.ViewUtils.disableView;
@@ -69,7 +73,8 @@ import static com.cncoding.teazer.utilities.diffutil.PostsDetailsDiffCallback.up
  *
  * Created by Prem$ on 2/2/2018.
  */
-class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlayer, OnAudioVolumeChangedListener {
+class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlayer,
+        OnAudioVolumeChangedListener, AudioManager.OnAudioFocusChangeListener {
 
     @LayoutRes static final int LAYOUT_RES = R.layout.item_home_screen_post_new;
 
@@ -96,6 +101,15 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
     private ExoPlayerViewHelper helper;
     private PostDetails postDetails;
     private AdFeedItem adFeedItem;
+    private Handler mHandler;
+    private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            pause();
+        }
+    };
+    private boolean hasAudioFocus;
+    private long currentPosition;
 
     PostListViewHolder(PostsListAdapter adapter, View view) {
         super(view);
@@ -104,7 +118,7 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         if (audioVolumeObserver == null) {
             audioVolumeObserver = new AudioVolumeObserver(adapter.fragment.getParentActivity());
         }
-        registerAudioObserver();
+        mHandler = new Handler();
     }
 
     @OnClick(R.id.content) void viewPost() {
@@ -137,6 +151,35 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
         launchReactionCamera(adapter.fragment.getParentActivity(), postDetails.getPostId());
     }
 
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (helper != null) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Permanent loss of audio focus. Pause playback immediately
+                hasAudioFocus = false;
+                currentPosition = helper.getLatestPlaybackInfo().getResumePosition();
+                helper.pause();
+                // Wait 30 milliseconds before stopping playback
+                if (mHandler != null) mHandler.postDelayed(mDelayedStopRunnable, 30);
+            }
+            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Pause playback
+                hasAudioFocus = false;
+                currentPosition = helper.getLatestPlaybackInfo().getResumePosition();
+                helper.pause();
+            }
+//            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+//                Lower the volume, keep playing
+//            }
+            else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Your app has been granted audio focus again. Raise volume to normal, restart playback if necessary
+                hasAudioFocus = true;
+                helper.getLatestPlaybackInfo().setResumePosition(currentPosition);
+                helper.play();
+            }
+        }
+    }
+
     @Override public String toString() {
         return "ExoPlayer{" + hashCode() + " " + getAdapterPosition() + "}";
     }
@@ -157,14 +200,20 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
                     Uri.parse(savedMediaPath != null && new File(savedMediaPath).exists() ? savedMediaPath : remoteMediaUrl));
             helper.initialize(playbackInfo);
         }
+        registerAudioObserver();
     }
 
     @Override public void play() {
-        if (helper != null) helper.play();
+        hasAudioFocus = acquireAudioLock(adapter.fragment.getTheContext(), this);
+        if (helper != null && hasAudioFocus) {
+            helper.play();
+            if (currentPosition > 0) helper.seekTo(currentPosition);
+        }
         adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
     }
 
     @Override public void pause() {
+        currentPosition = helper.getLatestPlaybackInfo().getResumePosition();
         if (helper != null) helper.pause();
         volumeControl.setVisibility(INVISIBLE);
     }
@@ -178,6 +227,9 @@ class PostListViewHolder extends BaseRecyclerView.ViewHolder implements ToroPlay
             helper.release();
             helper = null;
         }
+        if (mHandler != null) mHandler.removeCallbacks(mDelayedStopRunnable);
+        hasAudioFocus = false;
+        releaseAudioLock(adapter.fragment.getTheContext(), this);
         unregisterAudioObserver();
     }
 

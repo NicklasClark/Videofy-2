@@ -12,6 +12,7 @@ import dagger.Provides;
  * Created by Prem$ on 3/9/2018.
  */
 
+@BaseScope
 @Module
 public class ViewModelModule {
 

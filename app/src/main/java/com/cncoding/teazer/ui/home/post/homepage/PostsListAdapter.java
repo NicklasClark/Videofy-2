@@ -23,6 +23,7 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
 
     public List<PostDetails> posts;
     public PostsListFragment fragment;
+//    SparseIntArray positions;
 
     PostsListAdapter(PostsListFragment fragment) {
         this.fragment = fragment;
@@ -47,6 +48,23 @@ public class PostsListAdapter extends BaseRecyclerView.Adapter {
         return viewHolder;
 
     }
+
+//    @Override
+//    public void onViewAttachedToWindow(BaseRecyclerView.ViewHolder holder) {
+//        super.onViewAttachedToWindow(holder);
+//        if (holder instanceof PostListViewHolder) {
+//            ((PostListViewHolder) holder).hasAudioFocus = acquireAudioLock(fragment.getTheContext(), ((PostListViewHolder) holder));
+//        }
+//    }
+//
+//    @Override
+//    public void onViewDetachedFromWindow(BaseRecyclerView.ViewHolder holder) {
+//        super.onViewDetachedFromWindow(holder);
+//        if (holder instanceof PostListViewHolder) {
+//            releaseAudioLock(fragment.getTheContext(), ((PostListViewHolder) holder));
+//            ((PostListViewHolder) holder).hasAudioFocus = false;
+//        }
+//    }
 
     @Override public int getItemCount() {
         return posts.size();

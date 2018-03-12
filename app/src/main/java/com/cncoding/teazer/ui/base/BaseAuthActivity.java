@@ -22,6 +22,8 @@ public abstract class BaseAuthActivity extends BaseActivity {
     }
 
     public AuthViewModel getAuthViewModel() {
-        return viewModel;
+        return viewModel != null ?
+                viewModel :
+                TeazerApplication.get(this).getAppComponent().authComponentBuilder().build().authViewModel();
     }
 }

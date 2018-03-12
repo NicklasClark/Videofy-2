@@ -214,6 +214,12 @@ public class ExoPlayerHelper {
         return new PlaybackInfo(playbackInfo.getResumeWindow(), playbackInfo.getResumePosition());
     }
 
+    public void seekTo(long position) {
+        if (player != null) {
+            player.seekTo(position);
+        }
+    }
+
     public void addEventListener(@NonNull Player.EventListener eventListener) {
         if (this.eventListeners == null) {
             this.eventListeners = new ArrayList<>();

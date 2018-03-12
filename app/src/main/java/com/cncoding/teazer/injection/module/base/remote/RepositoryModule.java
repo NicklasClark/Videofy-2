@@ -31,6 +31,7 @@ import dagger.Provides;
  * Created by Prem$ on 3/7/2018.
  */
 
+@BaseScope
 @Module(includes = ServiceModule.class)
 public class RepositoryModule {
 

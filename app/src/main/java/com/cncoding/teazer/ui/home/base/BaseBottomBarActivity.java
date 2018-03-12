@@ -180,7 +180,7 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
         }
     }
 
-    //region LifeCycle methods
+    //region Lifecycle methods
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

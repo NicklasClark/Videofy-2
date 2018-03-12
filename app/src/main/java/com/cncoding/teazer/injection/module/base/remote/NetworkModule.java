@@ -30,6 +30,7 @@ import static com.cncoding.teazer.utilities.common.Annotations.WITH_AUTH_TOKEN;
  * Created by Prem$ on 3/7/2018.
  */
 
+@BaseScope
 @Module
 public class NetworkModule {
 

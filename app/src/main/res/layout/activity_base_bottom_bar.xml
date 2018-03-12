@@ -220,7 +220,7 @@
         android:scaleType="center"
         android:layout_gravity="top|start"
         android:src="@drawable/ic_arrow_back_dark"
-        android:visibility="visible"
+        android:visibility="gone"
         android:contentDescription="@string/back" />
 
 </RelativeLayout>

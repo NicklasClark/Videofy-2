@@ -79,6 +79,10 @@ public class ExoPlayerViewHelper extends ToroPlayerHelper {
         return this.helper.getPlaybackInfo();
     }
 
+    public void seekTo(long position) {
+        this.helper.seekTo(position);
+    }
+
     @Override public void release() {
         counter.set(0); // reset
         this.helper.removeEventListener(internalListener);

@@ -39,126 +39,127 @@ import dagger.Provides;
  * Created by Prem$ on 3/7/2018.
  */
 
+@BaseScope
 @Module
 public class LiveDataModule {
 
     @Provides @BaseScope
-    public BrokerLiveData<ResultObject> resultObjectLiveData() {
+    BrokerLiveData<ResultObject> resultObjectLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<DefaultCoverImageResponse> defaultCoverImageLiveData() {
+    BrokerLiveData<DefaultCoverImageResponse> defaultCoverImageLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<ConfigDetails> configDetailsLiveData() {
+    BrokerLiveData<ConfigDetails> configDetailsLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<List<ReportTypes>> reportTypesListLiveData() {
+    BrokerLiveData<List<ReportTypes>> reportTypesListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<List<DeactivateTypes>> deactivateTypesListLiveData() {
+    BrokerLiveData<List<DeactivateTypes>> deactivateTypesListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<List<Category>> categoriesListLiveData() {
+    BrokerLiveData<List<Category>> categoriesListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<LandingPostsV2> landingPostsLiveData() {
+    BrokerLiveData<LandingPostsV2> landingPostsLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    @Named(Annotations.POST_LIST) public BrokerLiveData<PostList> postListLiveData() {
+    @Named(Annotations.POST_LIST) BrokerLiveData<PostList> postListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    @Named(Annotations.MOST_POPULAR) public BrokerLiveData<PostList> mostPopularLiveData() {
+    @Named(Annotations.MOST_POPULAR) BrokerLiveData<PostList> mostPopularLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<UsersList> usersListLiveData() {
+    BrokerLiveData<UsersList> usersListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<VideosList> videosListLiveData() {
+    BrokerLiveData<VideosList> videosListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<CircleList> circleListLiveData() {
+    BrokerLiveData<CircleList> circleListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<FollowingsList> followingsListLiveData() {
+    BrokerLiveData<FollowingsList> followingsListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<FollowersList> followersListLiveData() {
+    BrokerLiveData<FollowersList> followersListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<ProfileInfo> profileInfoLiveData() {
+    BrokerLiveData<ProfileInfo> profileInfoLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<BlockedUsersList> blockedUsersListLiveData() {
+    BrokerLiveData<BlockedUsersList> blockedUsersListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<LikedUserList> likedUserListLiveData() {
+    BrokerLiveData<LikedUserList> likedUserListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<PostDetails> postDetailsLiveData() {
+    BrokerLiveData<PostDetails> postDetailsLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<PostUploadResult> postUploadResultLiveData() {
+    BrokerLiveData<PostUploadResult> postUploadResultLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<TaggedUsersList> taggedUsersListLiveData() {
+    BrokerLiveData<TaggedUsersList> taggedUsersListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<ReactionResponse> reactionResponseLiveData() {
+    BrokerLiveData<ReactionResponse> reactionResponseLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<ReactionsList> reactionsListLiveData() {
+    BrokerLiveData<ReactionsList> reactionsListLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<UserProfile> userProfileLiveData() {
+    BrokerLiveData<UserProfile> userProfileLiveData() {
         return new BrokerLiveData<>();
     }
 
     @Provides @BaseScope
-    public BrokerLiveData<NotificationsList> notificationsLiveData() {
+    BrokerLiveData<NotificationsList> notificationsLiveData() {
         return new BrokerLiveData<>();
     }
 }

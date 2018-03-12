@@ -26,6 +26,11 @@ import static com.cncoding.teazer.utilities.common.Annotations.NO_CALL;
 
 public abstract class BasePostFragment extends BaseHomeFragment {
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     /**
      * Setting observers.
      */

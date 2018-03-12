@@ -14,6 +14,7 @@ import dagger.Provides;
  * Created by Prem$ on 3/7/2018.
  */
 
+@Singleton
 @Module(subcomponents = AuthComponent.class)
 public class ContextModule {
 

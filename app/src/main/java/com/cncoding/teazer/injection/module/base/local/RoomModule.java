@@ -33,6 +33,7 @@ import dagger.Provides;
  * Created by Prem$ on 8/18/2017.
  */
 
+@BaseScope
 @Module
 public class RoomModule {
 
