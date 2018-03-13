@@ -103,10 +103,7 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
     private String userCoverUrl;
     private String userProfileUrl;
     List<TopReactedUser> topReactedUserList;
-
-
     ArrayList<Preference> userPrefrences;
-
     @BindView(R.id.reaction1)
     CircularAppCompatImageView reaction1;
     @BindView(R.id.reaction2)
@@ -114,35 +111,31 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
     @BindView(R.id.reaction3)
     CircularAppCompatImageView reaction3;
 
-
     ImageView placeholder;
-
     Context context;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
+
     @BindView(R.id.totallikes)
     ProximaNovaRegularCheckedTextView _totallikes;
     @BindView(R.id.topReactions)
     ProximaNovaRegularCheckedTextView topReactions;
-    AppBarLayout app_bar;
 
+    AppBarLayout app_bar;
     public static boolean checkpostupdated = false;
     public static boolean checkprofileupdated = false;
     public static boolean checkpicUpdated = false;
 
-
     public static FragmentNewProfile2 newInstance() {
         return new FragmentNewProfile2();
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_profile3, container, false);
@@ -153,7 +146,6 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
         getParentActivity().getSupportActionBar().setTitle("");
         //  toolbar.setSubtitle("Android-er.blogspot.com");
         //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
-
 
         placeholder = view.findViewById(R.id.background);
         _name = view.findViewById(R.id.name);
@@ -181,7 +173,6 @@ public class FragmentNewProfile2 extends BaseHomeFragment implements ProfileMyCr
 
             }
         });
-
 
 //        profile_id.setOnClickListener(new View.OnClickListener() {
 //
