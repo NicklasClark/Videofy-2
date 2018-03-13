@@ -170,7 +170,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         @Override
                                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                             if (response.code() == 200)
-                                                fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(), null, false, null));
+                                                fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(), false, null));
                                             else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                 Toast.makeText(fragment.getTheContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
                                             else {
@@ -222,7 +222,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
-                                                    fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(), null, false, null));
+                                                    fragment.navigation.pushFragment(PostDetailsFragment.newInstance(response.body(), false, null));
                                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(fragment.getTheContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {

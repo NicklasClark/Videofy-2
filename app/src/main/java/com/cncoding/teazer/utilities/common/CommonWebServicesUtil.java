@@ -82,7 +82,7 @@ public class CommonWebServicesUtil {
                         if (response.code() == 200) {
                             if (response.body() != null) {
                                 ((BaseBottomBarActivity)context).pushFragment(
-                                PostDetailsFragment.newInstance(response.body(), null, true, null));
+                                PostDetailsFragment.newInstance(response.body(), true, null));
 //                                PostsListFragment.postDetails = response.body();
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();

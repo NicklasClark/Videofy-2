@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -155,9 +154,7 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
 
 public class PostDetailsFragment extends BasePostFragment implements WatermarkAsyncResponse, OnAudioFocusChangeListener {
 
-    public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
-    public static final String ARG_THUMBNAIL = "thumbnail";
     public static final String ARG_REACT_ID = "react_id";
 
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
@@ -206,7 +203,6 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
     private Handler customHandler = new Handler();
     private Handler mHandler;
 
-    private Bitmap image;
     private SimpleExoPlayer player;
     private PostDetails postDetails;
     private PostReactionAdapter postReactionAdapter;
@@ -224,11 +220,10 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
 
     public PostDetailsFragment() {}
 
-    public static PostDetailsFragment newInstance(@NonNull PostDetails postDetails, Bitmap image, boolean isDeepLink, String react_id) {
+    public static PostDetailsFragment newInstance(@NonNull PostDetails postDetails, boolean isDeepLink, String react_id) {
         PostDetailsFragment postDetailsFragment = new PostDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
-        bundle.putParcelable(ARG_THUMBNAIL, image);
         if (isDeepLink) {
             PostDetailsFragment.isDeepLink = true;
             bundle.putString(ARG_REACT_ID, react_id);
@@ -242,7 +237,6 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         Bundle bundle = getArguments();
         if (bundle != null) {
             postDetails = bundle.getParcelable(ARG_POST_DETAILS);
-            image = bundle.getParcelable(ARG_THUMBNAIL);
             if (isDeepLink) {
                 String reactId = bundle.getString(ARG_REACT_ID);
                 if (reactId != null) {
@@ -258,8 +252,7 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, view);
 
-        if (image != null) playerView.setShutterBackground(image);
-        else playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
+        playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
@@ -909,7 +902,6 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
-                                image = null;
                                 customHandler.postDelayed(updateTimerThread, 0);
                             }
                             if (oneShotFlag) {

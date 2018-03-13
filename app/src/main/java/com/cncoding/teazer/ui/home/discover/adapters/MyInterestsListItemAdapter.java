@@ -224,7 +224,7 @@ public class MyInterestsListItemAdapter extends BaseRecyclerView.Adapter {
 
         @OnClick(R.id.root_layout) public void viewPost() {
             fragment.navigation.pushFragment(PostDetailsFragment.newInstance(postDetails,
-                    null, false, null));
+                    false, null));
         }
 
         @OnClick(R.id.dp) void dpClicked() {
