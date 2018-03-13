@@ -11,22 +11,25 @@
         android:fitsSystemWindows="true"
         android:theme="@style/BaseActivityTheme">
 
-        <com.cncoding.teazer.utilities.common.CollapsingImageLayoutOthersProfile
+        <com.cncoding.teazer.utilities.common.CollapsingImageLayout
             android:id="@+id/collapsing_imagelayout"
             android:layout_width="match_parent"
             android:layout_height="420dp"
             android:minHeight="?attr/actionBarSize"
             android:fitsSystemWindows="true"
+            android:smoothScrollbar="true"
+            android:scrollingCache="false"
+            android:animationCache="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-
                 android:id="@+id/background"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:minHeight="132dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"/>
+
 
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction1"
@@ -35,39 +38,40 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="14dp"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="1dp"
+                android:layout_marginRight="5dp"
                 android:visibility="gone"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/white"
                 android:src="@drawable/ic_user_male_dp"
-                android:padding="2dp" />
-
+                android:padding="2dp"
+                />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="54dp"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="1dp"
                 android:visibility="gone"
+                android:layout_marginRight="40dp"
                 android:src="@drawable/ic_user_male_dp"
-                android:padding="2dp" />
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/white"
+                android:padding="2dp"
+                />
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/reaction3"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="gone"
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="200dp"
+                android:visibility="gone"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="94dp"
+                android:layout_marginRight="75dp"
                 android:src="@drawable/ic_user_male_dp"
-                app:civ_border_color="@color/white"
                 app:civ_border_width="1dp"
-                android:padding="2dp" />
+                app:civ_border_color="@color/white"
+                android:padding="2dp"
+                />
 
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
@@ -77,11 +81,12 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="185dp"
                 android:layout_marginRight="10dp"
-                android:textColor="#ffffff"
-                android:textSize="12dp"
-                android:gravity="left"
                 android:background="#23646464"
-                android:text="Top Reactions"/>
+                android:gravity="left"
+                android:text="Top Reactions"
+                android:textColor="#ffffff"
+                android:textSize="12dp" />
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -102,23 +107,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
+
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"
                         android:id="@+id/creationslayout"
                         android:orientation="vertical">
 
                         <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaBoldTextView
+
                             android:id="@+id/creations"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:textSize="24sp"
+                            android:textSize="24dp"
+
                             android:textStyle="bold"
                             android:textColor="#212121"
                             />
@@ -176,6 +185,7 @@
                             android:layout_marginTop="5dp"
                             android:textStyle="bold"
                             android:textSize="24dp"
+
                             android:textColor="#212121"
                             android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
@@ -211,6 +221,7 @@
                             android:text="Following"
                             android:textSize="12dp"
                             android:textColor="@color/DialogBoxConfirm"
+
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
 
@@ -221,17 +232,18 @@
                     android:id="@+id/detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:layout_marginLeft="17dp"
                     android:layout_marginRight="100dp"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:maxLength="100"
                     android:layout_above="@+id/informationLayout"
-                    android:layout_marginBottom="20dp"
                     android:textColor="#212121"
                     android:textSize="14sp"/>
 
-
             </RelativeLayout>
+
 
             <com.cncoding.teazer.ui.customviews.common.CircularAppCompatImageView
                 android:id="@+id/profilepic"
@@ -240,7 +252,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="120dp"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_user_male_dp"
+
                 android:padding="2dp"
                 android:background="@drawable/bg_circle_white_outline"/>
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView
@@ -250,97 +262,54 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="140dp"
-                android:layout_marginLeft="110dp"
+                android:layout_marginLeft="100dp"
                 android:layout_marginRight="25dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:maxLength="17"
+                android:maxLength="20"
                 android:textColor="#000000"
-                android:textSize="17dp"
-                android:gravity="left"
-                />
+                android:textSize="16dp"
+                android:gravity="left"/>
+
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
-
-
-
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="120dp"
-                android:layout_marginLeft="110dp"
+                android:layout_marginLeft="100dp"
                 android:layout_marginRight="25dp"
                 android:maxLines="1"
-                android:maxLength="20"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:textColor="#000000"
-                android:textSize="14dp"
+                android:textSize="13dp"
+                android:maxLength="20"
                 android:gravity="start"
                 />
-
-
-
-
-            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
-                android:id="@+id/likeliked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="140dp"
-                android:layout_marginLeft="290dp"
-                android:textColor="#000000"
-                android:textSize="12dp"
-                android:gravity="start"/>
 
             <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/totallikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="130dp"
-                android:layout_marginLeft="292dp"
-                android:textColor="#0d0d0d"
-                android:textSize="10dp"
-                android:gravity="start"/>
-
+                android:layout_marginBottom="138dp"
+                android:layout_marginLeft="280dp"
+                android:gravity="start"
+                android:textColor="#000000"
+                android:textSize="10dp" />
 
             <ImageView
-                android:id="@+id/profilelikebutton"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:id="@+id/likesimage"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="132dp"
-                android:layout_marginLeft="265dp"
-                android:src="@drawable/ic_likebig"
-                />
+                android:layout_marginBottom="137dp"
+                android:layout_marginLeft="260dp"
+                android:src="@drawable/ic_likebig"/>
 
-            <!--<ImageView-->
-                <!--android:id="@+id/profilelikebutton"-->
-                <!--android:layout_width="32dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_gravity="bottom|right"-->
-                <!--android:layout_marginBottom="112dp"-->
-                <!--android:layout_marginRight="35dp"-->
-                <!--android:src="@drawable/ic_likebig"-->
-                <!--/>-->
-            <Button
-                android:id="@+id/follow"
-                android:layout_width="wrap_content"
-                android:layout_height="27dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="10dp"
-                android:textAllCaps="false"
-                android:padding="7dp"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="80dp"
-                android:background="@drawable/border_layout"
-                android:textColor="#ffffff"
-                android:textSize="10sp"/>
-
-
-        </com.cncoding.teazer.utilities.common.CollapsingImageLayoutOthersProfile>.
+        </com.cncoding.teazer.utilities.common.CollapsingImageLayout>
 
 
         <android.support.design.widget.TabLayout
@@ -352,35 +321,6 @@
             app:tabSelectedTextColor="@color/colorTabindicator"
             app:tabTextColor="#3e3e3e"
             app:layout_scrollFlags="scroll|enterAlways"/>
-        <RelativeLayout
-            android:id="@+id/message1"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:paddingBottom="10dp"
-            android:visibility="gone"
-            android:layout_gravity="bottom|center_horizontal">
-
-            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
-                android:layout_centerHorizontal="true"
-                android:id="@+id/alert1"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Oops this is private Account "
-                android:layout_margin="5dp"
-                android:textColor="#505050"
-                android:textSize="14sp"
-                />
-            <com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/alert1"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/backbutton"
-                android:text="To view the details,Please follow the user"
-                android:textColor="#505050"
-                android:textSize="14sp"/>
-        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -388,6 +328,8 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

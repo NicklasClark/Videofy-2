@@ -1,7 +1,7 @@
 package com.cncoding.teazer.ui.home.profile.adapter;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,23 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.apiCalls.ApiCallingService;
-import com.cncoding.teazer.data.model.profile.CoverImageResponse;
 import com.cncoding.teazer.data.model.profile.DefaultCoverMedia;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.home.profile.activity.CoverPicChangeActivity;
-import com.cncoding.teazer.ui.home.profile.fragment.FragmentNewProfile2;
 
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by farazhabib on 14/02/18.
@@ -40,6 +29,7 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int DefaultImages = 0;
     private final int UserSelectedImages = 1;
     CoverPicChangeActivity fragmentChangeCoverPhoto;
+    int selected_position = 0;
 
 
     public ChangeCoverPhotoAdapter(List<DefaultCoverMedia> categories, Context context, CoverPicChangeActivity fragmentChangeCoverPhoto) {
@@ -80,6 +70,16 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
+
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+
+        super.onAttachedToRecyclerView(recyclerView);
+
+    }
+
+
+
+    @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
 
@@ -88,43 +88,50 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
                     ViewHolder1 vh1 = (ViewHolder1) holder;
                     final String defaultCoverImageUrl = categories.get(position).getMediaUrl();
 
-                    Glide.with(context)
-                            .load(Uri.parse(defaultCoverImageUrl))
-                            .into( vh1.profile_id2);
+//                    Glide.with(context)
+//                            .load(Uri.parse(defaultCoverImageUrl))
+//                            .into( vh1.profile_id2);
+
+
+
+                    vh1.profile_id2.setBackgroundColor(selected_position == position ? Color.GREEN : Color.TRANSPARENT);
+
 
                     vh1.profile_id2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            RequestBody reqFile = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(categories.get(position).getDefaultCoverId()));
-                            MultipartBody.Part body = MultipartBody.Part.createFormData("default_cover_id", "cover_image.jpg", reqFile);
-
-
-                            ApiCallingService.User.updateUserProfileCoverMedia(body, context).enqueue(new Callback<CoverImageResponse>() {
-                                @Override
-                                public void onResponse(Call<CoverImageResponse> call, Response<CoverImageResponse> response) {
-                                    try {
-                                        CoverPicChangeActivity.coverPicUrl=categories.get(position).getMediaUrl();
-                                        Toast.makeText(context,"Your cover pic has been uploaded successfully",Toast.LENGTH_SHORT).show();
-                                        FragmentNewProfile2.checkprofileupdated=true;
-                                        ((CoverPicChangeActivity)context).finish();
 
 
 
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<CoverImageResponse> call, Throwable t) {
-
-                                    Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
-                                    t.printStackTrace();
-                                }
-                            });
+//                            RequestBody reqFile = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(categories.get(position).getDefaultCoverId()));
+//                            MultipartBody.Part body = MultipartBody.Part.createFormData("default_cover_id", "cover_image.jpg", reqFile);
+//
+//                            ApiCallingService.User.updateUserProfileCoverMedia(body, context).enqueue(new Callback<CoverImageResponse>() {
+//                                @Override
+//                                public void onResponse(Call<CoverImageResponse> call, Response<CoverImageResponse> response) {
+//                                    try {
+//                                        CoverPicChangeActivity.coverPicUrl=categories.get(position).getMediaUrl();
+//                                        Toast.makeText(context,"Your cover pic has been uploaded successfully",Toast.LENGTH_SHORT).show();
+//                                        FragmentNewProfile2.checkprofileupdated=true;
+//                                        ((CoverPicChangeActivity)context).finish();
+//
+//
+//
+//
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                        Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<CoverImageResponse> call, Throwable t) {
+//
+//                                    Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+//                                    t.printStackTrace();
+//                                }
+//                            });
 
 
 
@@ -174,7 +181,13 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public ViewHolder2(View view) {
             super(view);
+
             cardview = view.findViewById(R.id.cardview);
+
+
+
+
+
 
         }
     }
@@ -182,11 +195,45 @@ public class ChangeCoverPhotoAdapter extends RecyclerView.Adapter<RecyclerView.V
         private RelativeLayout rootLayout;
         ImageView profile_id2;
         private ProximaNovaRegularCheckedTextView nameView;
+
         public ViewHolder1(View view) {
+
             super(view);
-            rootLayout = view.findViewById(R.id.categories_item_layout);
+            rootLayout = view.findViewById(R.id.rootLayout);
             profile_id2 = view.findViewById(R.id.profile_id2);
             nameView = view.findViewById(R.id.chip);
+
+       //     view.setOnClickListener(new View.OnClickListener() {
+            //    @Override
+           //     public void onClick(View view) {
+        //            if (getAdapterPosition() == RecyclerView.NO_POSITION) return;
+                    // Updating old as well as new positions
+//                    profile_id2.setBackgroundColor(Color.GREEN);
+//                    notifyItemChanged(selected_position);
+//                    selected_position = getAdapterPosition();
+//                    notifyItemChanged(selected_position);
+     //           }
+          //  });
+
+
+
+//
+//            for(int i = 0; i < rootLayout.getChildCount(); i++) {
+              view = rootLayout.getChildAt(0);
+              view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context,"hello",Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+//            }
+
+
+
         }
+
     }
 }

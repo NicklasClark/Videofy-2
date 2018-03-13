@@ -69,19 +69,10 @@ public class CoverPicChangeActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         layoutManager = new GridLayoutManager(CoverPicChangeActivity.this,2);
         recyclerView.setLayoutManager(layoutManager);
 
-
         getDefaultCoverPic(1);
-
-
-
-
-
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
 
             @Override
@@ -92,31 +83,21 @@ public class CoverPicChangeActivity extends AppCompatActivity {
                 }
             }
         };
-
         recyclerView.addOnScrollListener(scrollListener);
-
     }
-
     public void changeCoverPic()
     {
-
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setFixAspectRatio(true)
                 .start(CoverPicChangeActivity.this);
     }
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-
                 try {
 
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(CoverPicChangeActivity.this.getContentResolver(), resultUri);
@@ -131,14 +112,9 @@ public class CoverPicChangeActivity extends AppCompatActivity {
                     // File profileImage = new File(r.getPath());
                     RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                     MultipartBody.Part body = MultipartBody.Part.createFormData("media", "cover_image.jpg", reqFile);
-
                     saveDataToDatabase(body);
-
-
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
-
                     e.printStackTrace();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -146,7 +122,6 @@ public class CoverPicChangeActivity extends AppCompatActivity {
             }
         }
     }
-
     public static byte[] bitmaptoByte(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (bitmap != null) {
@@ -154,10 +129,7 @@ public class CoverPicChangeActivity extends AppCompatActivity {
         }
         return baos.toByteArray();
     }
-
-
     public void saveDataToDatabase(MultipartBody.Part body) {
-
         ApiCallingService.User.updateUserProfileCoverMedia(body, context).enqueue(new Callback<CoverImageResponse>() {
             @Override
             public void onResponse(Call<CoverImageResponse> call, Response<CoverImageResponse> response) {
@@ -166,17 +138,11 @@ public class CoverPicChangeActivity extends AppCompatActivity {
                     FragmentNewProfile2.checkprofileupdated=true;
                     coverPicUrl =response.body().getProfileCoverImage().getMediaUrl();
                     finish();
-
-
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
-
                 }
             }
-
             @Override
             public void onFailure(Call<CoverImageResponse> call, Throwable t) {
 
