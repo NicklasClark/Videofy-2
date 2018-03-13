@@ -69,6 +69,7 @@ import com.cncoding.teazer.ui.home.post.BasePostFragment;
 import com.cncoding.teazer.ui.home.profile.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask.WatermarkAsyncResponse;
+import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -152,7 +153,8 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class PostDetailsFragment extends BasePostFragment implements WatermarkAsyncResponse, OnAudioFocusChangeListener {
+public class PostDetailsFragment extends BasePostFragment implements WatermarkAsyncResponse,
+        OnAudioFocusChangeListener, OnAudioVolumeChangedListener {
 
     public static final String ARG_POST_DETAILS = "postDetails";
     public static final String ARG_REACT_ID = "react_id";
@@ -620,15 +622,14 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
             int volume;
             if (isAudioEnabled) {
                 volume = 0;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_off);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = midVolume;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
+            setVolumeButton(volume);
             if (volume > midVolume) {
                 volume = midVolume;
             }
@@ -768,6 +769,22 @@ public class PostDetailsFragment extends BasePostFragment implements WatermarkAs
                 player.seekTo(playerCurrentPosition);
             }
         }
+    }
+
+    @Override
+    public void initialVolume(int currentVolume) {
+        setVolumeButton(currentVolume);
+    }
+
+    @Override
+    public void onVolumeChanged(int currentVolume) {
+        setVolumeButton(currentVolume);
+    }
+
+    private void setVolumeButton(int currentVolume) {
+        setTextViewDrawableStart(remainingTime, currentVolume > 0 ?
+                R.drawable.ic_volume_up :
+                R.drawable.ic_volume_off);
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
