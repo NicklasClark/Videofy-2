@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.data.model.BaseModel;
+import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.ui.customviews.common.CustomStaggeredGridLayoutManager;
@@ -31,21 +32,21 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_ALL_INTEREST
 
 public class MyInterestsFragmentTab extends BaseDiscoverFragment {
 
-    private static final String ARG_CATEGORY_ID = "categoryId";
+    private static final String ARG_CATEGORY = "category";
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
     @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
-    private int categoryId;
+    private Category category;
 
     public MyInterestsFragmentTab() {}
 
-    public static MyInterestsFragmentTab newInstance(int categoryId) {
+    public static MyInterestsFragmentTab newInstance(Category category) {
         MyInterestsFragmentTab fragment = new MyInterestsFragmentTab();
         Bundle args = new Bundle();
-        args.putInt(ARG_CATEGORY_ID, categoryId);
+        args.putParcelable(ARG_CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,18 +54,19 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            categoryId = getArguments().getInt(ARG_CATEGORY_ID);
+            category = getArguments().getParcelable(ARG_CATEGORY);
         }
     }
 
     @Override protected void handleResponse(BaseModel resultObject) {
         try {
-            if (resultObject instanceof PostList && resultObject.getCallType() == (CALL_ALL_INTERESTED_CATEGORIES_POSTS + categoryId)) {
+            if (resultObject instanceof PostList &&
+                    resultObject.getCallType() == (CALL_ALL_INTERESTED_CATEGORIES_POSTS + category.getCategoryId())) {
                 PostList postList = (PostList) resultObject;
                 is_next_page = postList.isNextPage();
                 if (!postList.getPosts().isEmpty()) {
                     //noinspection unchecked
-                    new UpdatePosts(this, currentPage).execute(postList.getPosts());
+                    new UpdatePosts(this, currentPage, postList.getPosts()).execute();
                 } else if (currentPage == 1){
                     showErrorMessage(R.string.no_videos_tagged, R.string.be_the_first_one_to_upload_one);
                 }
@@ -120,8 +122,12 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
 //        clearPostListLiveData();
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     private void getPosts(int page) {
-        viewModel.loadAllInterestedCategoriesPostsApiCall(page, categoryId);
+        viewModel.loadAllInterestedCategoriesPostsApiCall(page, category.getCategoryId());
     }
 
     private void showErrorMessage(@StringRes int message1, @StringRes int message2) {
@@ -132,19 +138,21 @@ public class MyInterestsFragmentTab extends BaseDiscoverFragment {
         noPosts2.setVisibility(VISIBLE);
     }
 
-    private static class UpdatePosts extends AsyncTask<List<PostDetails>, Void, Void> {
+    private static class UpdatePosts extends AsyncTask<Void, Void, Void> {
 
         private MyInterestsFragmentTab fragment;
         private int currentPage;
+        private List<PostDetails> postDetailsList;
 
-        UpdatePosts(MyInterestsFragmentTab fragment, int currentPage) {
+        UpdatePosts(MyInterestsFragmentTab fragment, int currentPage, List<PostDetails> postDetailsList) {
             this.fragment = fragment;
             this.currentPage = currentPage;
+            this.postDetailsList = postDetailsList;
         }
 
         @Override
-        protected Void doInBackground(List<PostDetails>[] lists) {
-            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(currentPage, lists[0]);
+        protected Void doInBackground(Void... voids) {
+            ((SubDiscoverAdapter) fragment.recyclerView.getAdapter()).updatePosts(currentPage, postDetailsList);
             return null;
         }
     }

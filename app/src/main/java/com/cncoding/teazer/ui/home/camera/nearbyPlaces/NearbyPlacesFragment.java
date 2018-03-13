@@ -19,9 +19,9 @@ import android.widget.LinearLayout;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.camera.CameraActivity;
 import com.cncoding.teazer.ui.home.camera.adapters.NearbyPlacesAdapter;
-import com.cncoding.teazer.ui.home.camera.base.BaseCameraFragment;
 import com.cncoding.teazer.ui.home.profile.activity.EditPost;
 import com.cncoding.teazer.utilities.common.ViewUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,11 +40,11 @@ import butterknife.OnTextChanged;
 import static com.cncoding.teazer.ui.home.camera.adapters.NearbyPlacesAdapter.TYPE_AUTOCOMPLETE;
 import static com.cncoding.teazer.ui.home.camera.adapters.NearbyPlacesAdapter.TYPE_NEARBY_PLACES;
 
-public class NearbyPlacesFragment extends BaseCameraFragment {
+public class NearbyPlacesFragment extends BaseHomeFragment {
+
     private static final String NEARBY_PLACES = "nearbyPlaces";
     public static final int TURN_ON_LOCATION_ACTION = 454;
     public static final int NEARBY_PLACE_AUTOCOMPLETE_ACTION = 453;
-//    private static final String CURRENT_LOCATION = "currentLocation";
     private static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
 
     @BindView(R.id.nearby_places_recycler_view) RecyclerView recyclerView;
@@ -54,7 +54,6 @@ public class NearbyPlacesFragment extends BaseCameraFragment {
     @BindView(R.id.clear) AppCompatImageView clearBtn;
 
     private ArrayList<HashMap<String, String>> nearbyPlaces;
-//    private Location location;
     private Handler handler;
     private GoogleApiClient googleApiClient;
     private OnNearbyPlacesListInteractionListener mListener;
@@ -63,14 +62,11 @@ public class NearbyPlacesFragment extends BaseCameraFragment {
         NearbyPlacesFragment fragment = new NearbyPlacesFragment();
         Bundle args = new Bundle();
         args.putSerializable(NEARBY_PLACES, nearbyPlaces);
-//        args.putParcelable(CURRENT_LOCATION, currentLocation);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public NearbyPlacesFragment() {
-        // Required empty public constructor
-    }
+    public NearbyPlacesFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +74,6 @@ public class NearbyPlacesFragment extends BaseCameraFragment {
         if (getArguments() != null) {
             //noinspection unchecked
             nearbyPlaces = (ArrayList<HashMap<String, String>>) getArguments().getSerializable(NEARBY_PLACES);
-//            location = getArguments().getParcelable(CURRENT_LOCATION);
         }
         if (getActivity() != null) {
             if(getActivity() instanceof CameraActivity)
@@ -91,9 +86,7 @@ public class NearbyPlacesFragment extends BaseCameraFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_nearby_places_list, container, false);
         ButterKnife.bind(this, rootView);
 

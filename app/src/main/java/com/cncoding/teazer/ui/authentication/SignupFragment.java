@@ -106,7 +106,7 @@ public class SignupFragment extends BaseAuthFragment {
         try {
             if (!isFocused) {
                 if (proceedSignup.getUserName() != null && !proceedSignup.getUserName().isEmpty()) {
-                    viewModel.checkUsernameAvailability(usernameView.getText().toString());
+                    viewModel.checkUsernameAvailabilityApiCall(usernameView.getText().toString());
                 } else {
                     setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                 }

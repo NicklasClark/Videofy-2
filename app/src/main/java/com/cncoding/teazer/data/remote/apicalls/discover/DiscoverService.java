@@ -2,6 +2,7 @@ package com.cncoding.teazer.data.remote.apicalls.discover;
 
 import com.cncoding.teazer.data.model.discover.LandingPosts;
 import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.UserInterestsAndTrendingCategories;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.UsersList;
 import com.cncoding.teazer.data.model.post.PostList;
@@ -55,6 +56,12 @@ public interface DiscoverService {
      */
     @GET("/api/v1/discover/trending/videos/{page}")
     Call<VideosList> getTrendingVideos(@Path("page") int page);
+
+    /**
+     * Call this service to get the discover page User Interested categories and Trending Categories.
+     */
+    @GET("/api/v1/discover/userinterests/and/trendingcategories")
+    Call<UserInterestsAndTrendingCategories> getUserInterestsAndTrendingCategories();
 
     /**
      * Call this service to get users list to send follow request.

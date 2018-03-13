@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 
 import com.cncoding.teazer.data.model.discover.LandingPosts;
 import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.UserInterestsAndTrendingCategories;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.UsersList;
 import com.cncoding.teazer.data.model.post.PostList;
@@ -23,6 +24,7 @@ import static com.cncoding.teazer.data.remote.apicalls.authentication.Authentica
 import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_ALL_INTERESTED_CATEGORIES_POSTS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_FEATURED_POSTS;
+import static com.cncoding.teazer.utilities.common.Annotations.CALL_GET_USER_INTERESTS_AND_TRENDING_CATEGORIES;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_LANDING_POSTS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_MOST_POPULAR_POSTS;
 import static com.cncoding.teazer.utilities.common.Annotations.CALL_TRENDING_POSTS_BY_CATEGORY;
@@ -98,6 +100,32 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
         return liveData;
     }
 
+    @Override
+    public LiveData<UserInterestsAndTrendingCategories> getUserInterestsAndTrendingCategories() {
+        final MutableLiveData<UserInterestsAndTrendingCategories> liveData = new MutableLiveData<>();
+        discoverService.getUserInterestsAndTrendingCategories().enqueue(new Callback<UserInterestsAndTrendingCategories>() {
+            @Override
+            public void onResponse(Call<UserInterestsAndTrendingCategories> call, Response<UserInterestsAndTrendingCategories> response) {
+                try {
+                    liveData.setValue(response.isSuccessful() ?
+                            response.body().setCallType(CALL_GET_USER_INTERESTS_AND_TRENDING_CATEGORIES) :
+                            new UserInterestsAndTrendingCategories(new Throwable(NOT_SUCCESSFUL))
+                                    .setCallType(CALL_GET_USER_INTERESTS_AND_TRENDING_CATEGORIES));
+                } catch (Exception e) {
+                    onFailure(call, e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInterestsAndTrendingCategories> call, Throwable t) {
+                t.printStackTrace();
+                liveData.setValue(new UserInterestsAndTrendingCategories(new Throwable(FAILED))
+                        .setCallType(CALL_GET_USER_INTERESTS_AND_TRENDING_CATEGORIES));
+            }
+        });
+        return liveData;
+    }
+
     @Override public LiveData<PostList> getAllInterestedCategoriesVideos(int page, int categoryId) {
         final MutableLiveData<PostList> liveData = new MutableLiveData<>();
         discoverService.getAllInterestedCategoriesVideos(page, categoryId)
@@ -130,7 +158,9 @@ public class DiscoverRepositoryImpl implements DiscoverRepository {
         discoverService.getDiscoverLandingPosts().enqueue(new Callback<LandingPosts>() {
             @Override
             public void onResponse(Call<LandingPosts> call, Response<LandingPosts> response) {
-                liveData.setValue(response.isSuccessful() ? response.body() : new LandingPosts(new Throwable(NOT_SUCCESSFUL)));
+                liveData.setValue(response.isSuccessful() ?
+                        response.body() :
+                        new LandingPosts(new Throwable(NOT_SUCCESSFUL)));
             }
 
             @Override

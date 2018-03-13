@@ -6,6 +6,7 @@ import com.cncoding.teazer.data.model.application.DeactivateTypes;
 import com.cncoding.teazer.data.model.application.ReportTypes;
 import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.UserInterestsAndTrendingCategories;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.CircleList;
 import com.cncoding.teazer.data.model.friends.FollowersList;
@@ -95,6 +96,11 @@ public class LiveDataModule {
 
     @Provides @BaseScope
     BrokerLiveData<VideosList> videosListLiveData() {
+        return new BrokerLiveData<>();
+    }
+
+    @Provides @BaseScope
+    BrokerLiveData<UserInterestsAndTrendingCategories> userInterestsAndTrendingCategoriesLiveData() {
         return new BrokerLiveData<>();
     }
 

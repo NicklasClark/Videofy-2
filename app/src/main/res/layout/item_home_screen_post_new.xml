@@ -113,7 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:animateLayoutChanges="true"
-        android:background="@drawable/bg_card_no_margin_grey">
+        android:background="@color/colorDisabled">
 
         <com.cncoding.teazer.ui.customviews.exoplayer.SimpleExoPlayerView
             android:id="@+id/content"

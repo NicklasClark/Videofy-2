@@ -73,6 +73,10 @@ public class LandingPostsV2 extends BaseModel {
 //                        Collections.frequency(myInterests.values(), Collections.EMPTY_LIST) == myInterests.size();
 //            }
 
+    public void setUserInterests(ArrayList<Category> userInterests) {
+        this.userInterests = userInterests;
+    }
+
     public boolean isEmpty() {
         return getFeaturedVideos().isEmpty() &&
                 (getMyInterests().isEmpty() ||

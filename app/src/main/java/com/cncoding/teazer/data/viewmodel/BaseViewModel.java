@@ -20,6 +20,7 @@ import com.cncoding.teazer.data.model.base.Category;
 import com.cncoding.teazer.data.model.base.Medias;
 import com.cncoding.teazer.data.model.base.TaggedUser;
 import com.cncoding.teazer.data.model.discover.LandingPostsV2;
+import com.cncoding.teazer.data.model.discover.UserInterestsAndTrendingCategories;
 import com.cncoding.teazer.data.model.discover.VideosList;
 import com.cncoding.teazer.data.model.friends.CircleList;
 import com.cncoding.teazer.data.model.friends.FollowersList;
@@ -93,6 +94,7 @@ public class BaseViewModel extends AndroidViewModel {
     @Inject @Named(MOST_POPULAR) BrokerLiveData<PostList> mostPopularLiveData;
     @Inject BrokerLiveData<UsersList> usersListLiveData;
     @Inject BrokerLiveData<VideosList> videosListLiveData;
+    @Inject BrokerLiveData<UserInterestsAndTrendingCategories> userInterestsAndTrendingCategoriesLiveData;
     @Inject BrokerLiveData<CircleList> circleListLiveData;
     @Inject BrokerLiveData<FollowingsList> followingsListLiveData;
     @Inject BrokerLiveData<FollowersList> followersListLiveData;
@@ -191,6 +193,10 @@ public class BaseViewModel extends AndroidViewModel {
 
     @NonNull public BrokerLiveData<VideosList> getVideosList() {
         return videosListLiveData;
+    }
+
+    public BrokerLiveData<UserInterestsAndTrendingCategories> getUserInterestsAndTrendingCategoriesLiveData() {
+        return userInterestsAndTrendingCategoriesLiveData;
     }
 
     @NonNull public BrokerLiveData<ResultObject> getResultObject() {
@@ -315,6 +321,10 @@ public class BaseViewModel extends AndroidViewModel {
 
     public void loadTrendingVideosApiCall(int page) {
         videosListLiveData.observeOn(discoverRepository.getTrendingVideos(page));
+    }
+
+    public void loadUserInterestsAndTrendingCategoriesApiCall() {
+        userInterestsAndTrendingCategoriesLiveData.observeOn(discoverRepository.getUserInterestsAndTrendingCategories());
     }
 
     public void loadVideosWithSearchTermApiCall(int page, String searchTerm) {

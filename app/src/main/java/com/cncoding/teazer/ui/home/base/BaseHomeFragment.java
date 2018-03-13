@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.viewmodel.BaseViewModel;
+import com.cncoding.teazer.injection.component.DaggerBaseComponent;
 import com.cncoding.teazer.ui.base.BaseFragment;
 import com.cncoding.teazer.ui.base.BaseRecyclerView;
 import com.cncoding.teazer.ui.base.FragmentNavigation;
 import com.cncoding.teazer.ui.customviews.common.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.ui.home.camera.CameraActivity;
 
 /**
  *
@@ -22,7 +25,6 @@ public class BaseHomeFragment extends BaseFragment {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
     private BaseRecyclerView.Adapter adapter;
-    public boolean isConnected;
     protected int currentPage;
     protected BaseViewModel viewModel;
 
@@ -30,7 +32,16 @@ public class BaseHomeFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentPage = 1;
-        viewModel = getParentActivity().getBaseViewModel();
+        if (getActivity() instanceof BaseBottomBarActivity) {
+            viewModel = ((BaseBottomBarActivity) getActivity()).getBaseViewModel();
+        }
+        else if (getActivity() instanceof CameraActivity) {
+            viewModel = ((CameraActivity) getActivity()).getBaseViewModel();
+        }
+        else viewModel = DaggerBaseComponent.builder()
+                    .appComponent(TeazerApplication.get(getActivity()).getAppComponent())
+                    .build()
+                    .baseViewModel();
     }
 
     public BaseViewModel getViewModel() {
@@ -50,6 +61,17 @@ public class BaseHomeFragment extends BaseFragment {
             e.printStackTrace();
         }
         return (BaseBottomBarActivity) getActivity();
+    }
+
+    @NonNull public CameraActivity getParentCameraActivity() {
+        try {
+            if (getActivity() != null && getActivity() instanceof CameraActivity) {
+                return (CameraActivity) getActivity();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (CameraActivity) getActivity();
     }
 
     @Override

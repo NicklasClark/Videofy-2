@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.base.TeazerApplication;
@@ -19,19 +20,17 @@ public abstract class BaseViewModelActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (viewModel == null)
-            viewModel = DaggerBaseComponent.builder()
-                    .appComponent(TeazerApplication.get(this).getAppComponent())
-                    .build()
-                    .baseViewModel();
+        if (viewModel == null) viewModel = getABaseViewModelInstance();
     }
 
-    public BaseViewModel getBaseViewModel() {
-        return viewModel != null ?
-                viewModel :
-                DaggerBaseComponent.builder()
-                        .appComponent(TeazerApplication.get(this).getAppComponent())
-                        .build()
-                        .baseViewModel();
+    @NonNull public BaseViewModel getBaseViewModel() {
+        return viewModel != null ? viewModel : getABaseViewModelInstance();
+    }
+
+    @NonNull private BaseViewModel getABaseViewModelInstance() {
+        return DaggerBaseComponent.builder()
+                .appComponent(TeazerApplication.get(this).getAppComponent())
+                .build()
+                .baseViewModel();
     }
 }

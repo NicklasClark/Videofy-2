@@ -74,6 +74,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.ui.home.base.IntentHandler.IS_SIGNUP;
 import static com.cncoding.teazer.utilities.common.FabricAnalyticsUtil.logSignUpEvent;
 import static com.cncoding.teazer.utilities.common.ViewUtils.hideKeyboard;
 
@@ -173,8 +174,10 @@ public class MainActivity extends BaseAuthActivity
         }
     }
 
-    private void successfullyLoggedIn() {
-        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+    private void successfullyLoggedIn(boolean isSignup) {
+        Intent intent = new Intent(MainActivity.this, BaseBottomBarActivity.class);
+        intent.putExtra(IS_SIGNUP, isSignup);
+        startActivity(intent);
         finish();
     }
 
@@ -255,7 +258,6 @@ public class MainActivity extends BaseAuthActivity
             if (Objects.equals(tag, TAG_SELECT_INTERESTS)) popAllBackStack();
             setFragment(tag, addToBackStack, null);
             transitionDrawable.startTransition(400);
-//            new Blur(this).execute();
         } else {
             if (transitionDrawable != null)
                 transitionDrawable.reverseTransition(400);
@@ -282,10 +284,8 @@ public class MainActivity extends BaseAuthActivity
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (!accountAlreadyExists)
-                            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-                        else
-                            successfullyLoggedIn();
+                        //                            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+                        successfullyLoggedIn(!accountAlreadyExists);
                     }
                 }, 500);
                 break;
@@ -298,7 +298,7 @@ public class MainActivity extends BaseAuthActivity
         try {
             switch (action) {
                 case LOGIN_WITH_PASSWORD_ACTION:
-                    successfullyLoggedIn();
+                    successfullyLoggedIn(false);
                     break;
                 case LOGIN_WITH_OTP_ACTION:
                     if (baseAuth instanceof InitiateLoginWithOtp)
@@ -320,10 +320,11 @@ public class MainActivity extends BaseAuthActivity
         if (verificationDetails != null) {
             //fabric event
             logSignUpEvent("Email/Phone", true, verificationDetails.getEmail());
-            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-            new UpdateProfilePic(this).execute(picturePath);
+            successfullyLoggedIn(true);
+//            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+//            new UpdateProfilePic(this).execute(picturePath);
         }
-        else successfullyLoggedIn();
+        else successfullyLoggedIn(false);
     }
 
     @Override
@@ -348,7 +349,7 @@ public class MainActivity extends BaseAuthActivity
 
     @Override
     public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
-        successfullyLoggedIn();
+        successfullyLoggedIn(true);
     }
 
     @Override

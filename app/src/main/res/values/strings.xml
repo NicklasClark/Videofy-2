@@ -399,4 +399,6 @@
     <string name="profile">Profile</string>
     <string name="no_featured_videos">No features videos yet</string>
     <string name="processing">Processing…</string>
+    <string name="edit_your_interests">Edit your interests</string>
+    <string name="please_select_5_interests">Please select at least five interests.</string>
 </resources>

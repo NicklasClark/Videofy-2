@@ -36,6 +36,7 @@ import com.cncoding.teazer.ui.home.discover.search.DiscoverSearchFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -72,11 +73,11 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static int scrollPosition;
-    public static boolean updateMyInterests = false;
     private FeaturedPostsListAdapter featuredPostsListAdapter;
     private MyInterestsListAdapter myInterestsListAdapter;
     private TrendingListAdapter trendingListAdapter;
     private MostPopularListAdapter mostPopularListAdapter;
+    private LandingPostsV2 landingPosts;
 
     public DiscoverFragment() {
         // Required empty public constructor
@@ -156,10 +157,9 @@ public class DiscoverFragment extends BaseDiscoverFragment {
     }
 
     @OnClick(R.id.no_my_interests) public void onNoMyInterestsClick() {
-        ArrayList<Category> userInterests = getUserInterests();
+        List<Category> userInterests = getUserInterests();
         if (userInterests != null)
-            navigation.pushFragmentOnto(
-                    Interests.newInstance(false, true, userInterests, null, true));
+            navigation.pushFragment(Interests.newInstance(false, true, userInterests, null, true));
         else Log.e("MY_INTERESTS_SELECT", "userInterests was null");
     }
 
@@ -167,8 +167,10 @@ public class DiscoverFragment extends BaseDiscoverFragment {
         if (resultObject != null) {
             switch (resultObject.getCallType()) {
                 case CALL_LANDING_POSTS:
-                    if (resultObject instanceof LandingPostsV2)
-                        new NotifyLandingDataSetChanged(this, (LandingPostsV2) resultObject).execute();
+                    if (resultObject instanceof LandingPostsV2) {
+                        landingPosts = (LandingPostsV2) resultObject;
+                        new NotifyLandingDataSetChanged(this, landingPosts).execute();
+                    }
                     break;
                 case CALL_MOST_POPULAR_POSTS:
                     if (resultObject instanceof PostList) {
@@ -192,6 +194,10 @@ public class DiscoverFragment extends BaseDiscoverFragment {
                     break;
             }
         }
+    }
+
+    public LandingPostsV2 getLandingPosts() {
+        return landingPosts;
     }
 
     @Override protected void handleError(BaseModel baseModel) {

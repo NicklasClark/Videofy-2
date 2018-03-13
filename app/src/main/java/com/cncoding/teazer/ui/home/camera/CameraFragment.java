@@ -18,7 +18,6 @@ package com.cncoding.teazer.ui.home.camera;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -67,7 +66,7 @@ import com.cncoding.teazer.data.model.base.UploadParams;
 import com.cncoding.teazer.ui.customviews.common.AutoFitTextureView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.ui.home.camera.base.BaseCameraFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.utilities.common.OnSwipeTouchListener;
 
 import java.io.File;
@@ -90,7 +89,7 @@ import butterknife.OnClick;
 import static com.cncoding.teazer.utilities.common.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.common.ViewUtils.updateMediaStoreDatabase;
 
-public class CameraFragment extends BaseCameraFragment {
+public class CameraFragment extends BaseHomeFragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
@@ -251,10 +250,7 @@ public class CameraFragment extends BaseCameraFragment {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            Activity activity = getActivity();
-            if (null != activity) {
-                activity.finish();
-            }
+            getParentCameraActivity().finish();
         }
 
         @Override
@@ -266,7 +262,6 @@ public class CameraFragment extends BaseCameraFragment {
     };
 
     private FragmentActivity activity;
-    private Context context;
     private Integer mSensorOrientation;
     private String mNextVideoAbsolutePath;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -288,8 +283,7 @@ public class CameraFragment extends BaseCameraFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
-        context = getTheContext();
+        activity = getParentCameraActivity();
 
         new CreateVideoFolder(this).execute();
 
@@ -319,9 +313,9 @@ public class CameraFragment extends BaseCameraFragment {
         if(isReaction)
             cameraGifView.setVisibility(View.VISIBLE);
 
-        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getTheContext()) {
+        mTextureView.setOnTouchListener(new OnSwipeTouchListener(context) {
             @Override public void onSwipeTop() {
-//                Toast.makeText(getTheContext(), "top", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context), "top", Toast.LENGTH_SHORT).show();
             }
             @Override public void onSwipeRight() {
                 if (selected_filter_mode_index > 0) {
@@ -340,12 +334,12 @@ public class CameraFragment extends BaseCameraFragment {
                 }
             }
             @Override public void onSwipeBottom() {
-//                Toast.makeText(getTheContext(), "bottom", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-        showFilterTip(getTheContext().getString(R.string.swipe_for_filter_text), false);
+        showFilterTip(getString(R.string.swipe_for_filter_text), false);
     }
 
     private void showFilterTip(String text, boolean isFilterName) {

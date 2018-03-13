@@ -94,8 +94,9 @@ public class SubDiscoverAdapter extends BaseRecyclerView.Adapter {
         try {
             if (page == 1) {
                 if (!postDetailsArrayList.isEmpty()) {
-                    final DiffUtil.DiffResult result = calculateDiff(
-                            new PostsDetailsDiffCallback(new ArrayList<>(postDetailsArrayList.subList(0, 10)), postDetailsList));
+                    final DiffUtil.DiffResult result = calculateDiff(new PostsDetailsDiffCallback(
+                            new ArrayList<>(postDetailsArrayList.subList(0, postDetailsArrayList.size() >= postDetailsList.size() ?
+                                            postDetailsList.size() : postDetailsArrayList.size())), postDetailsList));
                     postDetailsArrayList.clear();
                     postDetailsArrayList.addAll(postDetailsList);
                     fragment.getParentActivity().runOnUiThread(new Runnable() {

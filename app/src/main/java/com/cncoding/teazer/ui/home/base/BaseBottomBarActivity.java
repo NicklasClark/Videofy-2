@@ -62,8 +62,6 @@ import com.cncoding.teazer.utilities.common.NavigationController.RootFragmentLis
 import com.cncoding.teazer.utilities.common.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.common.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.common.SharedPrefs;
-import com.expletus.mobiruck.MobiruckEvent;
-import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -104,7 +102,7 @@ import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.ui.customviews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
-import static com.cncoding.teazer.ui.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
+import static com.cncoding.teazer.ui.home.base.IntentHandler.logMobiruckEvent;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.MEDIA_TYPE_GIPHY;
 import static com.cncoding.teazer.utilities.common.CommonUtilities.deleteFilePermanently;
@@ -137,7 +135,7 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
 //    Category/Interests listener
         OnInterestsInteractionListener,
 //    Profile listeners
-        WatermarkAsyncResponse {
+        WatermarkAsyncResponse, TabLayout.OnTabSelectedListener {
 
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
@@ -187,20 +185,7 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-//       Log.d("FCM", SharedPrefs.getFcmToken(this));
-//        Glide.with(this)
-//                .load(R.drawable.ic_loader)
-//                .asGif()
-//                .into(loader);
-
-        //logging mobiruck event
-        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-
-        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-
-        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
-
-        Log.d("NOTIFY", "onCreate called");
+        logMobiruckEvent();
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -221,24 +206,7 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
                 .rootFragmentListener(this, TABS.length)
                 .build();
 
-        bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                fragmentHistory.push(tab.getPosition());
-                switchTab(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                navigationController.clearStack();
-                switchTab(tab.getPosition());
-                maybeRefreshTab(tab);
-            }
-        });
+        bottomTabLayout.addOnTabSelectedListener(this);
 
         View thirdTab = getTabChild(bottomTabLayout, TAB3);
         if (thirdTab != null) {
@@ -570,6 +538,23 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
     }
 
     //region Fragment navigation methods
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        fragmentHistory.push(tab.getPosition());
+        switchTab(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        navigationController.clearStack();
+        switchTab(tab.getPosition());
+        maybeRefreshTab(tab);
+    }
+
     private void maybeRefreshTab(TabLayout.Tab tab) {
         final View tabButton = getTabChild(bottomTabLayout, tab.getPosition());
         if (tabButton != null) {
@@ -724,7 +709,6 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
                     bottomTabLayout.getTabAt(position).getIcon().setAlpha(255);
                 } else {
                     bottomTabLayout.getTabAt(i).getIcon().setTint(Color.WHITE);
-                    //bottomTabLayout.getTabAt(position).getIcon().setAlpha(127);
                 }
             }
         }
@@ -1075,16 +1059,25 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
 
     //region Fragment listeners
     @Override
-    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
-        DiscoverFragment.updateMyInterests = true;
-        navigationController.popFragments(2);
-        if (!isFromDiscover)
-            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories));
-        else {
-            if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
-                ((DiscoverFragment) currentFragment).loadPosts();
-            }
-        }
+    public void onInterestsInteraction(final boolean isFromDiscover, final ArrayList<Category> categories) {
+        if (currentFragment instanceof DiscoverFragment)
+            ((DiscoverFragment) currentFragment).getLandingPosts().setUserInterests(categories);
+        SubDiscoverFragment.updateUserInterests(categories);
+        popFragment();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (navigationController != null) {
+//                    if (!isFromDiscover && navigationController.getCurrentFragment() instanceof SubDiscoverFragment)
+//                        ((SubDiscoverFragment) navigationController.getCurrentFragment()).updateMyInterests(categories);
+//                    else {
+//                        if (navigationController.getCurrentFragment() instanceof DiscoverFragment && navigationController.isRootFragment()) {
+//                            ((DiscoverFragment) currentFragment).loadPosts();
+//                        }
+//                    }
+//                }
+//            }
+//        }, 200);
     }
 
     @Override
@@ -1103,7 +1096,7 @@ public class BaseBottomBarActivity extends BaseViewModelActivity
             materialShowcaseView = null;
         } else {
             if (!navigationController.isRootFragment()) {
-                navigationController.popFragment();
+                popFragment();
             } else {
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();

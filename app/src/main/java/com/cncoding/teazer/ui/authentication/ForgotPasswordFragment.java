@@ -141,11 +141,11 @@ public class ForgotPasswordFragment extends BaseAuthFragment {
                 if (isFieldFilled(Annotations.CHECK_USERNAME) || isFieldFilled(Annotations.CHECK_EMAIL)) {
                     if (isDigitsOnly(username)) {
 //                        Phone number is entered
-                        viewModel.requestResetPasswordByPhone(new ResetPasswordByPhoneNumber(Long.parseLong(username), countryCode));
+                        viewModel.requestResetPasswordByPhoneApiCall(new ResetPasswordByPhoneNumber(Long.parseLong(username), countryCode));
                     } else {
 //                        Email is entered
                         if (isFieldValidated(Annotations.CHECK_EMAIL)) {
-                            viewModel.requestResetPasswordByEmail(username);
+                            viewModel.requestResetPasswordByEmailApiCall(username);
                         }
                         else showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
                     }

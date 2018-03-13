@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
@@ -54,7 +55,6 @@ import static com.cncoding.teazer.utilities.common.Annotations.CALL_TRENDING_POS
 
 public class SubDiscoverFragment extends BaseDiscoverFragment {
 
-    private static final String ARG_CATEGORIES = "categories";
     private static final String ACTION = "action";
 
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarTitle;
@@ -68,17 +68,17 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     @BindView(R.id.action_edit) ProximaNovaSemiBoldTextView editInterestsBtn;
 
     private int currentPage;
-    private ArrayList<Category> categories;
+    private static List<Category> categories;
     private int action;
 
     public SubDiscoverFragment() {}
 
-    public static SubDiscoverFragment newInstance(int action, ArrayList<Category> categories) {
+    public static SubDiscoverFragment newInstance(int action, ArrayList<Category> categoryArrayList) {
         SubDiscoverFragment fragment = new SubDiscoverFragment();
         Bundle args = new Bundle();
         args.putInt(ACTION, action);
-        args.putParcelableArrayList(ARG_CATEGORIES, categories);
         fragment.setArguments(args);
+        categories = categoryArrayList;
         return fragment;
     }
 
@@ -86,7 +86,6 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             action = getArguments().getInt(ACTION);
-            categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
         }
         currentPage = 1;
     }
@@ -168,11 +167,15 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    navigation.pushFragmentOnto(Interests.newInstance(
+                    navigation.pushFragment(Interests.newInstance(
                             false, true, categories, null, false));
                 }
             }, 1000);
         }
+    }
+
+    public static void updateUserInterests(ArrayList<Category> category) {
+        categories = category;
     }
 
     private void prepareTrendingLayout() {
@@ -204,31 +207,38 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
 
     private void populateTabs() {
+        tabLayout.removeAllTabs();
         for (int i = 0; i < categories.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(categories.get(i).getCategoryName()), i);
+            try {
+                tabLayout.addTab(tabLayout.newTab().setText(categories.get(i).getCategoryName()), i);
 //            Set tab text color
-            LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
-            linearLayout.setPadding(get34dp(), 0, get34dp(), 0);
-            AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
-            view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-            view.setTextColor(i == 0 ? Color.parseColor(categories.get(i).getMyColor()) : Color.parseColor("#666666"));
+                LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
+                linearLayout.setPadding(get34dp(), 0, get34dp(), 0);
+                AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
+                view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+                view.setTextColor(i == 0 ? Color.parseColor(categories.get(i).getMyColor()) : Color.parseColor("#666666"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void setCurrentTabTextColor(int position) {
         LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(position));
-        linearLayout.setPadding(get34dp(), 0, get34dp(), 0);
         AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
         view.setTextColor(Color.parseColor(categories.get(position).getMyColor()));
     }
 
     private void fadeOtherTabColorsOut(int excludePosition) {
         for (int i = 0; i < categories.size(); i++) {
-            if (i != excludePosition) {
-                LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
-                linearLayout.setPadding(get34dp(), 0, get34dp(), 0);
-                AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
-                view.setTextColor(Color.parseColor("#666666"));
+            try {
+                if (i != excludePosition) {
+                    LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
+                    AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
+                    view.setTextColor(Color.parseColor("#666666"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -295,7 +305,7 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
     }
 
     @OnClick(R.id.action_edit) public void editInterests() {
-        navigation.pushFragmentOnto(Interests.newInstance(false, true, categories, null, false));
+        navigation.pushFragment(Interests.newInstance(false, true, categories, null, false));
     }
 
     @Override
@@ -308,19 +318,35 @@ public class SubDiscoverFragment extends BaseDiscoverFragment {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            return MyInterestsFragmentTab.newInstance(categories.get(position).getCategoryId());
+        @Override public Fragment getItem(int position) {
+            return MyInterestsFragmentTab.newInstance(categories.get(position));
         }
 
         @Override
-        public int getCount() {
+        public int getItemPosition(@NonNull Object item) {
+            try {
+                MyInterestsFragmentTab fragment = (MyInterestsFragmentTab) item;
+                Category category = fragment.getCategory();
+                int position = categories.indexOf(category);
+
+                if (position >= 0) {
+                    return position;
+                } else {
+                    return POSITION_NONE;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return POSITION_NONE;
+            }
+        }
+
+        @Override public int getCount() {
             return categories.size();
         }
     }

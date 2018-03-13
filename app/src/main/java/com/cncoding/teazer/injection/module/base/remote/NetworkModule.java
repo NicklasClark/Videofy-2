@@ -19,6 +19,7 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import static com.cncoding.teazer.utilities.common.Annotations.AUTH_TOKEN_STRING;
 import static com.cncoding.teazer.utilities.common.Annotations.BASE_URL_STRING;
@@ -34,9 +35,10 @@ import static com.cncoding.teazer.utilities.common.Annotations.WITH_AUTH_TOKEN;
 @Module
 public class NetworkModule {
 
-//    @Provides @BaseScope HttpLoggingInterceptor getLoggingInterceptor() {
-//        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
-//    }
+    @Provides @BaseScope
+    HttpLoggingInterceptor getLoggingInterceptor() {
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+    }
 
     @Provides @BaseScope
     @Named(AUTH_TOKEN_STRING)
@@ -79,10 +81,10 @@ public class NetworkModule {
 
     @Provides @BaseScope
     @Named(WITH_AUTH_TOKEN)
-    OkHttpClient getOkHttpClientWithAuthToken(Interceptor authInterceptor, Cache cache) {
+    OkHttpClient getOkHttpClientWithAuthToken(HttpLoggingInterceptor loggingInterceptor, Interceptor authInterceptor, Cache cache) {
         return new OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
-//                .addInterceptor(loggingInterceptor)
+                .addInterceptor(loggingInterceptor)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .cache(cache)

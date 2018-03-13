@@ -151,7 +151,7 @@ public class SignupFragment2 extends BaseAuthFragment {
         if (!isFocused) {
             String email = emailView.getText().toString();
             if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
-                viewModel.checkEmailAvailability(initiateSignup.getEmail());
+                viewModel.checkEmailAvailabilityApiCall(initiateSignup.getEmail());
             } else {
                 setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
@@ -161,7 +161,7 @@ public class SignupFragment2 extends BaseAuthFragment {
     @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
         if (!isFocused) {
             if (isValidPhoneNumber(phoneNumberView.getText().toString()))
-                viewModel.checkPhoneNumberAvailability(countryCodeView.getDefaultCountryCodeAsInt(), initiateSignup.getPhoneNumber());
+                viewModel.checkPhoneNumberAvailabilityApiCall(countryCodeView.getDefaultCountryCodeAsInt(), initiateSignup.getPhoneNumber());
             else
                 setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
         }
@@ -179,7 +179,7 @@ public class SignupFragment2 extends BaseAuthFragment {
                     if (getFirstAndLastNames(nameView.getText().toString()).length < 2) {
                         if (isValidEmailAddress(emailView.getText().toString())) {
                             signupBtn.setEnabled(false);
-                            viewModel.signUp(initiateSignup);
+                            viewModel.signUpApiCall(initiateSignup);
                         }
                         else showSnackBar(signupBtn, "Please provide a valid email address.");
                     }

@@ -725,8 +725,7 @@ public class CameraActivity extends BaseViewModelActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
-    }
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {}
 
     @Override
     public void onInterestsSelected(final String resultToShow, final String resultToSend, final int count) {

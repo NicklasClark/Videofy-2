@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import retrofit2.http.HEAD;
-
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
 
@@ -203,25 +201,29 @@ public class NavigationController {
      * @param fragment The fragment that is to be pushed
      */
     public void pushFragmentOnto(@Nullable final Fragment fragment) {
-        if (fragment != null && selectedTabIndex != NO_TAB) {
-            FragmentTransaction ft = createTransactionWithOptions(null);
+        try {
+            if (fragment != null && selectedTabIndex != NO_TAB) {
+                FragmentTransaction ft = createTransactionWithOptions(null);
 
-//            detachCurrentFragment(ft);
+    //            detachCurrentFragment(ft);
 
-            // ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
-            ft.add(containerId, fragment, generateTag(fragment));
-            ft.commit();
+                // ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
+                ft.add(containerId, fragment, generateTag(fragment));
+                ft.commit();
 
-            executePendingTransactions();
+                executePendingTransactions();
 
-            fragmentStacks.get(selectedTabIndex).push(fragment);
+                fragmentStacks.get(selectedTabIndex).push(fragment);
 
-            currentFragment = fragment;
+                currentFragment = fragment;
 
-            if (transactionListener != null) {
-                transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
+                if (transactionListener != null) {
+                    transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -53,7 +53,7 @@ import com.cncoding.teazer.data.model.giphy.Images;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.ui.customviews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.ui.home.camera.base.BaseCameraFragment;
+import com.cncoding.teazer.ui.home.base.BaseHomeFragment;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.ui.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.utilities.asynctasks.AddWaterMarkAsyncTask;
@@ -117,7 +117,7 @@ import static com.cncoding.teazer.utilities.common.ViewUtils.playVideoInExoPlaye
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends BaseCameraFragment implements EasyPermissions.PermissionCallbacks,
+public class UploadFragment extends BaseHomeFragment implements EasyPermissions.PermissionCallbacks,
         CompressVideoAsyncTask.AsyncResponse,
         AddWaterMarkAsyncTask.WatermarkAsyncResponse,
         GifConvertAsyncTask.GifConvertAsyncResponse {
@@ -298,7 +298,7 @@ public class UploadFragment extends BaseCameraFragment implements EasyPermission
         ButterKnife.bind(this, rootView);
 
         topProgressBar.setVisibility(View.GONE);
-        activity = getActivity();
+        activity = getParentCameraActivity();
 
         setBadge(uploadCategoriesBadge, categoryCount, TAGGED_CATEGORIES);
         setBadge(tagFriendsBadge, tagCount, TAGGED_FRIENDS);

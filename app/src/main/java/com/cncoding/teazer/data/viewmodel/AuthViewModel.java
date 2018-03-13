@@ -1,7 +1,7 @@
 package com.cncoding.teazer.data.viewmodel;
 
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.ViewModel;
 
 import com.cncoding.teazer.base.TeazerApplication;
 import com.cncoding.teazer.data.BrokerLiveData;
@@ -23,13 +23,12 @@ import javax.inject.Inject;
  * Created by Prem$ on 2/9/2018.
  */
 
-public class AuthViewModel extends AndroidViewModel {
+public class AuthViewModel extends ViewModel {
     
     @Inject BrokerLiveData<ResultObject> resultObjectLiveData;
     @Inject AuthenticationRepository authenticationRepository;
 
     public AuthViewModel(TeazerApplication application) {
-        super(application);
         application.getAppComponent().authComponentBuilder().build().inject(this);
     }
 
@@ -37,55 +36,55 @@ public class AuthViewModel extends AndroidViewModel {
         return resultObjectLiveData;
     }
 
-    public void signUp(InitiateSignup initiateSignup) {
+    public void signUpApiCall(InitiateSignup initiateSignup) {
         resultObjectLiveData.observeOn(authenticationRepository.signUp(initiateSignup));
     }
 
-    public void verifySignUp(VerifySignUp verifySignUp) {
+    public void verifySignUpApiCall(VerifySignUp verifySignUp) {
         resultObjectLiveData.observeOn(authenticationRepository.verifySignUp(verifySignUp));
     }
 
-    public void socialSignUp(SocialSignup socialSignup) {
+    public void socialSignUpApiCall(SocialSignup socialSignup) {
         resultObjectLiveData.observeOn(authenticationRepository.socialSignUp(socialSignup));
     }
 
-    public void loginWithPassword(Login login) {
+    public void loginWithPasswordApiCall(Login login) {
         resultObjectLiveData.observeOn(authenticationRepository.loginWithPassword(login));
     }
 
-    public void loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp) {
+    public void loginWithOtpApiCall(InitiateLoginWithOtp initiateLoginWithOtp) {
         resultObjectLiveData.observeOn(authenticationRepository.loginWithOtp(initiateLoginWithOtp));
     }
 
-    public void verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp) {
+    public void verifyLoginWithOtpApiCall(VerifyLoginWithOtp verifyLoginWithOtp) {
         resultObjectLiveData.observeOn(authenticationRepository.verifyLoginWithOtp(verifyLoginWithOtp));
     }
 
-    public void checkUsernameAvailability(String username) {
+    public void checkUsernameAvailabilityApiCall(String username) {
         resultObjectLiveData.observeOn(authenticationRepository.checkUsernameAvailability(username));
     }
 
-    public void checkEmailAvailability(String email) {
+    public void checkEmailAvailabilityApiCall(String email) {
         resultObjectLiveData.observeOn(authenticationRepository.checkEmailAvailability(email));
     }
 
-    public void checkPhoneNumberAvailability(int countryCode, long phoneNumber) {
+    public void checkPhoneNumberAvailabilityApiCall(int countryCode, long phoneNumber) {
         resultObjectLiveData.observeOn(authenticationRepository.checkPhoneNumberAvailability(countryCode, phoneNumber));
     }
 
-    public void verifyForgotPasswordOtp(int otp) {
+    public void verifyForgotPasswordOtpApiCall(int otp) {
         resultObjectLiveData.observeOn(authenticationRepository.verifyForgotPasswordOtp(otp));
     }
 
-    public void requestResetPasswordByEmail(String email) {
+    public void requestResetPasswordByEmailApiCall(String email) {
         resultObjectLiveData.observeOn(authenticationRepository.requestResetPasswordByEmail(email));
     }
 
-    public void requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
+    public void requestResetPasswordByPhoneApiCall(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber) {
         resultObjectLiveData.observeOn(authenticationRepository.requestResetPasswordByPhone(resetPasswordByPhoneNumber));
     }
 
-    public void resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp) {
+    public void resetPasswordByOtpApiCall(ResetPasswordByOtp resetPasswordByOtp) {
         resultObjectLiveData.observeOn(authenticationRepository.resetPasswordByOtp(resetPasswordByOtp));
     }
 }
