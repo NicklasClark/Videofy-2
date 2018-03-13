@@ -111,21 +111,22 @@ public class Interests extends BaseHomeFragment {
         flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
         flexboxLayoutManager.setJustifyContent(isForVideo ? JustifyContent.FLEX_START : JustifyContent.CENTER);
         recyclerView.setLayoutManager(flexboxLayoutManager);
+        recyclerView.setHasFixedSize(true);
         if (!isForVideo) {
             if (!isEditing) {
                 interestsAdapter = new InterestsAdapter(totalCategories, this, null,
                         null, false);
                 recyclerView.setAdapter(interestsAdapter);
+                getCategories();
             } else {
                 enableSaveBtn();
                 //noinspection unchecked
                 new SetInterestsAdapter(this).execute(userSelectedCategories);
             }
         } else {
-            recyclerView.setHasFixedSize(true);
-            getCategories();
             interestsAdapter = new InterestsAdapter(totalCategories, this, null, selectedData, true);
             recyclerView.setAdapter(interestsAdapter);
+            getCategories();
         }
         return rootView;
     }
@@ -136,13 +137,6 @@ public class Interests extends BaseHomeFragment {
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_dark);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (totalCategories != null && totalCategories.isEmpty())
-            getCategories();
     }
 
     private void getCategories() {

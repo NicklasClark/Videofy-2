@@ -19,7 +19,7 @@ import com.cncoding.teazer.ui.home.camera.CameraActivity;
  * Created by Prem $ on 11/02/2017.
  */
 
-public class BaseHomeFragment extends BaseFragment {
+public abstract class BaseHomeFragment extends BaseFragment {
 
     public FragmentNavigation navigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
